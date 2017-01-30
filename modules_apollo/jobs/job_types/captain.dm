@@ -124,6 +124,7 @@ Internal Affairs Agent
 	shoes = /obj/item/clothing/shoes/laceup
 	l_hand = /obj/item/weapon/storage/briefcase/iaa
 	l_pocket = /obj/item/device/laser_pointer
+	implants = list(/obj/item/weapon/implant/mindshield)
 
 /*
 SolGov Rep
@@ -156,3 +157,4 @@ SolGov Rep
 	l_hand = /obj/item/weapon/storage/briefcase/lawyer
 	l_pocket = /obj/item/device/laser_pointer
 	r_pocket = /obj/item/clothing/tie/lawyers_badge
+	implants = list(/obj/item/weapon/implant/mindshield)
