@@ -29,7 +29,7 @@
 		data["occupant"]["boneFractures"] = list()
 		if(iscarbon(occupant))
 			var/mob/living/carbon/C = occupant
-			for(var/X in C.getFractures())
+			for(var/X in C.get_fractures())
 				var/obj/item/bodypart/B = X
 				data["occupant"]["boneFractures"] += list(list("name" = B.name))
 

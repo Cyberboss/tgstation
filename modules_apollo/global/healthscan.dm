@@ -48,7 +48,7 @@
 	// Fractures
 	if(iscarbon(M) && mode)
 		var/mob/living/carbon/C = M
-		var/list/fractures = C.getFractures()
+		var/list/fractures = C.get_fractures()
 		if(fractures.len)
 			user << "\t<span class='alert'>Fractured bones detected. Analyze in sleeper for more details.</span>"
 
