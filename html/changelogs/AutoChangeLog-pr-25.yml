@@ -1,6 +1,0 @@
-author: "Atebite"
-delete-after: True
-changes: 
-  - rscadd: "Bones can fracture when you take too much brute damage in one hit. Fractured legs slow you down and make you to fall over now and then. Fractured arms makes you to drop items."
-  - rscadd: "Splints, which can null many of the negative effects of broken bones"
-  - rscadd: "Bone surgery. You can both fracture and mend bones via surgery. The bone setter and bone gel have been added as surgical tools used in these surgeries"

@@ -1,7 +1,0 @@
-author: "Atebite"
-delete-after: True
-changes: 
-  - rscadd: "Added neural laces, replacing the traditional cloning system. You can extract/implant neural laces through surgery. Implanting a lace with a mind stored on it to a braindead body will let the player associated with the stored mind to take control of it"
-  - rscadd: "Storage of multiple DNA scans used in cloning is now possible"
-  - tweak: "You can now start a cloning cycle indiscriminately. All you need is a scan"
-  - spellcheck: "Show cloning progress on the cloning console"
