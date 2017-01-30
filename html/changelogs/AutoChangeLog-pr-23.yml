@@ -1,0 +1,6 @@
+author: "Cakey"
+delete-after: True
+changes: 
+  - rscadd: "Added paper shredders"
+  - rscadd: "Added paper bundles"
+  - rscadd: "Added new radiation collector sprites"

@@ -2237,3 +2237,83 @@
 		message_admins("[key_name(usr)] created \"[G.name]\" station goal.")
 		ticker.mode.station_goals += G
 		modify_goals()
+	else if(href_list["AdminFaxView"])
+		var/client/C = locate(href_list["AdminFaxView"])
+		var/obj/item/fax = locate(href_list["AdminFaxView"])
+		if (istype(fax, /obj/item/weapon/paper))
+			var/obj/item/weapon/paper/P = fax
+			C << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[P.info]<HR>[P.stamps]</BODY></HTML>", "window=[P.name]")
+			onclose(C, "[P.name]")
+		else if (istype(fax, /obj/item/weapon/photo))
+			var/obj/item/weapon/photo/H = fax
+			H.show(usr)
+		else if (istype(fax, /obj/item/weapon/paper_bundle))
+			//having multiple people turning pages on a paper_bundle can cause issues
+			//open a browse window listing the contents instead
+			var/data = ""
+			var/obj/item/weapon/paper_bundle/B = fax
+
+			for (var/page = 1, page <= B.amount, page++)
+				var/obj/pageobj = B.contents[page]
+				data += "<A href='?src=\ref[src];AdminFaxViewPage=[page];paper_bundle=\ref[B]'>Page [page] - [pageobj.name]</A><BR>"
+
+			usr << browse(data, "window=[B.name]")
+		else
+			usr << "<span class='alert'>The faxed item is not viewable. This is probably a bug, and should be reported on the tracker: [fax.type]</span>"
+	else if (href_list["AdminFaxViewPage"])
+		var/client/C = locate(href_list["AdminFaxViewPage"])
+		var/page = text2num(href_list["AdminFaxViewPage"])
+		var/obj/item/weapon/paper_bundle/bundle = locate(href_list["paper_bundle"])
+
+		if (!bundle) return
+
+		if (istype(bundle.contents[page], /obj/item/weapon/paper))
+			var/obj/item/weapon/paper/P = bundle.contents[page]
+			C << browse("<HTML><HEAD><TITLE>[P.name]</TITLE></HEAD><BODY>[P.info]<HR>[P.stamps]</BODY></HTML>", "window=[P.name]")
+			onclose(C, "[P.name]")
+		else if (istype(bundle.contents[page], /obj/item/weapon/photo))
+			var/obj/item/weapon/photo/H = bundle.contents[page]
+			H.show(src.owner)
+		return
+
+	else if(href_list["CentcommFaxReply"])
+		var/mob/sender = locate(href_list["CentcommFaxReply"])
+		var/obj/machinery/photocopier/faxmachine/fax = locate(href_list["originfax"])
+
+		//todo: sanitize
+		var/input = input(src.owner, "Please enter a message to reply to [key_name(sender)] via secure connection. NOTE: BBCode does not work, but HTML tags do! Use <br> for line breaks.", "Outgoing message from Centcomm", "") as message|null
+		if(!input)	return
+
+		var/customname = input(src.owner, "Pick a title for the report", "Title") as text|null
+
+		// Create the reply message
+		var/obj/item/weapon/paper/P = new /obj/item/weapon/paper( null ) //hopefully the null loc won't cause trouble for us
+		P.name = "[command_name()] - [customname]"
+		P.info = input
+		P.update_icon()
+
+		// Stamps
+		var/obj/item/weapon/stamp/centcom/S
+		P.stamps += "<img src=large_[S.icon_state].png>"
+		if(!P.stamped)
+			P.stamped = new
+		P.stamped += S.icon_state
+
+		var/image/stampoverlay = image('icons/obj/bureaucracy.dmi')
+		stampoverlay.icon_state = "paper_stamp-cent"
+		if(!P.stamped)
+			P.stamped = new
+		P.stamped += /obj/item/weapon/stamp
+		P.overlays += stampoverlay
+		P.stamps += "<HR><i>This paper has been stamped by the Central Command Quantum Relay.</i>"
+
+		if(fax.recievefax(P))
+			src.owner << "<span class='notice'>Message reply to transmitted successfully.</span>"
+			log_admin("[key_name(src.owner)] replied to a fax message from [key_name(sender)]: [input]")
+			message_admins("[key_name_admin(src.owner)] replied to a fax message from [key_name_admin(sender)]")
+		else
+			src.owner << "<span class='alert'>Message reply failed.</span>"
+
+		spawn(100)
+			qdel(P)
+		return

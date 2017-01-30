@@ -66,67 +66,26 @@
 	if(href_list["copy"])
 		if(copy)
 			for(var/i = 0, i < copies, i++)
-				if(toner > 0 && !busy && copy)
-					var/copy_as_paper = 1
-					if(istype(copy, /obj/item/weapon/paper/contract/employment))
-						var/obj/item/weapon/paper/contract/employment/E = copy
-						var/obj/item/weapon/paper/contract/employment/C = new /obj/item/weapon/paper/contract/employment (loc, E.target.current)
-						if(C)
-							copy_as_paper = 0
-					if(copy_as_paper)
-						var/obj/item/weapon/paper/c = new /obj/item/weapon/paper (loc)
-						if(length(copy.info) > 0)	//Only print and add content if the copied doc has words on it
-							if(toner > 10)	//lots of toner, make it dark
-								c.info = "<font color = #101010>"
-							else			//no toner? shitty copies for you!
-								c.info = "<font color = #808080>"
-							var/copied = copy.info
-							copied = replacetext(copied, "<font face=\"[PEN_FONT]\" color=", "<font face=\"[PEN_FONT]\" nocolor=")	//state of the art techniques in action
-							copied = replacetext(copied, "<font face=\"[CRAYON_FONT]\" color=", "<font face=\"[CRAYON_FONT]\" nocolor=")	//This basically just breaks the existing color tag, which we need to do because the innermost tag takes priority.
-							c.info += copied
-							c.info += "</font>"
-							c.name = copy.name
-							c.fields = copy.fields
-							c.update_icon()
-							c.updateinfolinks()
-							toner--
-					busy = 1
-					sleep(15)
-					busy = 0
-				else
+				if(toner <= 0)
 					break
-			updateUsrDialog()
-		else if(photocopy)
-			for(var/i = 0, i < copies, i++)
-				if(toner >= 5 && !busy && photocopy)  //Was set to = 0, but if there was say 3 toner left and this ran, you would get -2 which would be weird for ink
-					var/obj/item/weapon/photo/p = new /obj/item/weapon/photo (loc)
-					var/icon/I = icon(photocopy.icon, photocopy.icon_state)
-					var/icon/img = icon(photocopy.img)
-					if(greytoggle == "Greyscale")
-						if(toner > 10) //plenty of toner, go straight greyscale
-							I.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0)) //I'm not sure how expensive this is, but given the many limitations of photocopying, it shouldn't be an issue.
-							img.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))
-						else //not much toner left, lighten the photo
-							I.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(100,100,100))
-							img.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(100,100,100))
-						toner -= 5	//photos use a lot of ink!
-					else if(greytoggle == "Color")
-						if(toner >= 10)
-							toner -= 10 //Color photos use even more ink!
-						else
-							continue
-					p.icon = I
-					p.img = img
-					p.name = photocopy.name
-					p.desc = photocopy.desc
-					p.scribble = photocopy.scribble
-					p.pixel_x = rand(-10, 10)
-					p.pixel_y = rand(-10, 10)
-					p.blueprints = photocopy.blueprints //a copy of a picture is still good enough for the syndicate
+
+				if (istype(copy, /obj/item/weapon/paper))
+					copy(copy)
 					busy = 1
 					sleep(15)
 					busy = 0
+				else if (istype(copy, /obj/item/weapon/photo))
+					photocopy(copy)
+					busy = 1
+					sleep(15)
+					busy = 0
+				else if (istype(copy, /obj/item/weapon/paper_bundle))
+					var/obj/item/weapon/paper_bundle/B = bundlecopy(copy)
+					busy = 1
+					sleep(15*B.amount)
+					busy = 0
 				else
+					usr << "<span class='warning'>\The [copy] can't be copied by \the [src].</span>"
 					break
 		else if(doccopy)
 			for(var/i = 0, i < copies, i++)
@@ -388,3 +347,81 @@
 	icon_state = "tonercartridge"
 	var/charges = 5
 	var/max_charges = 5
+
+//Photocopy procs used in both photocopiers and fax machines - Cakey
+/obj/machinery/photocopier/proc/copy(var/obj/item/weapon/paper/copy)
+	var/obj/item/weapon/paper/c = new /obj/item/weapon/paper (loc)
+	if(toner > 10)	//lots of toner, make it dark
+		c.info = "<font color = #101010>"
+	else			//no toner? shitty copies for you!
+		c.info = "<font color = #808080>"
+	var/copied = html_decode(copy.info)
+	copied = replacetext(copied, "<font face=\"[PEN_FONT]\" color=", "<font face=\"[PEN_FONT]\" nocolor=")	//state of the art techniques in action
+	copied = replacetext(copied, "<font face=\"[CRAYON_FONT]\" color=", "<font face=\"[CRAYON_FONT]\" nocolor=")	//This basically just breaks the existing color tag, which we need to do because the innermost tag takes priority.
+	c.info += copied
+	c.info += "</font>"
+	c.name = copy.name
+	c.fields = copy.fields
+	c.update_icon()
+	c.updateinfolinks()
+	toner--
+	if(toner == 0)
+		visible_message("<span class='notice'>A red light on \the [src] flashes, indicating that it is out of toner.</span>")
+	return c
+
+
+/obj/machinery/photocopier/proc/photocopy(var/obj/item/weapon/photo/photocopy)
+	var/obj/item/weapon/photo/p = new /obj/item/weapon/photo (loc)
+	var/icon/I = icon(photocopy.icon, photocopy.icon_state)
+	var/icon/img = icon(photocopy.img)
+	if(greytoggle == "Greyscale")
+		if(toner > 10) //plenty of toner, go straight greyscale
+			I.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0)) //I'm not sure how expensive this is, but given the many limitations of photocopying, it shouldn't be an issue.
+			img.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(0,0,0))
+		else //not much toner left, lighten the photo
+			I.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(100,100,100))
+			img.MapColors(rgb(77,77,77), rgb(150,150,150), rgb(28,28,28), rgb(100,100,100))
+		toner -= 5	//photos use a lot of ink!
+	else if(greytoggle == "Color")
+		if(toner >= 10)
+			toner -= 10 //Color photos use even more ink!
+	p.icon = I
+	p.img = img
+	p.name = photocopy.name
+	p.desc = photocopy.desc
+	p.scribble = photocopy.scribble
+	p.pixel_x = rand(-10, 10)
+	p.pixel_y = rand(-10, 10)
+	p.blueprints = photocopy.blueprints //a copy of a picture is still good enough for the syndicate
+
+	toner -= 5	//photos use a lot of ink!
+	if(toner < 0)
+		toner = 0
+		visible_message("<span class='notice'>A red light on \the [src] flashes, indicating that it is out of toner.</span>")
+
+	return p
+
+//If need_toner is 0, the copies will still be lightened when low on toner, however it will not be prevented from printing. TODO: Implement print queues for fax machines and get rid of need_toner
+/obj/machinery/photocopier/proc/bundlecopy(var/obj/item/weapon/paper_bundle/bundle, var/need_toner=1)
+	var/obj/item/weapon/paper_bundle/p = new /obj/item/weapon/paper_bundle (src)
+	for(var/obj/item/weapon/W in bundle)
+		if(toner <= 0 && need_toner)
+			toner = 0
+			visible_message("<span class='notice'>A red light on \the [src] flashes, indicating that it is out of toner.</span>")
+			break
+
+		if(istype(W, /obj/item/weapon/paper))
+			W = copy(W)
+		else if(istype(W, /obj/item/weapon/photo))
+			W = photocopy(W)
+		W.loc = p
+		p.amount++
+	//p.amount--
+	p.loc = src.loc
+	p.update_icon()
+	p.icon_state = "paper_words"
+	p.name = bundle.name
+	p.pixel_y = rand(-8, 8)
+	p.pixel_x = rand(-9, 9)
+	return p
+
