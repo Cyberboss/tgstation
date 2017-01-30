@@ -6,7 +6,7 @@
 */
 
 /obj/item/weapon/storage/surgery_bag
-    name = "Surgery Bag"
+    name = "surgery bag"
     desc = "Contains all the surgical tools you'll need."
     icon = 'icons/obj/objects.dmi'
     icon_state = "sbag_rolled"
@@ -25,8 +25,8 @@
     new /obj/item/weapon/scalpel( src )
     new /obj/item/weapon/hemostat(src)
     new /obj/item/weapon/retractor(src)
-    //new /obj/item/weapon/bonegel(src)
-    //new /obj/item/weapon/bonesetter(src)
+    new /obj/item/weapon/bonegel(src)
+    new /obj/item/weapon/bonesetter(src)
     new /obj/item/weapon/cautery(src)
     return
 
