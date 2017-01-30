@@ -9,7 +9,7 @@ Captain
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
-	supervisors = "Nanotrasen officials and Space law"
+	supervisors = "Nanotrasen officials and Central Command"
 	selection_color = "#ccccff"
 	req_admin_notify = 1
 	minimal_player_age = 14
@@ -106,7 +106,7 @@ Internal Affairs Agent
 	total_positions = 2
 	spawn_positions = 2
 	supervisors = "Central Command"
-	selection_color = "#ccccff"
+	selection_color = "#ddddff"
 
 	outfit = /datum/outfit/job/iaa
 
@@ -138,7 +138,7 @@ SolGov Rep
 	total_positions = 1
 	spawn_positions = 1
 	supervisors = "Sol Government"
-	selection_color = "#ccccff"
+	selection_color = "#ffeeee"
 
 	outfit = /datum/outfit/job/solgov
 
