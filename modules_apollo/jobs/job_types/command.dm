@@ -93,3 +93,66 @@ Head of Personnel
 	head = /obj/item/clothing/head/hopcap
 	backpack_contents = list(/obj/item/weapon/storage/box/ids=1,\
 		/obj/item/weapon/melee/classic_baton/telescopic=1, /obj/item/device/modular_computer/tablet/preset/advanced = 1)
+
+/*
+Internal Affairs Agent
+*/
+/datum/job/iaa
+	title = "Internal Affairs Agent"
+	flag = IAA
+	department_head = list("Centcom")
+	department_flag = CIVILIAN
+	faction = "Station"
+	total_positions = 2
+	spawn_positions = 2
+	supervisors = "Central Command"
+	selection_color = "#ccccff"
+
+	outfit = /datum/outfit/job/iaa
+
+	access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
+	minimal_access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
+
+/datum/outfit/job/iaa
+	name = "Internal Affairs Agent"
+	jobtype = /datum/job/iaa
+
+	belt = /obj/item/device/pda/lawyer
+	ears = /obj/item/device/radio/headset/heads
+	uniform = /obj/item/clothing/under/lawyer/blacksuit
+	suit = /obj/item/clothing/suit/toggle/lawyer/black
+	shoes = /obj/item/clothing/shoes/laceup
+	l_hand = /obj/item/weapon/storage/briefcase/iaa
+	l_pocket = /obj/item/device/laser_pointer
+
+/*
+SolGov Rep
+*/
+/datum/job/solgov
+	title = "SolGov Representative"
+	flag = SOLGOVAGENT
+	department_head = list("Captain")
+	department_flag = CIVILIAN
+	faction = "Station"
+	total_positions = 1
+	spawn_positions = 1
+	supervisors = "Sol Government"
+	selection_color = "#ccccff"
+
+	outfit = /datum/outfit/job/solgov
+
+	access = list(access_lawyer, access_court, access_sec_doors)
+	minimal_access = list(access_lawyer, access_court, access_sec_doors)
+
+/datum/outfit/job/solgov
+	name = "SolGov Representative"
+	jobtype = /datum/job/solgov
+
+	belt = /obj/item/device/pda/lawyer
+	ears = /obj/item/device/radio/headset/headset_sec
+	uniform = /obj/item/clothing/under/lawyer/bluesuit
+	suit = /obj/item/clothing/suit/toggle/lawyer
+	shoes = /obj/item/clothing/shoes/laceup
+	l_hand = /obj/item/weapon/storage/briefcase/lawyer
+	l_pocket = /obj/item/device/laser_pointer
+	r_pocket = /obj/item/clothing/tie/lawyers_badge
