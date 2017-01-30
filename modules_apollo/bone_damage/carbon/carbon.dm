@@ -23,7 +23,7 @@
 
 	for(var/X in fractures)
 		var/obj/item/bodypart/B = X
-		if(!B.broken)
+		if(!B.broken || B.splinted)
 			continue
 		var/r_arm = istype(B, /obj/item/bodypart/r_arm) // just throw it in a var cause we use it twice
 		if(!istype(B, /obj/item/bodypart/l_arm) && !r_arm)
