@@ -28,69 +28,6 @@ Librarian
 	l_pocket = /obj/item/device/laser_pointer
 
 /*
-Internal Affairs Agent
-*/
-/datum/job/iaa
-	title = "Internal Affairs Agent"
-	flag = IAA
-	department_head = list("Centcom")
-	department_flag = CIVILIAN
-	faction = "Station"
-	total_positions = 2
-	spawn_positions = 2
-	supervisors = "Central Command"
-	selection_color = "#ccccff"
-
-	outfit = /datum/outfit/job/iaa
-
-	access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
-	minimal_access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
-
-/datum/outfit/job/iaa
-	name = "Internal Affairs Agent"
-	jobtype = /datum/job/iaa
-
-	belt = /obj/item/device/pda/lawyer
-	ears = /obj/item/device/radio/headset/heads
-	uniform = /obj/item/clothing/under/lawyer/bluesuit
-	suit = /obj/item/clothing/suit/toggle/lawyer
-	shoes = /obj/item/clothing/shoes/laceup
-	l_hand = /obj/item/weapon/storage/briefcase/lawyer
-	l_pocket = /obj/item/device/laser_pointer
-
-/*
-Lawyer
-*/
-/datum/job/solgov
-	title = "SolGov Representative"
-	flag = SOLGOVAGENT
-	department_head = list("Captain")
-	department_flag = CIVILIAN
-	faction = "Station"
-	total_positions = 1
-	spawn_positions = 1
-	supervisors = "the captain"
-	selection_color = "#ccccff"
-
-	outfit = /datum/outfit/job/solgov
-
-	access = list(access_lawyer, access_court, access_sec_doors)
-	minimal_access = list(access_lawyer, access_court, access_sec_doors)
-
-/datum/outfit/job/solgov
-	name = "SolGov Representative"
-	jobtype = /datum/job/solgov
-
-	belt = /obj/item/device/pda/lawyer
-	ears = /obj/item/device/radio/headset/headset_sec
-	uniform = /obj/item/clothing/under/lawyer/bluesuit
-	suit = /obj/item/clothing/suit/toggle/lawyer
-	shoes = /obj/item/clothing/shoes/laceup
-	l_hand = /obj/item/weapon/storage/briefcase/lawyer
-	l_pocket = /obj/item/device/laser_pointer
-	r_pocket = /obj/item/clothing/tie/lawyers_badge
-
-/*
 Clown
 */
 /datum/job/clown
