@@ -1,0 +1,7 @@
+author: "Cakey"
+delete-after: True
+changes: 
+  - rscadd: "Added fax machines"
+  - rscadd: "Added hobo barrels"
+  - rscadd: "Added paper bundles"
+  - rscadd: "Added centcom stamps"

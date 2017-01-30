@@ -1,5 +1,5 @@
 //Apollo Station
-/*var/list/the_station_areas = list (
+var/list/the_station_areas = list (
 	/area/shuttle/arrival,
 	/area/shuttle/escape/station,
 	/area/shuttle/escape_pod1/station,
@@ -24,15 +24,15 @@
 	/area/quartermaster,
 	/area/janitor,
 	/area/hydroponics,
-	/area/rnd,
+	/area/toxins,
 	/area/storage,
 	/area/ai_monitored/storage/eva, //do not try to simplify to "/area/ai_monitored" --rastaf0
 	/area/ai_monitored/storage/secure,
 	/area/ai_monitored/storage/emergency,
-	/area/turret_protected/ai_upload, //do not try to simplify to "/area/turret_protected" --rastaf0
-	/area/turret_protected/ai_upload_foyer,
-	/area/turret_protected/ai,
-)*/
+	/area/ai_monitored/turret_protected/ai_upload, //do not try to simplify to "/area/turret_protected" --rastaf0
+	/area/ai_monitored/turret_protected/ai_upload_foyer,
+	/area/ai_monitored/turret_protected/ai,
+)
 
 /*=========================================
 ================01 - Apollo================
@@ -94,8 +94,8 @@
 	name = "\improper Port Primary Hallway"
 	icon_state = "hallP"
 
-/area/hallway/secondary/entry/port
-	name = "\improper Arrival Shuttle Hallway - Port"
+/area/arroval
+	name = "\improper Arrivals"
 	icon_state = "entry_2"
 
 
@@ -222,10 +222,6 @@
 
 /area/crew_quarters/heads/hor
 	name = "\improper Research Director's Office"
-	icon_state = "head_quarters"
-
-/area/crew_quarters/heads/chief
-	name = "\improper Chief Engineer's Office"
 	icon_state = "head_quarters"
 
 /area/crew_quarters/heads/hos
@@ -396,51 +392,51 @@
 	name = "\improper Mech Bay"
 	icon_state = "mechbay"
 
-/area/rnd/research
+/area/toxins/research
 	name = "\improper Research and Development"
 	icon_state = "research"
 
-/area/rnd/researchhalla
+/area/toxins/researchhalla
 	name = "\improper Research Main Hallway"
 	icon_state = "research"
 
-/area/rnd/researchhallb
+/area/toxins/researchhallb
 	name = "\improper Research Hazardous Materials Hallway"
 	icon_state = "research"
 
-/area/rnd/researchbreak
+/area/toxins/researchbreak
 	name = "\improper Research Break Room"
 	icon_state = "research"
 
-/area/rnd/lab
+/area/toxins/lab
 	name = "\improper Research Lab"
 	icon_state = "toxlab"
 
-/area/rnd/rdoffice
+/area/toxins/rdoffice
 	name = "\improper Research Director's Office"
 	icon_state = "head_quarters"
 
-/area/rnd/xenobiology
+/area/toxins/xenobiology
 	name = "\improper Xenobiology Lab"
 	icon_state = "xeno_lab"
 
-/area/rnd/xenobiology/xenoflora
+/area/toxins/xenobiology/xenoflora
 	name = "\improper Xenoflora Lab"
 	icon_state = "xeno_f_lab"
 
-/area/rnd/storage
+/area/toxins/storage
 	name = "\improper Toxins Storage"
 	icon_state = "toxstorage"
 
-/area/rnd/test_area
+/area/toxins/test_area
 	name = "\improper Toxins Test Area"
 	icon_state = "toxtest"
 
-/area/rnd/mixing
+/area/toxins/mixing
 	name = "\improper Toxins Mixing Room"
 	icon_state = "toxmix"
 
-/area/rnd/misc_lab
+/area/toxins/misc_lab
 	name = "\improper Miscellaneous Research"
 	icon_state = "toxmisc"
 
@@ -448,7 +444,7 @@
 	name = "\improper Telecomms Central Compartment"
 	icon_state = "tcomsatcham"
 
-/area/turret_protected/tcommbreaker
+/area/ai_monitored/turret_protected/tcommbreaker
 	name = "\improper Telecomms Breaker Room"
 	icon_state = "tcomsatcomp"
 
@@ -456,20 +452,20 @@
 	name = "\improper Telecomms Control Room"
 	icon_state = "tcomsatcomp"
 
-/area/turret_protected/ai_upload
+/area/ai_monitored/turret_protected/ai_upload
 	name = "\improper AI Upload Chamber"
 	icon_state = "ai_upload"
 
 
-/area/turret_protected/ai_upload_foyer
+/area/ai_monitored/turret_protected/ai_upload_foyer
 	name = "AI Upload Access"
 	icon_state = "ai_foyer"
 
-/area/turret_protected/ai
+/area/ai_monitored/turret_protected/ai
 	name = "\improper AI Chamber"
 	icon_state = "ai_chamber"
 
-/area/turret_protected/ai_cyborg_station
+/area/ai_monitored/turret_protected/ai_cyborg_station
 	name = "\improper Cyborg Station"
 	icon_state = "ai_cyborg"
 
@@ -644,6 +640,10 @@
 /area/atmos
 	name = "Atmospherics"
 	icon_state = "atmos"
+
+/area/engine/chiefs_office
+	name = "\improper Chief Engineer's Office"
+	icon_state = "head_quarters"
 
 /area/engine/engine_smes
 		name = "Engineering SMES"

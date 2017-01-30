@@ -291,6 +291,44 @@
 	if(is_blind(user))
 		return
 
+	if(istype(P, /obj/item/weapon/paper) || istype(P, /obj/item/weapon/photo))
+		var/obj/item/weapon/paper_bundle/B = new(src.loc)
+		if (name != "paper")
+			B.name = name
+		else if (P.name != "paper" && P.name != "photo")
+			B.name = P.name
+		user.unEquip(P)
+		if (istype(user, /mob/living/carbon/human))
+			var/mob/living/carbon/human/h_user = user
+			if (user.is_holding(src))
+				var/H = user.is_holding(src)
+				h_user.unEquip(src)
+				h_user.put_in_hand(B,H)
+			else if (h_user.l_store == src)
+				h_user.unEquip(src)
+				B.loc = h_user
+				B.layer = 20
+				h_user.l_store = B
+				h_user.update_inv_pockets()
+			else if (h_user.r_store == src)
+				h_user.unEquip(src)
+				B.loc = h_user
+				B.layer = 20
+				h_user.r_store = B
+				h_user.update_inv_pockets()
+			else if (h_user.head == src)
+				h_user.unEquip(src)
+				h_user.put_in_hands(B)
+			else if (!istype(src.loc, /turf))
+				src.loc = get_turf(h_user)
+				if(h_user.client)	h_user.client.screen -= src
+				h_user.put_in_hands(B)
+		user << "<span class='notice'>You clip the [P.name] to [(src.name == "paper") ? "the paper" : src.name].</span>"
+		src.loc = B
+		P.loc = B
+		B.amount++
+		B.update_icon()
+
 	if(istype(P, /obj/item/weapon/pen) || istype(P, /obj/item/toy/crayon))
 		if(user.is_literate())
 			user << browse("<HTML><HEAD><TITLE>[name]</TITLE></HEAD><BODY>[info_links]<HR>[stamps]</BODY></HTML>", "window=[name]")
