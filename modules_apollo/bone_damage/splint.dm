@@ -39,12 +39,12 @@
 	var/limb = affecting.name
 	if(M == user)
 		if((user.active_hand_index == HAND_L && istype(affecting, /obj/item/bodypart/l_arm)) || \
-				(user.active_hand_index == HAND_R && istype(affecting, /obj/item/bodypart/r_arm)))
-				user << "<span class='danger'>You cannot apply a splint to the arm you're using!</span>"
-				return
-			user.visible_message("<span class='danger'>[user] starts to apply the splint to their [limb].</span>",
-				"<span class='danger'>You start to apply the splint to your [limb].</span>",
-				"<span class='danger'>You hear something being wrapped.</span>")
+			(user.active_hand_index == HAND_R && istype(affecting, /obj/item/bodypart/r_arm)))
+			user << "<span class='danger'>You cannot apply a splint to the arm you're using!</span>"
+			return
+		user.visible_message("<span class='danger'>[user] starts to apply the splint to their [limb].</span>",
+			"<span class='danger'>You start to apply the splint to your [limb].</span>",
+			"<span class='danger'>You hear something being wrapped.</span>")
 	else
 		user.visible_message("<span class='danger'>[user] starts to apply the splint to [M]'s [limb].</span>",
 		"<span class='danger'>You start to apply the splint to [M]'s [limb].</span>",
