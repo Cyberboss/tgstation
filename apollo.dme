@@ -2032,6 +2032,7 @@
 #include "modules_apollo\bone_damage\carbon\carbon.dm"
 #include "modules_apollo\bone_damage\devices\scanners.dm"
 #include "modules_apollo\bone_damage\machinery\sleeper.dm"
+#include "modules_apollo\bone_damage\mob\inventory.dm"
 #include "modules_apollo\bone_damage\surgery\fractures.dm"
 #include "modules_apollo\bone_damage\surgery\tools.dm"
 #include "modules_apollo\global\healthscan.dm"

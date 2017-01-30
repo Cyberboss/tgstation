@@ -52,3 +52,30 @@
 	if(broken && prob(2))
 		rattle_bones()
 		owner.Weaken(2)
+
+// arm stuff
+#define HAND_L 1
+#define HAND_R 2
+
+/obj/item/bodypart/l_arm/fracture()
+	..()
+
+	var/obj/item/held_item = owner.get_item_for_held_index(HAND_L)
+	if(held_item)
+		owner.unEquip(held_item)
+		owner.visible_message("<span class='danger'>[src] drops the [held_item]!</span>",
+				"<span class='danger'>Your left arm hurts badly!</span>")
+		owner.emote("scream")
+
+/obj/item/bodypart/r_arm/fracture()
+	..()
+
+	var/obj/item/held_item = owner.get_item_for_held_index(HAND_R)
+	if(held_item)
+		owner.unEquip(held_item)
+		owner.visible_message("<span class='danger'>[src] drops the [held_item]!</span>",
+				"<span class='danger'>Your right arm hurts badly!</span>")
+		owner.emote("scream")
+
+#undef HAND_L
+#undef HAND_R
