@@ -65,7 +65,7 @@
 		"<span class='danger'>You begin to smash through the bone in [target]'s [parse_zone(target_zone)]...</span>")
 
 /datum/surgery_step/break_bone/success(mob/user, mob/living/carbon/target, target_zone, obj/item/tool, datum/surgery/surgery)
-	target.apply_damage(20,"brute","[target_zone]")
+	target.apply_damage(20, "brute", "[target_zone]")
 
 	var/obj/item/bodypart/B = target.get_bodypart(target_zone)
 	B.fracture()

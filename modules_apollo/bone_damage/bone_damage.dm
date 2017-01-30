@@ -4,7 +4,7 @@
 */
 
 /obj/item/bodypart
-	var/can_break = 1 // can this organ be fractured?
+	var/can_break = 1 // can this bodypart be fractured?
 	// NB! v must be >= 9. the receive_damage override is reliant on update_bodypart_damage_state() returning 1, which happens every 9 damage
 	var/break_damage = 15 // must deal at least this much damage in one hit to guarantee a fracture
 	var/broken = 0 // broken bones?
@@ -34,7 +34,11 @@
 		"<span class='danger'>Something feels like it shattered in your [name]!</span>",
 		"<span class='danger'>You hear a sickening crack.</span>")
 	// overriding get_sfx didn't work :(
-	playsound(owner.loc, pick('sound/effects/bonebreak1.ogg','sound/effects/bonebreak2.ogg','sound/effects/bonebreak3.ogg','sound/effects/bonebreak4.ogg'), 100)
+	var/fracture_sfx = pick('sound/effects/bonebreak1.ogg',
+						'sound/effects/bonebreak2.ogg',
+						'sound/effects/bonebreak3.ogg',
+						'sound/effects/bonebreak4.ogg')
+	playsound(owner.loc, fracture_sfx, 100)
 	owner.emote("scream")
 
 /obj/item/bodypart/proc/heal_fracture()

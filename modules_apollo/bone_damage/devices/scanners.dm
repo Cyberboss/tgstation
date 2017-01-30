@@ -8,9 +8,10 @@
 
 	// Clumsiness/brain damage check
 	if ((user.disabilities & CLUMSY || user.getBrainLoss() >= 60) && prob(50))
-		user << "<span class='notice'>You stupidly try to analyze the floor's vitals!</span>"
-		user.visible_message("<span class='warning'>[user] has analyzed the floor's vitals!</span>")
-		user << "<span class='info'>Analyzing results for The floor:\n\tOverall status: <b>Healthy</b>"
+		user.visible_message("<span class='warning'>[user] has analyzed [get_turf(M)]'s vitals!</span>",
+			"<span class='notice'>You stupidly try to analyze [get_turf(M)]'s vitals!</span>")
+
+		user << "<span class='info'>Analyzing results for [get_turf(M)]:\n\tOverall status: <b>Healthy</b>"
 		user << "<span class='info'>Key: <font color='blue'>Suffocation</font>/<font color='green'>Toxin</font>/<font color='#FF8000'>Burn</font>/<font color='red'>Brute</font></span>"
 		user << "<span class='info'>\tDamage specifics: <font color='blue'>0</font>-<font color='green'>0</font>-<font color='#FF8000'>0</font>-<font color='red'>0</font></span>"
 		user << "<span class='info'>Body temperature: ???</span>"
@@ -32,14 +33,10 @@
 /obj/item/device/pda/attack(mob/living/carbon/C, mob/living/user)
 	if(istype(C))
 		switch(scanmode)
-
 			if(1)
 				C.visible_message("<span class='alert'>[user] has analyzed [C]'s vitals!</span>")
 				new_healthscan(user, C, 1)
 				add_fingerprint(user)
-
-			if(2)
-				// Unused
 
 			if(4)
 				C.visible_message("<span class='warning'>[user] has analyzed [C]'s radiation levels!</span>")
