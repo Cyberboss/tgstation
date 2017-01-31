@@ -1,7 +1,7 @@
 ### HEALTH ###
 
 #Damage multiplier, effects both weapons and healing on all mobs. For example, 1.25 would result in 25% higher damage.
-DAMAGE_MULTIPLIER 1
+DAMAGE_MULTIPLIER 2
 
 ### REVIVAL ###
 
@@ -410,7 +410,8 @@ ROUNDSTART_RACES plasmaman
 #ROUNDSTART_RACES silver
 #ROUNDSTART_RACES uranium
 #ROUNDSTART_RACES abductor
-#ROUNDSTART_RACES synth
+ROUNDSTART_RACES synth
+ROUNDSTART_RACES skrell
 
 ## Races that are straight upgrades. If these are on expect powergamers to always pick them
 #ROUNDSTART_RACES skeleton

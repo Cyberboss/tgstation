@@ -94,7 +94,7 @@ var/list/the_station_areas = list (
 	name = "\improper Port Primary Hallway"
 	icon_state = "hallP"
 
-/area/arroval
+/area/arrival
 	name = "\improper Arrivals"
 	icon_state = "entry_2"
 
