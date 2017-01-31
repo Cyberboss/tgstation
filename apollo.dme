@@ -2040,4 +2040,6 @@
 #include "modules_apollo\neural_lace\neural_lace.dm"
 #include "modules_apollo\neural_lace\surgery\lace_extraction.dm"
 #include "modules_apollo\neural_lace\surgery\lace_implantation.dm"
+#include "modules_apollo\species\names.dm"
+#include "modules_apollo\species\skrell.dm"
 // END_INCLUDE
