@@ -29,6 +29,7 @@
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/spines_animated, animated_spines_list)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/legs, legs_list)
 	init_sprite_accessory_subtypes(/datum/sprite_accessory/wings, r_wings_list,roundstart = TRUE)
+	init_sprite_accessory_subtypes(/datum/sprite_accessory/tentacles, tentacles_list)
 
 
 	//Species

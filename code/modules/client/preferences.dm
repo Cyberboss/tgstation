@@ -289,6 +289,15 @@ var/list/preferences_datums = list()
 
 					dat += "</td>"
 
+				if("tentacles" in pref_species.mutant_bodyparts)
+					dat += "<td valign='top' width='7%'>"
+
+					dat += "<h3>Tentacles</h3>"
+
+					dat += "<a href='?_src_=prefs;preference=tentacles;task=input'>[features["tentacles"]]</a><BR>"
+
+					dat += "</td>"
+
 				if("frills" in pref_species.mutant_bodyparts)
 					dat += "<td valign='top' width='7%'>"
 
@@ -997,6 +1006,12 @@ var/list/preferences_datums = list()
 					new_horns = input(user, "Choose your character's horns:", "Character Preference") as null|anything in horns_list
 					if(new_horns)
 						features["horns"] = new_horns
+
+				if("tentacles")
+					var/new_tentacles
+					new_tentacles = input(user, "Choose your character's tentacles:", "Character Preference") as anything in tentacles_list
+					if(new_tentacles)
+						features["tentacles"] = new_tentacles
 
 				if("ears")
 					var/new_ears

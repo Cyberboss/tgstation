@@ -47,9 +47,6 @@
 	icon_state = "stamp-hos"
 	item_color = "hosred"
 
-/obj/item/weapon/stamp/iaa
-	name = "internal affair's rubber stamp"
-
 /obj/item/weapon/stamp/ce
 	name = "chief engineer's rubber stamp"
 	icon_state = "stamp-ce"
@@ -74,11 +71,6 @@
 	name = "clown's rubber stamp"
 	icon_state = "stamp-clown"
 	item_color = "clown"
-
-/obj/item/weapon/stamp/centcom
-	name = "central command rubber stamp"
-	icon_state = "stamp-centcom"
-	item_color = "centcom"
 
 /obj/item/weapon/stamp/attack_paw(mob/user)
 	return attack_hand(user)
