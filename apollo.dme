@@ -1704,6 +1704,7 @@
 #include "code\modules\paperwork\filingcabinet.dm"
 #include "code\modules\paperwork\folders.dm"
 #include "code\modules\paperwork\handlabeler.dm"
+#include "code\modules\paperwork\paper.dm"
 #include "code\modules\paperwork\paper_cutter.dm"
 #include "code\modules\paperwork\paperbin.dm"
 #include "code\modules\paperwork\paperplane.dm"
@@ -2041,6 +2042,8 @@
 #include "modules_apollo\misc\hobo_barrel.dm"
 #include "modules_apollo\misc\stamps.dm"
 #include "modules_apollo\misc\surgery_bag.dm"
+#include "modules_apollo\misc\paper_bundle.dm"
+#include "modules_apollo\misc\paper_shredder.dm"
 #include "modules_apollo\neural_lace\cloning.dm"
 #include "modules_apollo\neural_lace\humans.dm"
 #include "modules_apollo\neural_lace\mind.dm"
@@ -2049,3 +2052,4 @@
 #include "modules_apollo\neural_lace\surgery\lace_implantation.dm"
 #include "modules_apollo\species\names.dm"
 #include "modules_apollo\species\skrell.dm"
+// END_INCLUDE
