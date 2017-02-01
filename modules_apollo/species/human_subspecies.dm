@@ -27,13 +27,12 @@
 	coldmod = 0.8
 	heatmod = 1.2
 
-/datum/species/vatgrown/random_name(gender,unique,lastname)
+/datum/species/human/vatgrown/random_name(gender,unique,lastname)
 	if(unique)
 		return random_unique_vatgrown_name()
 
-	var/randname = vatgrown_name()
+	var/randname = vatgrown_name(gender)
 
-	if(lastname)
-		randname += " [lastname]"
+	randname += "-[rand(1,99)]"
 
 	return randname
