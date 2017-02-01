@@ -11,7 +11,8 @@
 /datum/species/human/spacer
 	name = "Space-Adapted Human"
 	id = "spaceadapted"
-	species_traits = list(EYECOLOR,HAIR,FACEHAIR,LIPS,RESISTPRESSURE,NOBREATH,EASYDISMEMBER)
+	eyes = "spaceeyes"
+	species_traits = list(LIPS,RESISTPRESSURE,NOBREATH,EASYDISMEMBER)
 	stunmod = 1.5
 	brutemod = 1.5
 	heatmod =  1.5
