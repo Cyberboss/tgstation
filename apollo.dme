@@ -2052,6 +2052,8 @@
 #include "modules_apollo\misc\road.dm"
 #include "modules_apollo\misc\stamps.dm"
 #include "modules_apollo\misc\surgery_bag.dm"
+#include "modules_apollo\misc\paper_bundle.dm"
+#include "modules_apollo\misc\paper_shredder.dm"
 #include "modules_apollo\neural_lace\cloning.dm"
 #include "modules_apollo\neural_lace\humans.dm"
 #include "modules_apollo\neural_lace\mind.dm"
