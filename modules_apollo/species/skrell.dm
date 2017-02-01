@@ -4,10 +4,11 @@
 	id = "skrell"
 	say_mod = "warbles"
 	eyes = "skrelleyes"
+	damage_overlay_type = "skrell"
 	default_color = "64BAA0"
 	species_traits = list(MUTCOLORS,EYECOLOR,LIPS)
 	mutant_bodyparts = list("ears", "wings", "tentacles")
-	default_features = list("mcolor" = "48F", "ears" = "None", "wings" = "None", "tentacles" = "Short")
+	default_features = list("mcolor" = "48F", "ears" = "None", "wings" = "None", "tentacles" = "short")
 	meat = /obj/item/weapon/reagent_containers/food/snacks/meat/slab/human/mutant/skrell
 	skinned_type = /obj/item/stack/sheet/animalhide/skrell
 	exotic_blood = "skrellblood"

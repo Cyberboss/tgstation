@@ -12,6 +12,7 @@
 	name = "Space-Adapted Human"
 	id = "spaceadapted"
 	eyes = "spaceeyes"
+	damage_overlay_type = "spaceadapted"
 	species_traits = list(LIPS,RESISTPRESSURE,NOBREATH,EASYDISMEMBER)
 	stunmod = 1.5
 	brutemod = 1.5
