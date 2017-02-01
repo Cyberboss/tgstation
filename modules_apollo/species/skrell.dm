@@ -15,6 +15,9 @@
 	brutemod = 2 //Weak against firearms
 	burnmod = 1.5 //Weak against lasers
 
+/datum/species/skrell/qualifies_for_rank()
+	return 1
+
 /datum/species/skrell/random_name(gender,unique,lastname)
 	if(unique)
 		return random_unique_skrell_name()
@@ -25,6 +28,12 @@
 		randname += " [lastname]"
 
 	return randname
+
+/datum/species/skrell/handle_chemicals(datum/reagent/chem, mob/living/carbon/human/H)
+	if(chem.id == "protein")
+		H.adjustToxLoss(3)
+		H.reagents.remove_reagent(chem.id, REAGENTS_METABOLISM)
+		return 1
 
 /obj/item/stack/sheet/animalhide/skrell
 	name = "skrell skin"
