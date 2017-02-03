@@ -13,6 +13,7 @@ Assistant
 	access = list()			//See /datum/job/assistant/get_access()
 	minimal_access = list()	//See /datum/job/assistant/get_access()
 	outfit = /datum/outfit/job/assistant
+	rank_succession_level = 2
 
 
 /datum/job/assistant/get_access()

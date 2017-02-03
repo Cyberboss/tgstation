@@ -18,6 +18,8 @@ Chaplain
 	access = list(access_morgue, access_chapel_office, access_crematorium, access_theatre)
 	minimal_access = list(access_morgue, access_chapel_office, access_crematorium, access_theatre)
 
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
+
 /datum/outfit/job/chaplain
 	name = "Chaplain"
 	jobtype = /datum/job/chaplain

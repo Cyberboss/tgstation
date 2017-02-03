@@ -17,6 +17,8 @@ Librarian
 	access = list(access_library)
 	minimal_access = list(access_library)
 
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
+
 /datum/outfit/job/librarian
 	name = "Librarian"
 	jobtype = /datum/job/librarian
