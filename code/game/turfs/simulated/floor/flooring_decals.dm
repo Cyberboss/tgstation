@@ -20,8 +20,9 @@ var/list/floor_decals = list()
 	if(newcolour)
 		color = newcolour
 	..(newloc)
+	initialize()
 
-/obj/effect/floor_decal/initialize()
+/obj/effect/floor_decal/proc/initialize()
 	if(supplied_dir)
 		setDir(supplied_dir)
 	var/turf/T = get_turf(src)
@@ -480,3 +481,39 @@ var/list/floor_decals = list()
 	name = "A14"
 	icon_state = "A14"
 
+//Road decals
+/obj/effect/floor_decal/road/edge
+	name = "road edge"
+	icon_state = "road_E"
+
+/obj/effect/floor_decal/road/edge/cee
+	name = "road edge"
+	icon_state = "road_U"
+
+/obj/effect/floor_decal/road/edge/corner
+	name = "road edge"
+	icon_state = "road_L"
+
+/obj/effect/floor_decal/road/edge/inner
+	name = "road edge"
+	icon_state = "road_C"
+
+/obj/effect/floor_decal/road/loading
+	name = "road loading"
+	icon_state = "road_loading"
+
+/obj/effect/floor_decal/road/dropoff
+	name = "road dropoff"
+	icon_state = "road_drop"
+
+/obj/effect/floor_decal/road/turn
+	name = "road turn"
+	icon_state = "road_turn"
+
+/obj/effect/floor_decal/road/turn/inverted
+	name = "road turn"
+	icon_state = "road_Iturn"
+
+/obj/effect/floor_decal/road/fullturn
+	name = "road turn"
+	icon_state = "road_dturn"

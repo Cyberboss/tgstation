@@ -101,6 +101,10 @@
 	mask_type = /obj/item/clothing/mask/breath
 	storage_type = /obj/item/weapon/tank/internals/emergency_oxygen/double
 
+/obj/machinery/suit_storage_unit/medical
+	suit_type = /obj/item/clothing/suit/space/hardsuit/medical
+	mask_type = /obj/item/clothing/mask/breath
+
 /obj/machinery/suit_storage_unit/New()
 	..()
 	wires = new /datum/wires/suit_storage_unit(src)
