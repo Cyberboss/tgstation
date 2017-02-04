@@ -18,11 +18,12 @@
 	density = 1
 	anchored = 0
 
-	light_range = 3
-	light_color = SM_DEFAULT_COLOR
-	light_power = 3
+	//light_range = 3
+	//light_color = SM_DEFAULT_COLOR
+	//light_power = 3
 
 	color = SM_DEFAULT_COLOR
+	luminosity = 4
 
 	var/smlevel = 1
 
@@ -69,18 +70,20 @@
 		update_icon()
 
 	radio = new (src)
+	radio.listening = 0
 
-/obj/machinery/power/supermatter/Destroy()
-	qdel( radio )
+/obj/machinery/power/supermatter_shard/supermatter/Destroy()
+	qdel(radio)
+	radio = null
 	. = ..()
 
-/obj/machinery/power/supermatter_shard/supermatter/proc/explode()
+/obj/machinery/power/supermatter_shard/supermatter/explode()
 	message_admins("Supermatter exploded at ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)", "LOG:")
 	log_game("Supermatter exploded at ([x],[y],[z])")
 	grav_pulling = 1
 	exploded = 1
 
-	spawn( getSMVar( smlevel, "pull_time" ) * TICKS_IN_SECOND )
+	spawn( getSMVar( smlevel, "pull_time" ) * 10 )
 		var/turf/epicenter = get_turf(src)
 
 		explosion(epicenter, \
@@ -94,13 +97,15 @@
 		return
 
 //Changes color and light_range of the light to these values if they were not already set
-/obj/machinery/power/supermatter_shard/supermatter/proc/shift_light( var/clr, var/lum = light_range )
-	light_color = clr
-	light_range = lum
+/obj/machinery/power/supermatter_shard/supermatter/proc/shift_light( var/clr, var/lum = luminosity)
+	luminosity = lum
+	SetLuminosity(lum)
+	//light_color = clr
+	//light_range = lum
 
-	color = clr
+	//color = clr
 
-	set_light( light_range, light_power, light_color )
+	//set_light( light_range, light_power, light_color )
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/announce_warning()
 	var/integrity = calc_integrity()
@@ -120,7 +125,7 @@
 	else
 		alert_msg = null
 	if(alert_msg)
-		radio.autosay(alert_msg, "Supermatter Monitor")
+		radio.talk_into(src, alert_msg)
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/calc_integrity()
 	var/integrity = damage / damage_max
@@ -176,8 +181,10 @@
 		return PROCESS_KILL
 	if(!istype(L)) 	//We are in a crate or somewhere that isn't turf, if we return to turf resume processing but for now.
 		return 1 //Yeah just stop.
-	if(istype( loc, /obj/machinery/phoron_desublimer/resonant_chamber ))
-		return 1 // Resonant chambers are similar to bluespace beakers, they halt reactions within them
+
+	//TODO: Resonant chaimber!
+	//if(istype( loc, /obj/machinery/phoron_desublimer/resonant_chamber ))
+	//	return 1 // Resonant chambers are similar to bluespace beakers, they halt reactions within them
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/alertCheck()
 	var/turf/L = loc
@@ -186,7 +193,7 @@
 			if( !istype( L, /turf/open/space ))
 				announce_warning()
 			explode()
-	else if( damage > warning_point && ( world.timeofday - lastwarning ) >= warning_delay*TICKS_IN_SECOND ) // while the core is still damaged and it's still worth noting its status
+	else if( damage > warning_point && ( world.timeofday - lastwarning ) >= warning_delay*10 ) // while the core is still damaged and it's still worth noting its status
 		if( !istype( L, /turf/open/space ))
 			announce_warning()
 
@@ -199,10 +206,10 @@
 	// Getting the environment gas
 	if(!istype(L, /turf/open/space))
 		env = L.return_air()
-		removed = env.remove( max( env.total_moles/10, min( smlevel * getSMVar( smlevel, "consumption_rate" ), env.total_moles )))
+		removed = env.remove( max( env.total_moles()/10, min( smlevel * getSMVar( smlevel, "consumption_rate" ), env.total_moles() )))
 
 	// If we're in a vacuum, heat can't escape the core, so we'll get damaged
-	if(!env || !removed || !removed.total_moles)
+	if(!env || !removed || !removed.total_moles())
 		damage = max( 0, damage+( power_percent*getSMVar( smlevel, "vacuum_damage" )))
 		return
 
@@ -212,10 +219,10 @@
 
 	// Awan suggested causing the SM to have different reactions to different gasses. So Let's try this.
 	// Store these variables for reactions.
-	var/oxygen = removed.gas["oxygen"]
-	var/phoron = removed.gas["phoron"]
-	var/carbon = removed.gas["carbon_dioxide"]
-	var/sleepy = removed.gas["sleeping_agent"]
+	var/oxygen = removed.gases["o2"]
+	var/phoron = removed.gases["plasma"]
+	var/carbon = removed.gases["co2"]
+	var/sleepy = removed.gases["n2o"]
 
 	// N2O handling
 	if(sleepy)
@@ -271,10 +278,10 @@
 		oxygen = 0
 
 	//Release reaction gasses
-	removed.gas["phoron"] = phoron
-	removed.gas["oxygen"] = oxygen
-	removed.gas["sleeping_agent"] = sleepy
-	removed.gas["carbon_dioxide"] = carbon
+	removed.gases["plasma"] = phoron
+	removed.gases["o2"] = oxygen
+	removed.gases["n2o"] = sleepy
+	removed.gases["co2"] = carbon
 
 	removed.add_thermal_energy( power*heat*( power_percent**2 ))
 	env.merge(removed)
@@ -285,10 +292,11 @@
 /obj/machinery/power/supermatter_shard/supermatter/proc/psionicBurst()
 	for(var/mob/living/carbon/human/l in oview(src, 7)) // If they can see it without mesons on.  Bad on them.
 		if(!istype(l.glasses, /obj/item/clothing/glasses/meson))
-			if(!isnucleation(l))
-				l.hallucination = max(0, getSMVar( smlevel, "psionic_power" ) * sqrt(1 / max(1,get_dist(l, src))))
-			else // Nucleations get less hallucinatoins
-				l.hallucination = max(0, getSMVar( smlevel, "psionic_power" )/5 * sqrt(1 / max(1,get_dist(l, src))))
+		//TODO handle nucleation hallucinations!
+			//if(!isnucleation(l))
+				//l.hallucination = max(0, getSMVar( smlevel, "psionic_power" ) * sqrt(1 / max(1,get_dist(l, src))))
+			//else // Nucleations get less hallucinatoins
+			l.hallucination = max(0, getSMVar( smlevel, "psionic_power" )/5 * sqrt(1 / max(1,get_dist(l, src))))
 
 // should probably be replaced with something more intricate sometime
 /obj/machinery/power/supermatter_shard/supermatter/proc/radiate()
@@ -313,14 +321,15 @@
 	supermatter_delamination( get_turf( src ), smlevel*1.5, smlevel, 0, 0 )
 
 	var/integrity = calc_integrity()
-	radio.autosay("CRITICAL STRUCTURE FAILURE: [MAX_SM_INTEGRITY-integrity]% Integrity Lost!", "Supermatter Monitor")
+	radio.talk_into(src, "CRITICAL STRUCTURE FAILURE: [MAX_SM_INTEGRITY-integrity]% Integrity Lost!")
 	announce_warning()
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/spark()
 	// Light up some sparks
-	var/datum/effect/effect/system/spark_spread/s = new /datum/effect/effect/system/spark_spread
-	s.set_up( 3, 1, src )
-	s.start()
+	var/datum/effect_system/spark_spread/sparks = new /datum/effect_system/spark_spread
+	sparks.set_up(1, 3, src)
+	sparks.start()
+	return
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/smLevelChange( var/level_increase = 1 )
 	smlevel += level_increase
@@ -334,18 +343,17 @@
 		return 0		// This stops people from being able to really power up the supermatter
 						// Then bring it inside to explode instantly upon landing on a valid turf.
 
-	if(istype(Proj, /obj/item/projectile/beam/continuous/emitter))
+	if(Proj.flag != "bullet")
 		var/factor = getSMVar( smlevel, "emitter_factor" )
-		var/obj/item/projectile/beam/continuous/emitter/B = Proj
-		power += ( 0.16 * ( 1.69 ** factor )) * ( B.power / ( EMITTER_POWER_MAX * 0.6667)) // regression
+		power += ( 0.16 * ( 1.69 ** factor )) * ( Proj.damage*config_bullet_energy) // regression
 		if(smlevel > 1)
 			//If above level 1
 			//Dam calc with a exponential factor (simular as above).
-			//Dam vars can be adjusted in /datum/sm_control
+			//Dam vars can be adjusted in utils.dm in the supermatter folder.
 			var/dama = getSMVar( smlevel, "dama")
 			var/damb = getSMVar( smlevel, "damb")
 			var/damc = getSMVar( smlevel, "damc")
-			damage += ((dama*(damb ** factor)) * B.power)/damc
+			damage += ((dama*(damb ** factor)) * Proj.damage)/damc * 50
 	else
 		damage += Proj.damage
 	return 0
@@ -377,14 +385,18 @@
 	user << "<span class = \"warning\">You attempt to interface with the control circuits but find they are not connected to your network.  Maybe in a future firmware update.</span>"
 
 /obj/machinery/power/supermatter_shard/supermatter/attack_hand(mob/user as mob)
+//TODO: NUCLEATIONS!
+/*
 	if( isnucleation( user )) // Nucleation's can touch it to heal!
 		var/mob/living/L = user
 		user.visible_message("<span class=\"warning\">\The [user] reaches out and touches \the [src], inducing a resonance... \his body starts to glow before they calmly pull away from it.</span>",\
 		"<span class='notice'>You reach out and touch \the [src]. Everything seems to go quiet and slow down as you feel your crystal structures mending.\"</span></span>", \
 		"<span class=\"danger\">Everything suddenly goes silent.\"</span>")
-		L.rejuvenate()
+		L.revive(full_heal = 1, admin_revive = 0)
 		L.sleeping = max(L.sleeping+2, 10)
 		return
+		*/
+
 
 	user.visible_message("<span class=\"warning\">\The [user] reaches out and touches \the [src], inducing a resonance... \his body starts to glow and bursts into flames before flashing into ash.</span>",\
 		"<span class=\"danger\">You reach out and touch \the [src]. Everything starts burning and all you can hear is ringing. Your last thought is \"That was not a wise decision.\"</span>",\
@@ -392,7 +404,7 @@
 
 	Consume(user)
 
-/obj/machinery/power/supermatter_shard/supermatter/proc/transfer_energy()
+/obj/machinery/power/supermatter_shard/supermatter/transfer_energy()
 	for(var/obj/machinery/power/rad_collector/R in rad_collectors)
 		var/distance = get_dist(R, src)
 		if(distance && distance <= getSMVar( smlevel, "collector_range" ))		//sanity for 1/0
@@ -402,22 +414,31 @@
 			R.receive_pulse(power*(0.7/distance))			// mod = 0.65 : 0.325 : 0.211 ..... 0.065    outputs - ~400 - 435kW with default setup (tested via mapping > setup supermatter)
 	return
 
-/obj/machinery/power/supermatter_shard/supermatter/attackby(obj/item/weapon/W as obj, mob/living/user as mob)
+/obj/machinery/power/supermatter_shard/supermatter/attackby(obj/item/W, mob/living/user, params)
+
+	if(!istype(W) || (W.flags & ABSTRACT) || !istype(user))
+		return
+
+	//TODO: Supermatter shards!
+	/*
 	if(istype(W, /obj/item/weapon/shard/supermatter))
 		src.damage += W.force
 		user.visible_message("<span class=\"warning\">\The [user] slashes at \the [src] with a [W] with a horrendous clash!</span>",\
 		"<span class=\"danger\">You slash at \the [src] with \the [src] with a horrendous clash!\"</span>",\
 		"<span class=\"warning\">A horrendous clash fills your ears.</span>")
 		return
+		*/
 
-	user.visible_message("<span class=\"warning\">\The [user] touches \a [W] to \the [src] as a silence fills the room...</span>",\
-		"<span class=\"danger\">You touch \the [W] to \the [src] when everything suddenly goes silent.\"</span>\n<span class=\"notice\">\The [W] flashes into dust as you flinch away from \the [src].</span>",\
-		"<span class=\"warning\">Everything suddenly goes silent.</span>")
 
-	user.drop_from_inventory(W)
-	Consume(W)
+	if(user.drop_item(W))
+		Consume(W)
+		user.visible_message("<span class='danger'>As [user] touches \the [src] with \a [W], silence fills the room...</span>",\
+			"<span class='userdanger'>You touch \the [src] with \the [W], and everything suddenly goes silent.</span>\n<span class='notice'>\The [W] flashes into dust as you flinch away from \the [src].</span>",\
+			"<span class='italics'>Everything suddenly goes silent.</span>")
 
-	user.apply_effect((power/getSMVar( smlevel, "base_power" ))*getSMVar( smlevel, "radiation_power" ), IRRADIATE)
+		playsound(get_turf(src), 'sound/effects/supermatter.ogg', 50, 1)
+
+		radiation_pulse(get_turf(src), 1, 1, 150, 1)
 
 /obj/machinery/power/supermatter_shard/supermatter/ex_act()
 	return
@@ -436,7 +457,7 @@
 
 	Consume(AM)
 
-/obj/machinery/power/supermatter_shard/supermatter/proc/Consume(var/mob/living/user)
+/obj/machinery/power/supermatter_shard/supermatter/Consume(var/mob/living/user)
 	if(istype(user))
 		if( user.smVaporize() )
 			power += getSMVar( smlevel, "base_power" )/8
@@ -465,22 +486,17 @@
 	shift_light( color )
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/supermatter_pull()
-	//following is adapted from singulo code
-	if(defer_powernet_rebuild != 2)
-		defer_powernet_rebuild = 1
+
 	// Let's just make this one loop.
 	for(var/atom/X in orange( getSMVar( smlevel, "pull_radius" ), src ))
 		X.singularity_pull(src, STAGE_FIVE)
-
-	if(defer_powernet_rebuild != 2)
-		defer_powernet_rebuild = 0
 	return
 
-/obj/machinery/power/supermatter_shard/supermatter/GotoAirflowDest(n) //Supermatter not pushed around by airflow
-	return
+///obj/machinery/power/supermatter_shard/supermatter/GotoAirflowDest(n) //Supermatter not pushed around by airflow
+//	return
 
-/obj/machinery/power/supermatter_shard/supermatter/RepelAirflowDest(n)
-	return
+///obj/machinery/power/supermatter_shard/supermatter/RepelAirflowDest(n)
+//	return
 
 /obj/machinery/power/supermatter_shard/supermatter/MouseDrop(atom/over)
 	if(!usr || !over) return
@@ -490,5 +506,11 @@
 		over.MouseDrop_T(src,usr)
 	return
 
-/obj/machinery/power/supermatter_shard/supermatter/overmapTravel()
-	qdel( src )
+///obj/machinery/power/supermatter_shard/supermatter/overmapTravel()
+//	qdel( src )
+
+// Returns whether or not time since start is greater than delay or less than 0
+/proc/delayPassed( var/delay, var/start )
+	if((( world.timeofday - start) > delay ) || (( world.timeofday - start ) < 0))
+		return 1
+	return 0

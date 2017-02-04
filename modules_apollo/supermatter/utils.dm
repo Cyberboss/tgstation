@@ -63,7 +63,9 @@ proc/supermatter_delamination( var/turf/epicenter, var/size = 25, var/smlevel = 
 			log_game("Supermatter delamination with size ([size]) in area [epicenter.loc.name] ")
 
 		playsound(epicenter, 'sound/effects/supermatter.ogg', 100, 1, round(size*3,1) )
-		new /obj/cell_spawner/v_wave( epicenter, size, smlevel )
+
+		//TODO: VWAVE
+		//new /obj/cell_spawner/v_wave( epicenter, size, smlevel )
 
 		diary << "## Supermatter delamination with size [size]. Took [(world.timeofday-start)/10] seconds."
 	return 1
@@ -78,18 +80,21 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 				if( ishuman( mob ))
 					var/mob/living/carbon/human/M = mob
 
-					if( istype(M.species, /datum/species/human ))
-						if( prob( 33 ))
-							M.set_species( "Nucleation", 1 )
+					//TODO: Human-->Supermatter conversion!
+					//if( istype(M.species, /datum/species/human ))
+						//if( prob( 33 ))
+							//M.set_species( "Nucleation", 1 )
 
 			mob.apply_effect( level*15, IRRADIATE )
 			mob.ex_act( 3 )
 
 	if( istype( T, /turf/open/floor/ ) && prob( 10 ))
-		new /datum/cell_auto_master/supermatter_crystal( T, 0, level )
+		//TODO: Generate sharts on vwaved floors
+		//new /datum/cell_auto_master/supermatter_crystal( T, 0, level )
 
 	for( var/obj/machinery/light/item in T.contents )
-		item.broken()
+		item.stat = BROKEN
+		//item.broken()
 
 /mob/proc/smVaporize()
 	if( !smSafeCheck() )
@@ -102,11 +107,12 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 	return 0
 
 /mob/living/carbon/human/smSafeCheck()
-	if(src.gloves)
-		if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
-			return 1
-
-	if( isnucleation( src )) // Nucleation's biology doesn't react to this
-		return 1
-
-	return 0
+	//TODO: touch safe check on human.
+	//if(src.gloves)
+	//	if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
+	//		return 1
+	//
+	//if( isnucleation( src )) // Nucleation's biology doesn't react to this
+	//	return 1
+	//
+	//return 0
