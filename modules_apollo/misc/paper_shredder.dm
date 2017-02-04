@@ -43,7 +43,7 @@
 				user << "<span class='warning'>\The [src] is full; please empty it before you continue.</span>"
 				return
 			paperamount += paper_result
-			user.unEquip(W)
+			user.temporarilyRemoveItemFromInventory(W)
 			qdel(W)
 			playsound(src.loc, 'sound/items/pshred.ogg', 75, 1)
 			if(paperamount > max_paper)

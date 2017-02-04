@@ -37,5 +37,5 @@
 		if(!held)
 			continue
 
-		unEquip(held)
+		dropItemToGround(held)
 		src << "<span class='danger'>Your [B.name] hurts badly!</span>"

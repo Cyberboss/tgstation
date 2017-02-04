@@ -286,6 +286,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["undershirt"]			>> undershirt
 	S["socks"]				>> socks
 	S["backbag"]			>> backbag
+	S["uplink_loc"]			>> uplink_spawn_loc
 	S["feature_mcolor"]					>> features["mcolor"]
 	S["feature_lizard_tail"]			>> features["tail_lizard"]
 	S["feature_lizard_snout"]			>> features["snout"]
@@ -306,6 +307,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["cyborg_name"]		>> custom_names["cyborg"]
 	S["religion_name"]		>> custom_names["religion"]
 	S["deity_name"]			>> custom_names["deity"]
+	S["prefered_security_department"] >> prefered_security_department
 
 	//Jobs
 	S["joblessrole"]		>> joblessrole
@@ -350,11 +352,13 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	eye_color		= sanitize_hexcolor(eye_color, 3, 0)
 	skin_tone		= sanitize_inlist(skin_tone, skin_tones)
 	backbag			= sanitize_inlist(backbag, backbaglist, initial(backbag))
+	uplink_spawn_loc = sanitize_inlist(uplink_spawn_loc, uplink_spawn_loc_list, initial(uplink_spawn_loc))
 	features["mcolor"]	= sanitize_hexcolor(features["mcolor"], 3, 0)
 	features["tail_lizard"]	= sanitize_inlist(features["tail_lizard"], tails_list_lizard)
 	features["tail_human"] 	= sanitize_inlist(features["tail_human"], tails_list_human, "None")
 	features["snout"]	= sanitize_inlist(features["snout"], snouts_list)
 	features["horns"] 	= sanitize_inlist(features["horns"], horns_list)
+	features["tentacles"] 	= sanitize_inlist(features["tentacles"], tentacles_list)
 	features["ears"]	= sanitize_inlist(features["ears"], ears_list, "None")
 	features["frills"] 	= sanitize_inlist(features["frills"], frills_list)
 	features["spines"] 	= sanitize_inlist(features["spines"], spines_list)
@@ -401,6 +405,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["undershirt"]			<< undershirt
 	S["socks"]				<< socks
 	S["backbag"]			<< backbag
+	S["uplink_loc"]			<< uplink_spawn_loc
 	S["species"]			<< pref_species.id
 	S["feature_mcolor"]					<< features["mcolor"]
 	S["feature_lizard_tail"]			<< features["tail_lizard"]
@@ -418,6 +423,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["cyborg_name"]		<< custom_names["cyborg"]
 	S["religion_name"]		<< custom_names["religion"]
 	S["deity_name"]			<< custom_names["deity"]
+	S["prefered_security_department"] << prefered_security_department
 
 	//Jobs
 	S["joblessrole"]		<< joblessrole

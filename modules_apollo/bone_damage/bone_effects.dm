@@ -62,7 +62,7 @@
 
 	var/obj/item/held_item = owner.get_item_for_held_index(HAND_L)
 	if(held_item)
-		owner.unEquip(held_item)
+		owner.dropItemToGround(held_item)
 		owner.visible_message("<span class='danger'>[src] drops the [held_item]!</span>",
 				"<span class='danger'>Your left arm hurts badly!</span>")
 		owner.emote("scream")
@@ -72,7 +72,7 @@
 
 	var/obj/item/held_item = owner.get_item_for_held_index(HAND_R)
 	if(held_item)
-		owner.unEquip(held_item)
+		owner.dropItemToGround(held_item)
 		owner.visible_message("<span class='danger'>[src] drops the [held_item]!</span>",
 				"<span class='danger'>Your right arm hurts badly!</span>")
 		owner.emote("scream")

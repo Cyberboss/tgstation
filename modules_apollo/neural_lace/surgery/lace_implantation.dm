@@ -38,7 +38,7 @@
 		user << "<span class='notice'>You revv up the lace claw but realize you don't actually have a neural lace in your offhand.</span>"
 		return
 
-	user.unEquip(lace) // doesn't seem to be any drop_item for the inactive hand so ???
+	user.temporarilyRemoveItemFromInventory(lace) // doesn't seem to be any drop_item for the inactive hand so ???
 	lace.Insert(target)
 
 	user << "<span class='notice'>You successfully attach the neural lace to [target]'s [parse_zone(target_zone)]!</span>"
