@@ -46,8 +46,8 @@ Mining Foreman
 
 	outfit = /datum/outfit/job/foreman
 
-	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_mining, access_mining_station, access_mineral_storeroom, access_fax, access_foreman)
-	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_fax, access_foreman)
+	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_mining, access_mining_station, access_mineral_storeroom, access_fax, access_foreman, access_eva)
+	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_fax, access_foreman, access_eva)
 
 	rank_succession_level = 5
 
@@ -118,8 +118,8 @@ Shaft Miner
 
 	outfit = /datum/outfit/job/miner
 
-	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom)
-	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom)
+	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom, access_eva)
+	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_eva)
 
 	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
