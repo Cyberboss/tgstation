@@ -149,7 +149,6 @@ var/list/external_positions = list(
 	return ((job in command_positions) || (job in nonhuman_positions) || (job in security_positions))
 
 
-
 //this is necessary because antags happen before job datums are handed out, but NOT before they come into existence
 //so I can't simply use job datum.department_head straight from the mind datum, laaaaame.
 /proc/get_department_heads(var/job_title)
@@ -175,6 +174,10 @@ var/static/regex/mine_expand = new("(?<!shaft )miner")
 var/static/regex/chef_expand = new("chef")
 var/static/regex/borg_expand = new("(?<!cy)borg")
 
+//Promotions system
+var/list/allJobDatums
+
+
 /proc/get_full_job_name(job)
 	job = lowertext(job)
 	job = cap_expand.Replace(job, "captain")
@@ -192,3 +195,8 @@ var/static/regex/borg_expand = new("(?<!cy)borg")
 	job = chef_expand.Replace(job, "cook")
 	job = borg_expand.Replace(job, "cyborg")
 	return job
+
+/proc/loadJobDatums()
+	allJobDatums = null
+	for(var/datum/job/J in (subtypesof(/datum/job)))
+		allJobDatums += J
