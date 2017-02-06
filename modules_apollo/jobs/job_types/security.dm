@@ -11,7 +11,7 @@ Head of Security
 	title = "Head of Security"
 	flag = HOS
 	department_head = list("Captain")
-	department_flag = ENGSEC
+	department_flag = SEC
 	head_announce = list("Security")
 	faction = "Station"
 	total_positions = 1
@@ -31,6 +31,8 @@ Head of Security
 			            access_forensics_lockers, access_morgue, access_maint_tunnels, access_all_personal_lockers,
 			            access_research, access_engine, access_mining, access_medical, access_construction, access_mailsorting,
 			            access_heads, access_hos, access_RC_announce, access_keycard_auth, access_gateway, access_maint_tunnels, access_fax)
+
+	rank_succession_level = COMMAND_SUCCESSION_LEVEL
 
 /datum/outfit/job/hos
 	name = "Head of Security"
@@ -64,7 +66,7 @@ Warden
 	title = "Warden"
 	flag = WARDEN
 	department_head = list("Head of Security")
-	department_flag = ENGSEC
+	department_flag = SEC
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
@@ -76,6 +78,8 @@ Warden
 
 	access = list(access_security, access_sec_doors, access_brig, access_armory, access_court, access_maint_tunnels, access_morgue, access_weapons, access_forensics_lockers, access_fax)
 	minimal_access = list(access_security, access_sec_doors, access_brig, access_armory, access_court, access_weapons, access_fax) //See /datum/job/warden/get_access()
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL+1
 
 /datum/job/warden/get_access()
 	var/list/L = list()
@@ -114,7 +118,7 @@ Detective
 	title = "Detective"
 	flag = DETECTIVE
 	department_head = list("Head of Security")
-	department_flag = ENGSEC
+	department_flag = SEC
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
@@ -126,6 +130,8 @@ Detective
 
 	access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_brig, access_weapons)
 	minimal_access = list(access_sec_doors, access_forensics_lockers, access_morgue, access_maint_tunnels, access_court, access_brig, access_weapons)
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL+1
 
 /datum/outfit/job/detective
 	name = "Detective"
@@ -162,7 +168,7 @@ Security Officer
 	title = "Security Officer"
 	flag = OFFICER
 	department_head = list("Head of Security")
-	department_flag = ENGSEC
+	department_flag = SEC
 	faction = "Station"
 	total_positions = 5 //Handled in /datum/controller/occupations/proc/setup_officer_positions()
 	spawn_positions = 5 //Handled in /datum/controller/occupations/proc/setup_officer_positions()
@@ -175,6 +181,7 @@ Security Officer
 	access = list(access_security, access_sec_doors, access_brig, access_court, access_maint_tunnels, access_morgue, access_weapons, access_forensics_lockers)
 	minimal_access = list(access_security, access_sec_doors, access_brig, access_court, access_weapons) //But see /datum/job/warden/get_access()
 
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
 /datum/job/officer/get_access()
 	var/list/L = list()

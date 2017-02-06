@@ -5,7 +5,7 @@ Quartermaster
 	title = "Quartermaster"
 	flag = QUARTERMASTER
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
+	department_flag = CARGO
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
@@ -16,6 +16,8 @@ Quartermaster
 
 	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom, access_fax, access_foreman)
 	minimal_access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom, access_fax)
+
+	rank_succession_level = 6
 
 /datum/outfit/job/quartermaster
 	name = "Quartermaster"
@@ -35,7 +37,7 @@ Mining Foreman
 	title = "Mining Foreman"
 	flag = FOREMAN
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
+	department_flag = CARGO
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
@@ -44,8 +46,10 @@ Mining Foreman
 
 	outfit = /datum/outfit/job/foreman
 
-	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_mining, access_mining_station, access_mineral_storeroom, access_fax, access_foreman)
-	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_fax, access_foreman)
+	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_mining, access_mining_station, access_mineral_storeroom, access_fax, access_foreman, access_eva)
+	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_fax, access_foreman, access_eva)
+
+	rank_succession_level = 5
 
 /datum/outfit/job/foreman
 	name = "Mining Foreman"
@@ -75,7 +79,7 @@ Cargo Technician
 	title = "Cargo Technician"
 	flag = CARGOTECH
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
+	department_flag = CARGO
 	faction = "Station"
 	total_positions = 3
 	spawn_positions = 2
@@ -86,6 +90,8 @@ Cargo Technician
 
 	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom)
 	minimal_access = list(access_maint_tunnels, access_cargo, access_cargo_bot, access_mailsorting, access_mineral_storeroom)
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
 /datum/outfit/job/cargo_tech
 	name = "Cargo Technician"
@@ -103,7 +109,7 @@ Shaft Miner
 	title = "Shaft Miner"
 	flag = MINER
 	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
+	department_flag = CARGO
 	faction = "Station"
 	total_positions = 3
 	spawn_positions = 3
@@ -112,8 +118,10 @@ Shaft Miner
 
 	outfit = /datum/outfit/job/miner
 
-	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom)
-	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom)
+	access = list(access_maint_tunnels, access_mailsorting, access_cargo, access_cargo_bot, access_qm, access_mining, access_mining_station, access_mineral_storeroom, access_eva)
+	minimal_access = list(access_mining, access_mining_station, access_mailsorting, access_mineral_storeroom, access_eva)
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
 /datum/outfit/job/miner
 	name = "Shaft Miner (Lavaland)"
@@ -191,6 +199,7 @@ Bartender
 	access = list(access_hydroponics, access_bar, access_kitchen, access_morgue, access_weapons)
 	minimal_access = list(access_bar)
 
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
 /datum/outfit/job/bartender
 	name = "Bartender"
@@ -209,6 +218,7 @@ Cook
 */
 /datum/job/cook
 	title = "Cook"
+	alt_titles = list("Botanist")
 	flag = COOK
 	department_head = list("Head of Personnel")
 	department_flag = CIVILIAN
@@ -222,7 +232,26 @@ Cook
 	outfit = /datum/outfit/job/cook
 
 	access = list(access_hydroponics, access_bar, access_kitchen, access_morgue)
-	minimal_access = list(access_kitchen, access_morgue)
+	minimal_access = list(access_kitchen, access_morgue, access_hydroponics)
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
+
+/datum/job/cook/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
+	if(!H)
+		return 0
+
+	//Equip the rest of the gear
+	H.dna.species.before_equip_job(src, H, visualsOnly)
+
+	if(H.job == "Botanist")
+		H.equipOutfit(/datum/outfit/job/cook, visualsOnly)
+	else
+		H.equipOutfit(/datum/outfit/job/botanist, visualsOnly)
+
+	H.dna.species.after_equip_job(src, H, visualsOnly)
+
+	if(!visualsOnly && announce)
+		announce(H)
 
 /datum/outfit/job/cook
 	name = "Cook"
@@ -252,32 +281,9 @@ Cook
     var/obj/item/weapon/storage/box/I = new chosen_box(src)
     H.equip_to_slot_or_del(I,slot_in_backpack)
 
-/*
-Botanist
-*/
-/datum/job/hydro
-	title = "Botanist"
-	flag = BOTANIST
-	department_head = list("Head of Personnel")
-	department_flag = CIVILIAN
-	faction = "Station"
-	total_positions = 3
-	spawn_positions = 2
-	supervisors = "the head of personnel"
-	selection_color = "#bbe291"
-
-	outfit = /datum/outfit/job/botanist
-
-	access = list(access_hydroponics, access_bar, access_kitchen, access_morgue)
-	minimal_access = list(access_hydroponics, access_morgue)
-	// Removed tox and chem access because STOP PISSING OFF THE CHEMIST GUYS
-	// Removed medical access because WHAT THE FUCK YOU AREN'T A DOCTOR YOU GROW WHEAT
-	// Given Morgue access because they have a viable means of cloning.
-
-
 /datum/outfit/job/botanist
 	name = "Botanist"
-	jobtype = /datum/job/hydro
+	jobtype = /datum/job/cook
 
 	belt = /obj/item/device/pda/botanist
 	ears = /obj/item/device/radio/headset/headset_srv
@@ -309,6 +315,8 @@ Janitor
 
 	access = list(access_janitor, access_maint_tunnels)
 	minimal_access = list(access_janitor, access_maint_tunnels)
+
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
 /datum/outfit/job/janitor
 	name = "Janitor"
