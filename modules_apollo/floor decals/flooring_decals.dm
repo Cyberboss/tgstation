@@ -1,3 +1,13 @@
+/obj/effect/turf_decal/Initialize(mapload)
+	var/turf/T = loc
+	var/image/I = src.get_decal()
+	if(!istype(T)) //you know this will happen somehow
+		CRASH("Turf decal initialized in an object/nullspace")
+	I.color = src.color
+	I.alpha = src.alpha
+	T.add_decal(I,group)
+	qdel(src)
+
 /obj/effect/turf_decal/corner
 	icon_state = "corner_white"
 	alpha = 229
