@@ -219,10 +219,10 @@
 
 	// Awan suggested causing the SM to have different reactions to different gasses. So Let's try this.
 	// Store these variables for reactions.
-	var/oxygen = removed.gases["o2"]
-	var/phoron = removed.gases["plasma"]
-	var/carbon = removed.gases["co2"]
-	var/sleepy = removed.gases["n2o"]
+	var/oxygen = removed.gases["o2"][MOLES]
+	var/phoron = removed.gases["plasma"][MOLES]
+	var/carbon = removed.gases["co2"][MOLES]
+	var/sleepy = removed.gases["n2o"][MOLES]
 
 	// N2O handling
 	if(sleepy)
@@ -278,10 +278,10 @@
 		oxygen = 0
 
 	//Release reaction gasses
-	removed.gases["plasma"] = phoron
-	removed.gases["o2"] = oxygen
-	removed.gases["n2o"] = sleepy
-	removed.gases["co2"] = carbon
+	removed.gases["plasma"][MOLES] = phoron
+	removed.gases["o2"][MOLES] = oxygen
+	removed.gases["n2o"][MOLES] = sleepy
+	removed.gases["co2"][MOLES] = carbon
 
 	removed.add_thermal_energy( power*heat*( power_percent**2 ))
 	env.merge(removed)

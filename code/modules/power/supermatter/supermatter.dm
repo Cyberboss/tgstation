@@ -339,7 +339,6 @@
 
 	//Some poor sod got eaten, go ahead and irradiate people nearby.
 	radiation_pulse(get_turf(src), 4, 10, 500, 1)
-
 	for(var/mob/living/L in range(10))
 		investigate_log("has irradiated [L] after consuming [AM].", "supermatter")
 		if(L in view())

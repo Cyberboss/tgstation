@@ -90,7 +90,6 @@ var/list/gaslist_cache = null
 /datum/gas_mixture/proc/heat_capacity() //joules per kelvin
 	var/list/cached_gases = gases
 	. = 0
-	world << cached_gases
 	for(var/id in cached_gases)
 		. += cached_gases[id][MOLES] * cached_gases[id][GAS_META][META_GAS_SPECIFIC_HEAT]
 

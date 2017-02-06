@@ -319,17 +319,18 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 	if(state == 2)	//Not yet wrenched and welded
 		if(!powernet)
 			user << "\The [src] isn't connected to a wire."
-			return 1
+			return 0
 		if(!src.locked)
 			if(src.active==1)
 				if(disabled)
 					user << "You try to turn [src] off but nothing happens."
-					return 1
+					return 0
 				src.active = 0
 				user << "You turn off [src]."
 				message_admins("Arc emitter turned off by [key_name(user, user.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[user]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
 				log_game("Arc emitter turned off by [user.ckey]([user]) in ([x],[y],[z])")
 				investigate_log("turned <font color='red'>off</font> by [user.key]","singulo")
+				return 0
 
 			else if(avail(active_power_usage))
 				if(disabled)
@@ -340,10 +341,12 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 				message_admins("Arc emitter turned on by [key_name(user, user.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[user]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
 				log_game("Arc mitter turned on by [user.ckey]([user]) in ([x],[y],[z])")
 				investigate_log("turned <font color='green'>on</font> by [user.key]","singulo")
+				return 1
 
 			update_icon()
 		else
 			user << "<span class='warning'>The controls are locked!</span>"
+			return 0
 	else
 		user << "<span class='warning'>\The [src] needs to be firmly secured to the floor first.</span>"
-		return 1
+		return 0
