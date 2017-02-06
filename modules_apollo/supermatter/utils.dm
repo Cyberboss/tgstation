@@ -75,20 +75,21 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 	for( var/mob/item in T.contents )
 		if( istype( item, /mob/living ))
 			var/mob/living/mob = item
-
+			//TODO: Human-->Supermatter conversion!
+			/*
 			if( transform_mobs )
 				if( ishuman( mob ))
 					var/mob/living/carbon/human/M = mob
-
-					//TODO: Human-->Supermatter conversion!
-					//if( istype(M.species, /datum/species/human ))
-						//if( prob( 33 ))
-							//M.set_species( "Nucleation", 1 )
+					if( istype(M.species, /datum/species/human ))
+						if( prob( 33 ))
+							M.set_species( "Nucleation", 1 )
+							*/
 
 			mob.apply_effect( level*15, IRRADIATE )
 			mob.ex_act( 3 )
 
-	if( istype( T, /turf/open/floor/ ) && prob( 10 ))
+	//TODO: Generate sharts on vwaved floors
+	//if( istype( T, /turf/open/floor/ ) && prob( 10 ))
 		//TODO: Generate sharts on vwaved floors
 		//new /datum/cell_auto_master/supermatter_crystal( T, 0, level )
 
@@ -107,11 +108,10 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 	return 0
 
 /mob/living/carbon/human/smSafeCheck()
-	//TODO: touch safe check on human.
-	//if(src.gloves)
-	//	if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
-	//		return 1
-	//
+	//TODO: NUCLEATIONS!
+	if(src.gloves)
+		if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
+			return 1
 	//if( isnucleation( src )) // Nucleation's biology doesn't react to this
 	//	return 1
 	//
