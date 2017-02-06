@@ -79,7 +79,6 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 			if( transform_mobs )
 				if( ishuman( mob ))
 					var/mob/living/carbon/human/M = mob
-
 					//TODO: Human-->Supermatter conversion!
 					//if( istype(M.species, /datum/species/human ))
 						//if( prob( 33 ))
@@ -107,11 +106,11 @@ proc/supermatter_convert( var/turf/T, var/transform_mobs = 0, var/level = 1 )
 	return 0
 
 /mob/living/carbon/human/smSafeCheck()
-	//TODO: touch safe check on human.
-	//if(src.gloves)
-	//	if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
-	//		return 1
-	//
+	//TODO: NUCLEATIONS!
+	if(src.gloves)
+		if(istype( src.gloves, /obj/item/clothing/gloves/sm_proof ))
+			return 1
+
 	//if( isnucleation( src )) // Nucleation's biology doesn't react to this
 	//	return 1
 	//
