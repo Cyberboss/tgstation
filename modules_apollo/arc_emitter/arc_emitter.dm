@@ -22,8 +22,8 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 
 	var/active = 0
 	var/powered = 0
-	var/state = 2
-	anchored = 1
+	var/state = 0
+	anchored = 0
 	var/locked = 0
 	var/disabled = 0
 	var/arc_power = 40
@@ -37,26 +37,42 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 	if(state == 2 && anchored)
 		connect_to_network()
 	wires = new /datum/wires/arc_emitter(src)
+	update_icon()
 
 /obj/machinery/power/arc_emitter/update_icon()
-	if (active && avail(active_power_usage))
+	if (active && powered)
 		icon_state = "arc_emitter_active"
-	else if (avail(active_power_usage))
-		icon_state = "arc_emitter_on"
 	else
 		icon_state = "arc_emitter_off"
 
+
 /obj/machinery/power/arc_emitter/process()
 	if(stat & (BROKEN))
-		update_icon()
-		return
-	if(src.state != 2 || !avail(active_power_usage))
+		powered = 0
 		src.active = 0
 		update_icon()
 		return
-	if(active)
-		fire_bolt()
+	if(src.state != 2 || (!powernet && active_power_usage))
+		src.active = 0
 		update_icon()
+		return
+	if(src.active == 1)
+		if(!active_power_usage || avail(active_power_usage))
+			add_load(active_power_usage)
+			if(!powered)
+				powered = 1
+				update_icon()
+				investigate_log("regained power and turned <font color='green'>on</font>","singulo")
+		else
+			if(powered)
+				powered = 0
+				update_icon()
+				investigate_log("lost power and turned <font color='red'>off</font>","singulo")
+				log_game("Emitter lost power in ([x],[y],[z])")
+			return
+		update_icon()
+		fire_bolt()
+	update_icon()
 
 //Fire bolt at a target
 /obj/machinery/power/arc_emitter/proc/fire_bolt()
@@ -258,7 +274,7 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 		default_deconstruction_screwdriver(user,icon_state,icon_state,W)
 		return
 
-	if(istype(W, /obj/item/device/multitool) || istype(W, /obj/item/weapon/wirecutters))
+	if(istype(W, /obj/item/device/multitool) || istype(W, /obj/item/weapon/wirecutters) || is_wire_tool(W))
 		if(emagged)
 			user << "<span class='warning'>The power control circuitry is fried.</span>"
 			return
@@ -309,27 +325,31 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 	return
 
 /obj/machinery/power/arc_emitter/attack_hand(mob/user as mob)
-	src.add_fingerprint(user)
 	activate(user)
+	src.add_fingerprint(user)
 
 /obj/machinery/power/arc_emitter/proc/activate(mob/user as mob)
 	if(stat & BROKEN)
+		update_icon()
 		return
 
 	if(state == 2)	//Not yet wrenched and welded
 		if(!powernet)
 			user << "\The [src] isn't connected to a wire."
+			update_icon()
 			return 0
 		if(!src.locked)
 			if(src.active==1)
 				if(disabled)
 					user << "You try to turn [src] off but nothing happens."
+					update_icon()
 					return 0
 				src.active = 0
 				user << "You turn off [src]."
 				message_admins("Arc emitter turned off by [key_name(user, user.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[user]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
 				log_game("Arc emitter turned off by [user.ckey]([user]) in ([x],[y],[z])")
 				investigate_log("turned <font color='red'>off</font> by [user.key]","singulo")
+				update_icon()
 				return 0
 
 			else if(avail(active_power_usage))
@@ -341,12 +361,15 @@ var/list/insulated_clothing = list(	/obj/item/clothing/head/helmet/space/hardsui
 				message_admins("Arc emitter turned on by [key_name(user, user.client)](<A HREF='?_src_=holder;adminmoreinfo=\ref[user]'>?</A>) in ([x],[y],[z] - <A HREF='?_src_=holder;adminplayerobservecoodjump=1;X=[x];Y=[y];Z=[z]'>JMP</a>)",0,1)
 				log_game("Arc mitter turned on by [user.ckey]([user]) in ([x],[y],[z])")
 				investigate_log("turned <font color='green'>on</font> by [user.key]","singulo")
+				update_icon()
 				return 1
 
 			update_icon()
 		else
 			user << "<span class='warning'>The controls are locked!</span>"
+			update_icon()
 			return 0
 	else
 		user << "<span class='warning'>\The [src] needs to be firmly secured to the floor first.</span>"
+		update_icon()
 		return 0

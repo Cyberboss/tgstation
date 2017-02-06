@@ -435,6 +435,10 @@
 	return
 
 /obj/machinery/power/supermatter_shard/supermatter/Bumped( atom/AM as mob|obj )
+	//we dont wanna cut out the arc emitter segments!
+	if(istype(AM, /obj/segment))
+		return
+
 	if(istype(AM, /mob/living))
 		var/mob/living/M = AM
 		if( !M.smVaporize()) // Nucleation's biology doesn't react to this
