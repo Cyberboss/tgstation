@@ -4,7 +4,7 @@ AI
 /datum/job/ai
 	title = "AI"
 	flag = AI
-	department_flag = ENGSEC
+	department_flag = SILICON
 	faction = "Station"
 	total_positions = 0
 	spawn_positions = 1
@@ -12,6 +12,8 @@ AI
 	supervisors = "your laws"
 	req_admin_notify = 1
 	minimal_player_age = 30
+
+	rank_succession_level = BORG_SUCCESSION_LEVEL
 
 /datum/job/ai/equip(mob/living/carbon/human/H)
 	if(!H)
@@ -28,13 +30,15 @@ Cyborg
 /datum/job/cyborg
 	title = "Cyborg"
 	flag = CYBORG
-	department_flag = ENGSEC
+	department_flag = SILICON
 	faction = "Station"
 	total_positions = 0
 	spawn_positions = 1
 	supervisors = "your laws and the AI"	//Nodrak
 	selection_color = "#ddffdd"
 	minimal_player_age = 21
+
+	rank_succession_level = BORG_SUCCESSION_LEVEL
 
 /datum/job/cyborg/equip(mob/living/carbon/human/H)
 	if(!H)

@@ -1,47 +1,68 @@
 
-var/const/ENGSEC			=(1<<0)
+var/const/ENG				=(1<<0)
 
-var/const/CAPTAIN			=(1<<0)
-var/const/HOS				=(1<<1)
-var/const/WARDEN			=(1<<2)
-var/const/DETECTIVE			=(1<<3)
-var/const/OFFICER			=(1<<4)
-var/const/CHIEF				=(1<<5)
-var/const/SENIORENGINEER	=(1<<6)
-var/const/ENGINEER			=(1<<7)
-var/const/ATMOSTECH			=(1<<8)
-var/const/AI				=(1<<10)
-var/const/CYBORG			=(1<<11)
+var/const/CHIEF				=(1<<0)
+var/const/SENIORENGINEER	=(1<<1)
+var/const/ENGINEER			=(1<<2)
 
 
-var/const/MEDSCI			=(1<<1)
+var/const/SEC				=(1<<1)
+
+var/const/HOS				=(1<<0)
+var/const/WARDEN			=(1<<1)
+var/const/DETECTIVE			=(1<<2)
+var/const/OFFICER			=(1<<3)
+
+
+var/const/MED				=(1<<2)
+
+var/const/CMO				=(1<<0)
+var/const/SENIORDOCTOR		=(1<<1)
+var/const/DOCTOR			=(1<<2)
+
+
+var/const/SCI				=(1<<3)
 
 var/const/RD				=(1<<0)
 var/const/SENIORSCIENTIST	=(1<<1)
 var/const/SCIENTIST			=(1<<2)
-var/const/CHEMIST			=(1<<3)
-var/const/CMO				=(1<<4)
-var/const/SENIORDOCTOR		=(1<<5)
-var/const/DOCTOR			=(1<<6)
 
 
-var/const/CIVILIAN			=(1<<2)
+var/const/CIVILIAN			=(1<<4)
 
-var/const/HOP				=(1<<0)
-var/const/IAA				=(1<<1)
-var/const/SOLGOVAGENT		=(1<<2)
+var/const/CAPTAIN			=(1<<0)
+var/const/HOP				=(1<<1)
+var/const/IAA				=(1<<2)
 var/const/BARTENDER			=(1<<3)
 var/const/BOTANIST			=(1<<4)
 var/const/COOK				=(1<<5)
 var/const/JANITOR			=(1<<6)
 var/const/LIBRARIAN			=(1<<7)
-var/const/QUARTERMASTER		=(1<<8)
-var/const/FOREMAN			=(1<<9)
-var/const/CARGOTECH			=(1<<10)
-var/const/MINER				=(1<<11)
-var/const/CHAPLAIN			=(1<<12)
-var/const/ASSISTANT			=(1<<13)
+var/const/CHAPLAIN			=(1<<8)
+var/const/ASSISTANT			=(1<<9)
 
+
+var/const/CARGO				=(1<<5)
+
+var/const/QUARTERMASTER		=(1<<0)
+var/const/FOREMAN			=(1<<1)
+var/const/CARGOTECH			=(1<<2)
+var/const/MINER				=(1<<3)
+
+
+var/const/SILICON			=(1<<6)
+
+var/const/AI				=(1<<0)
+var/const/CYBORG			=(1<<1)
+
+
+var/const/SOLGOV			=(1<<7)
+
+var/const/SOLGOVAGENT		=(1<<0)
+
+//UNUSED
+var/const/ENGSEC
+var/const/MEDSCI
 
 var/list/assistant_occupations = list(
 	"Assistant",
@@ -85,7 +106,6 @@ var/list/science_positions = list(
 
 
 var/list/supply_positions = list(
-	"Head of Personnel",
 	"Quartermaster",
 	"Mining Foreman",
 	"Cargo Technician",
@@ -96,7 +116,6 @@ var/list/supply_positions = list(
 var/list/civilian_positions = list(
 	"Head of Personnel",
 	"Internal Affairs Agent",
-	"SolGov Representative",
 	"Bartender",
 	"Botanist",
 	"Cook",
@@ -122,10 +141,12 @@ var/list/nonhuman_positions = list(
 	"pAI"
 )
 
+var/list/external_positions = list(
+	"SolGov Representative"
+)
 
 /proc/guest_jobbans(job)
 	return ((job in command_positions) || (job in nonhuman_positions) || (job in security_positions))
-
 
 
 //this is necessary because antags happen before job datums are handed out, but NOT before they come into existence
@@ -153,6 +174,10 @@ var/static/regex/mine_expand = new("(?<!shaft )miner")
 var/static/regex/chef_expand = new("chef")
 var/static/regex/borg_expand = new("(?<!cy)borg")
 
+//Promotions system
+var/list/allJobDatums
+
+
 /proc/get_full_job_name(job)
 	job = lowertext(job)
 	job = cap_expand.Replace(job, "captain")
@@ -170,3 +195,8 @@ var/static/regex/borg_expand = new("(?<!cy)borg")
 	job = chef_expand.Replace(job, "cook")
 	job = borg_expand.Replace(job, "cyborg")
 	return job
+
+/proc/loadJobDatums()
+	allJobDatums = null
+	for(var/datum/job/J in (subtypesof(/datum/job)))
+		allJobDatums += J
