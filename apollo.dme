@@ -2066,6 +2066,7 @@
 #include "modules_apollo\machinery\canister.dm"
 #include "modules_apollo\misc\ashtray.dm"
 #include "modules_apollo\misc\briefcase.dm"
+#include "modules_apollo\misc\chem_dispenser.dm"
 #include "modules_apollo\misc\faxmachine.dm"
 #include "modules_apollo\misc\hobo_barrel.dm"
 #include "modules_apollo\misc\paper_bundle.dm"
