@@ -205,6 +205,7 @@
 	// Getting the environment gas
 	if(!istype(L, /turf/open/space))
 		env = L.return_air()
+		env.assert_gases("o2","n2","co2","n2o","plasma")
 		removed = env.remove( max( env.total_moles()/10, min( smlevel * getSMVar( smlevel, "consumption_rate" ), env.total_moles() )))
 
 	// If we're in a vacuum, heat can't escape the core, so we'll get damaged
@@ -218,10 +219,10 @@
 
 	// Awan suggested causing the SM to have different reactions to different gasses. So Let's try this.
 	// Store these variables for reactions.
-	var/oxygen = removed.gases["o2"]
-	var/phoron = removed.gases["plasma"]
-	var/carbon = removed.gases["co2"]
-	var/sleepy = removed.gases["n2o"]
+	var/oxygen = removed.gases["o2"][MOLES]
+	var/phoron = removed.gases["plasma"][MOLES]
+	var/carbon = removed.gases["co2"][MOLES]
+	var/sleepy = removed.gases["n2o"][MOLES]
 
 	// N2O handling
 	if(sleepy)
@@ -277,10 +278,10 @@
 		oxygen = 0
 
 	//Release reaction gasses
-	removed.gases["plasma"] = phoron
-	removed.gases["o2"] = oxygen
-	removed.gases["n2o"] = sleepy
-	removed.gases["co2"] = carbon
+	removed.gases["plasma"][MOLES] = phoron
+	removed.gases["o2"][MOLES] = oxygen
+	removed.gases["n2o"][MOLES] = sleepy
+	removed.gases["co2"][MOLES] = carbon
 
 	removed.add_thermal_energy( power*heat*( power_percent**2 ))
 	env.merge(removed)
@@ -300,11 +301,8 @@
 // should probably be replaced with something more intricate sometime
 /obj/machinery/power/supermatter_shard/supermatter/proc/radiate()
 	// 0.83 * (power/733) + 1.28 comes from regression analysis on wanted values for the radiation range
-	for(var/mob/living/l in range( get_turf(src), round( 0.83 * (power/733) + 1.28 )))
-		// regression and some other mathemagics
-		var/rads = ( -72 + ( 15.3 * log( power))) * ( 2 / ( get_dist(l, get_turf(src) + 1 )))
-		l.apply_effect(rads, IRRADIATE)
-
+	var/rad_range = round( 0.83 * (power/733) + 1.28 )
+	radiation_pulse(get_turf(src), rad_range/2, rad_range, 100, log=0)
 	transfer_energy()
 
 /obj/machinery/power/supermatter_shard/supermatter/proc/decay()
@@ -418,31 +416,29 @@
 	if(!istype(W) || (W.flags & ABSTRACT) || !istype(user))
 		return
 
-	//TODO: Supermatter shards!
-	/*
 	if(istype(W, /obj/item/weapon/shard/supermatter))
 		src.damage += W.force
 		user.visible_message("<span class=\"warning\">\The [user] slashes at \the [src] with a [W] with a horrendous clash!</span>",\
 		"<span class=\"danger\">You slash at \the [src] with \the [src] with a horrendous clash!\"</span>",\
 		"<span class=\"warning\">A horrendous clash fills your ears.</span>")
 		return
-		*/
-
 
 	if(user.drop_item(W))
 		Consume(W)
 		user.visible_message("<span class='danger'>As [user] touches \the [src] with \a [W], silence fills the room...</span>",\
 			"<span class='userdanger'>You touch \the [src] with \the [W], and everything suddenly goes silent.</span>\n<span class='notice'>\The [W] flashes into dust as you flinch away from \the [src].</span>",\
 			"<span class='italics'>Everything suddenly goes silent.</span>")
-
 		playsound(get_turf(src), 'sound/effects/supermatter.ogg', 50, 1)
-
 		radiation_pulse(get_turf(src), 1, 1, 150, 1)
 
 /obj/machinery/power/supermatter_shard/supermatter/ex_act()
 	return
 
 /obj/machinery/power/supermatter_shard/supermatter/Bumped( atom/AM as mob|obj )
+	//we dont wanna cut out the arc emitter segments!
+	if(istype(AM, /obj/segment))
+		return
+
 	if(istype(AM, /mob/living))
 		var/mob/living/M = AM
 		if( !M.smVaporize()) // Nucleation's biology doesn't react to this
@@ -469,14 +465,15 @@
 	power += getSMVar( smlevel, "base_power" )/8
 
 		//Some poor sod got eaten, go ahead and irradiate people nearby.
-	for(var/mob/living/l in range(src, round(sqrt(((power/getSMVar( smlevel, "base_power" ))*7) / 5))))
+	for(var/mob/living/l in range(src, sqrt(((power/getSMVar( smlevel, "base_power" ))*7) / 5)))
 		if(l in view())
 			l.show_message("<span class=\"warning\">As \the [src] slowly stops resonating, you find your skin covered in new radiation burns.</span>", 1,\
 				"<span class=\"warning\">The unearthly ringing subsides and you notice you have new radiation burns.</span>", 2)
 		else
 			l.show_message("<span class=\"warning\">You hear an uneartly ringing and notice your skin is covered in fresh radiation burns.</span>", 2)
-		var/rads = ((power/getSMVar( smlevel, "base_power" ))*getSMVar( smlevel, "radiation_power" )) * sqrt( 1 / get_dist(l, src) )
-		l.apply_effect(rads, IRRADIATE)
+
+	var/rad_range = round(sqrt(((power/getSMVar( smlevel, "base_power" ))*7) / 5))
+	radiation_pulse(get_turf(src), rad_range/2, rad_range, 200, 0)
 
 /obj/machinery/power/supermatter_shard/supermatter/update_icon()
 	color = getSMVar( smlevel, "color" )
@@ -491,12 +488,6 @@
 		X.singularity_pull(src, STAGE_FIVE)
 	return
 
-///obj/machinery/power/supermatter_shard/supermatter/GotoAirflowDest(n) //Supermatter not pushed around by airflow
-//	return
-
-///obj/machinery/power/supermatter_shard/supermatter/RepelAirflowDest(n)
-//	return
-
 /obj/machinery/power/supermatter_shard/supermatter/MouseDrop(atom/over)
 	if(!usr || !over) return
 	if(!Adjacent(usr) || !over.Adjacent(usr)) return // should stop you from dragging through windows
@@ -504,9 +495,6 @@
 	spawn(0)
 		over.MouseDrop_T(src,usr)
 	return
-
-///obj/machinery/power/supermatter_shard/supermatter/overmapTravel()
-//	qdel( src )
 
 // Returns whether or not time since start is greater than delay or less than 0
 /proc/delayPassed( var/delay, var/start )
