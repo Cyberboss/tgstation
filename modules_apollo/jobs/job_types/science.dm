@@ -98,7 +98,7 @@ Scientist
 
 	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
 
-/datum/job/seniorengineer/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
+/datum/job/scientist/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
 	if(!H)
 		return 0
 
