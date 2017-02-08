@@ -15,7 +15,7 @@ var/list/departments
 	for( var/datum/job/job in allJobDatums)
 		if( job.department_flag == department_id )
 			positions += job
-	departments += department_id
+	departments[department_id] = src
 
 	..()
 

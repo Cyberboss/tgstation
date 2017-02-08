@@ -1,15 +1,15 @@
-//Apollo Station
+//artemis Station
 /*=========================================
-================01 - Apollo================
+================01 - artemis================
 ===========================================*/
 
 /area/shuttle/transport1/station
 	icon_state = "shuttle"
 	name = "\improper Transport Shuttle"
 
-/area/shuttle/arrival/apollo
+/area/shuttle/arrival/artemis
 	icon_state = "shuttle"
-	name = "\improper NOS Apollo Arrival Shuttle"
+	name = "\improper NOS artemis Arrival Shuttle"
 
 //Escape Pods
 /area/shuttle/escape_pod1/station

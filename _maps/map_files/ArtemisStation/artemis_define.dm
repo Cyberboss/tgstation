@@ -1,8 +1,8 @@
 
-/datum/map/apollo
-	name = "Apollo"
-	full_name = "NOS Apollo"
-	path = "apollo"
+/datum/map/artemis
+	name = "artemis"
+	full_name = "NOS artemis"
+	path = "artemis"
 
 	lobby_icon = 'maps/example/example_lobby.dmi'
 
