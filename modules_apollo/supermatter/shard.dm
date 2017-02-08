@@ -9,7 +9,7 @@
 	desc = "A shard of supermatter. Incredibly dangerous, though not large enough to go critical."
 	force = 10.0
 	throwforce = 20.0
-	icon = 'icons/obj/supermatter_apollo.dmi'
+	icon = 'icons/obj/supermatter_artemis.dmi'
 	icon_state = "supermattersmall"
 	w_class = 2
 	flags = CONDUCT
