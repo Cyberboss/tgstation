@@ -98,6 +98,7 @@
 			dat += "<a href ='?_src_=prefs;preference=cyborg_name;task=input'><b>Cyborg:</b> [custom_names["cyborg"]]</a><BR>"
 			dat += "<a href ='?_src_=prefs;preference=religion_name;task=input'><b>Chaplain religion:</b> [custom_names["religion"]] </a>"
 			dat += "<a href ='?_src_=prefs;preference=deity_name;task=input'><b>Chaplain deity:</b> [custom_names["deity"]]</a><BR>"
+			//Literally no fucking idea why this if statement doesn't work - Cakey
 			//if(selected_character.department.name == "Security")
 			dat += "<b>Custom job preferences:</b><BR>"
 			dat += "<a href='?_src_=prefs;preference=sec_dept;task=input'><b>Prefered security department:</b> [prefered_security_department]</a><BR></td>"
@@ -775,9 +776,9 @@
 						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
 
 				if("sec_dept")
-					var/department = input(user, "Choose your prefered security department:", "Security Departments") as null|anything in security_depts_prefs
-					if(department)
-						prefered_security_department = department
+					var/departmentsec = input(user, "Choose your prefered security department:", "Security Departments") as null|anything in security_depts_prefs
+					if(departmentsec)
+						prefered_security_department = departmentsec
 
 				if ("preferred_map")
 					var/maplist = list()
@@ -959,27 +960,27 @@
 			HTML += "<tr bgcolor='[job.selection_color]'><td width='60%' align='right'>"
 			var/rank = job.title
 			lastJob = job
-			if((job.department_flag == selected_character.department) || (job.department_flag == CIVILIAN))
-				if(jobban_isbanned(user, rank))
-					HTML += "<font color=red>[rank]</font></td><td><a href='?_src_=prefs;jobbancheck=[rank]'> BANNED</a></td></tr>"
-					continue
-				if(!job.player_old_enough(user.client))
-					var/available_in_days = job.available_in_days(user.client)
-					HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
-					continue
-				if((job_civilian_low & ASSISTANT) && (rank != "Assistant") && !jobban_isbanned(user, "Assistant"))
-					HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
-					continue
-				if(config.enforce_human_authority && !user.client.prefs.pref_species.qualifies_for_rank(rank, user.client.prefs.features))
-					if(user.client.prefs.pref_species.id == "human")
-						HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[MUTANT\]</b></font></td></tr>"
-					else
-						HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[NON-HUMAN\]</b></font></td></tr>"
-					continue
-				if((rank in command_positions) || (rank == "AI"))//Bold head jobs
-					HTML += "<b><span class='dark'>[rank]</span></b>"
+			//if((job.department_flag == selected_character.department) || (job.department_flag == CIVILIAN))
+			if(jobban_isbanned(user, rank))
+				HTML += "<font color=red>[rank]</font></td><td><a href='?_src_=prefs;jobbancheck=[rank]'> BANNED</a></td></tr>"
+				continue
+			if(!job.player_old_enough(user.client))
+				var/available_in_days = job.available_in_days(user.client)
+				HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
+				continue
+			if((job_civilian_low & ASSISTANT) && (rank != "Assistant") && !jobban_isbanned(user, "Assistant"))
+				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
+				continue
+			if(config.enforce_human_authority && !user.client.prefs.pref_species.qualifies_for_rank(rank, user.client.prefs.features))
+				if(user.client.prefs.pref_species.id == "human")
+					HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[MUTANT\]</b></font></td></tr>"
 				else
-					HTML += "<span class='dark'>[rank]</span>"
+					HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[NON-HUMAN\]</b></font></td></tr>"
+				continue
+			if((rank in command_positions) || (rank == "AI"))//Bold head jobs
+				HTML += "<b><span class='dark'>[rank]</span></b>"
+			else
+				HTML += "<span class='dark'>[rank]</span>"
 
 			HTML += "</td><td width='40%'>"
 
