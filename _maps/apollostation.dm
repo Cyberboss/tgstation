@@ -39,8 +39,8 @@ var/list/the_station_areas = list (
 
 		#define MINETYPE "lavaland"
 
-		#include "map_files\ApolloStation\apollo_areas.dm"
-                #include "map_files\ApolloStation\apollo-1.dmm"
+		#include "map_files\artemisStation\artemis_areas.dm"
+                #include "map_files\ArtemisStation\artemis-1.dmm"
 #ifndef TRAVIS_MASS_MAP_BUILD
         #include "map_files\generic\z2.dmm"
         #include "map_files\generic\z3.dmm"
@@ -53,9 +53,9 @@ var/list/the_station_areas = list (
 		#include "map_files\generic\z10.dmm"
 		#include "map_files\generic\z11.dmm"
 
-		#define MAP_PATH "map_files/ApolloStation"
-        #define MAP_FILE "apollo-1.dmm"
-        #define MAP_NAME "Apollo Station"
+		#define MAP_PATH "map_files/artemisStation"
+        #define MAP_FILE "artemis-1.dmm"
+        #define MAP_NAME "artemis Station"
 
 		#define MAP_TRANSITION_CONFIG DEFAULT_MAP_TRANSITION_CONFIG
 #endif

@@ -11,7 +11,7 @@
 /obj/machinery/power/supermatter_shard/supermatter
 	name = "supermatter core"
 	desc = "A strangely translucent and iridescent crystal. <span class='alert'>You get headaches just from looking at it.</span>"
-	icon = 'icons/obj/supermatter_apollo.dmi'
+	icon = 'icons/obj/supermatter_artemis.dmi'
 	icon_state = "supermatter"
 	var/base_icon = "base"
 

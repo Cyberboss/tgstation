@@ -38,7 +38,7 @@
 
 	return 1
 
-//Imported from apollo sleeps the current process until the world lag go's down.
+//Imported from artemis sleeps the current process until the world lag go's down.
 /proc/lag_kill()
 	var/c = 1
 	do
