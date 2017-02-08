@@ -14,7 +14,7 @@
 
 // BEGIN_INCLUDE
 #include "_maps\__MAP_DEFINES.dm"
-#include "_maps\apollostation.dm"
+#include "_maps\artemisstation.dm"
 #include "code\_compile_options.dm"
 #include "code\world.dm"
 #include "code\__DATASTRUCTURES\heap.dm"
@@ -2093,6 +2093,7 @@
 #include "modules_apollo\species\human_subspecies.dm"
 #include "modules_apollo\species\names.dm"
 #include "modules_apollo\species\skrell.dm"
+#include "modules_apollo\supermatter\core_chaimber_control.dm"
 #include "modules_apollo\supermatter\gloves.dm"
 #include "modules_apollo\supermatter\level_controls.dm"
 #include "modules_apollo\supermatter\shard.dm"
