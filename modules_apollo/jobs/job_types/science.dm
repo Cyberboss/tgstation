@@ -21,12 +21,12 @@ Research Director
 			            access_tox_storage, access_teleporter, access_sec_doors,
 			            access_research, access_robotics, access_xenobiology, access_ai_upload,
 			            access_RC_announce, access_keycard_auth, access_gateway, access_mineral_storeroom,
-			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax)
+			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax, access_tcomsat, access_chemistry)
 	minimal_access = list(access_rd, access_heads, access_tox, access_genetics, access_morgue,
 			            access_tox_storage, access_teleporter, access_sec_doors,
 			            access_research, access_robotics, access_xenobiology, access_ai_upload,
 			            access_RC_announce, access_keycard_auth, access_gateway, access_mineral_storeroom,
-			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax)
+			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax, access_tcomsat, access_chemistry)
 
 	rank_succession_level = COMMAND_SUCCESSION_LEVEL
 
@@ -72,8 +72,8 @@ Senior Scientist
 
 	outfit = /datum/outfit/job/scientist
 
-	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_tech_storage, access_genetics)
-	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom)
+	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_chemistry, access_tcomsat, access_tech_storage, access_genetics)
+	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_tcomsat, access_chemistry)
 
 	rank_succession_level = SENIOR_SUCCESSION_LEVEL
 

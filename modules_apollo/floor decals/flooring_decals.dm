@@ -359,61 +359,61 @@
 	icon = 'icons/turf/overlays.dmi'
 	icon_state = "snowfloor"
 
-//Apollo Logo
+//artemis Logo
 
-/obj/effect/turf_decal/apollo/l1
+/obj/effect/turf_decal/artemis/l1
 	name = "A1"
 	icon_state = "A1"
 
-/obj/effect/turf_decal/apollo/l2
+/obj/effect/turf_decal/artemis/l2
 	name = "A2"
 	icon_state = "A2"
 
-/obj/effect/turf_decal/apollo/l3
+/obj/effect/turf_decal/artemis/l3
 	name = "A3"
 	icon_state = "A3"
 
-/obj/effect/turf_decal/apollo/l4
+/obj/effect/turf_decal/artemis/l4
 	name = "A4"
 	icon_state = "A4"
 
-/obj/effect/turf_decal/apollo/l5
+/obj/effect/turf_decal/artemis/l5
 	name = "A5"
 	icon_state = "A5"
 
-/obj/effect/turf_decal/apollo/l6
+/obj/effect/turf_decal/artemis/l6
 	name = "A6"
 	icon_state = "A6"
 
-/obj/effect/turf_decal/apollo/l7
+/obj/effect/turf_decal/artemis/l7
 	name = "A7"
 	icon_state = "A7"
 
-/obj/effect/turf_decal/apollo/l8
+/obj/effect/turf_decal/artemis/l8
 	name = "A8"
 	icon_state = "A8"
 
-/obj/effect/turf_decal/apollo/l9
+/obj/effect/turf_decal/artemis/l9
 	name = "A9"
 	icon_state = "A9"
 
-/obj/effect/turf_decal/apollo/l10
+/obj/effect/turf_decal/artemis/l10
 	name = "A10"
 	icon_state = "A10"
 
-/obj/effect/turf_decal/apollo/l11
+/obj/effect/turf_decal/artemis/l11
 	name = "A11"
 	icon_state = "A11"
 
-/obj/effect/turf_decal/apollo/l12
+/obj/effect/turf_decal/artemis/l12
 	name = "A12"
 	icon_state = "A12"
 
-/obj/effect/turf_decal/apollo/l13
+/obj/effect/turf_decal/artemis/l13
 	name = "A13"
 	icon_state = "A13"
 
-/obj/effect/turf_decal/apollo/l14
+/obj/effect/turf_decal/artemis/l14
 	name = "A14"
 	icon_state = "A14"
 
