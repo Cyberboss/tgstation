@@ -5,7 +5,7 @@ Research Director
 	title = "Research Director"
 	flag = RD
 	department_head = list("Captain")
-	department_flag = MEDSCI
+	department_flag = SCI
 	head_announce = list("Science")
 	faction = "Station"
 	total_positions = 1
@@ -21,12 +21,14 @@ Research Director
 			            access_tox_storage, access_teleporter, access_sec_doors,
 			            access_research, access_robotics, access_xenobiology, access_ai_upload,
 			            access_RC_announce, access_keycard_auth, access_gateway, access_mineral_storeroom,
-			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax)
+			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax, access_tcomsat, access_chemistry)
 	minimal_access = list(access_rd, access_heads, access_tox, access_genetics, access_morgue,
 			            access_tox_storage, access_teleporter, access_sec_doors,
 			            access_research, access_robotics, access_xenobiology, access_ai_upload,
 			            access_RC_announce, access_keycard_auth, access_gateway, access_mineral_storeroom,
-			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax)
+			            access_tech_storage, access_minisat, access_maint_tunnels, access_network, access_fax, access_tcomsat, access_chemistry)
+
+	rank_succession_level = COMMAND_SUCCESSION_LEVEL
 
 /datum/outfit/job/rd
 	name = "Research Director"
@@ -55,13 +57,13 @@ Research Director
 	internals_slot = slot_s_store
 
 /*
-Scientist
+Senior Scientist
 */
 /datum/job/seniorscientist
 	title = "Senior Scientist"
 	flag = SENIORSCIENTIST
 	department_head = list("Research Director")
-	department_flag = MEDSCI
+	department_flag = SCI
 	faction = "Station"
 	total_positions = 3
 	spawn_positions = 3
@@ -70,8 +72,10 @@ Scientist
 
 	outfit = /datum/outfit/job/scientist
 
-	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_tech_storage, access_genetics)
-	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom)
+	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_chemistry, access_tcomsat, access_tech_storage, access_genetics)
+	minimal_access = list(access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_tcomsat, access_chemistry)
+
+	rank_succession_level = SENIOR_SUCCESSION_LEVEL
 
 /*
 Scientist
@@ -81,7 +85,7 @@ Scientist
 	alt_titles = list("Roboticist", "Chemist")
 	flag = SCIENTIST
 	department_head = list("Research Director")
-	department_flag = MEDSCI
+	department_flag = SCI
 	faction = "Station"
 	total_positions = 5
 	spawn_positions = 3
@@ -92,7 +96,9 @@ Scientist
 	access = list(access_robotics, access_tox, access_tox_storage, access_research, access_xenobiology, access_mineral_storeroom, access_tech_storage, access_genetics)
 	minimal_access = list(access_research, access_mineral_storeroom, access_robotics, access_chemistry)
 
-/datum/job/seniorengineer/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
+
+/datum/job/scientist/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
 	if(!H)
 		return 0
 

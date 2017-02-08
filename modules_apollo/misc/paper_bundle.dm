@@ -26,19 +26,17 @@
 		if(screen == 2)
 			screen = 1
 		user << "<span class='notice'>You add [(P.name == "paper") ? "the paper" : P.name] to [(src.name == "paper bundle") ? "the paper bundle" : src.name].</span>"
-		user.unEquip(P)
-		P.loc = src
+		user.transferItemToLoc(P, src)
 	else if(istype(W, /obj/item/weapon/photo))
 		amount++
 		if(screen == 2)
 			screen = 1
 		user << "<span class='notice'>You add [(W.name == "photo") ? "the photo" : W.name] to [(src.name == "paper bundle") ? "the paper bundle" : src.name].</span>"
-		user.unEquip(W)
-		W.loc = src
+		user.transferItemToLoc(W, src)
 	else if(istype(W, /obj/item/weapon/lighter))
 		burnpaper(W, user)
 	else if(istype(W, /obj/item/weapon/paper_bundle))
-		user.unEquip(W)
+		user.temporarilyRemoveItemFromInventory(W)
 		for(var/obj/O in W)
 			O.loc = src
 			O.add_fingerprint(usr)
@@ -76,7 +74,7 @@
 				"[class]You burn right through \the [src], turning it to ash. It flutters through the air before settling on the floor in a heap.")
 
 				if(user.get_inactive_held_item() == src)
-					user.unEquip(src)
+					user.temporarilyRemoveItemFromInventory(src)
 
 				new /obj/effect/decal/cleanable/ash(src.loc)
 				qdel(src)
@@ -157,7 +155,7 @@
 			usr << "<span class='notice'>You remove the [W.name] from the bundle.</span>"
 			if(amount == 1)
 				var/obj/item/weapon/paper/P = src[1]
-				usr.unEquip(src)
+				usr.temporarilyRemoveItemFromInventory(src)
 				usr.put_in_hands(P)
 				qdel(src)
 			else if(page == amount)
@@ -195,7 +193,7 @@
 		O.loc = usr.loc
 		O.layer = initial(O.layer)
 		O.add_fingerprint(usr)
-	usr.unEquip(src)
+	usr.temporarilyRemoveItemFromInventory(src)
 	qdel(src)
 	return
 

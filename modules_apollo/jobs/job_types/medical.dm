@@ -5,7 +5,7 @@ Chief Medical Officer
 	title = "Chief Medical Officer"
 	flag = CMO
 	department_head = list("Captain")
-	department_flag = MEDSCI
+	department_flag = MED
 	head_announce = list("Medical")
 	faction = "Station"
 	total_positions = 1
@@ -23,6 +23,8 @@ Chief Medical Officer
 	minimal_access = list(access_medical, access_morgue, access_genetics, access_cloning, access_heads, access_mineral_storeroom,
 			access_chemistry, access_virology, access_cmo, access_surgery, access_RC_announce,
 			access_keycard_auth, access_sec_doors, access_maint_tunnels, access_fax)
+
+	rank_succession_level = COMMAND_SUCCESSION_LEVEL
 
 /datum/outfit/job/cmo
 	name = "Chief Medical Officer"
@@ -50,7 +52,7 @@ Medical Doctor
 	alt_titles = list("Virologist")
 	flag = SENIORDOCTOR
 	department_head = list("Chief Medical Officer")
-	department_flag = MEDSCI
+	department_flag = MED
 	faction = "Station"
 	total_positions = 3
 	spawn_positions = 3
@@ -61,7 +63,9 @@ Medical Doctor
 	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics, access_cloning, access_mineral_storeroom)
 	minimal_access = list(access_medical, access_morgue, access_surgery, access_cloning, access_chemistry, access_virology)
 
-/datum/job/seniorengineer/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
+	rank_succession_level = SENIOR_SUCCESSION_LEVEL
+
+/datum/job/senirodoctor/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
 	if(!H)
 		return 0
 
@@ -86,7 +90,7 @@ Medical Doctor
 	alt_titles = list("Pharmacist","Surgeon","Psychiatrist")
 	flag = DOCTOR
 	department_head = list("Chief Medical Officer")
-	department_flag = MEDSCI
+	department_flag = MED
 	faction = "Station"
 	total_positions = 5
 	spawn_positions = 3
@@ -97,7 +101,9 @@ Medical Doctor
 	access = list(access_medical, access_morgue, access_surgery, access_chemistry, access_virology, access_genetics, access_cloning, access_mineral_storeroom)
 	minimal_access = list(access_medical, access_morgue, access_surgery, access_cloning, access_chemistry)
 
-/datum/job/seniorengineer/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
+	rank_succession_level = INDUCTEE_SUCCESSION_LEVEL
+
+/datum/job/doctor/equip(mob/living/carbon/human/H, visualsOnly = FALSE, announce = TRUE)
 	if(!H)
 		return 0
 

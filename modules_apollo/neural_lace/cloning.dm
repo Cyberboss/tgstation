@@ -50,7 +50,7 @@
 	R.fields["imp"] = "\ref[imp]"
 
 	src.records += R
-	scantemp = "Subject successfully scanned"
+	scantemp = "Subject successfully scanned."
 	playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 
 /obj/machinery/computer/cloning/interact(mob/user)
@@ -58,34 +58,35 @@
 	add_fingerprint(user)
 	ui_interact(user)
 
-	updatemodules()
+	updatemodules(TRUE)
 
 	var/dat = ""
 	dat += "<a href='byond://?src=\ref[src];refresh=1'>Refresh</a>"
-	if(scanner && pod1 && ((scanner.scan_level > 2) || (pod1.efficiency > 5)))
+
+	if(scanner && HasEfficientPod() && scanner.scan_level > 2)
 		if(!autoprocess)
 			dat += "<a href='byond://?src=\ref[src];task=autoprocess'>Autoprocess</a>"
 		else
 			dat += "<a href='byond://?src=\ref[src];task=stopautoprocess'>Stop autoprocess</a>"
 	else
 		dat += "<span class='linkOff'>Autoprocess</span>"
+
 	dat += "<h3>Cloning Pod Status</h3>"
-	dat += "<div class='statusDisplay'>[temp + " [pod1.occupant ? "\[[round(pod1.get_completion())]%\]" : ""]"]&nbsp;</div>"
+	dat += "<div class='statusDisplay'>[temp]&nbsp;</div>"
 
 	switch(src.menu)
 		if(1)
 			// Modules
-			if (isnull(src.scanner) || isnull(src.pod1))
+			if (isnull(src.scanner) || !pods.len)
 				dat += "<h3>Modules</h3>"
 				//dat += "<a href='byond://?src=\ref[src];relmodules=1'>Reload Modules</a>"
 				if (isnull(src.scanner))
 					dat += "<font class='bad'>ERROR: No Scanner detected!</font><br>"
-				if (isnull(src.pod1))
+				if (!pods.len)
 					dat += "<font class='bad'>ERROR: No Pod detected</font><br>"
 
 			// Scanner
 			if (!isnull(src.scanner))
-
 				dat += "<h3>Scanner Functions</h3>"
 
 				dat += "<div class='statusDisplay'>"
@@ -117,23 +118,21 @@
 			if (src.diskette)
 				dat += "<a href='byond://?src=\ref[src];disk=eject'>Eject Disk</a><br>"
 
-
-
 		if(2)
 			dat += "<h3>Current records</h3>"
 			dat += "<a href='byond://?src=\ref[src];menu=1'><< Back</a><br><br>"
-
+			// not very pretty. refactor?
 			var/list/name_records = list()
 			for(var/datum/data/record/R in records)
 				if(name_records[R.fields["name"]])
 					name_records[R.fields["name"]] += R
 				else
 					name_records[R.fields["name"]] = list(R)
-
+			
 			for(var/name in name_records)
 				dat += "<h4>[name]</h4>"
 				for(var/datum/data/record/R in name_records[name])
-					dat += "Scan ID [R.fields["id"]] <a href='byond://?src=\ref[src];view_rec=[R.fields["id"]]'>View Record</a><br>"
+					dat += "Scan ID [R.fields["id"]] <a href='byond://?src=\ref[src];view_rec=[R.fields["id"]]'>View Record</a>"
 		if(3)
 			dat += "<h3>Selected Record</h3>"
 			dat += "<a href='byond://?src=\ref[src];menu=2'><< Back</a><br>"
@@ -189,11 +188,12 @@
 	popup.open()
 
 /obj/machinery/computer/cloning/Topic(href, href_list)
-	/* Calling ..() in an overriding proc calls the original proc, don't do that as it'll destroy records when we try to access them
-	   The drawback is that we have to copy over the "actual" ..() code here. boo :(
+/*  Calling ..() in an overriding proc calls the original proc, don't do that as it'll destroy records when we try to access them
+	The drawback is that we have to copy over the "actual" ..() code here. boo :(
+
 	if(..())
 		return
-	*/
+*/
 
 	// obj/machinery/Topic
 	if(!is_interactable())
@@ -229,7 +229,6 @@
 			src.updateUsrDialog()
 			playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 
-
 		//No locking an open scanner.
 	else if ((href_list["lock"]) && !isnull(scanner) && scanner.is_operational())
 		if ((!scanner.locked) && (scanner.occupant))
@@ -259,7 +258,7 @@
 			var/obj/item/weapon/card/id/C = usr.get_active_held_item()
 			if (istype(C)||istype(C, /obj/item/device/pda))
 				if(src.check_access(C))
-					src.temp = "[src.active_record.fields["name"]] => Record deleted"
+					src.temp = "[src.active_record.fields["name"]] => Record deleted."
 					src.records.Remove(active_record)
 					active_record = null
 					playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
@@ -311,22 +310,26 @@
 
 	else if (href_list["clone"])
 		var/datum/data/record/C = find_record("id", href_list["clone"], records)
-		//Look for that player! They better be dead!
+		//Look for that player!
 		if(C)
+			var/obj/machinery/clonepod/pod = GetAvailablePod()
 			//Can't clone without someone to clone.  Or a pod.  Or if the pod is busy. Or full of gibs.
-			if(!pod1)
-				temp = "<font class='bad'>No Clonepod detected.</font>"
+			if(!pods.len)
+				temp = "<font class='bad'>No Clonepods detected.</font>"
 				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-			else if(pod1.occupant)
-				temp = "<font class='bad'>Clonepod is currently occupied.</font>"
+			else if(pod.occupant)
+				temp = "<font class='bad'>Cloning cycle already in progress.</font>"
 				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-			else if(pod1.mess)
-				temp = "<font class='bad'>Clonepod malfunction.</font>"
+			else if(!pod)
+				temp = "<font class='bad'>No Clonepods available.</font>"
 				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
 			else if(!config.revival_cloning)
 				temp = "<font class='bad'>Unable to initiate cloning cycle.</font>"
 				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
-			else if(pod1.growclone(C.fields["name"], C.fields["UI"], C.fields["SE"], C.fields["mrace"], C.fields["features"], C.fields["factions"]))
+			else if(pod.occupant)
+				temp = "<font class='bad'>Cloning cycle already in progress.</font>"
+				playsound(src, 'sound/machines/terminal_prompt_deny.ogg', 50, 0)
+			else if(pod.growclone(C.fields["name"], C.fields["UI"], C.fields["SE"], C.fields["mrace"], C.fields["features"], C.fields["factions"]))
 				temp = "[C.fields["name"]] => <font class='good'>Cloning cycle in progress...</font>"
 				playsound(src, 'sound/machines/terminal_prompt_confirm.ogg', 50, 0)
 				menu = 1
@@ -347,7 +350,7 @@
 	return
 
 
-/* 
+/*
 	Defined in code/game/machinery/cloning.dm
 */
 

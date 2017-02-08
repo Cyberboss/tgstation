@@ -5,7 +5,7 @@ Captain
 	title = "Captain"
 	flag = CAPTAIN
 	department_head = list("Centcom")
-	department_flag = ENGSEC
+	department_flag = CIVILIAN
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1
@@ -18,6 +18,8 @@ Captain
 
 	access = list() 			//See get_access()
 	minimal_access = list() 	//See get_access()
+
+	rank_succession_level = CAPTAIN_SUCCESION_LEVEL
 
 /datum/job/captain/get_access()
 	return get_all_accesses()
@@ -80,6 +82,7 @@ Head of Personnel
 			            access_theatre, access_chapel_office, access_library, access_research, access_mining, access_heads_vault, access_mining_station,
 			            access_hop, access_RC_announce, access_keycard_auth, access_gateway, access_mineral_storeroom, access_fax)
 
+	rank_succession_level = CAPTAIN_SUCCESION_LEVEL-1
 
 /datum/outfit/job/hop
 	name = "Head of Personnel"
@@ -113,6 +116,8 @@ Internal Affairs Agent
 	access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
 	minimal_access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
 
+	rank_succession_level = COMMAND_SUCCESSION_LEVEL
+
 /datum/outfit/job/iaa
 	name = "Internal Affairs Agent"
 	jobtype = /datum/job/iaa
@@ -133,7 +138,7 @@ SolGov Rep
 	title = "SolGov Representative"
 	flag = SOLGOVAGENT
 	department_head = list("Captain")
-	department_flag = CIVILIAN
+	department_flag = SOLGOV
 	faction = "Station"
 	total_positions = 1
 	spawn_positions = 1

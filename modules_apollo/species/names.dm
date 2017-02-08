@@ -14,8 +14,17 @@ var/list/vatgrown_names = file2list("config/names/vatgrown.txt")
 		if(i != attempts_to_find_unique_name && !findname(.))
 			break
 
-/proc/vatgrown_name()
-	return "[pick(vatgrown_names)][pick(vatgrown_names)]"
+/proc/vatgrown_name(gender)
+	if(gender==FEMALE)
+		if(prob(50))
+			return "[pick(first_names_female)]"
+		else
+			return "[pick(vatgrown_names)][pick(vatgrown_names)]"
+	else
+		if(prob(50))
+			return "[pick(first_names_male)]"
+		else
+			return "[pick(vatgrown_names)][pick(vatgrown_names)]"
 
 /proc/random_unique_vatgrown_name(gender, attempts_to_find_unique_name=10)
 	for(var/i=1, i<=attempts_to_find_unique_name, i++)
