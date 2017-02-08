@@ -5876,7 +5876,7 @@
 "ciZ" = (/obj/machinery/light/small{dir = 4},/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,/turf/open/floor/plating,/area/maintenance/engineering)
 "cja" = (/turf/open/floor/plating,/area/maintenance/substation/engineering)
 "cjb" = (/obj/structure/cable/cyan{d1 = 2; d2 = 4; icon_state = "2-4"},/turf/open/floor/plating,/area/maintenance/substation/engineering)
-"cjc" = (/obj/structure/cable/cyan{d1 = 1; d2 = 8; icon_state = "1-8"},/obj/effect/turf_decal/stripes/line{dir = 8},/turf/open/floor/plating,/area/maintenance/substation/engineering)
+"cjc" = (/obj/structure/cable/cyan{d1 = 1; d2 = 8; icon_state = "1-8"},/obj/effect/turf_decal/stripes/line{dir = 8},/obj/machinery/power/sensor,/obj/structure/cable/cyan,/turf/open/floor/plating,/area/maintenance/substation/engineering)
 "cjd" = (/obj/machinery/camera{c_tag = "Engineering - Equipemt Storage - EVA"; dir = 4; network = list("SS13","Engineering")},/turf/open/floor/plasteel,/area/engine/locker_room)
 "cje" = (/turf/open/floor/plasteel,/area/engine/locker_room)
 "cjf" = (/obj/effect/turf_decal/corner/yellow{dir = 9},/turf/open/floor/plasteel,/area/engine/storage)
