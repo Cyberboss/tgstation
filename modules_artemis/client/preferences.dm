@@ -52,6 +52,8 @@
 		return
 	world << "character: [selected_character.real_name]"
 	world << "department: [selected_character.selected_department]"
+	world << "department list:"
+	world << departments
 
 	update_preview_icon()
 	user << browse_rsc(preview_icon, "previewicon.png")

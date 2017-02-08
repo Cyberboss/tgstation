@@ -130,7 +130,7 @@ var/list/all_characters = list() // A list of all loaded characters
 	temporary = temp
 
 	if( !selected_department )
-		selected_department = departments["CIVILIAN"]
+		selected_department = departments[CIVILIAN]
 	menu = new( null, "creator", "Character Creator", 710, 610 )
 	menu.window_options = "focus=0;can_close=0;"
 
