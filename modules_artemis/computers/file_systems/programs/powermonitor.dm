@@ -1,5 +1,3 @@
-
-
 /datum/computer_file/program/power_monitor
 	filename = "powermonitor"
 	filedesc = "Power Monitoring"
@@ -17,9 +15,7 @@
 	var/record_size = 60
 	var/record_interval = 50
 	var/next_record = 0
-
-
-
+	var/list/apcs
 
 /datum/computer_file/program/power_monitor/run_program(mob/living/user)
 	. = ..(user)
@@ -35,8 +31,21 @@
 		record()
 
 /datum/computer_file/program/power_monitor/proc/search()
+	world << "Powergridsensors list: [powergridsensors]"
+	for(var/x in powergridsensors)
+		world << "List entry: [x]"
+
 	var/turf/T = get_turf(computer)
 	attached = locate() in T
+
+	apcs = new/list()
+	for(var/obj/machinery/power/sensor/s in powergridsensors)
+		if(s.powernet)
+			for(var/obj/machinery/power/terminal/term in s.powernet.nodes)
+				var/obj/machinery/power/apc/A = term.master
+				if(istype(A))
+					world << "APC found [A]"
+					apcs += A
 
 /datum/computer_file/program/power_monitor/proc/record()
 	if(world.time >= next_record)
@@ -75,18 +84,17 @@
 	data["history"] = history
 
 	data["areas"] = list()
-	if(attached)
-		for(var/obj/machinery/power/terminal/term in attached.powernet.nodes)
-			var/obj/machinery/power/apc/A = term.master
-			if(istype(A))
-				data["areas"] += list(list(
-					"name" = A.area.name,
-					"charge" = A.cell.percent(),
-					"load" = A.lastused_total,
-					"charging" = A.charging,
-					"eqp" = A.equipment,
-					"lgt" = A.lighting,
-					"env" = A.environ
-				))
+
+	for(var/obj/machinery/power/apc/A in apcs)
+		if(istype(A))
+			data["areas"] += list(list(
+				"name" = A.area.name,
+				"charge" = A.cell.percent(),
+				"load" = A.lastused_total,
+				"charging" = A.charging,
+				"eqp" = A.equipment,
+				"lgt" = A.lighting,
+				"env" = A.environ
+			))
 
 	return data
