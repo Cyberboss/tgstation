@@ -50,8 +50,6 @@
 #include "modules_artemis\cellauto\types\waveprop.dm"
 #include "modules_artemis\client\character.dm"
 #include "modules_artemis\client\preferences.dm"
-#include "modules_artemis\computer\card.dm"
-#include "modules_artemis\computer\console_presets.dm"
 #include "modules_artemis\computers\file_systems\console_presets.dm"
 #include "modules_artemis\computers\file_systems\programs\card.dm"
 #include "modules_artemis\computers\file_systems\programs\powermonitor.dm"
