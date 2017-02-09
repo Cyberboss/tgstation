@@ -1,4 +1,10 @@
-var/list/departments
+var/global/list/departments= list(
+	CIVILIAN = new/datum/department/civilian,
+	SEC = new/datum/department/security,
+	ENG = new/datum/department/engineering,
+	CARGO = new/datum/department/supply,
+	MED = new/datum/department/medical,
+	SCI = new/datum/department/science)
 
 /datum/department
 	var/name
@@ -15,8 +21,7 @@ var/list/departments
 	for( var/datum/job/job in allJobDatums)
 		if( job.department_flag == department_id )
 			positions += job
-	departments[department_id] = src
-
+	world << "new department: [department_id]"
 	..()
 
 /datum/department/proc/getPromotablePositionNames()
