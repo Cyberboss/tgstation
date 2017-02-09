@@ -81,6 +81,7 @@
 #include "modules_artemis\misc\paper_bundle.dm"
 #include "modules_artemis\misc\paper_shredder.dm"
 #include "modules_artemis\misc\road.dm"
+#include "modules_artemis\misc\shuttlechair.dm"
 #include "modules_artemis\misc\stamps.dm"
 #include "modules_artemis\misc\surgery_bag.dm"
 #include "modules_artemis\neural_lace\cloning.dm"
