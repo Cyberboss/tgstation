@@ -325,7 +325,7 @@
 	var/image/armrest = null
 
 /obj/structure/chair/shuttle/New()
-	armrest = image("icons/obj/furniture.dmi", "chair3_overlay")
+	armrest = image("icons/obj/chairs.dmi", "chair3_armrest")
 	armrest.layer = MOB_LAYER + 0.1
 
 	return ..()
