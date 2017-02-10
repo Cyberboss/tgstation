@@ -247,6 +247,7 @@
 /obj/item/weapon/storage/briefcase/inflatable
 	name = "inflatable barrier box"
 	desc = "Contains inflatable walls and doors."
+	icon = 'icons/obj/inflatable.dmi'
 	icon_state = "inf_box"
 	item_state = "syringe_kit"
 	max_combined_w_class = 21

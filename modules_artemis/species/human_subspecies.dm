@@ -36,3 +36,5 @@
 	randname += "-[rand(1,99)]"
 
 	return randname
+
+/datum/species/monkey

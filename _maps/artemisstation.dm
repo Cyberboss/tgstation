@@ -35,7 +35,7 @@ var/list/the_station_areas = list (
 
 #if !defined(MAP_FILE)
 
-		#define TITLESCREEN "title" //Add an image in misc/fullscreen.dmi, and set this define to the icon_state, to set a custom titlescreen for your map
+		#define TITLESCREEN "notitle" //Add an image in misc/fullscreen.dmi, and set this define to the icon_state, to set a custom titlescreen for your map
 
 		#define MINETYPE "lavaland"
 
@@ -53,9 +53,9 @@ var/list/the_station_areas = list (
 		#include "map_files\generic\z10.dmm"
 		#include "map_files\generic\z11.dmm"
 
-		#define MAP_PATH "map_files/artemisStation"
+		#define MAP_PATH "map_files/ArtemisStation"
         #define MAP_FILE "artemis-1.dmm"
-        #define MAP_NAME "artemis Station"
+        #define MAP_NAME "Artemis Station"
 
 		#define MAP_TRANSITION_CONFIG DEFAULT_MAP_TRANSITION_CONFIG
 #endif
