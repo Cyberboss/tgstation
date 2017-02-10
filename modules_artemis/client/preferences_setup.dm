@@ -49,20 +49,21 @@
 	var/list/all_jobs = subtypesof(/datum/job)
 	for(var/J in all_jobs)
 		var/datum/job/job = new J()
-		//if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL)
-			//world << "job: [job.title] added"
-		roles += job.title
+		if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
+			roles[job.title] = "NEVER"
 
 
 /datum/preferences/proc/update_preview_icon()
 	// Silicons only need a very basic preview since there is no customization for them.
-	if(job_engsec_high)
-		switch(job_engsec_high)
-			if(AI)
+	var/high_ranked = "Assistant"
+	for(var/x in roles)
+		if(roles[x] == "HIGH")
+			high_ranked = x
+			if(x == "AI")
 				preview_icon = icon('icons/mob/AI.dmi', "AI", SOUTH)
 				preview_icon.Scale(64, 64)
 				return
-			if(CYBORG)
+			if(x == "Cyborg")
 				preview_icon = icon('icons/mob/robots.dmi', "robot", SOUTH)
 				preview_icon.Scale(64, 64)
 				return
@@ -73,23 +74,8 @@
 
 	// Determine what job is marked as 'High' priority, and dress them up as such.
 	var/datum/job/previewJob
-	var/highRankFlag = job_civilian_high | job_medsci_high | job_engsec_high
 
-	if(job_civilian_low & ASSISTANT)
-		previewJob = SSjob.GetJob("Assistant")
-	else if(highRankFlag)
-		var/highDeptFlag
-		if(job_civilian_high)
-			highDeptFlag = CIVILIAN
-		else if(job_medsci_high)
-			highDeptFlag = MEDSCI
-		else if(job_engsec_high)
-			highDeptFlag = ENGSEC
-
-		for(var/datum/job/job in SSjob.occupations)
-			if(job.flag == highRankFlag && job.department_flag == highDeptFlag)
-				previewJob = job
-				break
+	previewJob = SSjob.GetJob(high_ranked)
 
 	if(previewJob)
 		mannequin.job = previewJob.title

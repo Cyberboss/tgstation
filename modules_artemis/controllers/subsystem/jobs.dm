@@ -100,6 +100,7 @@ var/datum/subsystem/job/SSjob
 
 
 /datum/subsystem/job/proc/FindOccupationCandidates(datum/job/job, level, flag)
+	world << "Running FOC, Job: [job], Level: [level]"
 	Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	var/list/candidates = list()
 	for(var/mob/new_player/player in unassigned)
@@ -118,7 +119,7 @@ var/datum/subsystem/job/SSjob
 		if(config.enforce_human_authority && !player.client.prefs.pref_species.qualifies_for_rank(job.title, player.client.prefs.features))
 			Debug("FOC non-human failed, Player: [player]")
 			continue
-		if(player.client.prefs.GetJobDepartment(job, level) & job.flag)
+		if(player.client.prefs.GetJobDepartment(job, level))
 			Debug("FOC pass, Player: [player], Level:[level]")
 			candidates += player
 	return candidates
@@ -327,7 +328,7 @@ var/datum/subsystem/job/SSjob
 
 
 				// If the player wants that job on this level, then try give it to him.
-				if(player.client.prefs.GetJobDepartment(job, level) & job.flag)
+				if(player.client.prefs.GetJobDepartment(job, level))
 
 					// If the job isn't filled
 					if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
@@ -478,11 +479,11 @@ var/datum/subsystem/job/SSjob
 			if(!job.player_old_enough(player.client))
 				level6++
 				continue
-			if(player.client.prefs.GetJobDepartment(job, 1) & job.flag)
+			if(player.client.prefs.GetJobDepartment(job, 1))
 				level1++
-			else if(player.client.prefs.GetJobDepartment(job, 2) & job.flag)
+			else if(player.client.prefs.GetJobDepartment(job, 2))
 				level2++
-			else if(player.client.prefs.GetJobDepartment(job, 3) & job.flag)
+			else if(player.client.prefs.GetJobDepartment(job, 3))
 				level3++
 			else level4++ //not selected
 

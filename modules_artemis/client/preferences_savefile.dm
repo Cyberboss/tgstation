@@ -312,6 +312,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["prefered_security_department"] >> prefered_security_department
 
 	//Jobs
+	/*
 	S["joblessrole"]		>> joblessrole
 	S["job_civilian_high"]	>> job_civilian_high
 	S["job_civilian_med"]	>> job_civilian_med
@@ -322,6 +323,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["job_engsec_high"]	>> job_engsec_high
 	S["job_engsec_med"]		>> job_engsec_med
 	S["job_engsec_low"]		>> job_engsec_low
+	*/
 
 	//Some list shinanigans
 	/*
@@ -413,9 +415,8 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		var/list/all_jobs = subtypesof(/datum/job)
 		for(var/J in all_jobs)
 			var/datum/job/job = new J()
-			//if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL)
-				//world << "job: [job.title] added"
-			roles += job.title
+			if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
+				roles[job.title] = "NEVER"
 
 	be_random_name	= sanitize_integer(be_random_name, 0, 1, initial(be_random_name))
 	be_random_body	= sanitize_integer(be_random_body, 0, 1, initial(be_random_body))
@@ -453,6 +454,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	features["feature_lizard_legs"]	= sanitize_inlist(features["legs"], legs_list, "Normal Legs")
 
 	joblessrole				= sanitize_integer(joblessrole, 1, 3, initial(joblessrole))
+	/*
 	job_civilian_high 		= sanitize_integer(job_civilian_high, 0, 65535, initial(job_civilian_high))
 	job_civilian_med 		= sanitize_integer(job_civilian_med, 0, 65535, initial(job_civilian_med))
 	job_civilian_low 		= sanitize_integer(job_civilian_low, 0, 65535, initial(job_civilian_low))
@@ -462,6 +464,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	job_engsec_high 		= sanitize_integer(job_engsec_high, 0, 65535, initial(job_engsec_high))
 	job_engsec_med 			= sanitize_integer(job_engsec_med, 0, 65535, initial(job_engsec_med))
 	job_engsec_low 			= sanitize_integer(job_engsec_low, 0, 65535, initial(job_engsec_low))
+	*/
 
 	return 1
 
@@ -514,6 +517,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	//Jobs
 	S["joblessrole"]		<< joblessrole
+	/*
 	S["job_civilian_high"]	<< job_civilian_high
 	S["job_civilian_med"]	<< job_civilian_med
 	S["job_civilian_low"]	<< job_civilian_low
@@ -523,6 +527,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	S["job_engsec_high"]	<< job_engsec_high
 	S["job_engsec_med"]		<< job_engsec_med
 	S["job_engsec_low"]		<< job_engsec_low
+	*/
 
 	//world << "Saving char roles"
 	//world << "Roles uncoded: [roles]"

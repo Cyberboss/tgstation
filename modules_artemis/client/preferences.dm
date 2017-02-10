@@ -64,19 +64,6 @@ var/list/preferences_datums = list()
 		//Mob preview
 	var/icon/preview_icon = null
 
-		//Jobs, uses bitflags
-	var/job_civilian_high = 0
-	var/job_civilian_med = 0
-	var/job_civilian_low = 0
-
-	var/job_medsci_high = 0
-	var/job_medsci_med = 0
-	var/job_medsci_low = 0
-
-	var/job_engsec_high = 0
-	var/job_engsec_med = 0
-	var/job_engsec_low = 0
-
 		//More jobs
 	var/list/roles = new/list()
 	var/department_tag = ""
@@ -144,7 +131,6 @@ var/list/preferences_datums = list()
 	custom_names["cyborg"] = pick(ai_names)
 	custom_names["clown"] = pick(clown_names)
 	custom_names["mime"] = pick(mime_names)
-
 	if(istype(C))
 		if(!IsGuestKey(C.key))
 			load_path(C.ckey)
@@ -409,11 +395,6 @@ var/list/preferences_datums = list()
 				continue
 			//world << "[parent] is not has old enough client"
 
-			if((job_civilian_low & ASSISTANT) && (rank != "Assistant") && !jobban_isbanned(user, "Assistant"))
-				HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
-				continue
-			//world << "[parent] does not have assistant tagged to on"
-
 			if(config.enforce_human_authority && !user.client.prefs.pref_species.qualifies_for_rank(rank, user.client.prefs.features))
 				if(user.client.prefs.pref_species.id == "human")
 					HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[MUTANT\]</b></font></td></tr>"
@@ -435,17 +416,17 @@ var/list/preferences_datums = list()
 			var/prefUpperLevel = -1 // level to assign on left click
 			var/prefLowerLevel = -1 // level to assign on right click
 
-			if(GetJobDepartment(job, 1) & job.flag)
+			if(roles[rank] == "HIGH")
 				prefLevelLabel = "High"
 				prefLevelColor = "slateblue"
 				prefUpperLevel = 4
 				prefLowerLevel = 2
-			else if(GetJobDepartment(job, 2) & job.flag)
+			else if(roles[rank] == "MEDIUM")
 				prefLevelLabel = "Medium"
 				prefLevelColor = "green"
 				prefUpperLevel = 1
 				prefLowerLevel = 3
-			else if(GetJobDepartment(job, 3) & job.flag)
+			else if(roles[rank] == "LOW")
 				prefLevelLabel = "Low"
 				prefLevelColor = "orange"
 				prefUpperLevel = 2
@@ -456,17 +437,7 @@ var/list/preferences_datums = list()
 				prefUpperLevel = 3
 				prefLowerLevel = 1
 
-			//world << "[parent] role loading as clickable"
 			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
-
-			if(rank == "Assistant")//Assistant is special
-				if(job_civilian_low & ASSISTANT)
-					HTML += "<font color=green>Yes</font>"
-				else
-					HTML += "<font color=red>No</font>"
-				HTML += "</a></td></tr>"
-				continue
-
 			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font>"
 			HTML += "</a></td></tr>"
 
@@ -491,152 +462,89 @@ var/list/preferences_datums = list()
 	popup.open(0)
 	return
 
-/datum/preferences/proc/SetJobPreferenceLevel(datum/job/job, level)
-	world << "Setting job prefs, job: [job], level: [level]"
+//FUCK BITFLAGS AND SHIFTS AND ALL THAT BS! ~rj
+/datum/preferences/proc/SetJobPreferenceLevel(var/job, level)
+	//world << "Setting job prefs, job: [job], level: [level]"
+	var/priority = "NEVER"
+	switch(level)
+		if(1)
+			priority = "HIGH"
+		if(2)
+			priority = "MEDIUM"
+		if(3)
+			priority = "LOW"
+		if(4)
+			priority = "NEVER"
+
 	if (!job)
 		return 0
 
 	if (level == 1) // to high
-		world << "Setting to high."
-		// remove any other job(s) set to high
-		job_civilian_med |= job_civilian_high
-		job_engsec_med |= job_engsec_high
-		job_medsci_med |= job_medsci_high
-		job_civilian_high = 0
-		job_engsec_high = 0
-		job_medsci_high = 0
+		//remove any other job(s) set to high
+		//world << "Setting to high."
+		for(var/x in roles)
+			if(roles[x] == "HIGH")
+				roles[x] = "MEDIUM"
 
-	if (job.department_flag == CIVILIAN)
-		world << "Its a civillain job"
-		job_civilian_low &= ~job.flag
-		job_civilian_med &= ~job.flag
-		job_civilian_high &= ~job.flag
+	for(var/x in roles)
+		if(x == job)
+			//world << "Setting job role job: [job], to: [priority]"
+			roles[x] = priority
+			return 1
 
-		switch(level)
-			world << "setting civ [job.title] flag to [level]"
-			if (1)
-				job_civilian_high |= job.flag
-			if (2)
-				job_civilian_med |= job.flag
-			if (3)
-				job_civilian_low |= job.flag
-
-		return 1
-	else if (job.department_flag == ENGSEC)
-		world << "Its a engi job"
-		job_engsec_low &= ~job.flag
-		job_engsec_med &= ~job.flag
-		job_engsec_high &= ~job.flag
-
-		switch(level)
-			world << "setting engi [job.title] flag to [level]"
-			if (1)
-				job_engsec_high |= job.flag
-			if (2)
-				job_engsec_med |= job.flag
-			if (3)
-				job_engsec_low |= job.flag
-
-		return 1
-	else if (job.department_flag == MEDSCI)
-		job_medsci_low &= ~job.flag
-		job_medsci_med &= ~job.flag
-		job_medsci_high &= ~job.flag
-
-		switch(level)
-			world << "setting engie [job.title] flag to [level]"
-			if (1)
-				job_medsci_high |= job.flag
-			if (2)
-				job_medsci_med |= job.flag
-			if (3)
-				job_medsci_low |= job.flag
-
-		return 1
-
-	world << "Setting job prefs failed!"
 	return 0
 
 /datum/preferences/proc/UpdateJobPreference(mob/user, role, desiredLvl)
-	world << "[parent] updating job level job: [role], level: [desiredLvl]"
+	//world << "[parent] updating job level job: [role], level: [desiredLvl]"
 	if(!SSjob || SSjob.occupations.len <= 0)
-		world << "No job subsystem or SSjob occupations list is empty"
+		//world << "No job subsystem or SSjob occupations list is empty"
 		return
 	var/datum/job/job = SSjob.GetJob(role)
-	world << "[parent] getting job datum for [role]"
+	//world << "[parent] getting job datum for [role]"
 
 	if(!job)
-		world << "[parent] no job datum found."
+		//world << "[parent] no job datum found."
 		user << browse(null, "window=mob_occupation")
 		ShowChoices(user)
 		return
 
 	if (!isnum(desiredLvl))
-		world << "[parent] desired level: [desiredLvl] is not a number"
+		//world << "[parent] desired level: [desiredLvl] is not a number"
 		user << "<span class='danger'>UpdateJobPreference - desired level was not a number. Please notify coders!</span>"
 		ShowChoices(user)
 		return
 
-	if(role == "Assistant")
-		world << "[parent] something wierd with assistants and stuff happened ??"
-		if(job_civilian_low & job.flag)
-			job_civilian_low &= ~job.flag
-		else
-			job_civilian_low |= job.flag
-		SetChoices(user)
-		return 1
-
-	world << "[parent] setting preferenses."
-	SetJobPreferenceLevel(job, desiredLvl)
+	//world << "[parent] setting preferenses."
+	SetJobPreferenceLevel(role, desiredLvl)
 	SetChoices(user)
 
 	return 1
 
+//Check if the player has this job on the given level
+/datum/preferences/proc/GetJobDepartment(var/datum/job/j, var/level)
+	var/priority = "NEVER"
+	switch(level)
+		if(1)
+			priority = "HIGH"
+		if(2)
+			priority = "MEDIUM"
+		if(3)
+			priority = "LOW"
+		if(4)
+			priority = "NEVER"
+
+
+	var/title = j.title
+	for(var/x in roles)
+		if(x == title)
+			if(roles[x] == priority)
+				return 1
+	return 0
+
 
 /datum/preferences/proc/ResetJobs()
-
-	job_civilian_high = 0
-	job_civilian_med = 0
-	job_civilian_low = 0
-
-	job_medsci_high = 0
-	job_medsci_med = 0
-	job_medsci_low = 0
-
-	job_engsec_high = 0
-	job_engsec_med = 0
-	job_engsec_low = 0
-
-
-/datum/preferences/proc/GetJobDepartment(datum/job/job, level)
-	if(!job || !level)
-		return 0
-	switch(job.department_flag)
-		if(CIVILIAN)
-			switch(level)
-				if(1)
-					return job_civilian_high
-				if(2)
-					return job_civilian_med
-				if(3)
-					return job_civilian_low
-		if(MEDSCI)
-			switch(level)
-				if(1)
-					return job_medsci_high
-				if(2)
-					return job_medsci_med
-				if(3)
-					return job_medsci_low
-		if(ENGSEC)
-			switch(level)
-				if(1)
-					return job_engsec_high
-				if(2)
-					return job_engsec_med
-				if(3)
-					return job_engsec_low
-	return 0
+	for(var/x in roles)
+		roles[x] = "NEVER"
 
 /datum/preferences/proc/process_link(mob/user, list/href_list)
 	if(href_list["jobbancheck"])
@@ -682,7 +590,7 @@ var/list/preferences_datums = list()
 						joblessrole = RETURNTOLOBBY
 				SetChoices(user)
 			if("setJobLevel")
-				world << "[parent] modifing job level job: [href_list["text"]], level: [text2num(href_list["level"])]"
+				//world << "[parent] modifing job level job: [href_list["text"]], level: [text2num(href_list["level"])]"
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
 			else
 				SetChoices(user)

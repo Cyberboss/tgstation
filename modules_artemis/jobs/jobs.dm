@@ -1,68 +1,57 @@
+//Department Flags FUCK BITSSHIFTS!! ~rj
+var/const/CIVILIAN 		= "CIV"
+var/const/CAPTAIN		= "CAP"
+var/const/HOP			= "HOP"
+var/const/IAA			= "IAA"
+var/const/BARTENDER		= "BAR"
+var/const/BOTANIST		= "BOT"
+var/const/COOK			= "COO"
+var/const/JANITOR		= "JAN"
+var/const/LIBRARIAN		= "LIB"
+var/const/CHAPLAIN		= "CHA"
+var/const/ASSISTANT		= "ASS"
+var/const/MIME			= "MIM"
+var/const/CLOWN			= "CLO"
 
-var/const/ENG				=(1<<0)
-
-var/const/CHIEF				=(1<<0)
-var/const/SENIORENGINEER	=(1<<1)
-var/const/ENGINEER			=(1<<2)
-
-
-var/const/SEC				=(1<<1)
-
-var/const/HOS				=(1<<0)
-var/const/WARDEN			=(1<<1)
-var/const/DETECTIVE			=(1<<2)
-var/const/OFFICER			=(1<<3)
-
-
-var/const/MED				=(1<<2)
-
-var/const/CMO				=(1<<0)
-var/const/SENIORDOCTOR		=(1<<1)
-var/const/DOCTOR			=(1<<2)
+var/const/ENG 				= "ENG"
+var/const/CHIEF				= "CHI"
+var/const/SENIORENGINEER	= "SEE"
+var/const/ENGINEER			= "ENG"
 
 
-var/const/SCI				=(1<<3)
-
-var/const/RD				=(1<<0)
-var/const/SENIORSCIENTIST	=(1<<1)
-var/const/SCIENTIST			=(1<<2)
-
-
-var/const/CIVILIAN			=(1<<4)
-
-var/const/CAPTAIN			=(1<<0)
-var/const/HOP				=(1<<1)
-var/const/IAA				=(1<<2)
-var/const/BARTENDER			=(1<<3)
-var/const/BOTANIST			=(1<<4)
-var/const/COOK				=(1<<5)
-var/const/JANITOR			=(1<<6)
-var/const/LIBRARIAN			=(1<<7)
-var/const/CHAPLAIN			=(1<<8)
-var/const/ASSISTANT			=(1<<9)
+var/const/SEC 				= "SEC"
+var/const/HOS				= "HOS"
+var/const/WARDEN			= "WAR"
+var/const/DETECTIVE			= "DET"
+var/const/OFFICER			= "OFF"
 
 
-var/const/CARGO				=(1<<5)
-
-var/const/QUARTERMASTER		=(1<<0)
-var/const/FOREMAN			=(1<<1)
-var/const/CARGOTECH			=(1<<2)
-var/const/MINER				=(1<<3)
-
-
-var/const/SILICON			=(1<<6)
-
-var/const/AI				=(1<<0)
-var/const/CYBORG			=(1<<1)
+var/const/CARGO 			= "CAR"
+var/const/QUARTERMASTER		= "QUA"
+var/const/FOREMAN			= "FOR"
+var/const/CARGOTECH			= "CAR"
+var/const/MINER				= "MIN"
 
 
-var/const/SOLGOV			=(1<<7)
+var/const/MED 			= "MED"
+var/const/CMO			= "CMO"
+var/const/SENIORDOCTOR	= "SED"
+var/const/DOCTOR		= "DOC"
 
-var/const/SOLGOVAGENT		=(1<<0)
 
-//UNUSED
-var/const/ENGSEC
-var/const/MEDSCI
+var/const/SCI 			= "SCI"
+var/const/RD				= "SRD"
+var/const/SENIORSCIENTIST	= "SES"
+var/const/SCIENTIST			= "SCI"
+
+
+var/const/SOLGOV 		= "SOL"
+var/const/SOLGOVAGENT	= "SOA"
+
+var/const/SILICON 		= "SIL"
+var/const/AI			= "SAI"
+var/const/CYBORG		= "CYB"
+
 
 var/list/assistant_occupations = list(
 	"Assistant",
