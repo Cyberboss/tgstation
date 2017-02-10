@@ -195,8 +195,3 @@ var/list/allJobDatums
 	job = chef_expand.Replace(job, "cook")
 	job = borg_expand.Replace(job, "cyborg")
 	return job
-
-/proc/loadJobDatums()
-	allJobDatums = null
-	for(var/datum/job/J in (subtypesof(/datum/job)))
-		allJobDatums += J
