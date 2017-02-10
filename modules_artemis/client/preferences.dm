@@ -181,6 +181,7 @@ var/list/preferences_datums = list()
 						if(S)
 							var/name
 							var/status
+							dat += "<td valign='left' width='50%'>"
 							for(var/i=1, i<= nr_chars, i++)
 								S.cd = "/character[i]"
 								S["real_name"] >> name
@@ -195,6 +196,7 @@ var/list/preferences_datums = list()
 								else
 									dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;num=[i];' [i == default_slot ? "class='linkOn'" : ""]>[name]</a> [status]"
 								dat += "<br>"
+							dat += "</td>"
 				if(1)//Char editor
 					dat += "<br>"
 					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=1' [char_prefs == 1 ? "class='linkOn'" : ""]>Identity/Ocupation</a>"

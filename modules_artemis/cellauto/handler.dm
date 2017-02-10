@@ -15,6 +15,7 @@
 	last_tick = world.timeofday
 
 	for( var/datum/cell_auto_master/master in masters )
+		//world << "Precessing a cell auto master"
 		master.process()
 
 	return
