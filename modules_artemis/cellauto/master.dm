@@ -14,6 +14,8 @@
 	if( size )
 		group_age_max = size
 
+
+
 /datum/cell_auto_master/Destroy()
 	for( var/cell in cells )
 		qdel( cell )
