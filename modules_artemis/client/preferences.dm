@@ -6,7 +6,7 @@ var/list/preferences_datums = list()
 	var/path
 	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
 	var/nr_chars = 1
-	var/max_save_slots = 8
+	var/max_save_slots = 999
 
 	//non-preference stuff
 	var/muted = 0
@@ -66,7 +66,7 @@ var/list/preferences_datums = list()
 
 		//More jobs
 	var/list/roles = new/list()
-	var/department_tag = ""
+	var/department_tag = "CIV"
 
 		//Metadata
 	var/ckey = ""
@@ -170,6 +170,7 @@ var/list/preferences_datums = list()
 
 	switch(current_tab)
 		if (0) // Character Settings#
+			dat += "<center>LOCK YOUR CHARACTER OR YOU WILL BE ASSIGNED A RANDOM ONE!</center>"
 			dat += "<a href='?_src_=prefs;preference=select_character;select_character=0' [select_character == 0 ? "class='linkOn'" : ""]>Character List</a> "
 			dat += "<a href='?_src_=prefs;preference=select_character;select_character=1' [select_character == 1 ? "class='linkOn'" : ""]>Edit Character</a>"
 			switch(select_character)
@@ -199,7 +200,7 @@ var/list/preferences_datums = list()
 							dat += "</td>"
 				if(1)//Char editor
 					dat += "<br>"
-					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=1' [char_prefs == 1 ? "class='linkOn'" : ""]>Identity/Ocupation</a>"
+					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=1' [char_prefs == 1 ? "class='linkOn'" : ""]>Identity/Occupation</a>"
 					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=0' [char_prefs == 0 ? "class='linkOn'" : ""]>Records</a>"
 					switch(char_prefs)
 						if(0)
@@ -354,6 +355,12 @@ var/list/preferences_datums = list()
 
 	else
 		HTML += "<b>Choose occupation chances</b><br>"
+
+		if(department_tag == "CIV" || !locked)
+			HTML += "<center><a href='?_src_=prefs;preference=job;task=department'>Choose Department</a></center><br>"
+		else
+			HTML += "<center>[department_tag]</center><br>"
+
 		HTML += "<div align='center'>Left-click to raise an occupation preference, right-click to lower it.<br></div>"
 		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
 		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
@@ -591,8 +598,17 @@ var/list/preferences_datums = list()
 					if(BERANDOMJOB)
 						joblessrole = RETURNTOLOBBY
 				SetChoices(user)
+
+			if("department")
+				generate_init_roles()
+				var/list/departments = list("Civilian" = "CIV", "Cargo" = "CAR", "Medical" = "MED", "Science" = "SCI", "Engineering" = "ENG", "Security" = "SEC", "Silicon" = "SIL")
+				var/tmp/choises = list("Civilian","Cargo","Medical","Science","Engineering","Security","Silicon")
+				var/chosen = input(user, "Choose your department:","Choose Department",null) as null|anything in choises
+				department_tag = departments[chosen]
+				prune_roles()
+				SetChoices(user)
+
 			if("setJobLevel")
-				//world << "[parent] modifing job level job: [href_list["text"]], level: [text2num(href_list["level"])]"
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
 			else
 				SetChoices(user)
@@ -1120,10 +1136,11 @@ var/list/preferences_datums = list()
 	var/dat = ""
 	dat += "<center><h2>Occupation Choices</h2>"
 	dat += "<a href='?_src_=prefs;preference=job;task=menu'>Set Occupation Preferences</a><br></center>"
+
 	dat += "<h2>Identity</h2>"
 	if(!locked)
 		dat += "<table width='100%'><tr><td width='75%' valign='top'>"
-		if(jobban_isbanned(parent.mob, "appearance"))
+		if(jobban_isbanned(usr, "appearance"))
 			dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
 		dat += "<a href='?_src_=prefs;preference=name;task=random'>Random Name</A> "
 		dat += "<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a><BR>"
@@ -1393,7 +1410,10 @@ var/list/preferences_datums = list()
 
 /datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1)
 	//If the char is not locked give the user a random char for this round.
-	//if(!locked)
+	if(!locked)
+		real_name = pref_species.random_name(gender)
+		random_character(gender)
+
 	if(be_random_name)
 		real_name = pref_species.random_name(gender)
 
@@ -1444,7 +1464,7 @@ var/list/preferences_datums = list()
 	character.character = src
 
 
-/datum/preferences/proc/has_role(var/role)
+/datum/preferences/proc/has_role(var/tmp/role)
 	//world << "prefs/has_role, [role]"
 	for(var/unlocked in roles)
 		if(lowertext(unlocked) == lowertext(role))
@@ -1452,6 +1472,38 @@ var/list/preferences_datums = list()
 			return 1
 	//world << "prefs/has_role/ret0, [role]"
 	return 0
+
+/datum/preferences/proc/prune_roles()
+	var/list/new_roles = new/list()
+	var/list/all_roles = get_all_jobs()
+	var/list/all_roles_department = new/list()
+	for(var/datum/job/J in all_roles)
+		if(lowertext(J.department_flag) == lowertext(department_tag) || J.department_flag == "CIV")
+			all_roles_department += J
+
+	for(var/datum/job/J in all_roles_department)
+		for(var/role in roles)
+			if(lowertext(role) == lowertext(J.title))
+				new_roles[role] = roles[role]
+	roles = new_roles
+
+
+/datum/preferences/proc/generate_init_roles()
+	roles = new/list()
+	var/tmp/list/all_jobs = subtypesof(/datum/job)
+	for(var/J in all_jobs)
+		var/datum/job/job = new J()
+		if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
+			roles[job.title] = "NEVER"
+	department_tag = "CIV"
+
+/datum/preferences/proc/get_all_jobs()
+	var/tmp/list/all_jobs = subtypesof(/datum/job)
+	var/list/all_jobs_generated = new/list()
+	for(var/J in all_jobs)
+		all_jobs_generated += new J()
+
+	return all_jobs_generated
 
 /mob/living
 	var/datum/preferences/character = null

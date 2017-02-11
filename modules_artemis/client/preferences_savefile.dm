@@ -410,13 +410,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 		status = "Active"
 
 	if(!roles || roles.len == 0)
-		world << "[real_name]'s safe file roles where empty, adding default roles"
-		roles = new/list()
-		var/list/all_jobs = subtypesof(/datum/job)
-		for(var/J in all_jobs)
-			var/datum/job/job = new J()
-			if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
-				roles[job.title] = "NEVER"
+		generate_init_roles()
 
 	be_random_name	= sanitize_integer(be_random_name, 0, 1, initial(be_random_name))
 	be_random_body	= sanitize_integer(be_random_body, 0, 1, initial(be_random_body))

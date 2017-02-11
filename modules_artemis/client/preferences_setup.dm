@@ -43,14 +43,7 @@
 	//Is this char to be deleted on safe or load ?
 	to_delete = 0
 
-	//setup roles cause that keeps bugging out!
-	//world << "Populating jobs for new random char"
-	roles = new/list()
-	var/list/all_jobs = subtypesof(/datum/job)
-	for(var/J in all_jobs)
-		var/datum/job/job = new J()
-		if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
-			roles[job.title] = "NEVER"
+	generate_init_roles()
 
 
 /datum/preferences/proc/update_preview_icon()

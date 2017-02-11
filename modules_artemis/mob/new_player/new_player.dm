@@ -432,7 +432,8 @@
 
 	var/mob/living/carbon/human/new_character = new(loc)
 
-	if(config.force_random_names || jobban_isbanned(src, "appearance"))
+	//If random names forced or player is banned from editing appearance or the player did not lock his character in.
+	if(config.force_random_names || jobban_isbanned(src, "appearance") || !client.prefs.locked)
 		client.prefs.random_character()
 		client.prefs.real_name = client.prefs.pref_species.random_name(gender,1)
 	client.prefs.copy_to(new_character)
