@@ -100,7 +100,7 @@ var/datum/subsystem/job/SSjob
 
 
 /datum/subsystem/job/proc/FindOccupationCandidates(datum/job/job, level, flag)
-	world << "Running FOC, Job: [job], Level: [level]"
+	//world << "Running FOC, Job: [job], Level: [level]"
 	Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	var/list/candidates = list()
 	for(var/mob/new_player/player in unassigned)
