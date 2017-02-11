@@ -131,18 +131,17 @@
 	icon = 'icons/obj/cryopod.dmi'
 	icon_state = "cryo_rear"
 	anchored = 1
+	density = 1
 
 //Cryopods themselves.
 /obj/machinery/cryopod
 	name = "cryogenic freezer"
 	desc = "A man-sized pod for entering suspended animation."
 	icon = 'icons/obj/cryopod.dmi'
-	icon_state = "body_scanner_0"
-	density = 1
+	icon_state = "body_scanner-open"
+	density = 0
 	anchored = 1
 
-	var/base_icon_state = "body_scanner_0"
-	var/occupied_icon_state = "body_scanner_1"
 	var/on_store_message = "has entered long-term storage."
 	var/on_store_name = "Cryogenic Oversight"
 	var/on_enter_occupant_message = "You feel cool air surround you. You go numb as your senses turn inward."
@@ -151,11 +150,12 @@
 
 	var/time_till_despawn = 3000
 	var/time_entered = 0          // Used to keep track of the safe period.
-	var/obj/item/device/radio/intercom/announce //
 
 	var/obj/machinery/computer/cryopod/control_computer
 	var/last_no_computer_message = 0
 	var/obj/item/device/radio/headset/radio
+
+	state_open = 1
 
 	// These items are preserved when the process() despawn proc occurs.
 	var/list/preserve_items = list(
@@ -174,8 +174,9 @@
 
 /obj/machinery/cryopod/New()
 	..()
-	announce = new /obj/item/device/radio/intercom(src)
+	radio = new /obj/item/device/radio/headset(src)
 	find_control_computer()
+	update_icon()
 
 /obj/machinery/cryopod/Destroy()
 	if(occupant)
@@ -233,7 +234,7 @@
 	var/mob/living/carbon/human/H = occupant
 	if( istype( occupant, /mob/living/carbon/human ))
 		if( H.character )
-			if( !H.character.locked ) // If they've been saved to the database previously
+			if( H.character.locked ) // If they've been saved to the database previously
 				H.character.save_character()
 
 	//Drop all items into the pod.
@@ -249,7 +250,7 @@
 	//Delete all items not on the preservation list.
 	var/list/items = src.contents
 	items -= occupant // Don't delete the occupant
-	items -= announce // or the autosay radio.
+	items -= radio // or the autosay radio.
 
 	for(var/obj/item/W in items)
 
@@ -335,16 +336,17 @@
 		var/list/items = src.contents
 		if(occupant)
 			items -= occupant
-		if(announce)
-			items -= announce
+		if(radio)
+			items -= radio
 
 		for(var/obj/item/W in items)
 			W.loc = get_turf(src)
+		density = 0
 
 
 /obj/machinery/cryopod/close_machine(mob/user)
-	var/willing = null //We don't want to allow people to be forced into despawning.
-	if((isnull(user) || istype(user)) && state_open && !panel_open)
+	var/willing = 0 //We don't want to allow people to be forced into despawning.
+	if((isnull(user) || istype(user)) && state_open)
 		..(user)
 		if(user.client)
 			if(alert(user,"Would you like to enter long-term storage?",,"Yes","No") == "Yes")
@@ -353,12 +355,13 @@
 				willing = 1
 		else
 			willing = 1
-		if(occupant && occupant.stat != DEAD && willing)
+		if(occupant && willing)
 			occupant << "<span class='notice'><b>[on_enter_occupant_message]</b></span>"
 			occupant << "<span class='notice'>If you ghost, log out or close your client now, your character will be permanently removed from the round</b></span>"
 			log_admin("[key_name_admin(user)] has entered a stasis pod.")
 			time_entered = world.time
 			name = "[name] ([usr.name])"
+			density = 0
 
 /obj/machinery/cryopod/emp_act(severity)
 	if(is_operational() && occupant)
@@ -369,6 +372,24 @@
 	if(user.stat || user.lying || !Adjacent(user) || !user.Adjacent(target) || !iscarbon(target) || !user.IsAdvancedToolUser())
 		return
 	close_machine(target)
+
+/obj/machinery/cryopod/proc/toggle_open(mob/user)
+	if(state_open)
+		close_machine()
+		return
+
+	open_machine()
+
+/obj/machinery/cryopod/attack_hand(mob/user)
+	if(..(user,1,0)) //don't set the machine, since there's no dialog
+		return
+
+	toggle_open(user)
+
+/obj/machinery/cryopod/update_icon()
+	icon_state = initial(icon_state)
+	if(state_open)
+		icon_state += "-open"
 
 //Attacks/effects.
 /obj/machinery/cryopod/blob_act()
