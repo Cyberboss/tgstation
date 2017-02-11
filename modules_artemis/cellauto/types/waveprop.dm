@@ -76,10 +76,11 @@
 
 	if( level )
 		smlevel = level
-
+	//world << "Adding vwave cell auto master to handlers"
 	v_wave_handler.masters += src
 
 /datum/cell_auto_master/v_wave/Destroy()
+	//world << "Removing vwave cell auto master to handlers"
 	v_wave_handler.masters -= src
 
 	..()

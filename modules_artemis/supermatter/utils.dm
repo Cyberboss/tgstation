@@ -65,7 +65,7 @@ proc/supermatter_delamination( var/turf/epicenter, var/size = 25, var/smlevel = 
 		playsound(epicenter, 'sound/effects/supermatter.ogg', 100, 1, round(size*3,1) )
 
 		//TODO: VWAVE
-		//new /obj/cell_spawner/v_wave( epicenter, size, smlevel )
+		new /obj/cell_spawner/v_wave( epicenter, size, smlevel )
 
 		diary << "## Supermatter delamination with size [size]. Took [(world.timeofday-start)/10] seconds."
 	return 1

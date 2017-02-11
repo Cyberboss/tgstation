@@ -29,12 +29,12 @@ Librarian
 	r_pocket = /obj/item/weapon/barcodescanner
 	l_pocket = /obj/item/device/laser_pointer
 
-/*
+
 Clown
-*/
+
 /datum/job/clown
 	title = "Clown"
-	//flag = CLOWN
+	flag = CLOWN
 	department_head = list("Head of Personnel")
 	department_flag = CIVILIAN
 	faction = "Station"
@@ -92,7 +92,7 @@ Mime
 */
 /datum/job/mime
 	title = "Mime"
-	//flag = MIME
+	flag = MIME
 	department_head = list("Head of Personnel")
 	department_flag = CIVILIAN
 	faction = "Station"

@@ -1,60 +1,159 @@
+var/list/preferences_datums = list()
+
 /datum/preferences
-	var/job_cargo_high = 0
-	var/job_cargo_med = 0
-	var/job_cargo_low = 0
+	var/client/parent
+	//doohickeys for savefiles
+	var/path
+	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
+	var/nr_chars = 1
+	var/max_save_slots = 8
 
-	var/job_sci_high = 0
-	var/job_sci_med = 0
-	var/job_sci_low = 0
+	//non-preference stuff
+	var/muted = 0
+	var/last_ip
+	var/last_id
 
-	var/job_med_high = 0
-	var/job_med_med = 0
-	var/job_med_low = 0
+	//game-preferences
+	var/lastchangelog = ""				//Saved changlog filesize to detect if there was a change
+	var/ooccolor = null
 
-	var/job_sec_high = 0
-	var/job_sec_med = 0
-	var/job_sec_low = 0
+	//Antag preferences
+	var/list/be_special = list()		//Special role selection
+	var/tmp/old_be_special = 0			//Bitflag version of be_special, used to update old savefiles and nothing more
+										//If it's 0, that's good, if it's anything but 0, the owner of this prefs file's antag choices were,
+										//autocorrected this round, not that you'd need to check that.
 
-	var/job_eng_high = 0
-	var/job_eng_med = 0
-	var/job_eng_low = 0
+	var/UI_style = "Midnight"
+	var/hotkeys = FALSE
+	var/tgui_fancy = TRUE
+	var/tgui_lock = TRUE
+	var/toggles = TOGGLES_DEFAULT
+	var/chat_toggles = TOGGLES_DEFAULT_CHAT
+	var/ghost_form = "ghost"
+	var/ghost_orbit = GHOST_ORBIT_CIRCLE
+	var/ghost_accs = GHOST_ACCS_DEFAULT_OPTION
+	var/ghost_others = GHOST_OTHERS_DEFAULT_OPTION
+	var/ghost_hud = 1
+	var/inquisitive_ghost = 1
+	var/allow_midround_antag = 1
+	var/preferred_map = null
+	var/uses_glasses_colour = 0
 
-	var/job_external_high = 0
-	var/job_external_med = 0
-	var/job_external_low = 0
+	//character preferences
+	var/real_name						//our character's name
+	var/be_random_name = 0				//whether we'll have a random name every round
+	var/be_random_body = 0				//whether we'll have a random body every round
+	var/gender = MALE					//gender of character (well duh)
+	var/age = 30						//age of character
+	var/underwear = "Nude"				//underwear type
+	var/undershirt = "Nude"				//undershirt type
+	var/socks = "Nude"					//socks type
+	var/backbag = DBACKPACK				//backpack type
+	var/hair_style = "Bald"				//Hair type
+	var/hair_color = "000"				//Hair color
+	var/facial_hair_style = "Shaved"	//Face hair type
+	var/facial_hair_color = "000"		//Facial hair color
+	var/skin_tone = "caucasian1"		//Skin color
+	var/eye_color = "000"				//Eye color
+	var/datum/species/pref_species = new /datum/species/human()	//Mutant race
+	var/list/features = list("mcolor" = "FFF", "tail_lizard" = "Smooth", "tail_human" = "None", "snout" = "Round", "horns" = "None", "ears" = "None", "wings" = "None", "frills" = "None", "spines" = "None", "body_markings" = "None", "legs" = "Normal Legs")
 
-	var/datum/character/selected_character
+	var/list/custom_names = list("clown", "mime", "ai", "cyborg", "religion", "deity")
+	var/prefered_security_department = SEC_DEPT_RANDOM
+
+		//Mob preview
+	var/icon/preview_icon = null
+
+		//More jobs
+	var/list/roles = new/list()
+	var/department_tag = ""
+
+		//Metadata
+	var/ckey = ""
+	var/rounds = 0
+	var/date = ""
+	//Is the char locked in ?
+	var/locked = 0
+	//What is the employment status
+	var/status = "Active"
+
+		//Char background
+	var/home_system = "Unset"           //System of birth.
+	var/citizenship = "None"            //Current home system.
+	var/flavor_texts_human = ""
+	var/flavor_texts_robot = ""
+
+		//Reccores
+	var/med_record = "Medical records here:"
+	var/sec_record = "Security records here:"
+	var/gen_record = "General employment records here:"
+	var/exploit_record = "Exploitable information here:"
+
+		//phorensics (not used atm)
+	var/DNA = ""
+	var/fingerprints = ""
+	var/unique_identifier = ""
+
+		//Langueages
+	var/additional_language = "None"
+
+
+	//Is this char to be deleted on safe or load ?
+	var/to_delete = 0
+
+		// Want randomjob if preferences already filled - Donkie
+	var/joblessrole = BERANDOMJOB  //defaults to 1 for fewer assistants
+
+	// 0 = character settings, 1 = game preferences
+	var/current_tab = 0
+	// 0 = char records, 1 = char prefs
+	var/char_prefs = 1
+	// 0 = char list, 1 = char editor
+	var/select_character = 0
+
+		// OOC Metadata:
+	var/metadata = ""
+
+	var/unlock_content = 0
+
+	var/list/ignoring = list()
+
+	var/clientfps = 0
+
+	var/parallax = PARALLAX_HIGH
+
+	var/uplink_spawn_loc = UPLINK_PDA
+
 
 /datum/preferences/New(client/C)
 	parent = C
 	custom_names["ai"] = pick(ai_names)
 	custom_names["cyborg"] = pick(ai_names)
+	custom_names["clown"] = pick(clown_names)
+	custom_names["mime"] = pick(mime_names)
 	if(istype(C))
 		if(!IsGuestKey(C.key))
 			load_path(C.ckey)
+
 	var/loaded_preferences_successfully = load_preferences()
 	if(loaded_preferences_successfully)
 		if(load_character())
-			return
-	//we couldn't load character data so just randomize the character appearance + name
-	selected_character = new/datum/character
-	selected_character.random_character()		//let's create a random character then - rather than a fat, bald and naked man.
-	selected_character.real_name = pref_species.random_name(gender,1)
+			if(!to_delete)
+				return
+
+	//we couldn't load character data or the character is to be deleted so just randomize the character appearance + name
+	random_character()		//let's create a random character then - rather than a fat, bald and naked man.
+	real_name = pref_species.random_name(gender,1)
+
 	if(!loaded_preferences_successfully)
 		save_preferences()
 	save_character()		//let's save this new random character so it doesn't keep generating new ones.
 	return
 
-/datum/preferences/ShowChoices(mob/user)
-	if(!user || !user.client || !selected_character)
-		if(!selected_character)
-			world << "no character"
-		return
-	world << "character: [selected_character.real_name]"
-	world << "department: [selected_character.selected_department]"
-	world << "department list:"
-	world << departments
 
+/datum/preferences/proc/ShowChoices(mob/user)
+	if(!user || !user.client)
+		return
 	update_preview_icon()
 	user << browse_rsc(preview_icon, "previewicon.png")
 	var/dat = "<center>"
@@ -68,223 +167,46 @@
 	dat += "</center>"
 
 	dat += "<HR>"
+
 	switch(current_tab)
 		if (0) // Character Settings#
-			if(path)
-				var/savefile/S = new /savefile(path)
-				if(S)
-					dat += "<center>"
-					var/name
-					for(var/i=1, i<=max_save_slots, i++)
-						S.cd = "/character[i]"
-						S["real_name"] >> name
-						if(!name)
-							name = "Character[i]"
-						//if(i!=1) dat += " | "
-						dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;num=[i];' [i == default_slot ? "class='linkOn'" : ""]>[name]</a> "
-					dat += "</center>"
-
-			dat += "<center><h2>Occupation Choices</h2>"
-			dat += "<a href='?_src_=prefs;preference=job;task=menu'>Set Occupation Preferences</a><br></center>"
-			dat += "<h2>Identity</h2>"
-			dat += "<table width='100%'><tr><td width='75%' valign='top'>"
-			if(jobban_isbanned(user, "appearance"))
-				dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
-			dat += "<a href='?_src_=prefs;preference=name;task=random'>Random Name</A> "
-			dat += "<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a><BR>"
-
-			dat += "<b>Name:</b> "
-			dat += "<a href='?_src_=prefs;preference=name;task=input'>[real_name]</a><BR>"
-
-			dat += "<b>Gender:</b> <a href='?_src_=prefs;preference=gender'>[gender == MALE ? "Male" : "Female"]</a><BR>"
-			dat += "<b>Age:</b> <a href='?_src_=prefs;preference=age;task=input'>[age]</a><BR>"
-
-			dat += "<b>Special Names:</b><BR>"
-			dat += "<a href ='?_src_=prefs;preference=ai_name;task=input'><b>AI:</b> [custom_names["ai"]]</a> "
-			dat += "<a href ='?_src_=prefs;preference=cyborg_name;task=input'><b>Cyborg:</b> [custom_names["cyborg"]]</a><BR>"
-			dat += "<a href ='?_src_=prefs;preference=religion_name;task=input'><b>Chaplain religion:</b> [custom_names["religion"]] </a>"
-			dat += "<a href ='?_src_=prefs;preference=deity_name;task=input'><b>Chaplain deity:</b> [custom_names["deity"]]</a><BR>"
-
-			if(selected_character.selected_department.department_id == SEC)
-				dat += "<b>Custom job preferences:</b><BR>"
-				dat += "<a href='?_src_=prefs;preference=sec_dept;task=input'><b>Prefered security department:</b> [prefered_security_department]</a><BR></td>"
-
-			dat += "<td valign='center'>"
-
-			dat += "<div class='statusDisplay'><center><img src=previewicon.png width=[preview_icon.Width()] height=[preview_icon.Height()]></center></div>"
-
-			dat += "</td></tr></table>"
-
-			dat += "<h2>Body</h2>"
-			dat += "<a href='?_src_=prefs;preference=all;task=random'>Random Body</A> "
-			dat += "<a href='?_src_=prefs;preference=all'>Always Random Body: [be_random_body ? "Yes" : "No"]</A><br>"
-
-			dat += "<table width='100%'><tr><td width='24%' valign='top'>"
-
-			if(config.mutant_races)
-				dat += "<b>Species:</b><BR><a href='?_src_=prefs;preference=species;task=input'>[pref_species.name]</a><BR>"
-			else
-				dat += "<b>Species:</b> Human<BR>"
-
-			dat += "<b>Underwear:</b><BR><a href ='?_src_=prefs;preference=underwear;task=input'>[underwear]</a><BR>"
-			dat += "<b>Undershirt:</b><BR><a href ='?_src_=prefs;preference=undershirt;task=input'>[undershirt]</a><BR>"
-			dat += "<b>Socks:</b><BR><a href ='?_src_=prefs;preference=socks;task=input'>[socks]</a><BR>"
-			dat += "<b>Backpack:</b><BR><a href ='?_src_=prefs;preference=bag;task=input'>[backbag]</a><BR>"
-			dat += "<b>Uplink Spawn Location:</b><BR><a href ='?_src_=prefs;preference=uplink_loc;task=input'>[uplink_spawn_loc]</a><BR></td>"
-
-			if(pref_species.use_skintones)
-
-				dat += "<td valign='top' width='21%'>"
-
-				dat += "<h3>Skin Tone</h3>"
-
-				dat += "<a href='?_src_=prefs;preference=s_tone;task=input'>[skin_tone]</a><BR>"
-
-				dat += "</td>"
-
-			if(HAIR in pref_species.species_traits)
-
-				dat += "<td valign='top' width='21%'>"
-
-				dat += "<h3>Hair Style</h3>"
-
-				dat += "<a href='?_src_=prefs;preference=hair_style;task=input'>[hair_style]</a><BR>"
-				dat += "<a href='?_src_=prefs;preference=previous_hair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_hair_style;task=input'>&gt;</a><BR>"
-				dat += "<span style='border:1px solid #161616; background-color: #[hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=hair;task=input'>Change</a><BR>"
-
-
-				dat += "</td><td valign='top' width='21%'>"
-
-				dat += "<h3>Facial Hair Style</h3>"
-
-				dat += "<a href='?_src_=prefs;preference=facial_hair_style;task=input'>[facial_hair_style]</a><BR>"
-				dat += "<a href='?_src_=prefs;preference=previous_facehair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_facehair_style;task=input'>&gt;</a><BR>"
-				dat += "<span style='border: 1px solid #161616; background-color: #[facial_hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=facial;task=input'>Change</a><BR>"
-
-				dat += "</td>"
-
-			if(EYECOLOR in pref_species.species_traits)
-
-				dat += "<td valign='top' width='21%'>"
-
-				dat += "<h3>Eye Color</h3>"
-
-				dat += "<span style='border: 1px solid #161616; background-color: #[eye_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=eyes;task=input'>Change</a><BR>"
-
-				dat += "</td>"
-
-			if(config.mutant_races) //We don't allow mutant bodyparts for humans either unless this is true.
-
-				if((MUTCOLORS in pref_species.species_traits) || (MUTCOLORS_PARTSONLY in pref_species.species_traits))
-
-					dat += "<td valign='top' width='14%'>"
-
-					dat += "<h3>Mutant Color</h3>"
-
-					dat += "<span style='border: 1px solid #161616; background-color: #[features["mcolor"]];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=mutant_color;task=input'>Change</a><BR>"
-
-					dat += "</td>"
-
-				if("tail_lizard" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Tail</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=tail_lizard;task=input'>[features["tail_lizard"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("snout" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Snout</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=snout;task=input'>[features["snout"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("horns" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Horns</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=horns;task=input'>[features["horns"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("tentacles" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Tentacles</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=tentacles;task=input'>[features["tentacles"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("frills" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Frills</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=frills;task=input'>[features["frills"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("spines" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Spines</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=spines;task=input'>[features["spines"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("body_markings" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Body Markings</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=body_markings;task=input'>[features["body_markings"]]</a><BR>"
-
-					dat += "</td>"
-				if("legs" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Legs</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=legs;task=input'>[features["legs"]]</a><BR>"
-
-					dat += "</td>"
-			if(config.mutant_humans)
-
-				if("tail_human" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Tail</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=tail_human;task=input'>[features["tail_human"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("ears" in pref_species.mutant_bodyparts)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Ears</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=ears;task=input'>[features["ears"]]</a><BR>"
-
-					dat += "</td>"
-
-				if("wings" in pref_species.mutant_bodyparts && r_wings_list.len >1)
-					dat += "<td valign='top' width='7%'>"
-
-					dat += "<h3>Wings</h3>"
-
-					dat += "<a href='?_src_=prefs;preference=wings;task=input'>[features["wings"]]</a><BR>"
-
-					dat += "</td>"
-
-			dat += "</tr></table>"
+			dat += "<a href='?_src_=prefs;preference=select_character;select_character=0' [select_character == 0 ? "class='linkOn'" : ""]>Character List</a> "
+			dat += "<a href='?_src_=prefs;preference=select_character;select_character=1' [select_character == 1 ? "class='linkOn'" : ""]>Edit Character</a>"
+			switch(select_character)
+				if(0)//Char list
+					dat += "<center><h2>Character List</h2><br><br>"
+					dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=add_char;add_char=1'>New Character</a><br><br>"
+					if(path)
+						var/savefile/S = new /savefile(path)
+						if(S)
+							var/name
+							var/status
+							dat += "<td valign='left' width='50%'>"
+							for(var/i=1, i<= nr_chars, i++)
+								S.cd = "/character[i]"
+								S["real_name"] >> name
+								S["status"] >> status
+								if(!status)
+									status = "Active"
+								if(!name)
+									name = "Character[i]"
+								//if(i!=1) dat += " | "
+								if(status == "KIA" || status == "Terminated")
+									dat += "<a style='white-space:nowrap'>[name]</a> [status]"
+								else
+									dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;num=[i];' [i == default_slot ? "class='linkOn'" : ""]>[name]</a> [status]"
+								dat += "<br>"
+							dat += "</td>"
+				if(1)//Char editor
+					dat += "<br>"
+					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=1' [char_prefs == 1 ? "class='linkOn'" : ""]>Identity/Ocupation</a>"
+					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=0' [char_prefs == 0 ? "class='linkOn'" : ""]>Records</a>"
+					switch(char_prefs)
+						if(0)
+							dat += character_records()
+						if(1)
+							dat += occupation_choices()
+					dat += "</tr></table>"
 
 
 		if (1) // Game Preferences
@@ -402,17 +324,231 @@
 	dat += "<hr><center>"
 
 	if(!IsGuestKey(user.key))
-		dat += "<a href='?_src_=prefs;preference=load'>Undo</a> "
-		dat += "<a href='?_src_=prefs;preference=save'>Save Setup</a> "
+		if(!locked)
+			dat += "<a href='?_src_=prefs;preference=load'>Undo</a> "
+		dat += "<a href='?_src_=prefs;preference=save'>Save and Lock Setup</a> "
 
-	dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
+	if(!locked)
+		dat += "<a href='?_src_=prefs;preference=reset_all'>Reset Setup</a>"
 	dat += "</center>"
 
 	var/datum/browser/popup = new(user, "preferences", "<div align='center'>Character Setup</div>", 640, 770)
 	popup.set_content(dat)
 	popup.open(0)
 
-/datum/preferences/process_link(mob/user, list/href_list)
+/datum/preferences/proc/SetChoices(mob/user, limit = 17, list/splitJobs = list("Chief Engineer"), widthPerColumn = 295, height = 620)
+	if(!SSjob)
+		return
+
+	//limit - The amount of jobs allowed per column. Defaults to 17 to make it look nice.
+	//splitJobs - Allows you split the table by job. You can make different tables for each department by including their heads. Defaults to CE to make it look nice.
+	//widthPerColumn - Screen's width for every column.
+	//height - Screen's height.
+
+	var/width = widthPerColumn
+
+	var/HTML = "<center>"
+	if(SSjob.occupations.len <= 0)
+		HTML += "The job ticker is not yet finished creating jobs, please try again later"
+		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
+
+	else
+		HTML += "<b>Choose occupation chances</b><br>"
+		HTML += "<div align='center'>Left-click to raise an occupation preference, right-click to lower it.<br></div>"
+		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
+		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
+		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>" // Table within a table for alignment, also allows you to easily add more colomns.
+		HTML += "<table width='100%' cellpadding='1' cellspacing='0'>"
+		var/index = -1
+
+		//The job before the current job. I only use this to get the previous jobs color when I'm filling in blank rows.
+		var/datum/job/lastJob
+
+		for(var/datum/job/job in SSjob.occupations)
+
+			index += 1
+			if((index >= limit) || (job.title in splitJobs))
+				width += widthPerColumn
+				if((index < limit) && (lastJob != null))
+					//If the cells were broken up by a job in the splitJob list then it will fill in the rest of the cells with
+					//the last job's selection color. Creating a rather nice effect.
+					for(var/i = 0, i < (limit - index), i += 1)
+						HTML += "<tr bgcolor='[lastJob.selection_color]'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
+				HTML += "</table></td><td width='20%'><table width='100%' cellpadding='1' cellspacing='0'>"
+				index = 0
+
+			HTML += "<tr bgcolor='[job.selection_color]'><td width='60%' align='right'>"
+			var/rank = job.title
+			lastJob = job
+			//world << "[parent]'s processing: [rank]"
+			if(!has_role(rank))
+				HTML += "<font color=black>[rank]</font></td><td><a href='?_src_=has_role;has_role=[rank]'> LOCKED</a></td></tr>"
+				continue
+			//world << "[parent] has role"
+
+			if(jobban_isbanned(user, rank))
+				HTML += "<font color=red>[rank]</font></td><td><a href='?_src_=prefs;jobbancheck=[rank]'> BANNED</a></td></tr>"
+				continue
+			//world << "[parent] is not jobbanned from role"
+
+			if(!job.player_old_enough(user.client))
+				var/available_in_days = job.available_in_days(user.client)
+				HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
+				continue
+			//world << "[parent] is not has old enough client"
+
+			if(config.enforce_human_authority && !user.client.prefs.pref_species.qualifies_for_rank(rank, user.client.prefs.features))
+				if(user.client.prefs.pref_species.id == "human")
+					HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[MUTANT\]</b></font></td></tr>"
+				else
+					HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[NON-HUMAN\]</b></font></td></tr>"
+				continue
+			//world << "[parent]'s species can do role"
+
+
+			if((rank in command_positions) || (rank == "AI"))//Bold head jobs
+				HTML += "<b><span class='dark'>[rank]</span></b>"
+			else
+				HTML += "<span class='dark'>[rank]</span>"
+
+			HTML += "</td><td width='40%'>"
+
+			var/prefLevelLabel = "ERROR"
+			var/prefLevelColor = "pink"
+			var/prefUpperLevel = -1 // level to assign on left click
+			var/prefLowerLevel = -1 // level to assign on right click
+
+			if(roles[rank] == "HIGH")
+				prefLevelLabel = "High"
+				prefLevelColor = "slateblue"
+				prefUpperLevel = 4
+				prefLowerLevel = 2
+			else if(roles[rank] == "MEDIUM")
+				prefLevelLabel = "Medium"
+				prefLevelColor = "green"
+				prefUpperLevel = 1
+				prefLowerLevel = 3
+			else if(roles[rank] == "LOW")
+				prefLevelLabel = "Low"
+				prefLevelColor = "orange"
+				prefUpperLevel = 2
+				prefLowerLevel = 4
+			else
+				prefLevelLabel = "NEVER"
+				prefLevelColor = "red"
+				prefUpperLevel = 3
+				prefLowerLevel = 1
+
+			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
+			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font>"
+			HTML += "</a></td></tr>"
+
+		for(var/i = 1, i < (limit - index), i += 1) // Finish the column so it is even
+			HTML += "<tr bgcolor='[lastJob.selection_color]'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
+
+		HTML += "</td'></tr></table>"
+		HTML += "</center></table>"
+
+		var/message = "Be an Assistant if preferences unavailable"
+		if(joblessrole == BERANDOMJOB)
+			message = "Get random job if preferences unavailable"
+		else if(joblessrole == RETURNTOLOBBY)
+			message = "Return to lobby if preferences unavailable"
+		HTML += "<center><br><a href='?_src_=prefs;preference=job;task=random'>[message]</a></center>"
+		HTML += "<center><a href='?_src_=prefs;preference=job;task=reset'>Reset Preferences</a></center>"
+
+	user << browse(null, "window=preferences")
+	var/datum/browser/popup = new(user, "mob_occupation", "<div align='center'>Occupation Preferences</div>", width, height)
+	popup.set_window_options("can_close=0")
+	popup.set_content(HTML)
+	popup.open(0)
+	return
+
+//FUCK BITFLAGS AND SHIFTS AND ALL THAT BS! ~rj
+/datum/preferences/proc/SetJobPreferenceLevel(var/job, level)
+	//world << "Setting job prefs, job: [job], level: [level]"
+	var/priority = "NEVER"
+	switch(level)
+		if(1)
+			priority = "HIGH"
+		if(2)
+			priority = "MEDIUM"
+		if(3)
+			priority = "LOW"
+		if(4)
+			priority = "NEVER"
+
+	if (!job)
+		return 0
+
+	if (level == 1) // to high
+		//remove any other job(s) set to high
+		//world << "Setting to high."
+		for(var/x in roles)
+			if(roles[x] == "HIGH")
+				roles[x] = "MEDIUM"
+
+	for(var/x in roles)
+		if(x == job)
+			//world << "Setting job role job: [job], to: [priority]"
+			roles[x] = priority
+			return 1
+
+	return 0
+
+/datum/preferences/proc/UpdateJobPreference(mob/user, role, desiredLvl)
+	//world << "[parent] updating job level job: [role], level: [desiredLvl]"
+	if(!SSjob || SSjob.occupations.len <= 0)
+		//world << "No job subsystem or SSjob occupations list is empty"
+		return
+	var/datum/job/job = SSjob.GetJob(role)
+	//world << "[parent] getting job datum for [role]"
+
+	if(!job)
+		//world << "[parent] no job datum found."
+		user << browse(null, "window=mob_occupation")
+		ShowChoices(user)
+		return
+
+	if (!isnum(desiredLvl))
+		//world << "[parent] desired level: [desiredLvl] is not a number"
+		user << "<span class='danger'>UpdateJobPreference - desired level was not a number. Please notify coders!</span>"
+		ShowChoices(user)
+		return
+
+	//world << "[parent] setting preferenses."
+	SetJobPreferenceLevel(role, desiredLvl)
+	SetChoices(user)
+
+	return 1
+
+//Check if the player has this job on the given level
+/datum/preferences/proc/GetJobDepartment(var/datum/job/j, var/level)
+	var/priority = "NEVER"
+	switch(level)
+		if(1)
+			priority = "HIGH"
+		if(2)
+			priority = "MEDIUM"
+		if(3)
+			priority = "LOW"
+		if(4)
+			priority = "NEVER"
+
+
+	var/title = j.title
+	for(var/x in roles)
+		if(x == title)
+			if(roles[x] == priority)
+				return 1
+	return 0
+
+
+/datum/preferences/proc/ResetJobs()
+	for(var/x in roles)
+		roles[x] = "NEVER"
+
+/datum/preferences/proc/process_link(mob/user, list/href_list)
 	if(href_list["jobbancheck"])
 		var/job = sanitizeSQL(href_list["jobbancheck"])
 		var/sql_ckey = sanitizeSQL(user.ckey)
@@ -456,9 +592,8 @@
 						joblessrole = RETURNTOLOBBY
 				SetChoices(user)
 			if("setJobLevel")
+				//world << "[parent] modifing job level job: [href_list["text"]], level: [text2num(href_list["level"])]"
 				UpdateJobPreference(user, href_list["text"], text2num(href_list["level"]))
-			if("setDepartment")
-				selected_character.selected_department = input(user, "Select a department","Department") as anything in departments
 			else
 				SetChoices(user)
 		return 1
@@ -527,13 +662,37 @@
 							ghost_others = GHOST_OTHERS_SIMPLE
 
 				if("name")
-					var/new_name
-					if(pref_species.id == "vatgrown")
-						new_name = reject_bad_name( input(user, "Choose your character's name:", "Character Preference") as text|null, 1)
-					else
-						new_name = reject_bad_name( input(user, "Choose your character's name:", "Character Preference")  as text|null )
+					var/new_name = reject_bad_name( input(user, "Choose your character's name:", "Character Preference")  as text|null )
 					if(new_name)
 						real_name = new_name
+					else
+						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
+
+				if("gen_rec")
+					var/rec = input(user, "Fill in your characters general employment record", "Character Preference")  as text|null
+					if(rec)
+						gen_record = rec
+					else
+						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
+
+				if("sec_rec")
+					var/rec = input(user, "Fill in your characters security record", "Character Preference")  as text|null
+					if(rec)
+						sec_record = rec
+					else
+						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
+
+				if("med_rec")
+					var/rec = input(user, "Fill in your characters medical record", "Character Preference")  as text|null
+					if(rec)
+						med_record = rec
+					else
+						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
+
+				if("exp_rec")
+					var/rec = input(user, "Fill in your characters general employment reccord", "Character Preference")  as text|null
+					if(rec)
+						exploit_record = rec
 					else
 						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
 
@@ -640,8 +799,6 @@
 						var/temp_hsv = RGBtoHSV(features["mcolor"])
 						if(features["mcolor"] == "#000" || (!(MUTCOLORS_PARTSONLY in pref_species.species_traits) && ReadHSV(temp_hsv)[3] < ReadHSV("#7F7F7F")[3]))
 							features["mcolor"] = pref_species.default_color
-					if(pref_species.id != "vatgrown")
-						real_name = reject_bad_name(real_name)
 
 				if("mutant_color")
 					var/new_mutantcolor = input(user, "Choose your character's alien/mutant color:", "Character Preference") as color|null
@@ -783,9 +940,9 @@
 						user << "<font color='red'>Invalid name. Your name should be at least 2 and at most [MAX_NAME_LEN] characters long. It may only contain the characters A-Z, a-z, -, ' and .</font>"
 
 				if("sec_dept")
-					var/departmentsec = input(user, "Choose your prefered security department:", "Security Departments") as null|anything in security_depts_prefs
-					if(departmentsec)
-						prefered_security_department = departmentsec
+					var/department = input(user, "Choose your prefered security department:", "Security Departments") as null|anything in security_depts_prefs
+					if(department)
+						prefered_security_department = department
 
 				if ("preferred_map")
 					var/maplist = list()
@@ -903,6 +1060,8 @@
 						parent.mob.hud_used.update_parallax_pref()
 
 				if("save")
+					//Safe and lock in the character.
+					locked = 1
 					save_preferences()
 					save_character()
 
@@ -916,382 +1075,383 @@
 						real_name = random_unique_name(gender)
 						save_character()
 
+				if("add_char")
+					save_preferences()
+					save_character()
+					default_slot += 1
+					random_character()
+					real_name = random_unique_name(gender)
+					nr_chars += 1
+
+
 				if("tab")
 					if (href_list["tab"])
 						current_tab = text2num(href_list["tab"])
 
+				if("char_prefs")
+					if(href_list["char_prefs"])
+						char_prefs = text2num(href_list["char_prefs"])
+				if("select_character")
+					if(href_list["select_character"])
+						select_character = text2num(href_list["select_character"])
+
 	ShowChoices(user)
 	return 1
 
-/datum/preferences/SetChoices(mob/user, limit = 17, list/splitJobs = list("Chief Engineer"), widthPerColumn = 295, height = 620)
-	if(!SSjob)
-		return
+/datum/preferences/proc/character_records()
+	var/dat = ""
+	dat += "<br>"
 
-	//limit - The amount of jobs allowed per column. Defaults to 17 to make it look nice.
-	//splitJobs - Allows you split the table by job. You can make different tables for each department by including their heads. Defaults to CE to make it look nice.
-	//widthPerColumn - Screen's width for every column.
-	//height - Screen's height.
+	dat += "<b>General:</b> "
+	dat += "<a href='?_src_=prefs;preference=gen_rec;task=input'>[gen_record]</a><BR>"
 
-	var/width = widthPerColumn
+	dat += "<b>Medical:</b> "
+	dat += "<a href='?_src_=prefs;preference=med_rec;task=input'>[med_record]</a><BR>"
 
-	var/HTML = "<center>"
-	if(SSjob.occupations.len <= 0)
-		HTML += "The job ticker is not yet finished creating jobs, please try again later"
-		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
+	dat += "<b>Security:</b> "
+	dat += "<a href='?_src_=prefs;preference=sec_rec;task=input'>[sec_record]</a><BR>"
 
-	else
-		HTML += "<b>Choose occupation chances</b><br>"
-		HTML += "<div align='center'>Left-click to raise an occupation preference, right-click to lower it.<br></div>"
-		HTML += "<center><a href='?_src_=prefs;preference=job;task=close'>Done</a></center><br>" // Easier to press up here.
-		HTML += "<script type='text/javascript'>function setJobPrefRedirect(level, rank) { window.location.href='?_src_=prefs;preference=job;task=setJobLevel;level=' + level + ';text=' + encodeURIComponent(rank); return false; }</script>"
-		HTML += "<table width='100%' cellpadding='1' cellspacing='0'><tr><td width='20%'>" // Table within a table for alignment, also allows you to easily add more colomns.
-		HTML += "<table width='100%' cellpadding='1' cellspacing='0'>"
-		var/index = -1
+	dat += "<b>Exploitable Information:</b> "
+	dat += "<a href='?_src_=prefs;preference=exp_rec;task=input'>[exploit_record]</a><BR>"
 
-		//The job before the current job. I only use this to get the previous jobs color when I'm filling in blank rows.
-		var/datum/job/lastJob
+	return dat
 
-		for(var/datum/job/job in SSjob.occupations)
+/datum/preferences/proc/occupation_choices()
+	var/dat = ""
+	dat += "<center><h2>Occupation Choices</h2>"
+	dat += "<a href='?_src_=prefs;preference=job;task=menu'>Set Occupation Preferences</a><br></center>"
+	dat += "<h2>Identity</h2>"
+	if(!locked)
+		dat += "<table width='100%'><tr><td width='75%' valign='top'>"
+		if(jobban_isbanned(parent.mob, "appearance"))
+			dat += "<b>You are banned from using custom names and appearances. You can continue to adjust your characters, but you will be randomised once you join the game.</b><br>"
+		dat += "<a href='?_src_=prefs;preference=name;task=random'>Random Name</A> "
+		dat += "<a href='?_src_=prefs;preference=name'>Always Random Name: [be_random_name ? "Yes" : "No"]</a><BR>"
 
-			index += 1
-			if((index >= limit) || (job.title in splitJobs))
-				width += widthPerColumn
-				if((index < limit) && (lastJob != null))
-					//If the cells were broken up by a job in the splitJob list then it will fill in the rest of the cells with
-					//the last job's selection color. Creating a rather nice effect.
-					for(var/i = 0, i < (limit - index), i += 1)
-						HTML += "<tr bgcolor='[lastJob.selection_color]'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
-				HTML += "</table></td><td width='20%'><table width='100%' cellpadding='1' cellspacing='0'>"
-				index = 0
+		dat += "<b>Name:</b> "
+		dat += "<a href='?_src_=prefs;preference=name;task=input'>[real_name]</a><BR>"
 
-			HTML += "<tr bgcolor='[job.selection_color]'><td width='60%' align='right'>"
-			var/rank = job.title
-			lastJob = job
-			if((job.department_flag == selected_character.selected_department) || (job.department_flag == CIVILIAN) || (job.department_flag == SILICON))
-				if(jobban_isbanned(user, rank))
-					HTML += "<font color=red>[rank]</font></td><td><a href='?_src_=prefs;jobbancheck=[rank]'> BANNED</a></td></tr>"
-					continue
-				if(!job.player_old_enough(user.client))
-					var/available_in_days = job.available_in_days(user.client)
-					HTML += "<font color=red>[rank]</font></td><td><font color=red> \[IN [(available_in_days)] DAYS\]</font></td></tr>"
-					continue
-				if((job_civilian_low & ASSISTANT) && (rank != "Assistant") && !jobban_isbanned(user, "Assistant"))
-					HTML += "<font color=orange>[rank]</font></td><td></td></tr>"
-					continue
-				if(config.enforce_human_authority && !user.client.prefs.pref_species.qualifies_for_rank(rank, user.client.prefs.features))
-					if(user.client.prefs.pref_species.id == "human")
-						HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[MUTANT\]</b></font></td></tr>"
-					else
-						HTML += "<font color=red>[rank]</font></td><td><font color=red><b> \[NON-HUMAN\]</b></font></td></tr>"
-					continue
-				if((rank in command_positions) || (rank == "AI"))//Bold head jobs
-					HTML += "<b><span class='dark'>[rank]</span></b>"
-				else
-					HTML += "<span class='dark'>[rank]</span>"
+		dat += "<b>Gender:</b> <a href='?_src_=prefs;preference=gender'>[gender == MALE ? "Male" : "Female"]</a><BR>"
+		dat += "<b>Age:</b> <a href='?_src_=prefs;preference=age;task=input'>[age]</a><BR>"
 
-			HTML += "</td><td width='40%'>"
+		dat += "<b>Special Names:</b><BR>"
+		dat += "<a href ='?_src_=prefs;preference=clown_name;task=input'><b>Clown:</b> [custom_names["clown"]]</a> "
+		dat += "<a href ='?_src_=prefs;preference=mime_name;task=input'><b>Mime:</b>[custom_names["mime"]]</a><BR>"
+		dat += "<a href ='?_src_=prefs;preference=ai_name;task=input'><b>AI:</b> [custom_names["ai"]]</a> "
+		dat += "<a href ='?_src_=prefs;preference=cyborg_name;task=input'><b>Cyborg:</b> [custom_names["cyborg"]]</a><BR>"
+		dat += "<a href ='?_src_=prefs;preference=religion_name;task=input'><b>Chaplain religion:</b> [custom_names["religion"]] </a>"
+		dat += "<a href ='?_src_=prefs;preference=deity_name;task=input'><b>Chaplain deity:</b> [custom_names["deity"]]</a><BR>"
 
-			var/prefLevelLabel = "ERROR"
-			var/prefLevelColor = "pink"
-			var/prefUpperLevel = -1 // level to assign on left click
-			var/prefLowerLevel = -1 // level to assign on right click
+		dat += "<b>Custom job preferences:</b><BR>"
+		dat += "<a href='?_src_=prefs;preference=sec_dept;task=input'><b>Prefered security department:</b> [prefered_security_department]</a><BR></td>"
 
-			if(GetJobDepartment(job, 1) & job.flag)
-				prefLevelLabel = "High"
-				prefLevelColor = "slateblue"
-				prefUpperLevel = 4
-				prefLowerLevel = 2
-			else if(GetJobDepartment(job, 2) & job.flag)
-				prefLevelLabel = "Medium"
-				prefLevelColor = "green"
-				prefUpperLevel = 1
-				prefLowerLevel = 3
-			else if(GetJobDepartment(job, 3) & job.flag)
-				prefLevelLabel = "Low"
-				prefLevelColor = "orange"
-				prefUpperLevel = 2
-				prefLowerLevel = 4
-			else
-				prefLevelLabel = "NEVER"
-				prefLevelColor = "red"
-				prefUpperLevel = 3
-				prefLowerLevel = 1
+		dat += "<td valign='center'>"
 
+		dat += "<div class='statusDisplay'><center><img src=previewicon.png width=[preview_icon.Width()] height=[preview_icon.Height()]></center></div>"
 
-			HTML += "<a class='white' href='?_src_=prefs;preference=job;task=setJobLevel;level=[prefUpperLevel];text=[rank]' oncontextmenu='javascript:return setJobPrefRedirect([prefLowerLevel], \"[rank]\");'>"
+		dat += "</td></tr></table>"
 
-			if(rank == "Assistant")//Assistant is special
-				if(job_civilian_low & ASSISTANT)
-					HTML += "<font color=green>Yes</font>"
-				else
-					HTML += "<font color=red>No</font>"
-				HTML += "</a></td></tr>"
-				continue
+		dat += "<h2>Body</h2>"
+		dat += "<a href='?_src_=prefs;preference=all;task=random'>Random Body</A> "
+		dat += "<a href='?_src_=prefs;preference=all'>Always Random Body: [be_random_body ? "Yes" : "No"]</A><br>"
 
-			HTML += "<font color=[prefLevelColor]>[prefLevelLabel]</font>"
-			HTML += "</a></td></tr>"
+		dat += "<table width='100%'><tr><td width='24%' valign='top'>"
 
-		for(var/i = 1, i < (limit - index), i += 1) // Finish the column so it is even
-			HTML += "<tr bgcolor='[lastJob.selection_color]'><td width='60%' align='right'>&nbsp</td><td>&nbsp</td></tr>"
-
-		HTML += "</td'></tr></table>"
-		HTML += "</center></table>"
-
-		var/message = "Be an Assistant if preferences unavailable"
-		if(joblessrole == BERANDOMJOB)
-			message = "Get random job if preferences unavailable"
-		else if(joblessrole == RETURNTOLOBBY)
-			message = "Return to lobby if preferences unavailable"
-		HTML += "<center><br><a href='?_src_=prefs;preference=job;task=random'>[message]</a></center>"
-		HTML += "<center><a href='?_src_=prefs;preference=job;task=reset'>Reset Preferences</a></center>"
-
-	user << browse(null, "window=preferences")
-	var/datum/browser/popup = new(user, "mob_occupation", "<div align='center'>Occupation Preferences</div>", width, height)
-	popup.set_window_options("can_close=0")
-	popup.set_content(HTML)
-	popup.open(0)
-	return
-
-/datum/preferences/SetJobPreferenceLevel(datum/job/job, level)
-	if (!job)
-		return 0
-
-	if (level == 1) // to high
-		// remove any other job(s) set to high
-		job_civilian_med |= job_civilian_high
-		job_eng_med |= job_eng_high
-		job_sec_med |= job_sec_high
-		job_med_med |= job_med_high
-		job_sci_med |= job_sci_high
-		job_cargo_med |= job_cargo_high
-		job_external_med |= job_external_high
-		job_civilian_high = 0
-		job_sec_high = 0
-		job_eng_high = 0
-		job_sci_high = 0
-		job_med_high = 0
-		job_external_high = 0
-		job_cargo_high = 0
-
-	if (job.department_flag == CIVILIAN)
-		job_civilian_low &= ~job.flag
-		job_civilian_med &= ~job.flag
-		job_civilian_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_civilian_high |= job.flag
-			if (2)
-				job_civilian_med |= job.flag
-			if (3)
-				job_civilian_low |= job.flag
-
-		return 1
-	else if (job.department_flag == SEC)
-		job_sec_low &= ~job.flag
-		job_sec_med &= ~job.flag
-		job_sec_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_sec_high |= job.flag
-			if (2)
-				job_sec_med |= job.flag
-			if (3)
-				job_sec_low |= job.flag
-
-		return 1
-	else if (job.department_flag == ENG)
-		job_eng_low &= ~job.flag
-		job_eng_med &= ~job.flag
-		job_eng_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_eng_high |= job.flag
-			if (2)
-				job_eng_med |= job.flag
-			if (3)
-				job_eng_low |= job.flag
-
-		return 1
-	else if (job.department_flag == SCI)
-		job_sci_low &= ~job.flag
-		job_sci_med &= ~job.flag
-		job_sci_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_sci_high |= job.flag
-			if (2)
-				job_sci_med |= job.flag
-			if (3)
-				job_sci_low |= job.flag
-
-		return 1
-	else if (job.department_flag == MED)
-		job_med_low &= ~job.flag
-		job_med_med &= ~job.flag
-		job_med_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_med_high |= job.flag
-			if (2)
-				job_med_med |= job.flag
-			if (3)
-				job_med_low |= job.flag
-
-		return 1
-	else if (job.department_flag == CARGO)
-		job_cargo_low &= ~job.flag
-		job_cargo_med &= ~job.flag
-		job_cargo_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_cargo_high |= job.flag
-			if (2)
-				job_cargo_med |= job.flag
-			if (3)
-				job_cargo_low |= job.flag
-
-		return 1
-	else if (job.department_flag == SOLGOV)
-		job_external_low &= ~job.flag
-		job_external_med &= ~job.flag
-		job_external_high &= ~job.flag
-
-		switch(level)
-			if (1)
-				job_external_high |= job.flag
-			if (2)
-				job_external_med |= job.flag
-			if (3)
-				job_external_low |= job.flag
-
-		return 1
-
-	return 0
-
-/datum/preferences/UpdateJobPreference(mob/user, role, desiredLvl)
-	if(!SSjob || SSjob.occupations.len <= 0)
-		return
-	var/datum/job/job = SSjob.GetJob(role)
-
-	if(!job)
-		user << browse(null, "window=mob_occupation")
-		ShowChoices(user)
-		return
-
-	if (!isnum(desiredLvl))
-		user << "<span class='danger'>UpdateJobPreference - desired level was not a number. Please notify coders!</span>"
-		ShowChoices(user)
-		return
-
-	if(role == "Assistant")
-		if(job_civilian_low & job.flag)
-			job_civilian_low &= ~job.flag
+		if(config.mutant_races)
+			dat += "<b>Species:</b><BR><a href='?_src_=prefs;preference=species;task=input'>[pref_species.name]</a><BR>"
 		else
-			job_civilian_low |= job.flag
-		SetChoices(user)
-		return 1
+			dat += "<b>Species:</b> Human<BR>"
 
-	SetJobPreferenceLevel(job, desiredLvl)
-	SetChoices(user)
+		dat += "<b>Underwear:</b><BR><a href ='?_src_=prefs;preference=underwear;task=input'>[underwear]</a><BR>"
+		dat += "<b>Undershirt:</b><BR><a href ='?_src_=prefs;preference=undershirt;task=input'>[undershirt]</a><BR>"
+		dat += "<b>Socks:</b><BR><a href ='?_src_=prefs;preference=socks;task=input'>[socks]</a><BR>"
+		dat += "<b>Backpack:</b><BR><a href ='?_src_=prefs;preference=bag;task=input'>[backbag]</a><BR>"
+		dat += "<b>Uplink Spawn Location:</b><BR><a href ='?_src_=prefs;preference=uplink_loc;task=input'>[uplink_spawn_loc]</a><BR></td>"
 
-	return 1
+		if(pref_species.use_skintones)
 
+			dat += "<td valign='top' width='21%'>"
 
-/datum/preferences/ResetJobs()
+			dat += "<h3>Skin Tone</h3>"
 
-	job_civilian_high = 0
-	job_civilian_med = 0
-	job_civilian_low = 0
+			dat += "<a href='?_src_=prefs;preference=s_tone;task=input'>[skin_tone]</a><BR>"
 
-	job_med_high = 0
-	job_med_med = 0
-	job_med_low = 0
+			dat += "</td>"
 
-	job_sci_high = 0
-	job_sci_med = 0
-	job_sci_low = 0
+		if(HAIR in pref_species.species_traits)
 
-	job_sec_high = 0
-	job_sec_med = 0
-	job_sec_low = 0
+			dat += "<td valign='top' width='21%'>"
 
-	job_eng_high = 0
-	job_eng_med = 0
-	job_eng_low = 0
+			dat += "<h3>Hair Style</h3>"
 
-	job_cargo_high = 0
-	job_cargo_med = 0
-	job_cargo_low = 0
-
-	job_external_high = 0
-	job_external_med = 0
-	job_external_low = 0
+			dat += "<a href='?_src_=prefs;preference=hair_style;task=input'>[hair_style]</a><BR>"
+			dat += "<a href='?_src_=prefs;preference=previous_hair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_hair_style;task=input'>&gt;</a><BR>"
+			dat += "<span style='border:1px solid #161616; background-color: #[hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=hair;task=input'>Change</a><BR>"
 
 
-/datum/preferences/GetJobDepartment(datum/job/job, level)
-	if(!job || !level)
-		return 0
-	switch(job.department_flag)
-		if(CIVILIAN)
-			switch(level)
-				if(1)
-					return job_civilian_high
-				if(2)
-					return job_civilian_med
-				if(3)
-					return job_civilian_low
-		if(SCI)
-			switch(level)
-				if(1)
-					return job_sci_high
-				if(2)
-					return job_sci_med
-				if(3)
-					return job_sci_low
-		if(MED)
-			switch(level)
-				if(1)
-					return job_med_high
-				if(2)
-					return job_med_med
-				if(3)
-					return job_med_low
-		if(SEC)
-			switch(level)
-				if(1)
-					return job_sec_high
-				if(2)
-					return job_sec_med
-				if(3)
-					return job_sec_low
-		if(ENG)
-			switch(level)
-				if(1)
-					return job_eng_high
-				if(2)
-					return job_eng_med
-				if(3)
-					return job_eng_low
-		if(CARGO)
-			switch(level)
-				if(1)
-					return job_cargo_high
-				if(2)
-					return job_cargo_med
-				if(3)
-					return job_cargo_low
-		if(SOLGOV)
-			switch(level)
-				if(1)
-					return job_external_high
-				if(2)
-					return job_external_med
-				if(3)
-					return job_external_low
+			dat += "</td><td valign='top' width='21%'>"
+
+			dat += "<h3>Facial Hair Style</h3>"
+
+			dat += "<a href='?_src_=prefs;preference=facial_hair_style;task=input'>[facial_hair_style]</a><BR>"
+			dat += "<a href='?_src_=prefs;preference=previous_facehair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_facehair_style;task=input'>&gt;</a><BR>"
+			dat += "<span style='border: 1px solid #161616; background-color: #[facial_hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=facial;task=input'>Change</a><BR>"
+
+			dat += "</td>"
+
+		if(EYECOLOR in pref_species.species_traits)
+
+			dat += "<td valign='top' width='21%'>"
+
+			dat += "<h3>Eye Color</h3>"
+
+			dat += "<span style='border: 1px solid #161616; background-color: #[eye_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=eyes;task=input'>Change</a><BR>"
+
+			dat += "</td>"
+
+		if(config.mutant_races) //We don't allow mutant bodyparts for humans either unless this is true.
+
+			if((MUTCOLORS in pref_species.species_traits) || (MUTCOLORS_PARTSONLY in pref_species.species_traits))
+
+				dat += "<td valign='top' width='14%'>"
+
+				dat += "<h3>Mutant Color</h3>"
+
+				dat += "<span style='border: 1px solid #161616; background-color: #[features["mcolor"]];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=mutant_color;task=input'>Change</a><BR>"
+
+				dat += "</td>"
+
+			if("tail_lizard" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Tail</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=tail_lizard;task=input'>[features["tail_lizard"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("snout" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Snout</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=snout;task=input'>[features["snout"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("horns" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Horns</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=horns;task=input'>[features["horns"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("tentacles" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Tentacles</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=tentacles;task=input'>[features["tentacles"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("frills" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Frills</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=frills;task=input'>[features["frills"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("spines" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Spines</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=spines;task=input'>[features["spines"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("body_markings" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Body Markings</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=body_markings;task=input'>[features["body_markings"]]</a><BR>"
+
+				dat += "</td>"
+			if("legs" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Legs</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=legs;task=input'>[features["legs"]]</a><BR>"
+
+				dat += "</td>"
+		if(config.mutant_humans)
+
+			if("tail_human" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Tail</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=tail_human;task=input'>[features["tail_human"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("ears" in pref_species.mutant_bodyparts)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Ears</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=ears;task=input'>[features["ears"]]</a><BR>"
+
+				dat += "</td>"
+
+			if("wings" in pref_species.mutant_bodyparts && r_wings_list.len >1)
+				dat += "<td valign='top' width='7%'>"
+
+				dat += "<h3>Wings</h3>"
+
+				dat += "<a href='?_src_=prefs;preference=wings;task=input'>[features["wings"]]</a><BR>"
+
+				dat += "</td>"
+	else
+		dat += "<table width='100%'><tr><td width='75%' valign='top'>"
+
+		dat += "<b>Name:</b> [real_name]<BR>"
+
+		dat += "<b>Gender:</b> [gender == MALE ? "Male" : "Female"]<BR>"
+		dat += "<b>Age:</b> [age]<BR>"
+
+		dat += "<b>Special Names:</b><BR>"
+		dat += "<a href ='?_src_=prefs;preference=clown_name;task=input'><b>Clown:</b> [custom_names["clown"]]</a> "
+		dat += "<a href ='?_src_=prefs;preference=mime_name;task=input'><b>Mime:</b>[custom_names["mime"]]</a><BR>"
+		dat += "<a href ='?_src_=prefs;preference=ai_name;task=input'><b>AI:</b> [custom_names["ai"]]</a> "
+		dat += "<a href ='?_src_=prefs;preference=cyborg_name;task=input'><b>Cyborg:</b> [custom_names["cyborg"]]</a><BR>"
+		dat += "<a href ='?_src_=prefs;preference=religion_name;task=input'><b>Chaplain religion:</b> [custom_names["religion"]] </a>"
+		dat += "<a href ='?_src_=prefs;preference=deity_name;task=input'><b>Chaplain deity:</b> [custom_names["deity"]]</a><BR>"
+
+		dat += "<b>Custom job preferences:</b><BR>"
+		dat += "<a href='?_src_=prefs;preference=sec_dept;task=input'><b>Prefered security department:</b> [prefered_security_department]</a><BR></td>"
+
+		dat += "<td valign='center'>"
+
+		dat += "<div class='statusDisplay'><center><img src=previewicon.png width=[preview_icon.Width()] height=[preview_icon.Height()]></center></div>"
+
+		dat += "</td></tr></table>"
+
+		dat += "<h2>Body</h2>"
+		dat += "<table width='100%'><tr><td width='24%' valign='top'>"
+
+		if(config.mutant_races)
+			dat += "<b>Species:</b> [pref_species.name]<BR>"
+		else
+			dat += "<b>Species:</b> Human<BR>"
+
+		dat += "<b>Underwear:</b><BR><a href ='?_src_=prefs;preference=underwear;task=input'>[underwear]</a><BR>"
+		dat += "<b>Undershirt:</b><BR><a href ='?_src_=prefs;preference=undershirt;task=input'>[undershirt]</a><BR>"
+		dat += "<b>Socks:</b><BR><a href ='?_src_=prefs;preference=socks;task=input'>[socks]</a><BR>"
+		dat += "<b>Backpack:</b><BR><a href ='?_src_=prefs;preference=bag;task=input'>[backbag]</a><BR>"
+		dat += "<b>Uplink Spawn Location:</b><BR><a href ='?_src_=prefs;preference=uplink_loc;task=input'>[uplink_spawn_loc]</a><BR></td>"
+
+		if(HAIR in pref_species.species_traits)
+
+			dat += "<td valign='top' width='21%'>"
+
+			dat += "<h3>Hair Style</h3>"
+
+			dat += "<a href='?_src_=prefs;preference=hair_style;task=input'>[hair_style]</a><BR>"
+			dat += "<a href='?_src_=prefs;preference=previous_hair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_hair_style;task=input'>&gt;</a><BR>"
+			dat += "<span style='border:1px solid #161616; background-color: #[hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=hair;task=input'>Change</a><BR>"
+
+
+			dat += "</td><td valign='top' width='21%'>"
+
+			dat += "<h3>Facial Hair Style</h3>"
+
+			dat += "<a href='?_src_=prefs;preference=facial_hair_style;task=input'>[facial_hair_style]</a><BR>"
+			dat += "<a href='?_src_=prefs;preference=previous_facehair_style;task=input'>&lt;</a> <a href='?_src_=prefs;preference=next_facehair_style;task=input'>&gt;</a><BR>"
+			dat += "<span style='border: 1px solid #161616; background-color: #[facial_hair_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=facial;task=input'>Change</a><BR>"
+
+			dat += "</td>"
+
+		if(EYECOLOR in pref_species.species_traits)
+
+			dat += "<td valign='top' width='21%'>"
+
+			dat += "<h3>Eye Color</h3>"
+
+			dat += "<span style='border: 1px solid #161616; background-color: #[eye_color];'>&nbsp;&nbsp;&nbsp;</span> <a href='?_src_=prefs;preference=eyes;task=input'>Change</a><BR>"
+
+			dat += "</td>"
+
+	return dat
+
+/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1)
+	//If the char is not locked give the user a random char for this round.
+	//if(!locked)
+	if(be_random_name)
+		real_name = pref_species.random_name(gender)
+
+	if(be_random_body)
+		random_character(gender)
+
+	if(config.humans_need_surnames)
+		var/firstspace = findtext(real_name, " ")
+		var/name_length = length(real_name)
+		if(!firstspace)	//we need a surname
+			real_name += " [pick(last_names)]"
+		else if(firstspace == name_length)
+			real_name += "[pick(last_names)]"
+
+	character.real_name = real_name
+	character.name = character.real_name
+
+	character.gender = gender
+	character.age = age
+
+	character.eye_color = eye_color
+	character.hair_color = hair_color
+	character.facial_hair_color = facial_hair_color
+
+	character.skin_tone = skin_tone
+	character.hair_style = hair_style
+	character.facial_hair_style = facial_hair_style
+	character.underwear = underwear
+	character.undershirt = undershirt
+	character.socks = socks
+
+	character.backbag = backbag
+
+	character.dna.features = features.Copy()
+	character.dna.real_name = character.real_name
+	var/datum/species/chosen_species
+	if(pref_species != /datum/species/human && config.mutant_races)
+		chosen_species = pref_species.type
+	else
+		chosen_species = /datum/species/human
+	character.set_species(chosen_species, icon_update=0)
+
+	if(icon_updates)
+		character.update_body()
+		character.update_hair()
+		character.update_body_parts()
+
+	character.character = src
+
+
+/datum/preferences/proc/has_role(var/role)
+	//world << "prefs/has_role, [role]"
+	for(var/unlocked in roles)
+		if(lowertext(unlocked) == lowertext(role))
+			//world << "prefs/has_role/ret1, [unlocked], [role]"
+			return 1
+	//world << "prefs/has_role/ret0, [role]"
 	return 0
+
+/mob/living
+	var/datum/preferences/character = null
