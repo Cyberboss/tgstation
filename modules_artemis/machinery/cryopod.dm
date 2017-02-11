@@ -138,7 +138,7 @@
 	name = "cryogenic freezer"
 	desc = "A man-sized pod for entering suspended animation."
 	icon = 'icons/obj/cryopod.dmi'
-	icon_state = "body_scanner-open"
+	icon_state = "body_scanner"
 	density = 0
 	anchored = 1
 
@@ -176,6 +176,7 @@
 	..()
 	radio = new /obj/item/device/radio/headset(src)
 	find_control_computer()
+	icon_state = "body_scanner"
 	update_icon()
 
 /obj/machinery/cryopod/Destroy()
@@ -346,7 +347,12 @@
 
 /obj/machinery/cryopod/close_machine(mob/user)
 	var/willing = 0 //We don't want to allow people to be forced into despawning.
-	if((isnull(user) || istype(user)) && state_open)
+	if(isnull(user) || !istype(user))
+		return
+	if(!(get_turf(user) == get_turf(src)))
+		..(user)
+		return
+	if(state_open)
 		..(user)
 		if(user.client)
 			if(alert(user,"Would you like to enter long-term storage?",,"Yes","No") == "Yes")
@@ -368,14 +374,16 @@
 		open_machine()
 	..(severity)
 
+/*
 /obj/machinery/cryopod/MouseDrop_T(mob/target, mob/user)
 	if(user.stat || user.lying || !Adjacent(user) || !user.Adjacent(target) || !iscarbon(target) || !user.IsAdvancedToolUser())
 		return
 	close_machine(target)
+*/
 
 /obj/machinery/cryopod/proc/toggle_open(mob/user)
 	if(state_open)
-		close_machine()
+		close_machine(user)
 		return
 
 	open_machine()
@@ -388,7 +396,7 @@
 
 /obj/machinery/cryopod/update_icon()
 	icon_state = initial(icon_state)
-	if(state_open)
+	if(!state_open)
 		icon_state += "-open"
 
 //Attacks/effects.
