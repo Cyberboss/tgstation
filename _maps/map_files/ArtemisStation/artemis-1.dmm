@@ -6197,7 +6197,7 @@
 "cpi" = (/obj/structure/table,/obj/item/stack/packageWrap,/obj/item/weapon/hand_labeler,/obj/item/device/destTagger,/obj/machinery/airalarm{dir = 8; icon_state = "alarm0"; pixel_x = 24},/turf/open/floor/plasteel,/area/quartermaster/sorting)
 "cpj" = (/obj/machinery/light/small{dir = 4},/turf/open/floor/plating,/area/maintenance/aft)
 "cpk" = (/turf/open/floor/plating,/area/ai_monitored/turret_protected/tcommbreaker)
-"cpl" = (/obj/structure/cable/green{d2 = 4; icon_state = "0-4"},/obj/machinery/power/smes{capacity = 200000; charge = 50000},/turf/open/floor/plating,/area/ai_monitored/turret_protected/tcommbreaker)
+"cpl" = (/obj/structure/cable/green{d2 = 4; icon_state = "0-4"},/obj/machinery/power/smes/engineering,/turf/open/floor/plating,/area/ai_monitored/turret_protected/tcommbreaker)
 "cpm" = (/obj/machinery/airalarm{pixel_y = 22},/obj/structure/cable/green{d1 = 2; d2 = 8; icon_state = "2-8"},/obj/structure/cable/green{d1 = 4; d2 = 8; icon_state = "4-8"},/obj/effect/turf_decal/stripes/line{dir = 8},/turf/open/floor/plating,/area/ai_monitored/turret_protected/tcommbreaker)
 "cpn" = (/obj/machinery/power/apc{auto_name = 1; dir = 1; name = "north bump"; pixel_x = 0; pixel_y = 24},/obj/structure/cable/green{d2 = 8; icon_state = "0-8"},/turf/open/floor/plating,/area/ai_monitored/turret_protected/tcommbreaker)
 "cpo" = (/obj/effect/turf_decal/corner/purple{tag = "icon-corner_white (NORTHWEST)"; icon_state = "corner_white"; dir = 9},/obj/item/device/radio/intercom{dir = 4; pixel_x = -22},/turf/open/floor/plasteel/white,/area/toxins/researchhalla)
