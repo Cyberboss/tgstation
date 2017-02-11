@@ -42,7 +42,7 @@
 
 	//Is this char to be deleted on safe or load ?
 	to_delete = 0
-
+	locked = 0
 	generate_init_roles()
 
 
@@ -63,7 +63,8 @@
 
 	// Set up the dummy for its photoshoot
 	var/mob/living/carbon/human/dummy/mannequin = new()
-	copy_to(mannequin)
+	//Copy to mannequin, we want to update the icon and we donnot want a random char.
+	copy_to(mannequin, 1, 0)
 
 	// Determine what job is marked as 'High' priority, and dress them up as such.
 	var/datum/job/previewJob

@@ -1089,16 +1089,13 @@ var/list/preferences_datums = list()
 					if(!load_character(text2num(href_list["num"])))
 						random_character()
 						real_name = random_unique_name(gender)
-						save_character()
 
 				if("add_char")
 					save_preferences()
-					save_character()
 					default_slot += 1
 					random_character()
 					real_name = random_unique_name(gender)
 					nr_chars += 1
-
 
 				if("tab")
 					if (href_list["tab"])
@@ -1107,6 +1104,7 @@ var/list/preferences_datums = list()
 				if("char_prefs")
 					if(href_list["char_prefs"])
 						char_prefs = text2num(href_list["char_prefs"])
+
 				if("select_character")
 					if(href_list["select_character"])
 						select_character = text2num(href_list["select_character"])
@@ -1408,9 +1406,9 @@ var/list/preferences_datums = list()
 
 	return dat
 
-/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1)
+/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, random = 1)
 	//If the char is not locked give the user a random char for this round.
-	if(!locked)
+	if(!locked && random)
 		real_name = pref_species.random_name(gender)
 		random_character(gender)
 
