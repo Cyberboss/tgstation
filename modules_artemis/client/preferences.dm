@@ -182,7 +182,7 @@ var/list/preferences_datums = list()
 						if(S)
 							var/name
 							var/status
-							dat += "<td valign='left' width='50%'>"
+							dat += "<table><tr><th>Character</th><th>Status</th></tr>"
 							for(var/i=1, i<= nr_chars, i++)
 								S.cd = "/character[i]"
 								S["real_name"] >> name
@@ -191,13 +191,14 @@ var/list/preferences_datums = list()
 									status = "Active"
 								if(!name)
 									name = "Character[i]"
-								//if(i!=1) dat += " | "
+
+								dat += "<tr valign='top' width='20%'>"
 								if(status == "KIA" || status == "Terminated")
-									dat += "<a style='white-space:nowrap'>[name]</a> [status]"
+									dat += "<td><a style='white-space:nowrap'>[name]</a></td><td>[status]</td>"
 								else
-									dat += "<a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;num=[i];' [i == default_slot ? "class='linkOn'" : ""]>[name]</a> [status]"
-								dat += "<br>"
-							dat += "</td>"
+									dat += "<td><a style='white-space:nowrap;' href='?_src_=prefs;preference=changeslot;num=[i];' [i == default_slot ? "class='linkOn'" : ""]>[name]</a></td><td>[status]</td>"
+								dat += "</tr>"
+							dat += "</table>"
 				if(1)//Char editor
 					dat += "<br>"
 					dat += "<a href='?_src_=prefs;preference=char_prefs;char_prefs=1' [char_prefs == 1 ? "class='linkOn'" : ""]>Identity/Occupation</a>"
@@ -1089,16 +1090,13 @@ var/list/preferences_datums = list()
 					if(!load_character(text2num(href_list["num"])))
 						random_character()
 						real_name = random_unique_name(gender)
-						save_character()
 
 				if("add_char")
 					save_preferences()
-					save_character()
 					default_slot += 1
 					random_character()
 					real_name = random_unique_name(gender)
 					nr_chars += 1
-
 
 				if("tab")
 					if (href_list["tab"])
@@ -1107,6 +1105,7 @@ var/list/preferences_datums = list()
 				if("char_prefs")
 					if(href_list["char_prefs"])
 						char_prefs = text2num(href_list["char_prefs"])
+
 				if("select_character")
 					if(href_list["select_character"])
 						select_character = text2num(href_list["select_character"])
@@ -1408,9 +1407,9 @@ var/list/preferences_datums = list()
 
 	return dat
 
-/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1)
+/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, random = 1)
 	//If the char is not locked give the user a random char for this round.
-	if(!locked)
+	if(!locked && random)
 		real_name = pref_species.random_name(gender)
 		random_character(gender)
 
@@ -1475,7 +1474,7 @@ var/list/preferences_datums = list()
 
 /datum/preferences/proc/prune_roles()
 	var/list/new_roles = new/list()
-	var/list/all_roles = get_all_jobs()
+	var/list/all_roles = SSjob.occupations
 	var/list/all_roles_department = new/list()
 	for(var/datum/job/J in all_roles)
 		if(lowertext(J.department_flag) == lowertext(department_tag) || J.department_flag == "CIV")
@@ -1490,11 +1489,9 @@ var/list/preferences_datums = list()
 
 /datum/preferences/proc/generate_init_roles()
 	roles = new/list()
-	var/tmp/list/all_jobs = subtypesof(/datum/job)
-	for(var/J in all_jobs)
-		var/datum/job/job = new J()
-		if(job.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
-			roles[job.title] = "NEVER"
+	for(var/datum/job/J in SSjob.occupations)
+		if(J.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
+			roles[J.title] = "NEVER"
 	department_tag = "CIV"
 
 /datum/preferences/proc/get_all_jobs()
