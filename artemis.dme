@@ -60,6 +60,8 @@
 #include "modules_artemis\computers\file_systems\programs\powermonitor.dm"
 #include "modules_artemis\controllers\ticker.dm"
 #include "modules_artemis\controllers\subsystem\jobs.dm"
+#include "modules_artemis\controllers\subsystem\shuttles.dm"
+#include "modules_artemis\controllers\subsystem\voting.dm"
 #include "modules_artemis\floor decals\flooring_decals.dm"
 #include "modules_artemis\global\carbon_life.dm"
 #include "modules_artemis\global\healthscan.dm"
