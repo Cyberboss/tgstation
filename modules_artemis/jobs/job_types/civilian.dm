@@ -30,8 +30,6 @@ Librarian
 	l_pocket = /obj/item/device/laser_pointer
 
 
-Clown
-
 /datum/job/clown
 	title = "Clown"
 	flag = CLOWN

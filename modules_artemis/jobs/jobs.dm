@@ -39,7 +39,7 @@ var/const/SENIORDOCTOR	= "SED"
 var/const/DOCTOR		= "DOC"
 
 
-var/const/SCI 			= "SCI"
+var/const/SCI 				= "SCI"
 var/const/RD				= "SRD"
 var/const/SENIORSCIENTIST	= "SES"
 var/const/SCIENTIST			= "SCI"
@@ -51,88 +51,6 @@ var/const/SOLGOVAGENT	= "SOA"
 var/const/SILICON 		= "SIL"
 var/const/AI			= "SAI"
 var/const/CYBORG		= "CYB"
-
-
-var/list/assistant_occupations = list(
-	"Assistant",
-	"Cargo Technician",
-	"Chaplain",
-	"Lawyer",
-	"Librarian"
-)
-
-
-var/list/command_positions = list(
-	"Captain",
-	"Head of Personnel",
-	"Head of Security",
-	"Chief Engineer",
-	"Research Director",
-	"Chief Medical Officer",
-	"Internal Affairs Agent"
-)
-
-
-var/list/engineering_positions = list(
-	"Chief Engineer",
-	"Senior Engineer",
-	"Station Engineer"
-)
-
-
-var/list/medical_positions = list(
-	"Chief Medical Officer",
-	"Senior Medical Doctor",
-	"Medical Doctor"
-)
-
-
-var/list/science_positions = list(
-	"Research Director",
-	"Senior Scientist",
-	"Scientist"
-)
-
-
-var/list/supply_positions = list(
-	"Quartermaster",
-	"Mining Foreman",
-	"Cargo Technician",
-	"Shaft Miner"
-)
-
-
-var/list/civilian_positions = list(
-	"Head of Personnel",
-	"Internal Affairs Agent",
-	"Bartender",
-	"Botanist",
-	"Cook",
-	"Janitor",
-	"Librarian",
-	"Chaplain",
-	"Entertainer",
-	"Assistant"
-)
-
-
-var/list/security_positions = list(
-	"Head of Security",
-	"Warden",
-	"Detective",
-	"Security Officer",
-)
-
-
-var/list/nonhuman_positions = list(
-	"AI",
-	"Cyborg",
-	"pAI"
-)
-
-var/list/external_positions = list(
-	"SolGov Representative"
-)
 
 /proc/guest_jobbans(job)
 	return ((job in command_positions) || (job in nonhuman_positions) || (job in security_positions))
