@@ -5613,7 +5613,7 @@
 "cdW" = (/turf/open/floor/carpet,/area/crew_quarters/heads/hor)
 "cdX" = (/obj/structure/chair{dir = 4},/turf/open/floor/carpet,/area/crew_quarters/heads/hor)
 "cdY" = (/obj/structure/table/reinforced,/obj/machinery/button/door{id = "rd_door"; name = "Door Control"; normaldoorcontrol = 1; pixel_x = 0; pixel_y = 12},/obj/item/weapon/pen{pixel_x = 4; pixel_y = 4},/turf/open/floor/carpet,/area/crew_quarters/heads/hor)
-"cdZ" = (/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,/obj/structure/chair/office/light{dir = 8},/turf/open/floor/carpet,/area/crew_quarters/heads/hor)
+"cdZ" = (/obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,/obj/structure/chair/office/light{dir = 8},/obj/effect/landmark/start{name = "Research Director"},/turf/open/floor/carpet,/area/crew_quarters/heads/hor)
 "cea" = (/obj/effect/turf_decal/corner/grey/diagonal,/obj/structure/displaycase/labcage,/obj/machinery/light{dir = 4; icon_state = "tube1"; pixel_x = 0},/turf/open/floor/plasteel/white,/area/crew_quarters/heads/hor)
 "ceb" = (/turf/open/floor/plating,/area/toxins/lab)
 "cec" = (/obj/structure/chair/office/light{dir = 4},/turf/open/floor/plating,/area/maintenance/aft_starboard)
