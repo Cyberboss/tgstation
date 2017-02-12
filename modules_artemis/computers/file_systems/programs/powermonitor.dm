@@ -31,10 +31,6 @@
 		record()
 
 /datum/computer_file/program/power_monitor/proc/search()
-	world << "Powergridsensors list: [powergridsensors]"
-	for(var/x in powergridsensors)
-		world << "List entry: [x]"
-
 	var/turf/T = get_turf(computer)
 	attached = locate() in T
 
