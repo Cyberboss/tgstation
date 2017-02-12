@@ -126,12 +126,8 @@ var/datum/subsystem/vote/SSvote
 				if(. == "Restart Round")
 					restart = 1
 			if("transfer")
-				if(master_mode != .)
-					world.save_mode(.)
-					if(ticker && ticker.mode)
-						transfer = 1
-					else
-						master_mode = .
+				if(. == "Crew Transfer")
+					transfer = 1
 			if("gamemode")
 				if(master_mode != .)
 					world.save_mode(.)
