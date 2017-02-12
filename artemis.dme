@@ -81,6 +81,7 @@
 #include "modules_artemis\jobs\job_types\silicon.dm"
 #include "modules_artemis\machinery\canister.dm"
 #include "modules_artemis\machinery\cryopod.dm"
+#include "modules_artemis\machinery\limbgrower.dm"
 #include "modules_artemis\misc\ashtray.dm"
 #include "modules_artemis\misc\briefcase.dm"
 #include "modules_artemis\misc\chem_dispenser.dm"
