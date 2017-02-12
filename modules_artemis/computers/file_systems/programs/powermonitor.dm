@@ -31,7 +31,6 @@
 		record()
 
 /datum/computer_file/program/power_monitor/proc/search()
-
 	var/turf/T = get_turf(computer)
 	attached = locate() in T
 
