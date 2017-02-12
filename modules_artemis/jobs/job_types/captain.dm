@@ -113,8 +113,8 @@ Internal Affairs Agent
 
 	outfit = /datum/outfit/job/iaa
 
-	access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
-	minimal_access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads)
+	access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads, access_fax)
+	minimal_access = list(access_lawyer, access_court, access_sec_doors, access_iaa, access_heads, access_fax)
 
 	rank_succession_level = COMMAND_SUCCESSION_LEVEL
 
@@ -123,7 +123,7 @@ Internal Affairs Agent
 	jobtype = /datum/job/iaa
 
 	belt = /obj/item/device/pda/lawyer
-	ears = /obj/item/device/radio/headset/heads
+	ears = /obj/item/device/radio/headset_com
 	uniform = /obj/item/clothing/under/lawyer/blacksuit
 	suit = /obj/item/clothing/suit/toggle/lawyer/black
 	shoes = /obj/item/clothing/shoes/laceup

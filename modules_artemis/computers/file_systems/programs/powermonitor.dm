@@ -40,7 +40,6 @@
 			for(var/obj/machinery/power/terminal/term in s.powernet.nodes)
 				var/obj/machinery/power/apc/A = term.master
 				if(istype(A))
-					world << "APC found [A]"
 					apcs += A
 
 /datum/computer_file/program/power_monitor/proc/record()

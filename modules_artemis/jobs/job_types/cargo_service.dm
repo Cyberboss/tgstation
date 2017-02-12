@@ -244,9 +244,9 @@ Cook
 	H.dna.species.before_equip_job(src, H, visualsOnly)
 
 	if(H.job == "Botanist")
-		H.equipOutfit(/datum/outfit/job/cook, visualsOnly)
-	else
 		H.equipOutfit(/datum/outfit/job/botanist, visualsOnly)
+	else
+		H.equipOutfit(/datum/outfit/job/cook, visualsOnly)
 
 	H.dna.species.after_equip_job(src, H, visualsOnly)
 

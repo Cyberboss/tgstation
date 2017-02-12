@@ -5,7 +5,7 @@ SERVERNAME Artemis Station
 STATIONNAME Artemis Station
 
 ## Put on byond hub: uncomment this to put your server on the byond hub.
-#HUB
+HUB
 
 # Lobby time: This is the amount of time between rounds that players have to setup their characters and be ready.
 LOBBY_COUNTDOWN 120
@@ -208,10 +208,10 @@ TICKLAG 0.5
 
 ## Hub address for tracking stats
 ## example: Hubmakerckey.Hubname
-#MEDAL_HUB_ADDRESS 
+MEDAL_HUB_ADDRESS Exadv1.spacestation13
 
 ## Password for the hub page
-#MEDAL_HUB_PASSWORD
+MEDAL_HUB_PASSWORD kMZy3U5jJHSiBQjr
 
 ## Uncomment this to let players see their own notes (they can still be set by admins only)
 #SEE_OWN_NOTES
