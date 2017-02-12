@@ -123,7 +123,7 @@ Internal Affairs Agent
 	jobtype = /datum/job/iaa
 
 	belt = /obj/item/device/pda/lawyer
-	ears = /obj/item/device/radio/headset_com
+	ears = /obj/item/device/radio/headset/headset_com
 	uniform = /obj/item/clothing/under/lawyer/blacksuit
 	suit = /obj/item/clothing/suit/toggle/lawyer/black
 	shoes = /obj/item/clothing/shoes/laceup
