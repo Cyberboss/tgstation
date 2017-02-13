@@ -62,6 +62,7 @@
 #include "modules_artemis\controllers\subsystem\jobs.dm"
 #include "modules_artemis\controllers\subsystem\shuttles.dm"
 #include "modules_artemis\controllers\subsystem\voting.dm"
+#include "modules_artemis\events\radiation_storm.dm"
 #include "modules_artemis\floor decals\flooring_decals.dm"
 #include "modules_artemis\gamemodes\traitor\traitor.dm"
 #include "modules_artemis\global\carbon_life.dm"
