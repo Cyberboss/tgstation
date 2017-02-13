@@ -127,6 +127,9 @@ var/list/preferences_datums = list()
 
 /datum/preferences/New(client/C)
 	parent = C
+	if(!job_stats)
+		job_stats = new()
+
 	custom_names["ai"] = pick(ai_names)
 	custom_names["cyborg"] = pick(ai_names)
 	custom_names["clown"] = pick(clown_names)
@@ -147,7 +150,9 @@ var/list/preferences_datums = list()
 
 	if(!loaded_preferences_successfully)
 		save_preferences()
-	save_character()		//let's save this new random character so it doesn't keep generating new ones.
+
+	//Lets only save when we need to!
+	//save_character()
 	return
 
 
@@ -357,7 +362,7 @@ var/list/preferences_datums = list()
 	else
 		HTML += "<b>Choose occupation chances</b><br>"
 
-		if(department_tag == "CIV" || !locked)
+		if(!locked)
 			HTML += "<center><a href='?_src_=prefs;preference=job;task=department'>Choose Department</a></center><br>"
 		else
 			HTML += "<center>[department_tag]</center><br>"
@@ -582,6 +587,8 @@ var/list/preferences_datums = list()
 	if(href_list["preference"] == "job")
 		switch(href_list["task"])
 			if("close")
+				if(locked)
+					save_character()
 				user << browse(null, "window=mob_occupation")
 				ShowChoices(user)
 			if("reset")
@@ -606,6 +613,8 @@ var/list/preferences_datums = list()
 				var/tmp/choises = list("Civilian","Cargo","Medical","Science","Engineering","Security","Silicon")
 				var/chosen = input(user, "Choose your department:","Choose Department",null) as null|anything in choises
 				department_tag = departments[chosen]
+				if(!department_tag || isnull(department_tag) || department_tag == "")
+					department_tag = "CIV"
 				prune_roles()
 				SetChoices(user)
 
@@ -1079,6 +1088,7 @@ var/list/preferences_datums = list()
 				if("save")
 					//Safe and lock in the character.
 					locked = 1
+					prune_roles()
 					save_preferences()
 					save_character()
 
@@ -1463,7 +1473,7 @@ var/list/preferences_datums = list()
 	character.character = src
 
 
-/datum/preferences/proc/has_role(var/tmp/role)
+/datum/preferences/proc/has_role(var/role)
 	//world << "prefs/has_role, [role]"
 	for(var/unlocked in roles)
 		if(lowertext(unlocked) == lowertext(role))
@@ -1474,33 +1484,26 @@ var/list/preferences_datums = list()
 
 /datum/preferences/proc/prune_roles()
 	var/list/new_roles = new/list()
-	var/list/all_roles = SSjob.occupations
-	var/list/all_roles_department = new/list()
-	for(var/datum/job/J in all_roles)
-		if(lowertext(J.department_flag) == lowertext(department_tag) || J.department_flag == "CIV")
-			all_roles_department += J
-
-	for(var/datum/job/J in all_roles_department)
+	for(var/J in job_stats.department_jobs[department_tag])
 		for(var/role in roles)
-			if(lowertext(role) == lowertext(J.title))
+			if(role == J)
 				new_roles[role] = roles[role]
+
+	for(var/J in job_stats.department_jobs["CIV"])
+		new_roles[J] = "NEVER"
 	roles = new_roles
 
-
 /datum/preferences/proc/generate_init_roles()
-	roles = new/list()
-	for(var/datum/job/J in SSjob.occupations)
-		if(J.rank_succession_level == INDUCTEE_SUCCESSION_LEVEL || 1)
-			roles[J.title] = "NEVER"
+	if(NO_INDUCTEE == 1)
+		for(var/role in job_stats.all_jobs)
+			roles[role] = "NEVER"
+	else
+		for(var/role in job_stats.inductee_roles)
+			roles[role] = "NEVER"
 	department_tag = "CIV"
 
 /datum/preferences/proc/get_all_jobs()
-	var/tmp/list/all_jobs = subtypesof(/datum/job)
-	var/list/all_jobs_generated = new/list()
-	for(var/J in all_jobs)
-		all_jobs_generated += new J()
-
-	return all_jobs_generated
+	return job_stats.all_jobs
 
 /mob/living
 	var/datum/preferences/character = null

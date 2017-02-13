@@ -19,7 +19,6 @@
 #include "_maps\artemisstation.dm"
 #include "modules_artemis\__DEFINES\arc_emitter.dm"
 #include "modules_artemis\__DEFINES\jobs.dm"
-#include "modules_artemis\__DEFINES\ranks.dm"
 #include "modules_artemis\__DEFINES\supermatter.dm"
 #include "modules_artemis\__HELPERS\departments.dm"
 #include "modules_artemis\__HELPERS\objective.dm"
