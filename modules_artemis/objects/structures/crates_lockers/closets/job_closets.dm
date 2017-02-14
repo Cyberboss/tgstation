@@ -1,5 +1,4 @@
 /obj/structure/closet/wardrobe/chaplain_black/New()
-	..()
 	contents = list()
 	new /obj/item/clothing/under/rank/chaplain(src)
 	new /obj/item/clothing/shoes/sneakers/black(src)
@@ -17,7 +16,6 @@
 	return
 
 /obj/structure/closet/secure_closet/detective/New()
-	..()
 	new /obj/item/clothing/under/rank/det(src)
 	new /obj/item/clothing/suit/det_suit(src)
 	new /obj/item/clothing/head/det_hat(src)
@@ -36,7 +34,6 @@
 	new /obj/item/clothing/suit/armor/vest/det_suit(src)
 
 /obj/structure/closet/secure_closet/captains/New()
-	..()
 	new /obj/item/clothing/suit/hooded/wintercoat/captain(src)
 	if(prob(50))
 		new /obj/item/weapon/storage/backpack/captain(src)
@@ -53,12 +50,10 @@
 	new /obj/item/device/radio/headset/heads/captain/alt(src)
 	new /obj/item/device/radio/headset/heads/captain(src)
 	new /obj/item/clothing/gloves/color/captain(src)
-	new /obj/item/weapon/storage/belt/sabre(src)
 	new /obj/item/weapon/gun/energy/e_gun(src)
 	new /obj/item/weapon/door_remote/captain(src)
 
 /obj/structure/closet/secure_closet/hos/New()
-	..()
 	new /obj/item/weapon/cartridge/hos(src)
 	new /obj/item/device/radio/headset/heads/hos(src)
 	new /obj/item/clothing/under/hosparadefem(src)
@@ -80,7 +75,6 @@
 	new /obj/item/weapon/pinpointer(src)
 
 /obj/structure/closet/secure_closet/hop/New()
-	..()
 	new /obj/item/clothing/under/rank/head_of_personnel(src)
 	new /obj/item/clothing/head/hopcap(src)
 	new /obj/item/weapon/cartridge/hop(src)
@@ -97,7 +91,6 @@
 	new /obj/item/weapon/door_remote/civillian(src)
 
 /obj/structure/closet/secure_closet/warden/New()
-	..()
 	new /obj/item/device/radio/headset/headset_sec(src)
 	new /obj/item/clothing/suit/armor/vest/warden(src)
 	new /obj/item/clothing/head/warden(src)
@@ -114,7 +107,6 @@
 	new /obj/item/weapon/door_remote/head_of_security(src)
 
 /obj/structure/closet/secure_closet/RD/New()
-	..()
 	new /obj/item/clothing/suit/bio_suit/scientist(src)
 	new /obj/item/clothing/head/bio_hood/scientist(src)
 	new /obj/item/clothing/suit/toggle/labcoat(src)
@@ -135,7 +127,6 @@
 	new /obj/item/weapon/storage/box/firingpins(src)
 
 /obj/structure/closet/secure_closet/engineering_chief/New()
-	..()
 	new /obj/item/clothing/under/rank/chief_engineer(src)
 	new /obj/item/clothing/head/hardhat/white(src)
 	new /obj/item/clothing/head/welding(src)
@@ -158,7 +149,6 @@
 	new /obj/item/weapon/pipe_dispenser(src)
 
 /obj/structure/closet/secure_closet/CMO/New()
-	..()
 	new /obj/item/weapon/storage/backpack/dufflebag/med(src)
 	new /obj/item/clothing/suit/bio_suit/cmo(src)
 	new /obj/item/clothing/head/bio_hood/cmo(src)
@@ -177,7 +167,6 @@
 	new /obj/item/weapon/door_remote/chief_medical_officer(src)
 
 /obj/structure/closet/secure_closet/quartermaster/New()
-	..()
 	new /obj/item/clothing/under/rank/cargo(src)
 	new /obj/item/clothing/shoes/sneakers/brown(src)
 	new /obj/item/device/radio/headset/headset_cargo(src)
