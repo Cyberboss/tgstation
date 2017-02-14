@@ -50,6 +50,7 @@
 	new /obj/item/device/radio/headset/heads/captain/alt(src)
 	new /obj/item/device/radio/headset/heads/captain(src)
 	new /obj/item/clothing/gloves/color/captain(src)
+	new /obj/item/weapon/storage/belt/sabre(src)
 	new /obj/item/weapon/gun/energy/e_gun(src)
 	new /obj/item/weapon/door_remote/captain(src)
 
