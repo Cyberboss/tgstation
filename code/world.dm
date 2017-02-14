@@ -8,18 +8,11 @@
 	hub_password = "kMZy3U5jJHSiBQjr"
 	name = "/tg/ Station 13"
 	fps = 20
-	visibility = 1
+	visibility = 0
 
 var/list/map_transition_config = MAP_TRANSITION_CONFIG
 
 /world/New()
-	spawn(10)
-		sleep 1
-		world.hub = "Exadv1.spacestation13"
-		world.hub_password = "kMZy3U5jJHSiBQjr"
-		world.name = "Artemis Station"
-		world.visibility = 0
-
 	map_ready = 1
 	world.log << "Map is ready."
 
@@ -76,11 +69,7 @@ var/list/map_transition_config = MAP_TRANSITION_CONFIG
 
 	Master.Setup(10, FALSE)
 
-	warning("Starting debug")
-	warning("world.hub [world.hub]")
-	warning("world.visibility [world.visibility]")
-	warning("world.hub_password [world.hub_password]")
-	warning("world.name [world.name]")
+	toggle_hub()
 
 #define IRC_STATUS_THROTTLE 50
 var/last_irc_status = 0
