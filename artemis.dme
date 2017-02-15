@@ -17,6 +17,7 @@
 
 // BEGIN_INCLUDE
 #include "_maps\artemisstation.dm"
+#include "modules_artemis\world.dm"
 #include "modules_artemis\__DEFINES\arc_emitter.dm"
 #include "modules_artemis\__DEFINES\jobs.dm"
 #include "modules_artemis\__DEFINES\supermatter.dm"
