@@ -1087,8 +1087,9 @@ var/list/preferences_datums = list()
 
 				if("save")
 					//Safe and lock in the character.
+					if(!locked)
+						prune_roles()
 					locked = 1
-					prune_roles()
 					save_preferences()
 					save_character()
 
@@ -1491,7 +1492,9 @@ var/list/preferences_datums = list()
 
 	for(var/J in job_stats.department_jobs["CIV"])
 		new_roles[J] = "NEVER"
+
 	roles = new_roles
+
 
 /datum/preferences/proc/generate_init_roles()
 	if(NO_INDUCTEE == 1)
@@ -1503,6 +1506,7 @@ var/list/preferences_datums = list()
 	department_tag = "CIV"
 
 /datum/preferences/proc/get_all_jobs()
+	world << "LEGACY getting al jobs"
 	return job_stats.all_jobs
 
 /mob/living

@@ -78,6 +78,7 @@ var/datum/subsystem/job/SSjob
 
 
 /datum/subsystem/job/proc/AssignRole(mob/new_player/player, rank, latejoin=0)
+	//warning("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
 	Debug("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
 	if(player && player.mind && rank)
 		var/datum/job/job = GetJob(rank)
@@ -95,12 +96,13 @@ var/datum/subsystem/job/SSjob
 		unassigned -= player
 		job.current_positions++
 		return 1
+	//warning("AR has failed, Player: [player], Rank: [rank]")
 	Debug("AR has failed, Player: [player], Rank: [rank]")
 	return 0
 
 
 /datum/subsystem/job/proc/FindOccupationCandidates(datum/job/job, level, flag)
-	//world << "Running FOC, Job: [job], Level: [level]"
+	//warning("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	var/list/candidates = list()
 	for(var/mob/new_player/player in unassigned)
@@ -206,7 +208,7 @@ var/datum/subsystem/job/SSjob
 	return
 
 
-/datum/subsystem/job/proc/FillAIPosition()
+/datum/subsystem/job/proc/FillAIPosition(unassigned)
 	var/ai_selected = 0
 	var/datum/job/job = GetJob("AI")
 	if(!job)
@@ -228,6 +230,7 @@ var/datum/subsystem/job/SSjob
 /** Proc DivideOccupations
  *  fills var "assigned_role" for all ready players.
  *  This proc must not have any side effect besides of modifying "assigned_role".
+ *	Totally redone for Artemis Station's role system ~rj
  **/
 /datum/subsystem/job/proc/DivideOccupations()
 	//Setup new player list and get the jobs list
@@ -265,109 +268,108 @@ var/datum/subsystem/job/SSjob
 
 	HandleFeedbackGathering()
 
-	//People who wants to be assistants, sure, go on.
+	//People who have assistant as high should just get that role
 	Debug("DO, Running Assistant Check 1")
-	var/datum/job/assist = new /datum/job/assistant()
-	var/list/assistant_candidates = FindOccupationCandidates(assist, 3)
-	Debug("AC1, Candidates: [assistant_candidates.len]")
-	for(var/mob/new_player/player in assistant_candidates)
-		Debug("AC1 pass, Player: [player]")
-		AssignRole(player, "Assistant")
-		assistant_candidates -= player
+	var/tmp/assigned = 0
+	for(var/mob/new_player/player in unassigned)
+		if(player.client.prefs.roles["Assistant"] == "HIGH")
+			Debug("AC1 pass, Player: [player]")
+			AssignRole(player, "Assistant")
+			unassigned -= player
+			assigned ++
+		if(assigned >= STARTING_ASSISTANTS)
+			break
+
 	Debug("DO, AC1 end")
 
-	//Select one head
-	Debug("DO, Running Head Check")
-	FillHeadPosition()
-	Debug("DO, Head Check end")
-
-	//Check for an AI
-	Debug("DO, Running AI Check")
-	FillAIPosition()
-	Debug("DO, AI Check end")
-
-	//Other jobs are now checked
-	Debug("DO, Running Standard Check")
-
-
-	// New job giving system by Donkie
-	// This will cause lots of more loops, but since it's only done once it shouldn't really matter much at all.
-	// Hopefully this will add more randomness and fairness to job giving.
-
-	// Loop through all levels from high to low
-	var/list/shuffledoccupations = shuffle(occupations)
-	for(var/level = 1 to 3)
-		//Check the head jobs first each level
-		CheckHeadPositions(level)
-
-		// Loop through all unassigned players
-		for(var/mob/new_player/player in unassigned)
-			if(PopcapReached())
-				RejectPlayer(player)
-
-			// Loop through all jobs
-			for(var/datum/job/job in shuffledoccupations) // SHUFFLE ME BABY
-				if(!job)
-					continue
-
-				if(jobban_isbanned(player, job.title))
-					Debug("DO isbanned failed, Player: [player], Job:[job.title]")
-					continue
-
-				if(!job.player_old_enough(player.client))
-					Debug("DO player not old enough, Player: [player], Job:[job.title]")
-					continue
-
-				if(player.mind && job.title in player.mind.restricted_roles)
-					Debug("DO incompatible with antagonist role, Player: [player], Job:[job.title]")
-					continue
-
-				if(config.enforce_human_authority && !player.client.prefs.pref_species.qualifies_for_rank(job.title, player.client.prefs.features))
-					Debug("DO non-human failed, Player: [player], Job:[job.title]")
-					continue
-
-
-				// If the player wants that job on this level, then try give it to him.
-				if(player.client.prefs.GetJobDepartment(job, level))
-
-					// If the job isn't filled
-					if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-						Debug("DO pass, Player: [player], Level:[level], Job:[job.title]")
-						AssignRole(player, job.title)
-						unassigned -= player
-						break
-
-	// Hand out random jobs to the people who didn't get any in the last check
-	// Also makes sure that they got their preference correct
-	for(var/mob/new_player/player in unassigned)
+	Debug("DO, Standart Check start")
+	var/list/to_assign = unassigned.Copy()
+	var/list/never_jobs = new/list()
+	for(var/mob/new_player/player in to_assign)
 		if(PopcapReached())
 			RejectPlayer(player)
-		else if(jobban_isbanned(player, "Assistant"))
-			GiveRandomJob(player) //you get to roll for random before everyone else just to be sure you don't get assistant. you're so speshul
+			Debug("DO, Standart Check start, POPCAP REACHED!")
+			break
 
-	for(var/mob/new_player/player in unassigned)
-		if(PopcapReached())
-			RejectPlayer(player)
-		else if(player.client.prefs.joblessrole == BERANDOMJOB)
-			GiveRandomJob(player)
+		var/datum/job/high = null
+		var/list/med_jobs = new/list()
+		var/list/low_jobs = new/list()
 
+		for(var/role in player.client.prefs.roles)
+			if(player.client.prefs.roles[role] == "HIGH")
+				high = GetJob(role)
+			if(player.client.prefs.roles[role] == "MEDIUM")
+				med_jobs += GetJob(role)
+			if(player.client.prefs.roles[role] == "LOW")
+				low_jobs += GetJob(role)
+			if(player.client.prefs.roles[role] == "NEVER")
+				never_jobs += GetJob(role)
+
+		//Assign first choise
+		if(!isnull(high) && istype(high))
+			if(high.spawn_positions >= high.current_positions || high.spawn_positions == -1)
+				AssignRole(player, high.title)
+				unassigned -= player
+				continue
+
+		var/succes = 0
+
+		//Assign seccond choise
+		if(!isnull(med_jobs) && med_jobs.len)
+			for(var/datum/job/job in shuffle(med_jobs))
+				if(job.spawn_positions >= job.current_positions || job.spawn_positions == -1)
+					succes = 1
+					AssignRole(player, job.title)
+					unassigned -= player
+					break
+			if(succes)
+				continue
+
+		//Assign thirth choise
+		if(!isnull(low_jobs) && low_jobs.len)
+			for(var/datum/job/job in shuffle(low_jobs))
+				if(job.spawn_positions >= job.current_positions || job.spawn_positions == -1)
+					succes = 1
+					AssignRole(player, job.title)
+					unassigned -= player
+					break
+			if(succes)
+				continue
 	Debug("DO, Standard Check end")
+
+	to_assign = unassigned.Copy()
 
 	Debug("DO, Running AC2")
 
 	// For those who wanted to be assistant if their preferences were filled, here you go.
-	for(var/mob/new_player/player in unassigned)
+	for(var/mob/new_player/player in to_assign)
 		if(PopcapReached())
 			RejectPlayer(player)
 		if(player.client.prefs.joblessrole == BEASSISTANT)
 			Debug("AC2 Assistant located, Player: [player]")
 			AssignRole(player, "Assistant")
+			unassigned -= player
 		else // For those who don't want to play if their preference were filled, back you go.
 			RejectPlayer(player)
 
-	for(var/mob/new_player/player in unassigned) //Players that wanted to back out but couldn't because they're antags (can you feel the edge case?)
-		GiveRandomJob(player)
+	to_assign = unassigned.Copy()
 
+	//Assign random job that the player has unlocked.
+	for(var/mob/new_player/player in to_assign)
+		if(!isnull(never_jobs) && never_jobs.len)
+			var/succes = 0
+			for(var/datum/job/job in shuffle(never_jobs))
+				if(job.spawn_positions >= job.current_positions || job.spawn_positions == -1)
+					succes = 1
+					AssignRole(player, job.title)
+					unassigned -= player
+					break
+			if(succes)
+				continue
+
+	//Finally players that really cannot join because all the jobs they can occcupie are taken.
+	for(var/mob/new_player/player in unassigned)
+		RejectPlayer(player)
 	return 1
 
 //Gives the player the stuff he should have with his rank
