@@ -39,6 +39,7 @@
 #include "modules_artemis\atmospherics\gasmixtures\gas_mixture.dm"
 #include "modules_artemis\bone_damage\bone_damage.dm"
 #include "modules_artemis\bone_damage\bone_effects.dm"
+#include "modules_artemis\bone_damage\robot_bodyparts.dm"
 #include "modules_artemis\bone_damage\splint.dm"
 #include "modules_artemis\bone_damage\carbon\carbon.dm"
 #include "modules_artemis\bone_damage\devices\scanners.dm"

@@ -188,3 +188,6 @@ Temporary Items
 .apdisk
 
 *.before
+
+# Atom build options
+.atom-build.json
