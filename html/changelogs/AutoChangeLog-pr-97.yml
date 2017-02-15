@@ -1,4 +1,0 @@
-author: "DantonDB tweaking"
-delete-after: True
-changes: 
-  - tweak: "Danton DB quarry now does a connection check before excecuting."
