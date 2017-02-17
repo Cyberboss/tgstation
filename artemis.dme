@@ -23,6 +23,7 @@
 #include "modules_artemis\__DEFINES\supermatter.dm"
 #include "modules_artemis\__HELPERS\departments.dm"
 #include "modules_artemis\__HELPERS\misc.dm"
+#include "modules_artemis\__HELPERS\mobs.dm"
 #include "modules_artemis\__HELPERS\objective.dm"
 #include "modules_artemis\admin\admin.dm"
 #include "modules_artemis\admin\admin_verbs.dm"
