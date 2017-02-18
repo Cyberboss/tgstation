@@ -24,6 +24,7 @@
 #include "modules_artemis\__HELPERS\departments.dm"
 #include "modules_artemis\__HELPERS\misc.dm"
 #include "modules_artemis\__HELPERS\objective.dm"
+#include "modules_artemis\_onclick\item_attack_log.dm"
 #include "modules_artemis\admin\admin.dm"
 #include "modules_artemis\admin\admin_verbs.dm"
 #include "modules_artemis\atmospherics\gasmixtures\gas_mixture.dm"
