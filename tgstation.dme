@@ -73,6 +73,7 @@
 #include "code\__HELPERS\lists.dm"
 #include "code\__HELPERS\maths.dm"
 #include "code\__HELPERS\matrices.dm"
+#include "code\__HELPERS\mobs.dm"
 #include "code\__HELPERS\names.dm"
 #include "code\__HELPERS\pronouns.dm"
 #include "code\__HELPERS\radio.dm"
