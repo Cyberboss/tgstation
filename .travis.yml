@@ -9,6 +9,7 @@ env:
     - BUILD_TOOLS=false
     - BUILD_TESTING=false
     - DM_MAPFILE="loadallmaps"
+    - DME_NAME="apollo.dme"
     matrix:
     - BUILD_TOOLS=true
     - BUILD_TESTING=true
