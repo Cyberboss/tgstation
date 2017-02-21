@@ -522,8 +522,8 @@
 			if(3)
 				if(ishuman(M))
 					var/mob/living/carbon/human/H = M
-					if(!H.heart_attack)
-						H.heart_attack = 1 // rip in pepperoni
+					if(!H.undergoing_cardiac_arrest() && H.can_heartattack())
+						H.set_heartattack(TRUE)
 						if(H.stat == CONSCIOUS)
 							H.visible_message("<span class='userdanger'>[H] clutches at [H.p_their()] chest as if [H.p_their()] heart stopped!</span>")
 					else
@@ -813,4 +813,24 @@
 		M.adjustStaminaLoss(10)
 	if(prob(30))
 		M << "You should sit down and take a rest..."
+	..()
+
+/datum/reagent/toxin/delayed
+	name = "Toxin Microcapsules"
+	id = "delayed_toxin"
+	description = "Causes heavy toxin damage after a brief time of inactivity."
+	reagent_state = LIQUID
+	metabolization_rate = 0 //stays in the system until active.
+	var/actual_metaboliztion_rate = REAGENTS_METABOLISM
+	toxpwr = 0
+	var/actual_toxpwr = 5
+	var/delay = 30
+
+/datum/reagent/toxin/delayed/on_mob_life(mob/living/M)
+	if(current_cycle > delay)
+		holder.remove_reagent(id, actual_metaboliztion_rate * M.metabolism_efficiency)
+		M.adjustToxLoss(actual_toxpwr*REM, 0)
+		if(prob(10))
+			M.Weaken(1, 0)
+		. = 1
 	..()
