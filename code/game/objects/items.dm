@@ -234,7 +234,8 @@ var/global/image/fire_overlay = image("icon" = 'icons/effects/fire.dmi', "icon_s
 		var/obj/item/weapon/storage/S = loc
 		S.remove_from_storage(src, user.loc)
 
-	throwing = 0
+	if(throwing)
+		throwing.finalize(FALSE)
 	if(loc == user)
 		if(!user.dropItemToGround(src))
 			return
@@ -255,7 +256,8 @@ var/global/image/fire_overlay = image("icon" = 'icons/effects/fire.dmi', "icon_s
 		var/obj/item/weapon/storage/S = loc
 		S.remove_from_storage(src, user.loc)
 
-	throwing = 0
+	if(throwing)
+		throwing.finalize(FALSE)
 	if(loc == user)
 		if(!user.dropItemToGround(src))
 			return
@@ -490,7 +492,7 @@ var/global/image/fire_overlay = image("icon" = 'icons/effects/fire.dmi', "icon_s
 			var/index = blood_splatter_index()
 			var/icon/blood_splatter_icon = blood_splatter_icons[index]
 			if(blood_splatter_icon)
-				overlays -= blood_splatter_icon
+				cut_overlay(blood_splatter_icon)
 
 /obj/item/clothing/gloves/clean_blood()
 	. = ..()

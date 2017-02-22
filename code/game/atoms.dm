@@ -18,13 +18,12 @@
 	//Value used to increment ex_act() if reactionary_explosions is on
 	var/explosion_block = 0
 
-	//overlays that should remain on top and not normally be removed, like c4.
-	var/list/priority_overlays
-
 	var/list/atom_colours	 //used to store the different colors on an atom
 							//its inherent color, the colored paint applied on it, special color effect etc...
 	var/initialized = FALSE
 
+	var/list/our_overlays	//our local copy of (non-priority) overlays without byond magic. Use procs in SSoverlays to manipulate
+	var/list/priority_overlays	//overlays that should remain on top and not normally removed when using cut_overlay functions, like c4.
 
 /atom/New()
 	//atom creation method that preloads variables at creation
@@ -41,10 +40,25 @@
 	if(luminosity)
 		light = new(src)
 
-	var/initialized = SSobj.initialized
-	if(initialized > INITIALIZATION_INSSOBJ)
-		Initialize(initialized == INITIALIZATION_INNEW_MAPLOAD)
+	var/do_initialize = SSatoms.initialized
+	if(do_initialize > INITIALIZATION_INSSOBJ)
+		Initialize(do_initialize == INITIALIZATION_INNEW_MAPLOAD)
 	//. = ..() //uncomment if you are dumb enough to add a /datum/New() proc
+
+//Called after New if the map is being loaded. mapload = TRUE
+//Called from base of New if the map is being loaded. mapload = FALSE
+//This base must be called or derivatives must set initialized to TRUE to prevent repeat calls
+//Derivatives must not sleep
+//Returning TRUE while mapload is TRUE will cause the object to be initialized again with mapload = FALSE when everything else is done
+//(Useful for things that requires turfs to have air). This base may only be called once, however
+
+//Note: the following functions don't call the base for optimization and must copypasta:
+// /turf/Initialize
+// /turf/open/space/Initialize
+/atom/proc/Initialize(mapload)
+	if(initialized)
+		stack_trace("Warning: [src]([type]) initialized multiple times!")
+	initialized = TRUE
 
 /atom/Destroy()
 	if(alternate_appearances)
@@ -59,6 +73,11 @@
 				AA.hide(list(src))
 	if(reagents)
 		qdel(reagents)
+
+	LAZYCLEARLIST(overlays)
+	LAZYCLEARLIST(priority_overlays)
+	//SSoverlays.processing -= src	//we COULD do this, but it's better to just let it fall out of the processing queue
+
 	return ..()
 
 /atom/proc/CanPass(atom/movable/mover, turf/target, height=1.5)
@@ -434,17 +453,6 @@ var/list/blood_splatter_icons = list()
 	. = ..()
 	sleep(1)
 	stoplag()
-
-//Called after New if the world is not loaded with TRUE
-//Called from base of New if the world is loaded with FALSE
-//This base must be called or derivatives must set initialized to TRUE to prevent repeat calls
-//Derivatives must not sleep
-/atom/proc/Initialize(mapload)
-#ifdef TESTING
-	if(initialized)
-		stack_trace("Warning: [src]([type]) initialized multiple times!")
-#endif
-	initialized = TRUE
 
 //the vision impairment to give to the mob whose perspective is set to that atom (e.g. an unfocused camera giving you an impaired vision when looking through it)
 /atom/proc/get_remote_view_fullscreens(mob/user)
