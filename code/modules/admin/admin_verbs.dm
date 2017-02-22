@@ -7,7 +7,6 @@ var/list/admin_verbs_default = list(
 	/client/proc/hide_verbs,			/*hides all our adminverbs*/
 	/client/proc/hide_most_verbs,		/*hides all our hideable adminverbs*/
 	/client/proc/debug_variables,		/*allows us to -see- the variables of any instance in the game. +VAREDIT needed to modify*/
-	/client/proc/admin_memo,			/*admin memo system. show/delete/write. +SERVER needed to delete admin memos of others*/
 	/client/proc/deadchat,				/*toggles deadchat on/off*/
 	/client/proc/dsay,					/*talk in deadchat using our ckey/fakekey*/
 	/client/proc/toggleprayers,			/*toggles prayers on/off*/
@@ -88,7 +87,6 @@ var/list/admin_verbs_fun = list(
 	/client/proc/one_click_antag,
 	/client/proc/send_space_ninja,
 	/client/proc/cmd_admin_add_freeform_ai_law,
-	/client/proc/cmd_admin_add_random_ai_law,
 	/client/proc/object_say,
 	/client/proc/toggle_random_events,
 	/client/proc/set_ooc,
@@ -157,7 +155,8 @@ var/list/admin_verbs_debug = list(
 	/client/proc/map_template_upload,
 	/client/proc/jump_to_ruin,
 	/client/proc/clear_dynamic_transit,
-	/client/proc/toggle_medal_disable
+	/client/proc/toggle_medal_disable,
+	/client/proc/view_runtimes
 	)
 var/list/admin_verbs_possess = list(
 	/proc/possess,
@@ -209,12 +208,10 @@ var/list/admin_verbs_hideable = list(
 	/client/proc/cinematic,
 	/client/proc/send_space_ninja,
 	/client/proc/cmd_admin_add_freeform_ai_law,
-	/client/proc/cmd_admin_add_random_ai_law,
 	/client/proc/cmd_admin_create_centcom_report,
 	/client/proc/cmd_change_command_name,
 	/client/proc/object_say,
 	/client/proc/toggle_random_events,
-	/client/proc/cmd_admin_add_random_ai_law,
 	/datum/admins/proc/startnow,
 	/datum/admins/proc/restart,
 	/datum/admins/proc/delay,

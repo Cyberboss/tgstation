@@ -46,8 +46,11 @@
 	if(stored_card && stored_card2)
 		user << "<span class='warning'>You try to insert \the [I] into \the [src], but its slots are occupied.</span>"
 		return FALSE
-	if(user && !user.transferItemToLoc(I, src))
-		return FALSE
+	if(user)
+		if(!user.transferItemToLoc(I, src))
+			return FALSE
+	else
+		I.forceMove(src)
 
 	if(!stored_card)
 		stored_card = I
@@ -65,14 +68,18 @@
 
 	var/ejected = 0
 	if(stored_card && (!slot || slot == 1))
-		stored_card.forceMove(get_turf(src))
-		stored_card.verb_pickup()
+		if(user)
+			user.put_in_hands(stored_card)
+		else
+			stored_card.forceMove(get_turf(src))
 		stored_card = null
 		ejected++
 
 	if(stored_card2 && (!slot || slot == 2))
-		stored_card2.forceMove(get_turf(src))
-		stored_card2.verb_pickup()
+		if(user)
+			user.put_in_hands(stored_card2)
+		else
+			stored_card2.forceMove(get_turf(src))
 		stored_card2 = null
 		ejected++
 

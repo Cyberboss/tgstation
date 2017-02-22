@@ -47,6 +47,8 @@
 			internal_organs += new /obj/item/organ/lungs()
 	if(!(NOBLOOD in dna.species.species_traits))
 		internal_organs += new /obj/item/organ/heart
+
+	internal_organs += new dna.species.mutanteyes()
 	internal_organs += new /obj/item/organ/brain
 	..()
 
@@ -718,8 +720,8 @@
 
 /mob/living/carbon/human/wash_cream()
 	//clean both to prevent a rare bug
-	overlays -=image('icons/effects/creampie.dmi', "creampie_lizard")
-	overlays -=image('icons/effects/creampie.dmi', "creampie_human")
+	cut_overlay(image('icons/effects/creampie.dmi', "creampie_lizard"))
+	cut_overlay(image('icons/effects/creampie.dmi', "creampie_human"))
 
 
 //Turns a mob black, flashes a skeleton overlay
@@ -738,7 +740,7 @@
 
 /mob/living/carbon/human/proc/end_electrocution_animation(image/I)
 	remove_atom_colour(TEMPORARY_COLOUR_PRIORITY, "#000000")
-	overlays -= I
+	cut_overlay(I)
 
 /mob/living/carbon/human/canUseTopic(atom/movable/M, be_close = 0)
 	if(incapacitated() || lying )
@@ -763,17 +765,6 @@
 		var/datum/data/record/R = find_record("name", oldname, L)
 		if(R)
 			R.fields["name"] = newname
-
-/mob/living/carbon/human/update_sight()
-	if(!client)
-		return
-	if(stat == DEAD)
-		sight = (SEE_TURFS|SEE_MOBS|SEE_OBJS)
-		see_in_dark = 8
-		see_invisible = SEE_INVISIBLE_OBSERVER
-		return
-
-	dna.species.update_sight(src)
 
 /mob/living/carbon/human/get_total_tint()
 	. = ..()
@@ -829,6 +820,7 @@
 		regenerate_limbs()
 		regenerate_organs()
 	remove_all_embedded_objects()
+	set_heartattack(FALSE)
 	drunkenness = 0
 	for(var/datum/mutation/human/HM in dna.mutations)
 		if(HM.quality != POSITIVE)
@@ -904,3 +896,39 @@
 	.["Make alien"] = "?_src_=vars;makealien=\ref[src]"
 	.["Make slime"] = "?_src_=vars;makeslime=\ref[src]"
 	.["Toggle Purrbation"] = "?_src_=vars;purrbation=\ref[src]"
+
+/mob/living/carbon/human/MouseDrop_T(mob/living/target, mob/living/user)
+	if((target != pulling) || (grab_state < GRAB_AGGRESSIVE) || (user != target))	//Get consent first :^)
+		. = ..()
+		return
+	buckle_mob(target, FALSE, TRUE, TRUE)
+	. = ..()
+
+/mob/living/carbon/human/buckle_mob(mob/living/M, force = FALSE, check_loc = TRUE, yes = FALSE)
+	if(!yes)
+		return
+	if(!is_type_in_typecache(M, can_ride_typecache))
+		M.visible_message("<span class='warning'>[M] really can't seem to mount [src]...</span>")
+		return
+	if(!riding_datum)
+		riding_datum = new /datum/riding/human
+		riding_datum.ridden = src
+	if(buckled_mobs && ((M in buckled_mobs) || (buckled_mobs.len >= max_buckled_mobs)))
+		return
+	if(buckled)	//NO INFINITE STACKING!!
+		return
+	if(M.incapacitated(FALSE, TRUE) || incapacitated(FALSE, TRUE))
+		M.visible_message("<span class='boldwarning'>[M] can't hang onto [src]!</span>")
+		return
+	if(iscarbon(M) && (!riding_datum.equip_buckle_inhands(M, 2)))	//MAKE SURE THIS IS LAST!!
+		M.visible_message("<span class='boldwarning'>[M] can't climb onto [src] because [M.p_their()] hands are full!</span>")
+		return
+	. = ..(M, force, check_loc)
+	stop_pulling()
+
+/mob/living/carbon/human/unbuckle_mob(mob/living/M)
+	if(iscarbon(M))
+		if(riding_datum)
+			riding_datum.unequip_buckle_inhands(M)
+			riding_datum.restore_position(M)
+	. = ..(M)

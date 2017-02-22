@@ -51,8 +51,10 @@
 	name = "dull sigil"
 	desc = "A dull, barely-visible golden sigil. It's as though light was carved into the ground."
 	icon = 'icons/effects/clockwork_effects.dmi'
-	clockwork_desc = "A sigil that will stun the first non-servant to cross it. Nar-Sie's dogs will be knocked down."
+	clockwork_desc = "A sigil that will stun the next non-Servant to cross it."
 	icon_state = "sigildull"
+	layer = HIGH_SIGIL_LAYER
+	alpha = 60
 	color = "#FAE48C"
 	sigil_name = "Sigil of Transgression"
 
@@ -78,8 +80,9 @@
 	desc = "A luminous golden sigil. Something about it really bothers you."
 	clockwork_desc = "A sigil that will enslave the first person to cross it, provided they remain on it for seven seconds."
 	icon_state = "sigilsubmission"
-	color = "#FAE48C"
+	layer = LOW_SIGIL_LAYER
 	alpha = 125
+	color = "#FAE48C"
 	stat_affected = UNCONSCIOUS
 	resist_string = "glows faintly yellow"
 	var/convert_time = 70
@@ -148,8 +151,8 @@
 	clockwork_desc = "A sigil that will enslave any person who crosses it, provided they remain on it for seven seconds. \n\
 	It can convert a mindshielded target once before disppearing, but can convert any number of non-implanted targets."
 	icon_state = "sigiltransgression"
-	color = "#A97F1B"
 	alpha = 200
+	color = "#A97F1B"
 	glow_light = 4 //bright light
 	glow_falloff = 3
 	delete_on_finish = FALSE
@@ -159,11 +162,10 @@
 
 /obj/effect/clockwork/sigil/submission/accession/post_channel(mob/living/L)
 	if(L.isloyal())
-		var/mob/living/carbon/C = L
 		delete_on_finish = TRUE
-		C.visible_message("<span class='warning'>[C] visibly trembles!</span>", \
+		L.visible_message("<span class='warning'>[L] visibly trembles!</span>", \
 		"<span class='sevtug'>[text2ratvar("You will be mine and his. This puny trinket will not stop me.")]</span>")
-		for(var/obj/item/weapon/implant/mindshield/M in C.implants)
+		for(var/obj/item/weapon/implant/mindshield/M in L.implants)
 			qdel(M)
 
 
@@ -173,8 +175,8 @@
 	desc = "A glowing orange sigil. The air around it feels staticky."
 	clockwork_desc = "A sigil that will serve as a battery for clockwork structures."
 	icon_state = "sigiltransmission"
-	color = "#EC8A2D"
 	alpha = 50
+	color = "#EC8A2D"
 	resist_string = "glows faintly"
 	sigil_name = "Sigil of Transmission"
 	affects_servants = TRUE
@@ -190,7 +192,11 @@
 /obj/effect/clockwork/sigil/transmission/examine(mob/user)
 	..()
 	if(is_servant_of_ratvar(user) || isobserver(user))
-		user << "<span class='[power_charge ? "brass":"alloy"]'>It is storing <b>[ratvar_awakens ? "INFINITY":"[power_charge]"]W</b> of power.</span>"
+		var/structure_number = 0
+		for(var/obj/structure/destructible/clockwork/powered/P in range(SIGIL_ACCESS_RANGE, src))
+			structure_number++
+		user << "<span class='[power_charge ? "brass":"alloy"]'>It is storing <b>[ratvar_awakens ? "INFINITY":"[power_charge]"]W</b> of power, \
+		and <b>[structure_number]</b> Clockwork Structure[structure_number == 1 ? "":"s"] [structure_number == 1 ? "is":"are"] in range.</span>"
 		if(iscyborg(user))
 			user << "<span class='brass'>You can recharge from the [sigil_name] by crossing it.</span>"
 
@@ -265,8 +271,9 @@
 	desc = "A faint blue sigil. Looking at it makes you feel protected."
 	clockwork_desc = "A sigil that will drain non-Servants that remain on it. Servants that remain on it will be healed if it has any vitality drained."
 	icon_state = "sigilvitality"
-	color = "#123456"
+	layer = SIGIL_LAYER
 	alpha = 75
+	color = "#123456"
 	affects_servants = TRUE
 	stat_affected = DEAD
 	resist_string = "glows shimmering yellow"
@@ -281,7 +288,10 @@
 	..()
 	if(is_servant_of_ratvar(user) || isobserver(user))
 		user << "<span class='[vitality ? "inathneq_small":"alloy"]'>It has access to <b>[ratvar_awakens ? "INFINITE":"[vitality]"]</b> units of vitality.</span>"
-		user << "<span class='inathneq_small'>It requires at least <b>[base_revive_cost]</b> units of vitality to revive dead Servants, in addition to any damage the Servant has.</span>"
+		if(ratvar_awakens)
+			user << "<span class='inathneq_small'>It can revive Servants at no cost!</span>"
+		else
+			user << "<span class='inathneq_small'>It can revive Servants at a cost of <b>[base_revive_cost]</b> vitality plus vitality equal to the non-oxygen damage they have, in addition to being destroyed in the process.</span>"
 
 /obj/effect/clockwork/sigil/vitality/sigil_effects(mob/living/L)
 	if((is_servant_of_ratvar(L) && L.suiciding) || sigil_active)
@@ -311,7 +321,10 @@
 						qdel(W)
 				L.dust()
 			else
-				vitality_drained = L.adjustToxLoss(1.5)
+				if(!ratvar_awakens && L.stat == CONSCIOUS)
+					vitality_drained = L.adjustToxLoss(1)
+				else
+					vitality_drained = L.adjustToxLoss(1.5)
 			if(vitality_drained)
 				vitality += vitality_drained
 			else
@@ -326,14 +339,20 @@
 					if(ghost)
 						ghost.reenter_corpse()
 					L.revive(1, 1)
+					var/obj/effect/overlay/temp/ratvar/sigil/vitality/V = new /obj/effect/overlay/temp/ratvar/sigil/vitality(get_turf(src))
+					animate(V, alpha = 0, transform = matrix()*2, time = 8)
 					playsound(L, 'sound/magic/Staff_Healing.ogg', 50, 1)
-					L.visible_message("<span class='warning'>[L] suddenly gets back up, [L.p_their()] mouth dripping blue ichor!</span>", \
+					L.visible_message("<span class='warning'>[L] suddenly gets back up, [ratvar_awakens ? "[L.p_their()] body dripping blue ichor":"even as [src] scatters into blue sparks around [L.p_them()]"]!</span>", \
 					"<span class='inathneq'>\"[text2ratvar("You will be okay, child.")]\"</span>")
 					vitality -= revival_cost
+					if(!ratvar_awakens)
+						qdel(src)
 				break
-			var/vitality_for_cycle = min(vitality, 3)
-			if(ratvar_awakens)
-				vitality_for_cycle = 3
+			var/vitality_for_cycle = 3
+			if(!ratvar_awakens)
+				if(L.stat == CONSCIOUS)
+					vitality_for_cycle = 2
+				vitality_for_cycle = min(vitality, vitality_for_cycle)
 			var/vitality_used = L.heal_ordered_damage(vitality_for_cycle, damage_heal_order)
 
 			if(!vitality_used)

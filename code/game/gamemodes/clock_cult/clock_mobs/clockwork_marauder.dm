@@ -3,8 +3,8 @@
 	name = "clockwork marauder"
 	desc = "A stalwart apparition of a soldier, blazing with crimson flames. It's armed with a gladius and shield."
 	icon_state = "clockwork_marauder"
-	health = 400
-	maxHealth = 400
+	health = 300
+	maxHealth = 300
 	speed = 1
 	obj_damage = 40
 	melee_damage_lower = 12
@@ -13,7 +13,7 @@
 	attack_sound = 'sound/weapons/bladeslice.ogg'
 	weather_immunities = list("lava")
 	movement_type = FLYING
-	loot = list(/obj/item/clockwork/component/replicant_alloy/fallen_armor)
+	loot = list(/obj/item/clockwork/component/geis_capacitor/fallen_armor)
 	var/true_name = "Meme Master 69" //Required to call forth the marauder
 	var/global/list/possible_true_names = list("Servant", "Warden", "Serf", "Page", "Usher", "Knave", "Vassal", "Escort")
 	var/mob/living/host //The mob that the marauder is living inside of
@@ -262,8 +262,8 @@
 
 /mob/living/simple_animal/hostile/clockwork/marauder/proc/blockOrCounter(mob/target, atom/textobject)
 	if(ratvar_awakens) //if ratvar has woken, we block nearly everything at a very high chance
-		blockchance = 80
-		counterchance = 80
+		blockchance = 90
+		counterchance = 90
 	if(prob(blockchance))
 		. = TRUE
 		if(target)
@@ -285,8 +285,8 @@
 	else
 		blockchance = min(blockchance + initial(blockchance), 100)
 	if(ratvar_awakens)
-		blockchance = 80
-		counterchance = 80
+		blockchance = 90
+		counterchance = 90
 
 //COMMUNICATION and EMERGENCE
 
@@ -382,7 +382,7 @@
 		return FALSE
 	if(isliving(owner))
 		var/mob/living/L = owner
-		if(!L.can_speak_vocal())
+		if(!L.can_speak_vocal() || L.stat)
 			return FALSE
 	return ..()
 
@@ -424,5 +424,5 @@
 	for(var/M in mob_list)
 		if(isobserver(M))
 			var/link = FOLLOW_LINK(M, src)
-			M << "[link] [name_part] <span class='sevtug_small'>(to</span> <span class='sevtug'>[linked_marauder][linked_marauder.get_alt_name()]</span><span class='sevtug_small'>):</span> [message]"
+			M << "[link] [name_part] <span class='sevtug_small'>(to</span> <span class='sevtug'>[linked_marauder] ([linked_marauder.true_name])</span><span class='sevtug_small'>):</span> [message]"
 	return TRUE

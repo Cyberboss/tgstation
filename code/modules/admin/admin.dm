@@ -61,14 +61,8 @@ var/global/BSACooldown = 0
 	else
 		body+= "<A href='?_src_=holder;jobban3=emote;jobban4=\ref[M]'>Emoteban</A> | "
 
-	body += "<A href='?_src_=holder;shownoteckey=[M.ckey]'>Notes</A> | "
+	body += "<A href='?_src_=holder;showmessageckey=[M.ckey]'>Notes | Messages | Watchlist</A> | "
 	if(M.client)
-		if(M.client.check_watchlist(M.client.ckey))
-			body += "<A href='?_src_=holder;watchremove=[M.ckey]'>Remove from Watchlist</A> | "
-			body += "<A href='?_src_=holder;watchedit=[M.ckey]'>Edit Watchlist reason</A> "
-		else
-			body += "<A href='?_src_=holder;watchadd=\ref[M.ckey]'>Add to Watchlist</A> "
-
 		body += "| <A href='?_src_=holder;sendtoprison=\ref[M]'>Prison</A> | "
 		body += "\ <A href='?_src_=holder;sendbacktolobby=\ref[M]'>Send back to Lobby</A> | "
 		var/muted = M.client.prefs.muted
@@ -575,11 +569,11 @@ var/global/BSACooldown = 0
 	set desc="Delay the game start"
 	set name="Delay pre-game"
 
-	var/newtime = input("Set a new time in seconds. Set -1 for indefinite delay.","Set Delay",round(ticker.timeLeft/10)) as num|null
+	var/newtime = input("Set a new time in seconds. Set -1 for indefinite delay.","Set Delay",round(ticker.GetTimeLeft()/10)) as num|null
 	if(ticker.current_state > GAME_STATE_PREGAME)
 		return alert("Too late... The game has already started!")
 	if(newtime)
-		ticker.timeLeft = newtime * 10
+		ticker.SetTimeLeft(newtime * 10)
 		if(newtime < 0)
 			world << "<b>The game start has been delayed.</b>"
 			log_admin("[key_name(usr)] delayed the round start.")
@@ -829,3 +823,7 @@ var/global/BSACooldown = 0
 				"Admin login: [key_name(src)]")
 		if(string)
 			message_admins("[string]")
+
+
+/datum/admins/SDQL_update()
+	return FALSE	//No.

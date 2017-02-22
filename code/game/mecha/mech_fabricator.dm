@@ -160,7 +160,7 @@
 	updateUsrDialog()
 	sleep(get_construction_time_w_coeff(D))
 	use_power = 1
-	overlays -= "fab-active"
+	cut_overlay("fab-active")
 	desc = initial(desc)
 
 	var/location = get_step(src,(dir))
@@ -452,11 +452,12 @@
 		if(inserted)
 			user << "<span class='notice'>You insert [inserted] sheet\s into [src].</span>"
 			if(W && W.materials.len)
-				user.put_in_active_hand(W)
+				if(!QDELETED(W))
+					user.put_in_active_hand(W)
 				var/mat_overlay = "fab-load-[material2name(W.materials[1])]"
 				add_overlay(mat_overlay)
 				sleep(10)
-				overlays -= mat_overlay //No matter what the overlay shall still be deleted
+				cut_overlay(mat_overlay) //No matter what the overlay shall still be deleted
 
 		updateUsrDialog()
 

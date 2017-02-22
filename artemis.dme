@@ -19,6 +19,7 @@
 #include "_maps\artemisstation.dm"
 #include "modules_artemis\world.dm"
 #include "modules_artemis\__DEFINES\arc_emitter.dm"
+#include "modules_artemis\__DEFINES\color.dm"
 #include "modules_artemis\__DEFINES\jobs.dm"
 #include "modules_artemis\__DEFINES\supermatter.dm"
 #include "modules_artemis\__HELPERS\departments.dm"
@@ -109,6 +110,7 @@
 #include "modules_artemis\objects\misc\surgery_bag.dm"
 #include "modules_artemis\objects\structures\inflatable.dm"
 #include "modules_artemis\objects\structures\crates_lockers\closets\job_closets.dm"
+#include "modules_artemis\orphaned_procs\dbcore.dm"
 #include "modules_artemis\phoron_desub\formation_vessel.dm"
 #include "modules_artemis\phoron_desub\neutron_furnace.dm"
 #include "modules_artemis\phoron_desub\phoron_desublimer.dm"
@@ -126,4 +128,5 @@
 #include "modules_artemis\supermatter\supermatter.dm"
 #include "modules_artemis\supermatter\utils.dm"
 #include "modules_artemis\supply\packs.dm"
+#include "modules_artemis\turf\simulated\floor\stairs.dm"
 // END_INCLUDE

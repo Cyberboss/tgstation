@@ -188,7 +188,12 @@
 					return
 		if(pulling == AM)
 			stop_pulling()
+		var/current_dir
+		if(isliving(AM))
+			current_dir = AM.dir
 		step(AM, t)
+		if(current_dir)
+			AM.setDir(current_dir)
 		now_pushing = 0
 
 //mob verbs are a lot faster than object verbs
@@ -598,7 +603,7 @@
 	if(!override)
 		float(!has_gravity)
 
-/mob/living/proc/float(on)
+/mob/living/float(on)
 	if(throwing)
 		return
 	var/fixed = 0
@@ -756,7 +761,7 @@
 	return 0
 
 /mob/living/proc/harvest(mob/living/user)
-	if(qdeleted(src))
+	if(QDELETED(src))
 		return
 	if(butcher_results)
 		for(var/path in butcher_results)
