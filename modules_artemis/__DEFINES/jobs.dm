@@ -6,6 +6,8 @@
 #define CAPTAIN_SUCCESION_LEVEL COMMAND_SUCCESSION_LEVEL+2
 #define NO_INDUCTEE 1
 
+#define STARTING_ASSISTANTS 3		//The mas number of people who will get assistant at round start if the readied up for one.
+
 //The following list are the actual enabled jobs!
 
 var/global/list/assistant_occupations = list(
