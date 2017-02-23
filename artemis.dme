@@ -108,6 +108,7 @@
 #include "modules_artemis\objects\misc\shuttlechair.dm"
 #include "modules_artemis\objects\misc\stamps.dm"
 #include "modules_artemis\objects\misc\surgery_bag.dm"
+#include "modules_artemis\objects\structures\energybarrier.dm"
 #include "modules_artemis\objects\structures\inflatable.dm"
 #include "modules_artemis\objects\structures\crates_lockers\closets\job_closets.dm"
 #include "modules_artemis\orphaned_procs\dbcore.dm"
