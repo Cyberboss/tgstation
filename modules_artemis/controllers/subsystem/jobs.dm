@@ -1,31 +1,8 @@
-var/datum/subsystem/job/SSjob
-
 /datum/subsystem/job
-	name = "Jobs"
 	init_order = 5
-	flags = SS_NO_FIRE
-
-	var/list/occupations = list()			//List of all jobs
-	var/list/name_occupations = list()		//Dict of all jobs, keys are titles
-	var/list/type_occupations = list()		//Dict of all jobs, keys are types
 	var/list/inductee_occupations = list() 	//List of all jobs chars unlock.
-	var/list/unassigned = list()			//Players who need jobs
-	var/list/job_debug = list()				//Debug info
-	var/initial_players_to_assign = 0 		//used for checking against population caps
 
-/datum/subsystem/job/New()
-	NEW_SS_GLOBAL(SSjob)
-
-
-/datum/subsystem/job/Initialize(timeofday)
-	if(!occupations.len)
-		SetupOccupations()
-	if(config.load_jobs_from_txt)
-		LoadJobs()
-	..()
-
-
-/datum/subsystem/job/proc/SetupOccupations(faction = "Station")
+/datum/subsystem/job/SetupOccupations(faction = "Station")
 	occupations = list()
 	var/list/all_jobs = subtypesof(/datum/job)
 	if(!all_jobs.len)
@@ -53,56 +30,12 @@ var/datum/subsystem/job/SSjob
 
 	return 1
 
-
-/datum/subsystem/job/proc/Debug(text)
-	if(!Debug2)
-		return 0
-	job_debug.Add(text)
-	return 1
-
-
-/datum/subsystem/job/proc/GetJob(rank)
-	if(!occupations.len)
-		SetupOccupations()
-	return name_occupations[rank]
-
-/datum/subsystem/job/proc/GetJobType(jobtype)
-	if(!occupations.len)
-		SetupOccupations()
-	return type_occupations[jobtype]
-
 /datum/subsystem/job/proc/GetInducteeJobsRanks()
 	var/list/iJobs = new/list()
 	for(var/datum/job/j in inductee_occupations)
 		iJobs += j.title
 
-
-/datum/subsystem/job/proc/AssignRole(mob/new_player/player, rank, latejoin=0)
-	//warning("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
-	Debug("Running AR, Player: [player], Rank: [rank], LJ: [latejoin]")
-	if(player && player.mind && rank)
-		var/datum/job/job = GetJob(rank)
-		if(!job)
-			return 0
-		if(jobban_isbanned(player, rank))
-			return 0
-		if(!job.player_old_enough(player.client))
-			return 0
-		var/position_limit = job.total_positions
-		if(!latejoin)
-			position_limit = job.spawn_positions
-		Debug("Player: [player] is now Rank: [rank], JCP:[job.current_positions], JPL:[position_limit]")
-		player.mind.assigned_role = rank
-		unassigned -= player
-		job.current_positions++
-		return 1
-	//warning("AR has failed, Player: [player], Rank: [rank]")
-	Debug("AR has failed, Player: [player], Rank: [rank]")
-	return 0
-
-
-/datum/subsystem/job/proc/FindOccupationCandidates(datum/job/job, level, flag)
-	//warning("Running FOC, Job: [job], Level: [level], Flag: [flag]")
+/datum/subsystem/job/FindOccupationCandidates(datum/job/job, level, flag)
 	Debug("Running FOC, Job: [job], Level: [level], Flag: [flag]")
 	var/list/candidates = list()
 	for(var/mob/new_player/player in unassigned)
@@ -126,89 +59,7 @@ var/datum/subsystem/job/SSjob
 			candidates += player
 	return candidates
 
-/datum/subsystem/job/proc/GiveRandomJob(mob/new_player/player)
-	Debug("GRJ Giving random job, Player: [player]")
-	for(var/datum/job/job in shuffle(occupations))
-		if(!job)
-			continue
-
-		if(istype(job, GetJob("Assistant"))) // We don't want to give him assistant, that's boring!
-			continue
-
-		if(job.title in command_positions) //If you want a command position, select it!
-			continue
-
-		if(jobban_isbanned(player, job.title))
-			Debug("GRJ isbanned failed, Player: [player], Job: [job.title]")
-			continue
-
-		if(!job.player_old_enough(player.client))
-			Debug("GRJ player not old enough, Player: [player]")
-			continue
-
-		if(player.mind && job.title in player.mind.restricted_roles)
-			Debug("GRJ incompatible with antagonist role, Player: [player], Job: [job.title]")
-			continue
-
-		if(config.enforce_human_authority && !player.client.prefs.pref_species.qualifies_for_rank(job.title, player.client.prefs.features))
-			Debug("GRJ non-human failed, Player: [player]")
-			continue
-
-
-		if((job.current_positions < job.spawn_positions) || job.spawn_positions == -1)
-			Debug("GRJ Random job given, Player: [player], Job: [job]")
-			AssignRole(player, job.title)
-			unassigned -= player
-			break
-
-/datum/subsystem/job/proc/ResetOccupations()
-	for(var/mob/new_player/player in player_list)
-		if((player) && (player.mind))
-			player.mind.assigned_role = null
-			player.mind.special_role = null
-	SetupOccupations()
-	unassigned = list()
-	return
-
-
-//This proc is called before the level loop of DivideOccupations() and will try to select a head, ignoring ALL non-head preferences for every level until
-//it locates a head or runs out of levels to check
-//This is basically to ensure that there's atleast a few heads in the round
-/datum/subsystem/job/proc/FillHeadPosition()
-	for(var/level = 1 to 3)
-		for(var/command_position in command_positions)
-			var/datum/job/job = GetJob(command_position)
-			if(!job)
-				continue
-			if((job.current_positions >= job.total_positions) && job.total_positions != -1)
-				continue
-			var/list/candidates = FindOccupationCandidates(job, level)
-			if(!candidates.len)
-				continue
-			var/mob/new_player/candidate = pick(candidates)
-			if(AssignRole(candidate, command_position))
-				return 1
-	return 0
-
-
-//This proc is called at the start of the level loop of DivideOccupations() and will cause head jobs to be checked before any other jobs of the same level
-//This is also to ensure we get as many heads as possible
-/datum/subsystem/job/proc/CheckHeadPositions(level)
-	for(var/command_position in command_positions)
-		var/datum/job/job = GetJob(command_position)
-		if(!job)
-			continue
-		if((job.current_positions >= job.total_positions) && job.total_positions != -1)
-			continue
-		var/list/candidates = FindOccupationCandidates(job, level)
-		if(!candidates.len)
-			continue
-		var/mob/new_player/candidate = pick(candidates)
-		AssignRole(candidate, command_position)
-	return
-
-
-/datum/subsystem/job/proc/FillAIPosition(unassigned)
+/datum/subsystem/job/FillAIPosition(unassigned)
 	var/ai_selected = 0
 	var/datum/job/job = GetJob("AI")
 	if(!job)
@@ -232,7 +83,7 @@ var/datum/subsystem/job/SSjob
  *  This proc must not have any side effect besides of modifying "assigned_role".
  *	Totally redone for Artemis Station's role system ~rj
  **/
-/datum/subsystem/job/proc/DivideOccupations()
+/datum/subsystem/job/DivideOccupations()
 	//Setup new player list and get the jobs list
 	Debug("Running DO")
 
@@ -373,7 +224,7 @@ var/datum/subsystem/job/SSjob
 	return 1
 
 //Gives the player the stuff he should have with his rank
-/datum/subsystem/job/proc/EquipRank(mob/living/H, rank, joined_late=0)
+/datum/subsystem/job/EquipRank(mob/living/H, rank, joined_late=0)
 	var/datum/job/job = GetJob(rank)
 
 	H.job = rank
@@ -428,41 +279,7 @@ var/datum/subsystem/job/SSjob
 
 	return H
 
-
-/datum/subsystem/job/proc/setup_officer_positions()
-	var/datum/job/J = SSjob.GetJob("Security Officer")
-	if(!J)
-		throw EXCEPTION("setup_officer_positions(): Security officer job is missing")
-
-	if(config.security_scaling_coeff > 0)
-		if(J.spawn_positions > 0)
-			var/officer_positions = min(12, max(J.spawn_positions, round(unassigned.len/config.security_scaling_coeff))) //Scale between configured minimum and 12 officers
-			Debug("Setting open security officer positions to [officer_positions]")
-			J.total_positions = officer_positions
-			J.spawn_positions = officer_positions
-
-	//Spawn some extra eqipment lockers if we have more than 5 officers
-	var/equip_needed = J.total_positions
-	if(equip_needed < 0) // -1: infinite available slots
-		equip_needed = 12
-	for(var/i=equip_needed-5, i>0, i--)
-		if(secequipment.len)
-			var/spawnloc = secequipment[1]
-			new /obj/structure/closet/secure_closet/security/sec(spawnloc)
-			secequipment -= spawnloc
-		else //We ran out of spare locker spawns!
-			break
-
-
-/datum/subsystem/job/proc/LoadJobs()
-	var/jobstext = return_file_text("config/jobs.txt")
-	for(var/datum/job/J in occupations)
-		var/regex/jobs = new("[J.title]=(-1|\\d+),(-1|\\d+)")
-		jobs.Find(jobstext)
-		J.total_positions = text2num(jobs.group[1])
-		J.spawn_positions = text2num(jobs.group[2])
-
-/datum/subsystem/job/proc/HandleFeedbackGathering()
+/datum/subsystem/job/HandleFeedbackGathering()
 	for(var/datum/job/job in occupations)
 		var/tmp_str = "|[job.title]|"
 
@@ -491,32 +308,3 @@ var/datum/subsystem/job/SSjob
 
 		tmp_str += "HIGH=[level1]|MEDIUM=[level2]|LOW=[level3]|NEVER=[level4]|BANNED=[level5]|YOUNG=[level6]|-"
 		feedback_add_details("job_preferences",tmp_str)
-
-/datum/subsystem/job/proc/PopcapReached()
-	if(config.hard_popcap || config.extreme_popcap)
-		var/relevent_cap = max(config.hard_popcap, config.extreme_popcap)
-		if((initial_players_to_assign - unassigned.len) >= relevent_cap)
-			return 1
-	return 0
-
-/datum/subsystem/job/proc/RejectPlayer(mob/new_player/player)
-	if(player.mind && player.mind.special_role)
-		return
-	if(PopcapReached())
-		Debug("Popcap overflow Check observer located, Player: [player]")
-	player << "<b>You have failed to qualify for any job you desired.</b>"
-	unassigned -= player
-	player.ready = 0
-
-
-/datum/subsystem/job/Recover()
-	var/oldjobs = SSjob.occupations
-	spawn(20)
-		for (var/datum/job/J in oldjobs)
-			spawn(-1)
-				var/datum/job/newjob = GetJob(J.title)
-				if (!istype(newjob))
-					return
-				newjob.total_positions = J.total_positions
-				newjob.spawn_positions = J.spawn_positions
-				newjob.current_positions = J.current_positions

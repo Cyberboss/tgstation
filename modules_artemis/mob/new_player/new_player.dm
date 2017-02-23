@@ -1,27 +1,4 @@
-/mob/new_player
-	var/ready = 0
-	var/spawning = 0//Referenced when you want to delete the new_player later on in the code.
-
-	flags = NONE
-
-	invisibility = INVISIBILITY_ABSTRACT
-
-	density = 0
-	stat = DEAD
-	canmove = 0
-
-	anchored = 1	//  don't get pushed around
-
-/mob/new_player/New()
-	tag = "mob_[next_mob_id++]"
-	mob_list += src
-
-	if(length(newplayer_start))
-		loc = pick(newplayer_start)
-	else
-		loc = locate(1,1,1)
-
-/mob/new_player/proc/new_player_panel()
+/mob/new_player/new_player_panel()
 
 	var/output = "<center><p><a href='byond://?src=\ref[src];show_preferences=1'>Setup Character</A></p>"
 
@@ -38,7 +15,7 @@
 	output += "<p><a href='byond://?src=\ref[src];observe=1'>Observe</A></p>"
 
 	if(!IsGuestKey(src.key))
-		establish_db_connection()
+		dbcon.Connect()
 
 		if(dbcon.IsConnected())
 			var/isadmin = 0
@@ -267,7 +244,7 @@
 					return
 				src << "<span class='notice'>Vote successful.</span>"
 
-/mob/new_player/proc/IsJobAvailable(rank)
+/mob/new_player/IsJobAvailable(rank)
 	var/datum/job/job = SSjob.GetJob(rank)
 	if(!job)
 		return 0
@@ -293,140 +270,7 @@
 		return 0
 	return 1
 
-
-/mob/new_player/proc/AttemptLateSpawn(rank)
-	if(!IsJobAvailable(rank))
-		src << alert("[rank] is not available. Please try another.")
-		return 0
-
-	//Remove the player from the join queue if he was in one and reset the timer
-	ticker.queued_players -= src
-	ticker.queue_delay = 4
-
-	SSjob.AssignRole(src, rank, 1)
-
-	var/mob/living/character = create_character()	//creates the human and transfers vars and mind
-	var/equip = SSjob.EquipRank(character, rank, 1)
-	if(iscyborg(equip))	//Borgs get borged in the equip, so we need to make sure we handle the new mob.
-		character = equip
-
-
-	var/D = pick(latejoin)
-	if(!D)
-		for(var/turf/T in get_area_turfs(/area/shuttle/arrival))
-			if(!T.density)
-				var/clear = 1
-				for(var/obj/O in T)
-					if(O.density)
-						clear = 0
-						break
-				if(clear)
-					D = T
-					continue
-
-	character.loc = D
-	ticker.minds += character.mind
-
-	var/mob/living/carbon/human/humanc
-	if(ishuman(character))
-		humanc = character	//Let's retypecast the var to be human,
-
-	if(humanc)	//These procs all expect humans
-		data_core.manifest_inject(humanc)
-		AnnounceArrival(humanc, rank)
-		AddEmploymentContract(humanc)
-		if(highlander)
-			humanc << "<span class='userdanger'><i>THERE CAN BE ONLY ONE!!!</i></span>"
-			humanc.make_scottish()
-
-	joined_player_list += character.ckey
-
-	if(config.allow_latejoin_antagonists && humanc)	//Borgs aren't allowed to be antags. Will need to be tweaked if we get true latejoin ais.
-		if(SSshuttle.emergency)
-			switch(SSshuttle.emergency.mode)
-				if(SHUTTLE_RECALL, SHUTTLE_IDLE)
-					ticker.mode.make_antag_chance(humanc)
-				if(SHUTTLE_CALL)
-					if(SSshuttle.emergency.timeLeft(1) > initial(SSshuttle.emergencyCallTime)*0.5)
-						ticker.mode.make_antag_chance(humanc)
-	qdel(src)
-
-/mob/new_player/proc/AnnounceArrival(var/mob/living/carbon/human/character, var/rank)
-	if(ticker.current_state != GAME_STATE_PLAYING)
-		return
-	var/area/A = get_area(character)
-	var/message = "<span class='game deadsay'><span class='name'>\
-		[character.real_name]</span> ([rank]) has arrived at the station at \
-		<span class='name'>[A.name]</span>.</span>"
-	deadchat_broadcast(message, follow_target = character, message_type=DEADCHAT_ARRIVALRATTLE)
-	if((!announcement_systems.len) || (!character.mind))
-		return
-	if((character.mind.assigned_role == "Cyborg") || (character.mind.assigned_role == character.mind.special_role))
-		return
-
-	var/obj/machinery/announcement_system/announcer = pick(announcement_systems)
-	announcer.announce("ARRIVAL", character.real_name, rank, list()) //make the list empty to make it announce it in common
-
-/mob/new_player/proc/AddEmploymentContract(mob/living/carbon/human/employee)
-	//TODO:  figure out a way to exclude wizards/nukeops/demons from this.
-	sleep(30)
-	for(var/C in employmentCabinets)
-		var/obj/structure/filingcabinet/employment/employmentCabinet = C
-		if(!employmentCabinet.virgin)
-			employmentCabinet.addFile(employee)
-
-
-/mob/new_player/proc/LateChoices()
-	var/mills = world.time - round_start_time // 1/10 of a second, not real milliseconds but whatever
-	//var/secs = ((mills % 36000) % 600) / 10 //Not really needed, but I'll leave it here for refrence.. or something
-	var/mins = (mills % 36000) / 600
-	var/hours = mills / 36000
-
-	var/dat = "<div class='notice'>Round Duration: [round(hours)]h [round(mins)]m</div>"
-
-	if(SSshuttle.emergency)
-		switch(SSshuttle.emergency.mode)
-			if(SHUTTLE_ESCAPE)
-				dat += "<div class='notice red'>The station has been evacuated.</div><br>"
-			if(SHUTTLE_CALL)
-				if(!SSshuttle.canRecall())
-					dat += "<div class='notice red'>The station is currently undergoing evacuation procedures.</div><br>"
-
-	var/available_job_count = 0
-	for(var/datum/job/job in SSjob.occupations)
-		if(job && IsJobAvailable(job.title))
-			available_job_count++;
-
-	dat += "<div class='clearBoth'>Choose from the following open positions:</div><br>"
-	dat += "<div class='jobs'><div class='jobsColumn'>"
-	var/job_count = 0
-	for(var/datum/job/job in SSjob.occupations)
-		if(job && IsJobAvailable(job.title))
-			job_count++;
-			if (job_count > round(available_job_count / 2))
-				dat += "</div><div class='jobsColumn'>"
-			var/position_class = "otherPosition"
-			if (job.title in command_positions)
-				position_class = "commandPosition"
-			dat += "<a class='[position_class]' href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title] ([job.current_positions])</a><br>"
-	if(!job_count) //if there's nowhere to go, assistant opens up.
-		for(var/datum/job/job in SSjob.occupations)
-			if(job.title != "Assistant") continue
-			dat += "<a class='otherPosition' href='byond://?src=\ref[src];SelectedJob=[job.title]'>[job.title] ([job.current_positions])</a><br>"
-			break
-	dat += "</div></div>"
-
-	// Removing the old window method but leaving it here for reference
-	//src << browse(dat, "window=latechoices;size=300x640;can_close=1")
-
-	// Added the new browser window method
-	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 440, 500)
-	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
-	popup.set_content(dat)
-	popup.open(0) // 0 is passed to open so that it doesn't use the onclose() proc
-
-
-/mob/new_player/proc/create_character()
+/mob/new_player/create_character()
 	spawning = 1
 	close_spawn_windows()
 
@@ -448,22 +292,3 @@
 	new_character.stopLobbySound()
 
 	return new_character
-
-/mob/new_player/proc/ViewManifest()
-	var/dat = "<html><body>"
-	dat += "<h4>Crew Manifest</h4>"
-	dat += data_core.get_manifest(OOC = 1)
-
-	src << browse(dat, "window=manifest;size=387x420;can_close=1")
-
-/mob/new_player/Move()
-	return 0
-
-
-/mob/new_player/proc/close_spawn_windows()
-
-	src << browse(null, "window=latechoices") //closes late choices window
-	src << browse(null, "window=playersetup") //closes the player setup window
-	src << browse(null, "window=preferences") //closes job selection
-	src << browse(null, "window=mob_occupation")
-	src << browse(null, "window=latechoices") //closes late job selection

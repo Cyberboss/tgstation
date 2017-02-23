@@ -61,6 +61,6 @@ var/list/the_station_areas = list (
 #endif
 #elif !defined(MAP_OVERRIDE)
 
-	#warn a map has already been included, ignoring appollo station.
+	#warn a map has already been included, ignoring artemis station.
 
 #endif

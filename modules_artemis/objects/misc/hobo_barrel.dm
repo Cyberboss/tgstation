@@ -15,6 +15,7 @@
 	name = "roasted ratrod"
 	desc = "A rodent with a metal rod stuck through it. It's been cooked."
 	icon_state = "ratrod"
+	icon = 'icons/obj/food/ratrod.dmi'
 	trash = /obj/item/stack/rods
 	bitesize = 2
 	list_reagents = list("nutriment" = 2)

@@ -4,6 +4,7 @@
 	name = "neural lace"
 	desc = "A lightweight brain implant used to record and store the entirety of a person's brain."
 	icon_state = "neurallace"
+	icon = 'icons/obj/lace.dmi'
 	throw_speed = 2
 	throw_range = 4
 	layer = ABOVE_MOB_LAYER
@@ -30,7 +31,7 @@
 /obj/item/weapon/lace_claw
 	name = "lace claw"
 	desc = "A precision instrument used to handle neural laces without breaking them. It is set to extract mode."
-	icon = 'icons/obj/surgery.dmi'
+	icon = 'icons/obj/lace.dmi'
 	icon_state = "lacetool"
 	var/mode = 0 // 0 = extract, 1 = implant
 

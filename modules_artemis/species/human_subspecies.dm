@@ -8,10 +8,15 @@
 	speedmod = 0.8
 	say_mod = "grunts"
 
+/obj/item/organ/eyes/spacer
+	name = "spacer eyes"
+	desc = "A set of eyes that are resistant to the vacuum of space."
+	flash_protect = 1
+
 /datum/species/human/spacer
 	name = "Space-Adapted Human"
 	id = "spaceadapted"
-	eyes = "spaceeyes"
+	mutanteyes = /obj/item/organ/eyes/spacer
 	damage_overlay_type = "spaceadapted"
 	species_traits = list(LIPS,RESISTPRESSURE,NOBREATH,EASYDISMEMBER)
 	stunmod = 1.5

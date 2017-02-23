@@ -1,6 +1,6 @@
 
 //The mob should have a gender you want before running this proc. Will run fine without H
-/datum/preferences/proc/random_character(gender_override)
+/datum/preferences/random_character(gender_override)
 	if(gender_override)
 		gender = gender_override
 	else
@@ -46,7 +46,7 @@
 	generate_init_roles()
 
 
-/datum/preferences/proc/update_preview_icon()
+/datum/preferences/update_preview_icon()
 	// Silicons only need a very basic preview since there is no customization for them.
 	var/high_ranked = "Assistant"
 	for(var/x in roles)

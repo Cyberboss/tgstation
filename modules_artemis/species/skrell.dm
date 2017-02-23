@@ -3,7 +3,7 @@
 	name = "Skrell"
 	id = "skrell"
 	say_mod = "warbles"
-	eyes = "skrelleyes"
+	mutanteyes = /obj/item/organ/eyes/skrell
 	damage_overlay_type = "skrell"
 	default_color = "64BAA0"
 	species_traits = list(MUTCOLORS,EYECOLOR,LIPS)
@@ -15,6 +15,10 @@
 	exotic_bloodtype = "S"
 	brutemod = 2 //Weak against firearms
 	burnmod = 1.5 //Weak against lasers
+
+/obj/item/organ/eyes/skrell
+	name = "skrell eyes"
+	desc = "A set of eyes that are very good at seeing underwater. Glub glub."
 
 /datum/species/skrell/qualifies_for_rank()
 	return 1

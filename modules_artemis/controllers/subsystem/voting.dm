@@ -1,54 +1,7 @@
-var/datum/subsystem/vote/SSvote
-
 /datum/subsystem/vote
-	name = "Vote"
-	wait = 10
-
-	flags = SS_FIRE_IN_LOBBY|SS_KEEP_TIMING|SS_NO_INIT
-
-	var/initiator = null
-	var/started_time = null
 	var/crew_transfer_vote_time = null
-	var/time_remaining = 0
-	var/mode = null
-	var/question = null
-	var/list/choices = list()
-	var/list/voted = list()
-	var/list/voting = list()
-	var/list/generated_actions = list()
 
-/datum/subsystem/vote/New()
-	NEW_SS_GLOBAL(SSvote)
-
-/datum/subsystem/vote/fire()	//called by master_controller
-	if(mode)
-		time_remaining = round((started_time + config.vote_period - world.time)/10)
-
-		if(time_remaining < 0)
-			result()
-			for(var/client/C in voting)
-				C << browse(null, "window=vote;can_close=0")
-			reset()
-		else
-			var/datum/browser/client_popup
-			for(var/client/C in voting)
-				client_popup = new(C, "vote", "Voting Panel")
-				client_popup.set_window_options("can_close=0")
-				client_popup.set_content(interface(C))
-				client_popup.open(0)
-
-
-/datum/subsystem/vote/proc/reset()
-	initiator = null
-	time_remaining = 0
-	mode = null
-	question = null
-	choices.Cut()
-	voted.Cut()
-	voting.Cut()
-	remove_action_buttons()
-
-/datum/subsystem/vote/proc/get_result()
+/datum/subsystem/vote/get_result()
 	//get the highest number of votes
 	var/greatest_votes = 0
 	var/total_votes = 0
@@ -87,36 +40,7 @@ var/datum/subsystem/vote/SSvote
 				. += option
 	return .
 
-/datum/subsystem/vote/proc/announce_result()
-	var/list/winners = get_result()
-	var/text
-	if(winners.len > 0)
-		if(question)
-			text += "<b>[question]</b>"
-		else
-			text += "<b>[capitalize(mode)] Vote</b>"
-		for(var/i=1,i<=choices.len,i++)
-			var/votes = choices[choices[i]]
-			if(!votes)
-				votes = 0
-			text += "\n<b>[choices[i]]:</b> [votes]"
-		if(mode != "custom")
-			if(winners.len > 1)
-				text = "\n<b>Vote Tied Between:</b>"
-				for(var/option in winners)
-					text += "\n\t[option]"
-			. = pick(winners)
-			text += "\n<b>Vote Result: [.]</b>"
-		else
-			text += "\n<b>Did not vote:</b> [clients.len-voted.len]"
-	else
-		text += "<b>Vote Result: Inconclusive - No Votes!</b>"
-	log_vote(text)
-	remove_action_buttons()
-	world << "\n<font color='purple'>[text]</font>"
-	return .
-
-/datum/subsystem/vote/proc/result()
+/datum/subsystem/vote/result()
 	. = announce_result()
 	var/restart = 0
 	var/transfer = 0
@@ -154,18 +78,7 @@ var/datum/subsystem/vote/SSvote
 		//do some checks and start the crew transfer
 	return .
 
-/datum/subsystem/vote/proc/submit_vote(vote)
-	if(mode)
-		if(config.vote_no_dead && usr.stat == DEAD && !usr.client.holder)
-			return 0
-		if(!(usr.ckey in voted))
-			if(vote && 1<=vote && vote<=choices.len)
-				voted += usr.ckey
-				choices[choices[vote]]++	//check this
-				return vote
-	return 0
-
-/datum/subsystem/vote/proc/initiate_vote(vote_type, initiator_key)
+/datum/subsystem/vote/initiate_vote(vote_type, initiator_key)
 	if(!mode)
 		if(started_time)
 			var/next_allowed_time = (started_time + config.vote_delay)
@@ -221,7 +134,7 @@ var/datum/subsystem/vote/SSvote
 		return 1
 	return 0
 
-/datum/subsystem/vote/proc/interface(client/C)
+/datum/subsystem/vote/interface(client/C)
 	if(!C)
 		return
 	var/admin = 0
@@ -307,30 +220,9 @@ var/datum/subsystem/vote/SSvote
 			submit_vote(round(text2num(href_list["vote"])))
 	usr.vote()
 
-/datum/subsystem/vote/proc/remove_action_buttons()
+/datum/subsystem/vote/remove_action_buttons()
 	for(var/v in generated_actions)
 		var/datum/action/vote/V = v
-		if(!qdeleted(V))
+		if(!QDELETED(V))
 			V.Remove(V.owner)
 	generated_actions = list()
-
-/mob/verb/vote()
-	set category = "OOC"
-	set name = "Vote"
-
-	var/datum/browser/popup = new(src, "vote", "Voting Panel")
-	popup.set_window_options("can_close=0")
-	popup.set_content(SSvote.interface(client))
-	popup.open(0)
-
-/datum/action/vote
-	name = "Vote!"
-	button_icon_state = "vote"
-
-/datum/action/vote/Trigger()
-	if(owner)
-		owner.vote()
-		Remove(owner)
-
-/datum/action/vote/IsAvailable()
-	return 1

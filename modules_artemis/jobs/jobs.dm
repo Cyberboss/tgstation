@@ -1,17 +1,17 @@
-//Department Flags FUCK BITSSHIFTS!! ~rj
-var/const/CIVILIAN 		= "CIV"
-var/const/CAPTAIN		= "CAP"
-var/const/HOP			= "HOP"
-var/const/IAA			= "IAA"
-var/const/BARTENDER		= "BAR"
-var/const/BOTANIST		= "BOT"
-var/const/COOK			= "COO"
-var/const/JANITOR		= "JAN"
-var/const/LIBRARIAN		= "LIB"
-var/const/CHAPLAIN		= "CHA"
-var/const/ASSISTANT		= "ASS"
-var/const/MIME			= "MIM"
-var/const/CLOWN			= "CLO"
+//Department Flags FUCK BITSHIFTS!! ~rj
+var/const/CIVILIAN 			= "CIV"
+var/const/CAPTAIN			= "CAP"
+var/const/HOP				= "HOP"
+var/const/IAA				= "IAA"
+var/const/BARTENDER			= "BAR"
+var/const/BOTANIST			= "BOT"
+var/const/COOK				= "COO"
+var/const/JANITOR			= "JAN"
+var/const/LIBRARIAN			= "LIB"
+var/const/CHAPLAIN			= "CHA"
+var/const/ASSISTANT			= "ASS" //Good god RJ, always with the asses. ~Cakey
+var/const/MIME				= "MIM"
+var/const/CLOWN				= "CLO"
 
 var/const/ENG 				= "ENG"
 var/const/CHIEF				= "CHI"
@@ -33,10 +33,10 @@ var/const/CARGOTECH			= "CAR"
 var/const/MINER				= "MIN"
 
 
-var/const/MED 			= "MED"
-var/const/CMO			= "CMO"
-var/const/SENIORDOCTOR	= "SED"
-var/const/DOCTOR		= "DOC"
+var/const/MED 				= "MED"
+var/const/CMO				= "CMO"
+var/const/SENIORDOCTOR		= "SED"
+var/const/DOCTOR			= "DOC"
 
 
 var/const/SCI 				= "SCI"
@@ -45,12 +45,26 @@ var/const/SENIORSCIENTIST	= "SES"
 var/const/SCIENTIST			= "SCI"
 
 
-var/const/SOLGOV 		= "SOL"
-var/const/SOLGOVAGENT	= "SOA"
+var/const/SOLGOV 			= "SOL"
+var/const/SOLGOVAGENT		= "SOA"
 
-var/const/SILICON 		= "SIL"
-var/const/AI			= "SAI"
-var/const/CYBORG		= "CYB"
+var/const/SILICON 			= "SIL"
+var/const/AI				= "SAI"
+var/const/CYBORG			= "CYB"
+
+//Unused, but here for error-free compiling(tm) ~Cakey
+var/const/ENGSEC			= "ENGSEC"
+
+var/const/ATMOSTECH			= "ATMOS"
+var/const/ROBOTICIST		= "ROBO"
+
+var/const/MEDSCI			= "MEDSCI"
+
+var/const/GENETICIST		= "GENE"
+var/const/VIROLOGIST		= "VIRO"
+var/const/CHEMIST			= "CHEM"
+
+var/const/LAWYER			= "LAW"
 
 /proc/guest_jobbans(job)
 	return ((job in command_positions) || (job in nonhuman_positions) || (job in security_positions))
@@ -66,6 +80,9 @@ var/const/CYBORG		= "CYB"
 		if(J.title == job_title)
 			return J.department_head //this is a list
 
+//Promotions system
+var/list/allJobDatums
+
 var/static/regex/cap_expand = new("cap(?!tain)")
 var/static/regex/cmo_expand = new("cmo")
 var/static/regex/hos_expand = new("hos")
@@ -80,10 +97,6 @@ var/static/regex/doc_expand = new("(?<!medical )doctor|medic(?!al)")
 var/static/regex/mine_expand = new("(?<!shaft )miner")
 var/static/regex/chef_expand = new("chef")
 var/static/regex/borg_expand = new("(?<!cy)borg")
-
-//Promotions system
-var/list/allJobDatums
-
 
 /proc/get_full_job_name(job)
 	job = lowertext(job)

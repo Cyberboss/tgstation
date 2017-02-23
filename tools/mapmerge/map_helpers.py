@@ -74,7 +74,10 @@ def merge_map(newfile, backupfile, tgm):
             if new_tile == old_tile: #this tile is the exact same as before, so the old key is used
                 merged_grid[x,y] = old_key
                 known_keys[new_key] = old_key
-                unused_keys.remove(old_key)
+                try:
+                    unused_keys.remove(old_key)
+                except ValueError as ve_exception:
+                    print("NOTICE: Correcting duplicate dictionary entry. ({})".format(new_key))
                 continue
 
             #the tile is different here, but if it exists in the old dictionary, its old key can be used
@@ -84,7 +87,7 @@ def merge_map(newfile, backupfile, tgm):
                 known_keys[new_key] = newold_key
                 try:
                     unused_keys.remove(newold_key)
-                except ValueError:
+                except ValueError as ve_exception:
                     print("NOTICE: Correcting duplicate dictionary entry. ({})".format(new_key))
 
             #the tile is brand new and it needs a new key, but if the old key isn't being used any longer it can be used instead
@@ -102,7 +105,7 @@ def merge_map(newfile, backupfile, tgm):
 
     header = False
     #step two: clean the dictionary if it has too many unused keys
-    if len(unused_keys) > min(300, (len(old_dict) * 0.5)):
+    if len(unused_keys) > min(1600, (len(old_dict) * 0.5)):
         print("NOTICE: Trimming the dictionary.")
         trimmed_dict_map = trim_dictionary({"dictionary": old_dict, "grid": merged_grid})
         old_dict = trimmed_dict_map["dictionary"]
@@ -121,7 +124,7 @@ def merge_map(newfile, backupfile, tgm):
 
 #######################
 #write to file helpers#
-def write_dictionary_tgm(filename, dictionary, header): #write dictionary in tgm format
+def write_dictionary_tgm(filename, dictionary, header = None): #write dictionary in tgm format
     with open(filename, "w") as output:
         output.write("{}\n".format(tgm_header))
         if header:
@@ -179,7 +182,7 @@ def write_grid_coord_small(filename, grid, maxx, maxy): #thanks to YotaXP for fi
             output.write("{}\n\"}}\n".format(grid[x,maxy]))
 
 
-def write_dictionary(filename, dictionary, header): #writes a tile dictionary the same way Dreammaker does
+def write_dictionary(filename, dictionary, header = None): #writes a tile dictionary the same way Dreammaker does
     with open(filename, "w") as output:
         for key, value in dictionary.items():
             if header:
@@ -253,6 +256,9 @@ def get_map_raw_text(mapfile):
         return reading.read()
 
 def parse_map(map_raw_text): #still does not support more than one z level per file, but should parse any format
+    in_comment_line = False
+    comment_trigger = False
+
     in_quote_block = False
     in_key_block = False
     in_data_block = False
@@ -289,9 +295,26 @@ def parse_map(map_raw_text): #still does not support more than one z level per f
 
         if not in_map_block:
 
-            if char == "\n" or char == "\t":
+            if char == "\n":
+                in_comment_line = False
+                comment_trigger = False
                 continue
 
+            if in_comment_line:
+                continue
+
+            if char == "\t":
+                continue
+
+            if char == "/" and not in_quote_block:
+                if comment_trigger:
+                    in_comment_line = True
+                    continue
+                else:
+                    comment_trigger = True
+            else:
+                comment_trigger = False
+            
             if in_data_block:
 
                 if in_varedit_block:

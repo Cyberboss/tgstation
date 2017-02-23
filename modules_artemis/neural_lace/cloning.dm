@@ -128,7 +128,7 @@
 					name_records[R.fields["name"]] += R
 				else
 					name_records[R.fields["name"]] = list(R)
-			
+
 			for(var/name in name_records)
 				dat += "<h4>[name]</h4>"
 				for(var/datum/data/record/R in name_records[name])
@@ -357,6 +357,10 @@
 #define CLONE_INITIAL_DAMAGE 190
 
 // Cloning pod
+/obj/machinery/clonepod
+	var/locked = FALSE
+	var/eject_wait = FALSE
+
 /obj/machinery/clonepod/growclone(clonename, ui, se, datum/species/mrace, list/features, factions)
 	if(panel_open)
 		return FALSE

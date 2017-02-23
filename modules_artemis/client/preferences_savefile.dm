@@ -19,7 +19,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	Failing all that, the standard sanity checks are performed. They simply check the data is suitable, reverting to
 	initial() values if necessary.
 */
-/datum/preferences/proc/savefile_needs_update(savefile/S)
+/datum/preferences/savefile_needs_update(savefile/S)
 	var/savefile_version
 	S["version"] >> savefile_version
 
@@ -31,7 +31,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 	return -1
 
 
-/datum/preferences/proc/update_antagchoices(current_version, savefile/S)
+/datum/preferences/update_antagchoices(current_version, savefile/S)
 	if((!islist(be_special) || old_be_special ) && current_version < 12)
 		//Archived values of when antag pref defines were a bitfield+fitflags
 		var/B_traitor = 1
@@ -87,7 +87,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 						be_special += ROLE_ABDUCTOR
 
 
-/datum/preferences/proc/update_preferences(current_version, savefile/S)
+/datum/preferences/update_preferences(current_version, savefile/S)
 	if(current_version < 10)
 		toggles |= MEMBER_PUBLIC
 	if(current_version < 11)
@@ -105,7 +105,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 //from this proc.
 //It's only really meant to avoid annoying frequent players
 //if your savefile is 3 months out of date, then 'tough shit'.
-/datum/preferences/proc/update_character(current_version, savefile/S)
+/datum/preferences/update_character(current_version, savefile/S)
 	if(pref_species && !(pref_species.id in roundstart_species))
 		var/rando_race = pick(config.roundstart_races)
 		pref_species = new rando_race()
@@ -128,12 +128,12 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 
 
-/datum/preferences/proc/load_path(ckey,filename="preferences.sav")
+/datum/preferences/load_path(ckey,filename="preferences.sav")
 	if(!ckey)
 		return
 	path = "data/player_saves/[copytext(ckey,1,2)]/[ckey]/[filename]"
 
-/datum/preferences/proc/load_preferences()
+/datum/preferences/load_preferences()
 	if(!path)
 		return 0
 	if(!fexists(path))
@@ -201,7 +201,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	return 1
 
-/datum/preferences/proc/save_preferences()
+/datum/preferences/save_preferences()
 	if(!path)
 		return 0
 	var/savefile/S = new /savefile(path)
@@ -237,7 +237,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	return 1
 
-/datum/preferences/proc/load_character(slot)
+/datum/preferences/load_character(slot)
 	if(!path)
 		return 0
 	if(!fexists(path))
@@ -462,7 +462,7 @@ SAVEFILE UPDATING/VERSIONING - 'Simplified', or rather, more coder-friendly ~Car
 
 	return 1
 
-/datum/preferences/proc/save_character()
+/datum/preferences/save_character()
 	if(!path)
 		return 0
 	var/savefile/S = new /savefile(path)

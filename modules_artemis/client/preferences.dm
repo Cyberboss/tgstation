@@ -1,68 +1,8 @@
 var/list/preferences_datums = list()
 
 /datum/preferences
-	var/client/parent
-	//doohickeys for savefiles
-	var/path
-	var/default_slot = 1				//Holder so it doesn't default to slot 1, rather the last one used
 	var/nr_chars = 1
-	var/max_save_slots = 999
-
-	//non-preference stuff
-	var/muted = 0
-	var/last_ip
-	var/last_id
-
-	//game-preferences
-	var/lastchangelog = ""				//Saved changlog filesize to detect if there was a change
-	var/ooccolor = null
-
-	//Antag preferences
-	var/list/be_special = list()		//Special role selection
-	var/tmp/old_be_special = 0			//Bitflag version of be_special, used to update old savefiles and nothing more
-										//If it's 0, that's good, if it's anything but 0, the owner of this prefs file's antag choices were,
-										//autocorrected this round, not that you'd need to check that.
-
-	var/UI_style = "Midnight"
-	var/hotkeys = FALSE
-	var/tgui_fancy = TRUE
-	var/tgui_lock = TRUE
-	var/toggles = TOGGLES_DEFAULT
-	var/chat_toggles = TOGGLES_DEFAULT_CHAT
-	var/ghost_form = "ghost"
-	var/ghost_orbit = GHOST_ORBIT_CIRCLE
-	var/ghost_accs = GHOST_ACCS_DEFAULT_OPTION
-	var/ghost_others = GHOST_OTHERS_DEFAULT_OPTION
-	var/ghost_hud = 1
-	var/inquisitive_ghost = 1
-	var/allow_midround_antag = 1
-	var/preferred_map = null
-	var/uses_glasses_colour = 0
-
-	//character preferences
-	var/real_name						//our character's name
-	var/be_random_name = 0				//whether we'll have a random name every round
-	var/be_random_body = 0				//whether we'll have a random body every round
-	var/gender = MALE					//gender of character (well duh)
-	var/age = 30						//age of character
-	var/underwear = "Nude"				//underwear type
-	var/undershirt = "Nude"				//undershirt type
-	var/socks = "Nude"					//socks type
-	var/backbag = DBACKPACK				//backpack type
-	var/hair_style = "Bald"				//Hair type
-	var/hair_color = "000"				//Hair color
-	var/facial_hair_style = "Shaved"	//Face hair type
-	var/facial_hair_color = "000"		//Facial hair color
-	var/skin_tone = "caucasian1"		//Skin color
-	var/eye_color = "000"				//Eye color
-	var/datum/species/pref_species = new /datum/species/human()	//Mutant race
-	var/list/features = list("mcolor" = "FFF", "tail_lizard" = "Smooth", "tail_human" = "None", "snout" = "Round", "horns" = "None", "ears" = "None", "wings" = "None", "frills" = "None", "spines" = "None", "body_markings" = "None", "legs" = "Normal Legs")
-
-	var/list/custom_names = list("clown", "mime", "ai", "cyborg", "religion", "deity")
-	var/prefered_security_department = SEC_DEPT_RANDOM
-
-		//Mob preview
-	var/icon/preview_icon = null
+	max_save_slots = 999
 
 		//More jobs
 	var/list/roles = new/list()
@@ -83,47 +23,28 @@ var/list/preferences_datums = list()
 	var/flavor_texts_human = ""
 	var/flavor_texts_robot = ""
 
-		//Reccores
+		//Records
 	var/med_record = "Medical records here:"
 	var/sec_record = "Security records here:"
 	var/gen_record = "General employment records here:"
 	var/exploit_record = "Exploitable information here:"
 
-		//phorensics (not used atm)
+		//Forensics (not used atm)
 	var/DNA = ""
 	var/fingerprints = ""
 	var/unique_identifier = ""
 
-		//Langueages
+		//Languages
 	var/additional_language = "None"
 
 
-	//Is this char to be deleted on safe or load ?
+		//Is this char to be deleted on save or load ?
 	var/to_delete = 0
 
-		// Want randomjob if preferences already filled - Donkie
-	var/joblessrole = BERANDOMJOB  //defaults to 1 for fewer assistants
-
-	// 0 = character settings, 1 = game preferences
-	var/current_tab = 0
 	// 0 = char records, 1 = char prefs
 	var/char_prefs = 1
 	// 0 = char list, 1 = char editor
 	var/select_character = 0
-
-		// OOC Metadata:
-	var/metadata = ""
-
-	var/unlock_content = 0
-
-	var/list/ignoring = list()
-
-	var/clientfps = 0
-
-	var/parallax = PARALLAX_HIGH
-
-	var/uplink_spawn_loc = UPLINK_PDA
-
 
 /datum/preferences/New(client/C)
 	parent = C
@@ -156,7 +77,7 @@ var/list/preferences_datums = list()
 	return
 
 
-/datum/preferences/proc/ShowChoices(mob/user)
+/datum/preferences/ShowChoices(mob/user)
 	if(!user || !user.client)
 		return
 	update_preview_icon()
@@ -343,7 +264,7 @@ var/list/preferences_datums = list()
 	popup.set_content(dat)
 	popup.open(0)
 
-/datum/preferences/proc/SetChoices(mob/user, limit = 17, list/splitJobs = list("Chief Engineer"), widthPerColumn = 295, height = 620)
+/datum/preferences/SetChoices(mob/user, limit = 17, list/splitJobs = list("Chief Engineer"), widthPerColumn = 295, height = 620)
 	if(!SSjob)
 		return
 
@@ -478,7 +399,7 @@ var/list/preferences_datums = list()
 	return
 
 //FUCK BITFLAGS AND SHIFTS AND ALL THAT BS! ~rj
-/datum/preferences/proc/SetJobPreferenceLevel(var/job, level)
+/datum/preferences/SetJobPreferenceLevel(var/job, level)
 	//world << "Setting job prefs, job: [job], level: [level]"
 	var/priority = "NEVER"
 	switch(level)
@@ -509,7 +430,7 @@ var/list/preferences_datums = list()
 
 	return 0
 
-/datum/preferences/proc/UpdateJobPreference(mob/user, role, desiredLvl)
+/datum/preferences/UpdateJobPreference(mob/user, role, desiredLvl)
 	//world << "[parent] updating job level job: [role], level: [desiredLvl]"
 	if(!SSjob || SSjob.occupations.len <= 0)
 		//world << "No job subsystem or SSjob occupations list is empty"
@@ -536,7 +457,7 @@ var/list/preferences_datums = list()
 	return 1
 
 //Check if the player has this job on the given level
-/datum/preferences/proc/GetJobDepartment(var/datum/job/j, var/level)
+/datum/preferences/GetJobDepartment(var/datum/job/j, var/level)
 	var/priority = "NEVER"
 	switch(level)
 		if(1)
@@ -557,11 +478,11 @@ var/list/preferences_datums = list()
 	return 0
 
 
-/datum/preferences/proc/ResetJobs()
+/datum/preferences/ResetJobs()
 	for(var/x in roles)
 		roles[x] = "NEVER"
 
-/datum/preferences/proc/process_link(mob/user, list/href_list)
+/datum/preferences/process_link(mob/user, list/href_list)
 	if(href_list["jobbancheck"])
 		var/job = sanitizeSQL(href_list["jobbancheck"])
 		var/sql_ckey = sanitizeSQL(user.ckey)
@@ -1086,7 +1007,7 @@ var/list/preferences_datums = list()
 						parent.mob.hud_used.update_parallax_pref()
 
 				if("save")
-					//Safe and lock in the character.
+					//Save and lock in the character.
 					if(!locked)
 						prune_roles()
 					locked = 1
@@ -1418,7 +1339,7 @@ var/list/preferences_datums = list()
 
 	return dat
 
-/datum/preferences/proc/copy_to(mob/living/carbon/human/character, icon_updates = 1, random = 1)
+/datum/preferences/copy_to(mob/living/carbon/human/character, icon_updates = 1, random = 1)
 	//If the char is not locked give the user a random char for this round.
 	if(!locked && random)
 		real_name = pref_species.random_name(gender)
