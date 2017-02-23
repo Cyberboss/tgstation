@@ -70,6 +70,8 @@ var/list/map_transition_config = MAP_TRANSITION_CONFIG
 
 	Master.Setup(10, FALSE)
 
+	toggle_hub()
+
 #define IRC_STATUS_THROTTLE 50
 /world/Topic(T, addr, master, key)
 	if(config && config.log_world_topic)

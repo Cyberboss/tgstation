@@ -267,7 +267,13 @@
 	votable_modes += "secret"
 
 /datum/configuration/proc/load(filename, type = "config") //the type can also be game_options, in which case it uses a different switch. not making it separate to not copypaste code - Urist
+
+	warning("Loading config [filename]")
 	var/list/Lines = file2list(filename)
+	if(!Lines)
+		warning("Failed")
+	else
+		warning("Succes")
 
 	for(var/t in Lines)
 		if(!t)

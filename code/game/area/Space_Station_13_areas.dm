@@ -1003,6 +1003,7 @@ NOTE: there are two lists of areas in the end of this file: centcom and station 
  Used in gamemodes code at the moment. --rastaf0
 */
 
+/*Commented out to make way for artemis's station areas list. -Cakey
 //SPACE STATION 13
 var/list/the_station_areas = list (
 	/area/atmos,
@@ -1034,3 +1035,4 @@ var/list/the_station_areas = list (
 	/area/ai_monitored/turret_protected/ai_upload_foyer,
 	/area/ai_monitored/turret_protected/ai,
 )
+*/

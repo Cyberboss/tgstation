@@ -52,7 +52,7 @@
 	icon_state = "meatballspaghetti"
 	trash = /obj/item/trash/plate
 	bonus_reagents = list("nutriment" = 1, "vitamin" = 4)
-	list_reagents = list("nutriment" = 8, "vitamin" = 4)
+	list_reagents = list("nutriment" = 8, "vitamin" = 4, "protein" = 7)
 	filling_color = "#F0E68C"
 	tastes = list("pasta" = 1, "tomato" = 1, "meat" = 1)
 
@@ -63,7 +63,7 @@
 	icon_state = "spesslaw"
 	trash = /obj/item/trash/plate
 	bonus_reagents = list("nutriment" = 1, "vitamin" = 6)
-	list_reagents = list("nutriment" = 8, "vitamin" = 6)
+	list_reagents = list("nutriment" = 8, "vitamin" = 6, "protein" = 7)
 	filling_color = "#F0E68C"
 	tastes = list("pasta" = 1, "tomato" = 1, "meat" = 1)
 

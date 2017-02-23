@@ -77,7 +77,6 @@
 	bonus_reagents = list("vitamin" = 10)
 	tastes = list("cake" = 4, "cream cheese" = 3)
 
-
 /obj/item/weapon/reagent_containers/food/snacks/cakeslice/cheese
 	name = "cheese cake slice"
 	desc = "Slice of pure cheestisfaction."

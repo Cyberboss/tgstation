@@ -177,7 +177,6 @@ Cook
 	spawn_positions = 1
 	supervisors = "the head of personnel"
 	selection_color = "#bbe291"
-	var/cooks = 0 //Counts cooks amount
 
 	outfit = /datum/outfit/job/cook
 
@@ -263,7 +262,6 @@ Janitor
 	spawn_positions = 1
 	supervisors = "the head of personnel"
 	selection_color = "#bbe291"
-	var/global/janitors = 0
 
 	outfit = /datum/outfit/job/janitor
 

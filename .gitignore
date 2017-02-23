@@ -6,6 +6,9 @@
 #Ignore byond config folder.
 /cfg/**/*
 
+#Ignore stuff in the config folder
+/config/**/*
+
 #Ignore compiled files and other files generated during compilation.
 *.mdme
 *.dmb
@@ -192,3 +195,6 @@ Temporary Items
 
 #Visual studio stuff
 *.vscode/*
+
+# Atom build options
+.atom-build.json

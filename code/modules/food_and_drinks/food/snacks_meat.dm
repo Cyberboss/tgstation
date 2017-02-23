@@ -18,7 +18,7 @@
 	name = "carp fillet"
 	desc = "A fillet of spess carp meat."
 	icon_state = "fishfillet"
-	list_reagents = list("nutriment" = 3, "carpotoxin" = 2, "vitamin" = 2)
+	list_reagents = list("nutriment" = 3, "carpotoxin" = 2, "vitamin" = 2, "protein" = 3)
 	bitesize = 6
 	filling_color = "#FA8072"
 	tastes = list("fish" = 1)
@@ -35,7 +35,7 @@
 	name = "fish fingers"
 	desc = "A finger of fish."
 	icon_state = "fishfingers"
-	bonus_reagents = list("nutriment" = 1, "vitamin" = 2)
+	bonus_reagents = list("nutriment" = 1, "vitamin" = 2, "protein" = 2)
 	list_reagents = list("nutriment" = 4)
 	bitesize = 1
 	filling_color = "#CD853F"
@@ -45,7 +45,7 @@
 	name = "fish and chips"
 	desc = "I do say so myself chap."
 	icon_state = "fishandchips"
-	bonus_reagents = list("nutriment" = 1, "vitamin" = 2)
+	bonus_reagents = list("nutriment" = 1, "vitamin" = 2, "protein" = 5)
 	list_reagents = list("nutriment" = 6)
 	filling_color = "#FA8072"
 	tastes = list("fish" = 1, "chips" = 1)
@@ -64,7 +64,7 @@
 	name = "spider leg"
 	desc = "A still twitching leg of a giant spider... you don't really want to eat this, do you?"
 	icon_state = "spiderleg"
-	list_reagents = list("nutriment" = 2, "toxin" = 2)
+	list_reagents = list("nutriment" = 2, "toxin" = 2, "protein" = 3)
 	cooked_type = /obj/item/weapon/reagent_containers/food/snacks/boiledspiderleg
 	filling_color = "#000000"
 	tastes = list("cobwebs" = 1)
@@ -74,7 +74,7 @@
 	desc = "Now you can feel like a real tourist vacationing in Ireland."
 	icon_state = "cornedbeef"
 	trash = /obj/item/trash/plate
-	bonus_reagents = list("nutriment" = 1, "vitamin" = 4)
+	bonus_reagents = list("nutriment" = 1, "vitamin" = 4, "protein" = 2)
 	list_reagents = list("nutriment" = 5)
 	tastes = list("meat" = 1, "cabbage" = 1)
 
@@ -88,10 +88,10 @@
 	tastes = list("meat" = 1, "salmon" = 1)
 
 /obj/item/weapon/reagent_containers/food/snacks/faggot
-	name = "faggot"
+	name = "meatball"
 	desc = "A great meal all round. Not a cord of wood."
 	icon_state = "faggot"
-	list_reagents = list("nutriment" = 4, "vitamin" = 1)
+	list_reagents = list("nutriment" = 4, "vitamin" = 1, "protein" = 5)
 	filling_color = "#800000"
 	tastes = list("meat" = 1)
 
@@ -143,7 +143,7 @@
 	name = "raw khinkali"
 	desc = "One hundred khinkalis? Do I look like a pig?"
 	icon_state = "khinkali"
-	list_reagents = list("nutriment" = 1, "vitamin" = 1)
+	list_reagents = list("nutriment" = 1, "vitamin" = 1, "protein" = 2)
 	cooked_type = /obj/item/weapon/reagent_containers/food/snacks/khinkali
 	tastes = list("meat" = 1, "onions" = 1, "garlic" = 1)
 
@@ -151,7 +151,7 @@
 	name = "khinkali"
 	desc = "One hundred khinkalis? Do I look like a pig?"
 	icon_state = "khinkali"
-	list_reagents = list("nutriment" = 4, "vitamin" = 2)
+	list_reagents = list("nutriment" = 4, "vitamin" = 2, "protein" = 5)
 	bitesize = 3
 	filling_color = "#F0F0F0"
 	tastes = list("meat" = 1, "onions" = 1, "garlic" = 1)
@@ -161,7 +161,7 @@
 	desc = "Just add water!"
 	icon_state = "monkeycube"
 	bitesize = 12
-	list_reagents = list("nutriment" = 2)
+	list_reagents = list("nutriment" = 2, "protein" = 2)
 	filling_color = "#CD853F"
 	tastes = list("the jungle" = 1, "bananas" = 1)
 
@@ -174,7 +174,7 @@
 	name = "enchiladas"
 	desc = "Viva La Mexico!"
 	icon_state = "enchiladas"
-	bonus_reagents = list("nutriment" = 1, "vitamin" = 2)
+	bonus_reagents = list("nutriment" = 1, "vitamin" = 2, "protein" = 1)
 	bitesize = 4
 	filling_color = "#FFA07A"
 	list_reagents = list("nutriment" = 8, "capsaicin" = 6)
@@ -199,8 +199,8 @@
 	desc = "A giant spider's leg that's still twitching after being cooked. Gross!"
 	icon_state = "spiderlegcooked"
 	trash = /obj/item/trash/plate
-	bonus_reagents = list("nutriment" = 1, "capsaicin" = 2, "vitamin" = 2)
-	list_reagents = list("nutriment" = 3, "capsaicin" = 2)
+	bonus_reagents = list("nutriment" = 1, "capsaicin" = 2, "vitamin" = 2, "protein" = 1)
+	list_reagents = list("nutriment" = 3, "capsaicin" = 2, "protein" = 3)
 	filling_color = "#000000"
 	tastes = list("hot peppers" = 1, "cobwebs" = 1)
 
@@ -210,7 +210,7 @@
 	icon_state = "spidereggsham"
 	trash = /obj/item/trash/plate
 	bonus_reagents = list("nutriment" = 1, "vitamin" = 3)
-	list_reagents = list("nutriment" = 6)
+	list_reagents = list("nutriment" = 6, "protein" = 3)
 	bitesize = 4
 	filling_color = "#7FFF00"
 	tastes = list("meat" = 1, "the colour green" = 1)
@@ -220,7 +220,7 @@
 	desc = "Celebrate surviving attack from hostile alien lifeforms by hospitalising yourself."
 	icon_state = "sashimi"
 	bonus_reagents = list("nutriment" = 1, "capsaicin" = 4, "vitamin" = 4)
-	list_reagents = list("nutriment" = 6, "capsaicin" = 5)
+	list_reagents = list("nutriment" = 6, "capsaicin" = 5, "protein" = 4)
 	filling_color = "#FA8072"
 	tastes = list("fish" = 1, "hot peppers" = 1)
 

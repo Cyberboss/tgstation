@@ -1,0 +1,857 @@
+﻿Merge remote-tracking branch 'refs/remotes/Artemis-Community/master' into dev
+
+# Conflicts:
+#	.gitignore
+#	.travis.yml
+#	_maps/RandomZLevels/centcomAway.dmm
+#	_maps/RandomZLevels/moonoutpost19.dmm
+#	_maps/RandomZLevels/research.dmm
+#	_maps/RandomZLevels/spacebattle.dmm
+#	_maps/map_files/BirdStation/BirdStation.dmm
+#	_maps/map_files/MetaStation/MetaStation.dmm
+#	_maps/map_files/PubbyStation/PubbyStation.dmm
+#	_maps/map_files/TgStation/tgstation.2.1.3.dmm
+#	_maps/map_files/generic/lavaland.dmm
+#	code/game/turfs/turf.dm
+#	code/modules/admin/topic.dm
+#	code/world.dm
+#	config/admins.txt
+#	config/config.txt
+#	html/changelogs/.all_changelog.yml
+#	icons/effects/beam.dmi
+#	icons/mob/human_face.dmi
+#	icons/mob/suit.dmi
+#	icons/obj/bureaucracy.dmi
+#	icons/obj/clothing/suits.dmi
+#	icons/obj/food/food.dmi
+#	icons/obj/surgery.dmi
+#	icons/turf/floors.dmi
+#	tgui/assets/tgui.css
+#	tgui/assets/tgui.js
+#	tools/travis/build_byond.sh
+#
+# It looks like you may be committing a merge.
+# If this is not correct, please remove the file
+#	.git/MERGE_HEAD
+# and try again.
+
+
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch dev
+# Your branch is up-to-date with 'origin/dev'.
+#
+# All conflicts fixed but you are still merging.
+#
+# Changes to be committed:
+#	renamed:    CONTRIBUTING.md -> .github/CONTRIBUTING.md
+#	renamed:    ISSUE_TEMPLATE.md -> .github/ISSUE_TEMPLATE.md
+#	renamed:    PULL_REQUEST_TEMPLATE.md -> .github/PULL_REQUEST_TEMPLATE.md
+#	modified:   .gitignore
+#	modified:   .travis.yml
+#	modified:   SQL/database_changelog.txt
+#	modified:   SQL/tgstation_schema.sql
+#	modified:   SQL/tgstation_schema_prefixed.sql
+#	modified:   _maps/RandomRuins/LavaRuins/lavaland_surface_ash_walker1.dmm
+#	modified:   _maps/RandomRuins/LavaRuins/lavaland_surface_hermit.dmm
+#	modified:   _maps/RandomRuins/LavaRuins/lavaland_surface_prisoner_crash.dmm
+#	modified:   _maps/RandomRuins/LavaRuins/lavaland_surface_swarmer_crash.dmm
+#	modified:   _maps/RandomRuins/LavaRuins/lavaland_surface_syndicate_base1.dmm
+#	modified:   _maps/RandomRuins/SpaceRuins/caravanambush.dmm
+#	modified:   _maps/RandomRuins/SpaceRuins/crashedclownship.dmm
+#	modified:   _maps/RandomRuins/SpaceRuins/crashedship.dmm
+#	modified:   _maps/RandomRuins/SpaceRuins/derelict4.dmm
+#	modified:   _maps/RandomRuins/SpaceRuins/intactemptyship.dmm
+#	modified:   _maps/RandomZLevels/Academy.dmm
+#	modified:   _maps/RandomZLevels/caves.dmm
+#	modified:   _maps/RandomZLevels/centcomAway.dmm
+#	modified:   _maps/RandomZLevels/moonoutpost19.dmm
+#	modified:   _maps/RandomZLevels/research.dmm
+#	modified:   _maps/RandomZLevels/spacebattle.dmm
+#	deleted:    _maps/birdstation.dm
+#	modified:   _maps/loadallmaps.dm
+#	deleted:    _maps/map_files/BirdStation/job/job_changes.dm
+#	deleted:    _maps/map_files/BirdStation/job/removed_jobs.dm
+#	modified:   _maps/map_files/Deltastation/DeltaStation2.dmm
+#	modified:   _maps/map_files/MetaStation/MetaStation.dmm
+#	modified:   _maps/map_files/OmegaStation/OmegaStation.dmm
+#	modified:   _maps/map_files/OmegaStation/job/removed_jobs.dm
+#	modified:   _maps/map_files/PubbyStation/PubbyStation.dmm
+#	modified:   _maps/map_files/TgStation/tgstation.2.1.3.dmm
+#	modified:   _maps/map_files/generic/z2.dmm
+#	deleted:    _maps/map_files/generic/z5.dmm
+#	new file:   _maps/shuttles/emergency_arena.dmm
+#	modified:   _maps/shuttles/emergency_asteroid.dmm
+#	modified:   _maps/shuttles/emergency_birdboat.dmm
+#	modified:   _maps/shuttles/emergency_luxury.dmm
+#	new file:   _maps/shuttles/emergency_russiafightpit.dmm
+#	modified:   _maps/shuttles/whiteship_meta.dmm
+#	modified:   _maps/shuttles/whiteship_pubby.dmm
+#	modified:   _maps/templates/medium_shuttle1.dmm
+#	modified:   _maps/templates/medium_shuttle2.dmm
+#	modified:   _maps/templates/medium_shuttle3.dmm
+#	modified:   bot/minibot.py
+#	modified:   code/__DEFINES/MC.dm
+#	modified:   code/__DEFINES/admin.dm
+#	modified:   code/__DEFINES/clockcult.dm
+#	modified:   code/__DEFINES/combat.dm
+#	modified:   code/__DEFINES/construction.dm
+#	modified:   code/__DEFINES/flags.dm
+#	modified:   code/__DEFINES/is_helpers.dm
+#	modified:   code/__DEFINES/layers.dm
+#	modified:   code/__DEFINES/misc.dm
+#	modified:   code/__DEFINES/monkeys.dm
+#	modified:   code/__DEFINES/qdel.dm
+#	modified:   code/__DEFINES/sight.dm
+#	modified:   code/__DEFINES/status_effects.dm
+#	renamed:    code/__HELPERS/lists.dm -> code/__HELPERS/_lists.dm
+#	modified:   code/__HELPERS/_logging.dm
+#	modified:   code/__HELPERS/bandetect.dm
+#	modified:   code/__HELPERS/game.dm
+#	modified:   code/__HELPERS/icon_smoothing.dm
+#	modified:   code/__HELPERS/icons.dm
+#	modified:   code/__HELPERS/matrices.dm
+#	modified:   code/__HELPERS/mobs.dm
+#	modified:   code/__HELPERS/text.dm
+#	modified:   code/__HELPERS/time.dm
+#	modified:   code/__HELPERS/unsorted.dm
+#	modified:   code/_compile_options.dm
+#	modified:   code/_globalvars/lists/mapping.dm
+#	modified:   code/_globalvars/lists/mobs.dm
+#	modified:   code/_globalvars/lists/poll_ignore.dm
+#	modified:   code/_globalvars/logging.dm
+#	modified:   code/_onclick/ai.dm
+#	modified:   code/_onclick/hud/alert.dm
+#	modified:   code/_onclick/hud/alien.dm
+#	modified:   code/_onclick/hud/alien_larva.dm
+#	modified:   code/_onclick/hud/ghost.dm
+#	modified:   code/_onclick/hud/hud.dm
+#	modified:   code/_onclick/hud/parallax.dm
+#	modified:   code/_onclick/hud/plane_master.dm
+#	modified:   code/_onclick/hud/screen_objects.dm
+#	modified:   code/_onclick/item_attack.dm
+#	modified:   code/_onclick/telekinesis.dm
+#	modified:   code/controllers/configuration.dm
+#	modified:   code/controllers/master.dm
+#	modified:   code/controllers/subsystem.dm
+#	modified:   code/controllers/subsystem/acid.dm
+#	modified:   code/controllers/subsystem/air.dm
+#	new file:   code/controllers/subsystem/atoms.dm
+#	modified:   code/controllers/subsystem/augury.dm
+#	modified:   code/controllers/subsystem/events.dm
+#	modified:   code/controllers/subsystem/fire_burning.dm
+#	modified:   code/controllers/subsystem/garbage.dm
+#	modified:   code/controllers/subsystem/jobs.dm
+#	modified:   code/controllers/subsystem/lighting.dm
+#	modified:   code/controllers/subsystem/mapping.dm
+#	modified:   code/controllers/subsystem/minimap.dm
+#	modified:   code/controllers/subsystem/persistence.dm
+#	modified:   code/controllers/subsystem/processing/objects.dm
+#	new file:   code/controllers/subsystem/processing/overlays.dm
+#	modified:   code/controllers/subsystem/processing/processing.dm
+#	modified:   code/controllers/subsystem/shuttles.dm
+#	modified:   code/controllers/subsystem/throwing.dm
+#	modified:   code/controllers/subsystem/ticker.dm
+#	new file:   code/controllers/subsystem/time_tracking.dm
+#	modified:   code/controllers/subsystem/timer.dm
+#	modified:   code/controllers/subsystem/voting.dm
+#	modified:   code/datums/action.dm
+#	modified:   code/datums/ai_laws.dm
+#	modified:   code/datums/antagonists/datum_clockcult.dm
+#	modified:   code/datums/beam.dm
+#	modified:   code/datums/datumvars.dm
+#	modified:   code/datums/diseases/transformation.dm
+#	modified:   code/datums/emotes.dm
+#	modified:   code/datums/forced_movement.dm
+#	modified:   code/datums/helper_datums/getrev.dm
+#	deleted:    code/datums/helper_datums/map_template.dm
+#	modified:   code/datums/material_container.dm
+#	modified:   code/datums/mind.dm
+#	modified:   code/datums/progressbar.dm
+#	modified:   code/datums/riding.dm
+#	modified:   code/datums/shuttles.dm
+#	new file:   code/datums/soullink.dm
+#	modified:   code/datums/status_effects/buffs.dm
+#	modified:   code/datums/status_effects/debuffs.dm
+#	modified:   code/datums/status_effects/gas.dm
+#	modified:   code/datums/status_effects/status_effect.dm
+#	modified:   code/datums/wires/airalarm.dm
+#	modified:   code/datums/wires/emitter.dm
+#	modified:   code/game/area/Space_Station_13_areas.dm
+#	modified:   code/game/area/areas.dm
+#	modified:   code/game/area/areas/away_content.dm
+#	modified:   code/game/area/areas/holodeck.dm
+#	modified:   code/game/area/areas/misc.dm
+#	deleted:    code/game/asteroid.dm
+#	modified:   code/game/atoms.dm
+#	modified:   code/game/atoms_movable.dm
+#	modified:   code/game/data_huds.dm
+#	modified:   code/game/gamemodes/antag_spawner.dm
+#	modified:   code/game/gamemodes/blob/blob_report.dm
+#	modified:   code/game/gamemodes/blob/blobs/blob_mobs.dm
+#	modified:   code/game/gamemodes/blob/blobs/core.dm
+#	modified:   code/game/gamemodes/changeling/changeling_power.dm
+#	modified:   code/game/gamemodes/changeling/powers/augmented_eyesight.dm
+#	modified:   code/game/gamemodes/changeling/powers/mutations.dm
+#	modified:   code/game/gamemodes/changeling/powers/panacea.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_cult.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_effects/clock_sigils.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_effects/general_markers.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_helpers/clock_powerdrain.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_helpers/proselytizer_helpers.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_helpers/ratvarian_language.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_helpers/scripture_checks.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_helpers/slab_abilities.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/clock_components.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/clockwork_armor.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/clockwork_proselytizer.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/clockwork_slab.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/judicial_visor.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/soul_vessel.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_items/wraith_spectacles.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_mobs.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_mobs/anima_fragment.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_mobs/clockwork_marauder.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scripture.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scriptures/scripture_applications.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scriptures/scripture_drivers.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scriptures/scripture_judgement.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scriptures/scripture_revenant.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_scriptures/scripture_scripts.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structure.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/ark_of_the_clockwork_justicar.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/clockwork_obelisk.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/geis_binding.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/interdiction_lens.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/mania_motor.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/mending_motor.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/ocular_warden.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/ratvar_the_clockwork_justicar.dm
+#	new file:   code/game/gamemodes/clock_cult/clock_structures/taunting_trail.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/tinkerers_cache.dm
+#	modified:   code/game/gamemodes/clock_cult/clock_structures/tinkerers_daemon.dm
+#	modified:   code/game/gamemodes/cult/cult_items.dm
+#	modified:   code/game/gamemodes/cult/cult_structures.dm
+#	modified:   code/game/gamemodes/cult/ritual.dm
+#	modified:   code/game/gamemodes/cult/runes.dm
+#	modified:   code/game/gamemodes/cult/talisman.dm
+#	modified:   code/game/gamemodes/devil/devilinfo.dm
+#	modified:   code/game/gamemodes/devil/true_devil/_true_devil.dm
+#	modified:   code/game/gamemodes/devil/true_devil/inventory.dm
+#	modified:   code/game/gamemodes/malfunction/Malf_Modules.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/abduction.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/abduction_gear.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/abduction_surgery.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/gland.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/machinery/console.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/machinery/dispenser.dm
+#	modified:   code/game/gamemodes/miniantags/abduction/machinery/experiment.dm
+#	modified:   code/game/gamemodes/miniantags/borer/borer.dm
+#	modified:   code/game/gamemodes/miniantags/borer/borer_event.dm
+#	modified:   code/game/gamemodes/miniantags/bot_swarm/swarmer.dm
+#	modified:   code/game/gamemodes/miniantags/revenant/revenant.dm
+#	modified:   code/game/gamemodes/nuclear/nuclear_challenge.dm
+#	modified:   code/game/gamemodes/nuclear/nuclearbomb.dm
+#	modified:   code/game/gamemodes/objective.dm
+#	deleted:    code/game/gamemodes/setupgame.dm
+#	modified:   code/game/gamemodes/traitor/traitor.dm
+#	modified:   code/game/gamemodes/wizard/artefact.dm
+#	modified:   code/game/gamemodes/wizard/spellbook.dm
+#	modified:   code/game/machinery/Sleeper.dm
+#	modified:   code/game/machinery/announcement_system.dm
+#	modified:   code/game/machinery/autolathe.dm
+#	modified:   code/game/machinery/buttons.dm
+#	modified:   code/game/machinery/camera/camera_assembly.dm
+#	modified:   code/game/machinery/camera/motion.dm
+#	modified:   code/game/machinery/cloning.dm
+#	modified:   code/game/machinery/computer/aifixer.dm
+#	modified:   code/game/machinery/computer/buildandrepair.dm
+#	modified:   code/game/machinery/computer/camera_advanced.dm
+#	modified:   code/game/machinery/computer/cloning.dm
+#	modified:   code/game/machinery/computer/communications.dm
+#	modified:   code/game/machinery/computer/gulag_teleporter.dm
+#	modified:   code/game/machinery/computer/security.dm
+#	modified:   code/game/machinery/constructable_frame.dm
+#	modified:   code/game/machinery/doors/airlock.dm
+#	modified:   code/game/machinery/doors/airlock_types.dm
+#	modified:   code/game/machinery/doors/alarmlock.dm
+#	modified:   code/game/machinery/doors/door.dm
+#	modified:   code/game/machinery/doors/firedoor.dm
+#	modified:   code/game/machinery/doors/windowdoor.dm
+#	modified:   code/game/machinery/embedded_controller/access_controller.dm
+#	modified:   code/game/machinery/firealarm.dm
+#	modified:   code/game/machinery/flasher.dm
+#	modified:   code/game/machinery/hologram.dm
+#	modified:   code/game/machinery/iv_drip.dm
+#	modified:   code/game/machinery/lightswitch.dm
+#	modified:   code/game/machinery/machinery.dm
+#	modified:   code/game/machinery/porta_turret/portable_turret.dm
+#	modified:   code/game/machinery/quantum_pad.dm
+#	modified:   code/game/machinery/robot_fabricator.dm
+#	modified:   code/game/machinery/status_display.dm
+#	modified:   code/game/machinery/suit_storage_unit.dm
+#	modified:   code/game/machinery/vending.dm
+#	modified:   code/game/mecha/equipment/tools/mining_tools.dm
+#	modified:   code/game/mecha/equipment/tools/other_tools.dm
+#	modified:   code/game/mecha/equipment/weapons/weapons.dm
+#	modified:   code/game/mecha/mech_bay.dm
+#	modified:   code/game/mecha/mech_fabricator.dm
+#	modified:   code/game/mecha/mecha.dm
+#	modified:   code/game/mecha/mecha_actions.dm
+#	modified:   code/game/mecha/mecha_construction_paths.dm
+#	modified:   code/game/mecha/mecha_defense.dm
+#	modified:   code/game/mecha/mecha_parts.dm
+#	modified:   code/game/mecha/working/ripley.dm
+#	modified:   code/game/objects/effects/contraband.dm
+#	modified:   code/game/objects/effects/countdown.dm
+#	modified:   code/game/objects/effects/effects.dm
+#	modified:   code/game/objects/effects/forcefields.dm
+#	modified:   code/game/objects/effects/landmarks.dm
+#	modified:   code/game/objects/effects/overlays.dm
+#	modified:   code/game/objects/effects/spawners/lootdrop.dm
+#	modified:   code/game/objects/explosion.dm
+#	modified:   code/game/objects/items.dm
+#	modified:   code/game/objects/items/blueprints.dm
+#	modified:   code/game/objects/items/bodybag.dm
+#	modified:   code/game/objects/items/charter.dm
+#	modified:   code/game/objects/items/crayons.dm
+#	modified:   code/game/objects/items/dehy_carp.dm
+#	modified:   code/game/objects/items/devices/PDA/PDA.dm
+#	modified:   code/game/objects/items/devices/geiger_counter.dm
+#	modified:   code/game/objects/items/devices/laserpointer.dm
+#	modified:   code/game/objects/items/devices/megaphone.dm
+#	modified:   code/game/objects/items/devices/paicard.dm
+#	modified:   code/game/objects/items/devices/radio/encryptionkey.dm
+#	modified:   code/game/objects/items/devices/radio/headset.dm
+#	modified:   code/game/objects/items/devices/radio/intercom.dm
+#	modified:   code/game/objects/items/devices/radio/radio.dm
+#	modified:   code/game/objects/items/devices/scanners.dm
+#	modified:   code/game/objects/items/devices/taperecorder.dm
+#	modified:   code/game/objects/items/stacks/sheets/glass.dm
+#	modified:   code/game/objects/items/stacks/sheets/sheet_types.dm
+#	modified:   code/game/objects/items/stacks/stack.dm
+#	modified:   code/game/objects/items/toys.dm
+#	modified:   code/game/objects/items/weapons/AI_modules.dm
+#	modified:   code/game/objects/items/weapons/RPD.dm
+#	modified:   code/game/objects/items/weapons/defib.dm
+#	modified:   code/game/objects/items/weapons/dice.dm
+#	modified:   code/game/objects/items/weapons/explosives.dm
+#	modified:   code/game/objects/items/weapons/grenades/chem_grenade.dm
+#	modified:   code/game/objects/items/weapons/grenades/clusterbuster.dm
+#	modified:   code/game/objects/items/weapons/grenades/flashbang.dm
+#	modified:   code/game/objects/items/weapons/grenades/ghettobomb.dm
+#	modified:   code/game/objects/items/weapons/grenades/grenade.dm
+#	modified:   code/game/objects/items/weapons/grenades/plastic.dm
+#	new file:   code/game/objects/items/weapons/his_grace.dm
+#	modified:   code/game/objects/items/weapons/holy_weapons.dm
+#	modified:   code/game/objects/items/weapons/implants/implant.dm
+#	modified:   code/game/objects/items/weapons/implants/implant_chem.dm
+#	modified:   code/game/objects/items/weapons/implants/implant_gang.dm
+#	modified:   code/game/objects/items/weapons/implants/implant_loyality.dm
+#	modified:   code/game/objects/items/weapons/implants/implant_track.dm
+#	modified:   code/game/objects/items/weapons/implants/implanter.dm
+#	modified:   code/game/objects/items/weapons/melee/misc.dm
+#	modified:   code/game/objects/items/weapons/scrolls.dm
+#	modified:   code/game/objects/items/weapons/sharpener.dm
+#	modified:   code/game/objects/items/weapons/storage/bags.dm
+#	modified:   code/game/objects/items/weapons/storage/book.dm
+#	modified:   code/game/objects/items/weapons/storage/boxes.dm
+#	modified:   code/game/objects/items/weapons/storage/firstaid.dm
+#	modified:   code/game/objects/items/weapons/storage/secure.dm
+#	modified:   code/game/objects/items/weapons/storage/storage.dm
+#	modified:   code/game/objects/items/weapons/storage/toolbox.dm
+#	modified:   code/game/objects/items/weapons/storage/uplink_kits.dm
+#	modified:   code/game/objects/items/weapons/tanks/jetpack.dm
+#	modified:   code/game/objects/items/weapons/tanks/tanks.dm
+#	modified:   code/game/objects/items/weapons/tanks/watertank.dm
+#	modified:   code/game/objects/items/weapons/teleportation.dm
+#	modified:   code/game/objects/items/weapons/tools.dm
+#	modified:   code/game/objects/items/weapons/twohanded.dm
+#	modified:   code/game/objects/items/weapons/vending_items.dm
+#	modified:   code/game/objects/items/weapons/weaponry.dm
+#	modified:   code/game/objects/obj_defense.dm
+#	modified:   code/game/objects/objs.dm
+#	modified:   code/game/objects/structures.dm
+#	modified:   code/game/objects/structures/beds_chairs/alien_nest.dm
+#	modified:   code/game/objects/structures/beds_chairs/chair.dm
+#	modified:   code/game/objects/structures/crates_lockers/closets.dm
+#	modified:   code/game/objects/structures/crates_lockers/closets/bodybag.dm
+#	modified:   code/game/objects/structures/crates_lockers/closets/statue.dm
+#	modified:   code/game/objects/structures/crates_lockers/closets/wardrobe.dm
+#	modified:   code/game/objects/structures/crates_lockers/crates.dm
+#	modified:   code/game/objects/structures/destructible_structures.dm
+#	modified:   code/game/objects/structures/displaycase.dm
+#	modified:   code/game/objects/structures/false_walls.dm
+#	modified:   code/game/objects/structures/fireaxe.dm
+#	modified:   code/game/objects/structures/ghost_role_spawners.dm
+#	modified:   code/game/objects/structures/grille.dm
+#	modified:   code/game/objects/structures/kitchen_spike.dm
+#	new file:   code/game/objects/structures/life_candle.dm
+#	modified:   code/game/objects/structures/morgue.dm
+#	modified:   code/game/objects/structures/musician.dm
+#	modified:   code/game/objects/structures/tables_racks.dm
+#	modified:   code/game/objects/structures/transit_tubes/station.dm
+#	modified:   code/game/objects/structures/transit_tubes/transit_tube_construction.dm
+#	modified:   code/game/objects/structures/transit_tubes/transit_tube_pod.dm
+#	modified:   code/game/objects/structures/watercloset.dm
+#	modified:   code/game/objects/structures/window.dm
+#	modified:   code/game/sound.dm
+#	modified:   code/game/turfs/closed.dm
+#	modified:   code/game/turfs/open.dm
+#	modified:   code/game/turfs/simulated/chasm.dm
+#	modified:   code/game/turfs/simulated/floor.dm
+#	modified:   code/game/turfs/simulated/floor/fancy_floor.dm
+#	modified:   code/game/turfs/simulated/floor/light_floor.dm
+#	modified:   code/game/turfs/simulated/floor/mineral_floor.dm
+#	modified:   code/game/turfs/simulated/floor/misc_floor.dm
+#	modified:   code/game/turfs/simulated/floor/plating.dm
+#	modified:   code/game/turfs/simulated/floor/plating/asteroid.dm
+#	modified:   code/game/turfs/simulated/floor/plating/lava.dm
+#	modified:   code/game/turfs/simulated/floor/plating/misc_plating.dm
+#	modified:   code/game/turfs/simulated/floor/reinf_floor.dm
+#	modified:   code/game/turfs/simulated/minerals.dm
+#	modified:   code/game/turfs/simulated/wall/misc_walls.dm
+#	modified:   code/game/turfs/simulated/walls.dm
+#	modified:   code/game/turfs/space/space.dm
+#	modified:   code/game/turfs/space/transit.dm
+#	modified:   code/game/turfs/turf.dm
+#	modified:   code/modules/VR/vr_sleeper.dm
+#	modified:   code/modules/admin/DB_ban/functions.dm
+#	modified:   code/modules/admin/IsBanned.dm
+#	modified:   code/modules/admin/NewBan.dm
+#	modified:   code/modules/admin/admin.dm
+#	modified:   code/modules/admin/admin_investigate.dm
+#	deleted:    code/modules/admin/admin_memo.dm
+#	modified:   code/modules/admin/admin_ranks.dm
+#	modified:   code/modules/admin/admin_verbs.dm
+#	modified:   code/modules/admin/fun_balloon.dm
+#	modified:   code/modules/admin/ipintel.dm
+#	modified:   code/modules/admin/permissionverbs/permissionedit.dm
+#	modified:   code/modules/admin/player_panel.dm
+#	modified:   code/modules/admin/secrets.dm
+#	new file:   code/modules/admin/sql_message_system.dm
+#	deleted:    code/modules/admin/sql_notes.dm
+#	modified:   code/modules/admin/stickyban.dm
+#	modified:   code/modules/admin/topic.dm
+#	modified:   code/modules/admin/verbs/SDQL2/SDQL_2.dm
+#	modified:   code/modules/admin/verbs/SDQL2/SDQL_2_parser.dm
+#	new file:   code/modules/admin/verbs/SDQL2/SDQL_2_wrappers.dm
+#	modified:   code/modules/admin/verbs/adminhelp.dm
+#	modified:   code/modules/admin/verbs/adminpm.dm
+#	modified:   code/modules/admin/verbs/debug.dm
+#	modified:   code/modules/admin/verbs/map_template_loadverb.dm
+#	modified:   code/modules/admin/verbs/massmodvar.dm
+#	modified:   code/modules/admin/verbs/modifyvariables.dm
+#	modified:   code/modules/admin/verbs/onlyone.dm
+#	modified:   code/modules/admin/verbs/pray.dm
+#	modified:   code/modules/admin/verbs/randomverbs.dm
+#	modified:   code/modules/admin/verbs/reestablish_db_connection.dm
+#	deleted:    code/modules/admin/watchlist.dm
+#	modified:   code/modules/assembly/assembly.dm
+#	modified:   code/modules/assembly/bomb.dm
+#	modified:   code/modules/assembly/flash.dm
+#	modified:   code/modules/assembly/igniter.dm
+#	modified:   code/modules/assembly/signaler.dm
+#	modified:   code/modules/atmospherics/environmental/LINDA_fire.dm
+#	modified:   code/modules/atmospherics/environmental/LINDA_turf_tile.dm
+#	modified:   code/modules/atmospherics/machinery/airalarm.dm
+#	modified:   code/modules/atmospherics/machinery/atmosmachinery.dm
+#	modified:   code/modules/atmospherics/machinery/components/unary_devices/vent_pump.dm
+#	modified:   code/modules/atmospherics/machinery/components/unary_devices/vent_scrubber.dm
+#	modified:   code/modules/atmospherics/machinery/pipes/pipes.dm
+#	modified:   code/modules/awaymissions/capture_the_flag.dm
+#	modified:   code/modules/awaymissions/corpse.dm
+#	modified:   code/modules/awaymissions/gateway.dm
+#	modified:   code/modules/awaymissions/mission_code/Academy.dm
+#	modified:   code/modules/awaymissions/zlevel.dm
+#	modified:   code/modules/cargo/exports.dm
+#	modified:   code/modules/cargo/exports/organs.dm
+#	modified:   code/modules/client/client_procs.dm
+#	modified:   code/modules/client/preferences.dm
+#	modified:   code/modules/client/preferences_savefile.dm
+#	modified:   code/modules/client/verbs/ooc.dm
+#	modified:   code/modules/client/verbs/sethotkeys.dm
+#	modified:   code/modules/client/verbs/suicide.dm
+#	modified:   code/modules/clothing/clothing.dm
+#	modified:   code/modules/clothing/glasses/glasses.dm
+#	modified:   code/modules/clothing/glasses/hud.dm
+#	modified:   code/modules/clothing/masks/gasmask.dm
+#	modified:   code/modules/clothing/shoes/bananashoes.dm
+#	modified:   code/modules/clothing/spacesuits/chronosuit.dm
+#	modified:   code/modules/clothing/spacesuits/flightsuit.dm
+#	modified:   code/modules/clothing/spacesuits/hardsuit.dm
+#	modified:   code/modules/clothing/spacesuits/plasmamen.dm
+#	modified:   code/modules/clothing/suits/armor.dm
+#	modified:   code/modules/clothing/suits/miscellaneous.dm
+#	modified:   code/modules/clothing/suits/toggles.dm
+#	modified:   code/modules/clothing/under/color.dm
+#	modified:   code/modules/clothing/under/jobs/medsci.dm
+#	modified:   code/modules/crafting/recipes.dm
+#	modified:   code/modules/detectivework/detective_work.dm
+#	new file:   code/modules/error_handler/error_handler.dm
+#	new file:   code/modules/error_handler/error_viewer.dm
+#	modified:   code/modules/events/abductor.dm
+#	modified:   code/modules/events/alien_infestation.dm
+#	modified:   code/modules/events/brand_intelligence.dm
+#	modified:   code/modules/events/holiday/vday.dm
+#	modified:   code/modules/events/immovable_rod.dm
+#	modified:   code/modules/events/ion_storm.dm
+#	modified:   code/modules/events/prison_break.dm
+#	modified:   code/modules/events/sentience.dm
+#	modified:   code/modules/events/spacevine.dm
+#	modified:   code/modules/events/wizard/magicarp.dm
+#	modified:   code/modules/food_and_drinks/drinks/drinks/bottle.dm
+#	modified:   code/modules/food_and_drinks/drinks/drinks/drinkingglass.dm
+#	modified:   code/modules/food_and_drinks/food/condiment.dm
+#	modified:   code/modules/food_and_drinks/food/customizables.dm
+#	modified:   code/modules/food_and_drinks/food/snacks.dm
+#	modified:   code/modules/food_and_drinks/food/snacks_bread.dm
+#	modified:   code/modules/food_and_drinks/food/snacks_other.dm
+#	new file:   code/modules/food_and_drinks/kitchen_machinery/deep_fryer.dm
+#	modified:   code/modules/food_and_drinks/kitchen_machinery/processor.dm
+#	modified:   code/modules/food_and_drinks/kitchen_machinery/smartfridge.dm
+#	modified:   code/modules/food_and_drinks/recipes/tablecraft/recipes_misc.dm
+#	modified:   code/modules/games/cards.dm
+#	modified:   code/modules/holodeck/area_copy.dm
+#	modified:   code/modules/holodeck/computer.dm
+#	modified:   code/modules/holodeck/turfs.dm
+#	modified:   code/modules/hydroponics/beekeeping/beebox.dm
+#	modified:   code/modules/hydroponics/grown/banana.dm
+#	modified:   code/modules/hydroponics/grown/misc.dm
+#	modified:   code/modules/hydroponics/grown/tomato.dm
+#	modified:   code/modules/hydroponics/hydroponics.dm
+#	modified:   code/modules/hydroponics/sample.dm
+#	modified:   code/modules/jobs/job_types/cargo_service.dm
+#	modified:   code/modules/jobs/job_types/civilian.dm
+#	modified:   code/modules/jobs/job_types/medical.dm
+#	modified:   code/modules/library/lib_machines.dm
+#	modified:   code/modules/library/random_books.dm
+#	modified:   code/modules/library/soapstone.dm
+#	renamed:    code/modules/awaymissions/maploader/dmm_suite.dm -> code/modules/mapping/dmm_suite.dm
+#	new file:   code/modules/mapping/map_template.dm
+#	renamed:    code/modules/awaymissions/maploader/reader.dm -> code/modules/mapping/reader.dm
+#	copied:     code/modules/awaymissions/zlevel.dm -> code/modules/mapping/ruins.dm
+#	renamed:    code/modules/awaymissions/maploader/swapmaps.dm -> code/modules/mapping/swapmaps.dm
+#	renamed:    code/modules/awaymissions/maploader/writer.dm -> code/modules/mapping/writer.dm
+#	new file:   code/modules/mining/aux_base.dm
+#	new file:   code/modules/mining/aux_base_camera.dm
+#	modified:   code/modules/mining/fulton.dm
+#	modified:   code/modules/mining/lavaland/necropolis_chests.dm
+#	modified:   code/modules/mining/lavaland/ruins/gym.dm
+#	modified:   code/modules/mining/machine_vending.dm
+#	modified:   code/modules/mining/mine_items.dm
+#	modified:   code/modules/mob/dead/observer/observer.dm
+#	modified:   code/modules/mob/inventory.dm
+#	modified:   code/modules/mob/living/blood.dm
+#	modified:   code/modules/mob/living/brain/brain_item.dm
+#	modified:   code/modules/mob/living/brain/posibrain.dm
+#	modified:   code/modules/mob/living/carbon/alien/alien.dm
+#	modified:   code/modules/mob/living/carbon/alien/emote.dm
+#	modified:   code/modules/mob/living/carbon/alien/humanoid/alien_powers.dm
+#	modified:   code/modules/mob/living/carbon/alien/larva/update_icons.dm
+#	modified:   code/modules/mob/living/carbon/alien/organs.dm
+#	modified:   code/modules/mob/living/carbon/alien/special/alien_embryo.dm
+#	modified:   code/modules/mob/living/carbon/carbon.dm
+#	modified:   code/modules/mob/living/carbon/carbon_defense.dm
+#	modified:   code/modules/mob/living/carbon/human/death.dm
+#	modified:   code/modules/mob/living/carbon/human/human.dm
+#	modified:   code/modules/mob/living/carbon/human/human_defense.dm
+#	modified:   code/modules/mob/living/carbon/human/human_defines.dm
+#	modified:   code/modules/mob/living/carbon/human/human_movement.dm
+#	modified:   code/modules/mob/living/carbon/human/life.dm
+#	modified:   code/modules/mob/living/carbon/human/species.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/abductors.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/corporate.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/golems.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/jellypeople.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/plasmamen.dm
+#	modified:   code/modules/mob/living/carbon/human/species_types/shadowpeople.dm
+#	modified:   code/modules/mob/living/carbon/inventory.dm
+#	modified:   code/modules/mob/living/carbon/monkey/combat.dm
+#	modified:   code/modules/mob/living/carbon/monkey/monkey.dm
+#	modified:   code/modules/mob/living/carbon/update_icons.dm
+#	modified:   code/modules/mob/living/death.dm
+#	modified:   code/modules/mob/living/emote.dm
+#	modified:   code/modules/mob/living/living.dm
+#	modified:   code/modules/mob/living/living_defense.dm
+#	modified:   code/modules/mob/living/living_defines.dm
+#	modified:   code/modules/mob/living/silicon/ai/ai.dm
+#	modified:   code/modules/mob/living/silicon/ai/death.dm
+#	modified:   code/modules/mob/living/silicon/ai/freelook/eye.dm
+#	modified:   code/modules/mob/living/silicon/ai/life.dm
+#	modified:   code/modules/mob/living/silicon/laws.dm
+#	deleted:    code/modules/mob/living/silicon/pai/examine.dm
+#	deleted:    code/modules/mob/living/silicon/pai/life.dm
+#	modified:   code/modules/mob/living/silicon/pai/pai.dm
+#	modified:   code/modules/mob/living/silicon/pai/pai_shell.dm
+#	modified:   code/modules/mob/living/silicon/robot/death.dm
+#	modified:   code/modules/mob/living/silicon/robot/emote.dm
+#	modified:   code/modules/mob/living/silicon/robot/life.dm
+#	modified:   code/modules/mob/living/silicon/robot/robot.dm
+#	modified:   code/modules/mob/living/silicon/robot/robot_defense.dm
+#	modified:   code/modules/mob/living/silicon/robot/robot_modules.dm
+#	modified:   code/modules/mob/living/silicon/robot/robot_movement.dm
+#	modified:   code/modules/mob/living/silicon/silicon.dm
+#	modified:   code/modules/mob/living/silicon/silicon_defense.dm
+#	modified:   code/modules/mob/living/simple_animal/bot/cleanbot.dm
+#	modified:   code/modules/mob/living/simple_animal/bot/construction.dm
+#	modified:   code/modules/mob/living/simple_animal/bot/secbot.dm
+#	modified:   code/modules/mob/living/simple_animal/friendly/drone/drones_as_items.dm
+#	modified:   code/modules/mob/living/simple_animal/friendly/drone/extra_drone_types.dm
+#	modified:   code/modules/mob/living/simple_animal/friendly/drone/inventory.dm
+#	modified:   code/modules/mob/living/simple_animal/friendly/drone/visuals_icons.dm
+#	modified:   code/modules/mob/living/simple_animal/guardian/guardian.dm
+#	modified:   code/modules/mob/living/simple_animal/guardian/types/lightning.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/flan.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/giant_spider.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/hostile.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/megafauna/bubblegum.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/megafauna/colossus.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/megafauna/dragon.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/megafauna/hierophant.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/megafauna/megafauna.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/mimic.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/statue.dm
+#	modified:   code/modules/mob/living/simple_animal/hostile/wizard.dm
+#	modified:   code/modules/mob/living/simple_animal/simple_animal.dm
+#	modified:   code/modules/mob/living/simple_animal/slime/death.dm
+#	modified:   code/modules/mob/logout.dm
+#	modified:   code/modules/mob/mob.dm
+#	modified:   code/modules/mob/mob_defines.dm
+#	modified:   code/modules/mob/mob_helpers.dm
+#	modified:   code/modules/mob/mob_movement.dm
+#	modified:   code/modules/mob/mob_transformation_simple.dm
+#	modified:   code/modules/mob/new_player/login.dm
+#	modified:   code/modules/mob/new_player/new_player.dm
+#	modified:   code/modules/mob/new_player/poll.dm
+#	modified:   code/modules/modular_computers/NTNet/NTNet_relay.dm
+#	modified:   code/modules/modular_computers/computers/item/computer_components.dm
+#	modified:   code/modules/modular_computers/computers/machinery/modular_computer.dm
+#	modified:   code/modules/modular_computers/file_system/programs/file_browser.dm
+#	modified:   code/modules/modular_computers/hardware/card_slot.dm
+#	modified:   code/modules/modular_computers/hardware/printer.dm
+#	modified:   code/modules/modular_computers/hardware/recharger.dm
+#	modified:   code/modules/orbit/orbit.dm
+#	modified:   code/modules/paperwork/contract.dm
+#	modified:   code/modules/paperwork/paper.dm
+#	modified:   code/modules/paperwork/paper_cutter.dm
+#	modified:   code/modules/paperwork/paperbin.dm
+#	modified:   code/modules/paperwork/paperplane.dm
+#	modified:   code/modules/paperwork/pen.dm
+#	modified:   code/modules/paperwork/photocopier.dm
+#	modified:   code/modules/paperwork/photography.dm
+#	modified:   code/modules/power/apc.dm
+#	modified:   code/modules/power/cable.dm
+#	modified:   code/modules/power/cell.dm
+#	modified:   code/modules/power/gravitygenerator.dm
+#	modified:   code/modules/power/lighting.dm
+#	modified:   code/modules/power/power.dm
+#	modified:   code/modules/power/singularity/collector.dm
+#	modified:   code/modules/power/singularity/emitter.dm
+#	modified:   code/modules/power/singularity/field_generator.dm
+#	modified:   code/modules/power/singularity/narsie.dm
+#	modified:   code/modules/power/tesla/coil.dm
+#	modified:   code/modules/power/tesla/energy_ball.dm
+#	modified:   code/modules/power/tesla/generator.dm
+#	modified:   code/modules/projectiles/ammunition/energy.dm
+#	modified:   code/modules/projectiles/ammunition/special.dm
+#	modified:   code/modules/projectiles/gun.dm
+#	modified:   code/modules/projectiles/guns/ballistic/automatic.dm
+#	modified:   code/modules/projectiles/guns/ballistic/laser_gatling.dm
+#	modified:   code/modules/projectiles/guns/ballistic/revolver.dm
+#	modified:   code/modules/projectiles/guns/ballistic/shotgun.dm
+#	modified:   code/modules/projectiles/guns/energy/kinetic_accelerator.dm
+#	modified:   code/modules/projectiles/guns/magic/staff.dm
+#	modified:   code/modules/projectiles/guns/magic/wand.dm
+#	modified:   code/modules/projectiles/projectile/beams.dm
+#	modified:   code/modules/projectiles/projectile/magic.dm
+#	modified:   code/modules/projectiles/projectile/special.dm
+#	modified:   code/modules/reagents/chemistry/machinery/chem_master.dm
+#	modified:   code/modules/reagents/chemistry/machinery/reagentgrinder.dm
+#	modified:   code/modules/reagents/chemistry/reagents/medicine_reagents.dm
+#	modified:   code/modules/reagents/chemistry/reagents/other_reagents.dm
+#	modified:   code/modules/reagents/chemistry/reagents/toxin_reagents.dm
+#	modified:   code/modules/reagents/chemistry/recipes/medicine.dm
+#	modified:   code/modules/reagents/chemistry/recipes/others.dm
+#	modified:   code/modules/reagents/chemistry/recipes/toxins.dm
+#	modified:   code/modules/reagents/reagent_containers.dm
+#	modified:   code/modules/reagents/reagent_containers/borghydro.dm
+#	modified:   code/modules/reagents/reagent_containers/bottle.dm
+#	modified:   code/modules/reagents/reagent_containers/glass.dm
+#	modified:   code/modules/reagents/reagent_containers/hypospray.dm
+#	modified:   code/modules/reagents/reagent_containers/pill.dm
+#	modified:   code/modules/reagents/reagent_dispenser.dm
+#	modified:   code/modules/recycling/conveyor2.dm
+#	modified:   code/modules/recycling/disposal-construction.dm
+#	modified:   code/modules/recycling/disposal-structures.dm
+#	modified:   code/modules/recycling/disposal-unit.dm
+#	modified:   code/modules/research/circuitprinter.dm
+#	modified:   code/modules/research/designs.dm
+#	modified:   code/modules/research/designs/AI_module_designs.dm
+#	modified:   code/modules/research/designs/machine_designs.dm
+#	modified:   code/modules/research/designs/mecha_designs.dm
+#	modified:   code/modules/research/designs/medical_designs.dm
+#	modified:   code/modules/research/designs/power_designs.dm
+#	modified:   code/modules/research/designs/stock_parts_designs.dm
+#	modified:   code/modules/research/designs/weapon_designs.dm
+#	modified:   code/modules/research/experimentor.dm
+#	modified:   code/modules/research/message_server.dm
+#	modified:   code/modules/research/protolathe.dm
+#	modified:   code/modules/research/rdconsole.dm
+#	modified:   code/modules/shuttle/assault_pod.dm
+#	modified:   code/modules/shuttle/computer.dm
+#	modified:   code/modules/shuttle/emergency.dm
+#	modified:   code/modules/shuttle/ferry.dm
+#	modified:   code/modules/shuttle/manipulator.dm
+#	modified:   code/modules/shuttle/on_move.dm
+#	modified:   code/modules/shuttle/shuttle.dm
+#	modified:   code/modules/shuttle/special.dm
+#	modified:   code/modules/shuttle/supply.dm
+#	modified:   code/modules/spells/spell.dm
+#	new file:   code/modules/spells/spell_types/aimed.dm
+#	modified:   code/modules/spells/spell_types/area_teleport.dm
+#	modified:   code/modules/spells/spell_types/barnyard.dm
+#	modified:   code/modules/spells/spell_types/charge.dm
+#	modified:   code/modules/spells/spell_types/conjure.dm
+#	modified:   code/modules/spells/spell_types/devil.dm
+#	modified:   code/modules/spells/spell_types/devil_boons.dm
+#	modified:   code/modules/spells/spell_types/emplosion.dm
+#	modified:   code/modules/spells/spell_types/ethereal_jaunt.dm
+#	modified:   code/modules/spells/spell_types/forcewall.dm
+#	modified:   code/modules/spells/spell_types/genetic.dm
+#	modified:   code/modules/spells/spell_types/godhand.dm
+#	modified:   code/modules/spells/spell_types/knock.dm
+#	modified:   code/modules/spells/spell_types/lichdom.dm
+#	modified:   code/modules/spells/spell_types/lightning.dm
+#	modified:   code/modules/spells/spell_types/mime.dm
+#	modified:   code/modules/spells/spell_types/rod_form.dm
+#	modified:   code/modules/spells/spell_types/spacetime_distortion.dm
+#	modified:   code/modules/spells/spell_types/summonitem.dm
+#	modified:   code/modules/spells/spell_types/touch_attacks.dm
+#	modified:   code/modules/spells/spell_types/turf_teleport.dm
+#	new file:   code/modules/spells/spell_types/voice_of_god.dm
+#	modified:   code/modules/spells/spell_types/wizard.dm
+#	modified:   code/modules/station_goals/bsa.dm
+#	modified:   code/modules/station_goals/dna_vault.dm
+#	modified:   code/modules/station_goals/shield.dm
+#	modified:   code/modules/stock_market/articles.dm
+#	modified:   code/modules/surgery/bodyparts/bodyparts.dm
+#	modified:   code/modules/surgery/bodyparts/dismemberment.dm
+#	modified:   code/modules/surgery/bodyparts/head.dm
+#	modified:   code/modules/surgery/bodyparts/robot_bodyparts.dm
+#	modified:   code/modules/surgery/eye_surgery.dm
+#	modified:   code/modules/surgery/organs/augments_chest.dm
+#	modified:   code/modules/surgery/organs/augments_eyes.dm
+#	modified:   code/modules/surgery/organs/augments_internal.dm
+#	modified:   code/modules/surgery/organs/organ_internal.dm
+#	modified:   code/modules/surgery/organs/vocal_cords.dm
+#	modified:   code/modules/surgery/plastic_surgery.dm
+#	modified:   code/modules/telesci/bscrystal.dm
+#	modified:   code/modules/telesci/gps.dm
+#	modified:   code/modules/tooltip/tooltip.html
+#	modified:   code/modules/uplink/uplink.dm
+#	modified:   code/modules/uplink/uplink_item.dm
+#	modified:   code/modules/vehicles/atv.dm
+#	modified:   code/modules/vehicles/vehicle.dm
+#	modified:   code/modules/zombie/organs.dm
+#	modified:   code/orphaned_procs/dbcore.dm
+#	modified:   code/orphaned_procs/statistics.dm
+#	modified:   code/world.dm
+#	modified:   config/admins.txt
+#	modified:   config/config.txt
+#	modified:   config/maps.txt
+#	modified:   config/unbuyableshuttles.txt
+#	new file:   goon/sound/machinery/FireAlarm.ogg
+#	modified:   html/changelog.html
+#	modified:   html/changelogs/.all_changelog.yml
+#	new file:   html/changelogs/AutoChangeLog-pr-24096.yml
+#	new file:   html/changelogs/AutoChangeLog-pr-24175.yml
+#	new file:   html/changelogs/AutoChangeLog-pr-24223.yml
+#	new file:   html/changelogs/AutoChangeLog-pr-24312.yml
+#	modified:   icons/effects/96x96.dmi
+#	modified:   icons/effects/clockwork_effects.dmi
+#	modified:   icons/effects/effects.dmi
+#	modified:   icons/mob/actions.dmi
+#	modified:   icons/mob/augments.dmi
+#	modified:   icons/mob/back.dmi
+#	modified:   icons/mob/belt.dmi
+#	modified:   icons/mob/belt_mirror.dmi
+#	modified:   icons/mob/clockwork_mobs.dmi
+#	modified:   icons/mob/drone.dmi
+#	modified:   icons/mob/eyes.dmi
+#	modified:   icons/mob/head.dmi
+#	modified:   icons/mob/inhands/clothing_lefthand.dmi
+#	modified:   icons/mob/inhands/clothing_righthand.dmi
+#	modified:   icons/mob/inhands/items_lefthand.dmi
+#	modified:   icons/mob/inhands/items_righthand.dmi
+#	modified:   icons/mob/lavaland/legion.dmi
+#	modified:   icons/mob/robots.dmi
+#	modified:   icons/mob/screen_alert.dmi
+#	modified:   icons/mob/suit.dmi
+#	modified:   icons/mob/uniform.dmi
+#	modified:   icons/obj/bureaucracy.dmi
+#	modified:   icons/obj/clockwork_objects.dmi
+#	modified:   icons/obj/clothing/glasses.dmi
+#	modified:   icons/obj/clothing/hats.dmi
+#	modified:   icons/obj/clothing/suits.dmi
+#	modified:   icons/obj/clothing/uniforms.dmi
+#	modified:   icons/obj/food/containers.dmi
+#	modified:   icons/obj/food/food.dmi
+#	modified:   icons/obj/grenade.dmi
+#	modified:   icons/obj/hydroponics/equipment.dmi
+#	modified:   icons/obj/kitchen.dmi
+#	modified:   icons/obj/library.dmi
+#	modified:   icons/obj/lighting.dmi
+#	modified:   icons/obj/machines/research.dmi
+#	modified:   icons/obj/mining.dmi
+#	modified:   icons/obj/projectiles.dmi
+#	modified:   icons/obj/smooth_structures/clockwork_window.dmi
+#	modified:   icons/obj/storage.dmi
+#	modified:   icons/obj/surgery.dmi
+#	modified:   icons/obj/tank.dmi
+#	modified:   icons/turf/floors.dmi
+#	modified:   icons/turf/shuttle.dmi
+#	modified:   interface/stylesheet.dm
+#	deleted:    sound/AI/newroundsexy2.ogg
+#	new file:   sound/effects/his_grace_ascend.ogg
+#	new file:   sound/effects/his_grace_awaken.ogg
+#	new file:   sound/machines/clockcult/ocularwarden-dot1.ogg
+#	new file:   sound/machines/clockcult/ocularwarden-dot2.ogg
+#	new file:   sound/machines/clockcult/ocularwarden-target.ogg
+#	new file:   sound/misc/highlander_delayed.ogg
+#	renamed:    sound/misc/apcdestroyed.ogg -> sound/roundend/apcdestroyed.ogg
+#	renamed:    sound/misc/bangindonk.ogg -> sound/roundend/bangindonk.ogg
+#	new file:   sound/roundend/disappointed.ogg
+#	renamed:    sound/misc/its_only_game.ogg -> sound/roundend/its_only_game.ogg
+#	renamed:    sound/misc/leavingtg.ogg -> sound/roundend/leavingtg.ogg
+#	renamed:    sound/AI/newroundsexy.ogg -> sound/roundend/newroundsexy.ogg
+#	renamed:    sound/misc/yeehaw.ogg -> sound/roundend/yeehaw.ogg
+#	new file:   sound/weapons/slap.ogg
+#	new file:   strings/round_start_sounds.txt
+#	modified:   tgstation.dme
+#	new file:   tgui/src/interfaces/engraved_message.ract
+#	modified:   tgui/src/interfaces/file_manager.ract
+#	new file:   tools/DMTreeToGlobalsList/DMTreeToGlobalsList.csproj
+#	new file:   tools/DMTreeToGlobalsList/Program.cs
+#	modified:   tools/github_webhook_processor.php
+#	modified:   tools/mapmerge/map_helpers.py
+#	modified:   tools/mapmerge/path_update.py
+#	modified:   tools/travis/build_byond.sh
+#
+# Changes not staged for commit:
+#	modified:   _maps/loadallmaps.dm
+#	modified:   code/modules/clothing/suits/miscellaneous.dm
+#	modified:   modules_artemis/neural_lace/neural_lace.dm
+#	modified:   modules_artemis/objects/misc/hobo_barrel.dm
+#	modified:   modules_artemis/objects/misc/paper_shredder.dm
+#
+# Untracked files:
+#	icons/mob/poncho.dmi
+#	icons/obj/clothing/poncho.dmi
+#	icons/obj/food/ratrod.dmi
+#	icons/obj/lace.dmi
+#	icons/obj/machines/paper_shredder.dmi
+#	icons/turf/stairs.dmi
+#	modules_artemis/turf/
+#
+

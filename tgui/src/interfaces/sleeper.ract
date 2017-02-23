@@ -35,6 +35,13 @@
     <ui-section label='Brain'>
         <span class='{{data.occupant.brainLoss ? "bad" : "good"}}'>{{data.occupant.brainLoss ? "Abnormal" : "Healthy"}}</span>
     </ui-section>
+    <ui-section label='Fractures'>
+      {{#each adata.occupant.boneFractures}}
+        <span class='bad'>{{name}}</span><br/>
+      {{else}}
+        <span class='good'>None</span>
+      {{/each}}
+    </ui-section>
     <ui-section label='Bloodstream'>
         {{#each adata.occupant.reagents}}
           <span class='highlight' intro-outro='fade'>{{Math.fixed(volume, 1)}} units of {{name}}</span><br/>

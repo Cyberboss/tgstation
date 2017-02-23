@@ -2,6 +2,7 @@
  * Wood floor
  * Grass floor
  * Carpet floor
+ * Linoleum
  */
 
 /turf/open/floor/wood
@@ -132,3 +133,10 @@
 /turf/open/floor/fakespace/Initialize()
 	..()
 	icon_state = "[rand(0,25)]"
+
+/turf/open/floor/lino
+	name = "linoleum"
+	desc = "It's like the 2390's all over again."
+	icon = 'icons/turf/floors/linoleum.dmi'
+	icon_state = "lino"
+	floor_tile = /obj/item/stack/tile/linoleum

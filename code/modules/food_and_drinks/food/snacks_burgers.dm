@@ -168,7 +168,7 @@
 	desc = "Forget the Big Mac. THIS is the future!"
 	icon_state = "bigbiteburger"
 	bonus_reagents = list("vitamin" = 6)
-	list_reagents = list("nutriment" = 10, "vitamin" = 2)
+	list_reagents = list("nutriment" = 10, "vitamin" = 2, "protein" = 7)
 	w_class = WEIGHT_CLASS_NORMAL
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/jelly
@@ -190,7 +190,7 @@
 	desc = "This is a mountain of a burger. FOOD!"
 	icon_state = "superbiteburger"
 	bonus_reagents = list("vitamin" = 10)
-	list_reagents = list("nutriment" = 40, "vitamin" = 5)
+	list_reagents = list("nutriment" = 40, "vitamin" = 5, "protein" = 20)
 	w_class = WEIGHT_CLASS_NORMAL
 	bitesize = 7
 	volume = 100
@@ -201,7 +201,7 @@
 	desc = "HOT! HOT!"
 	icon_state = "fivealarmburger"
 	bonus_reagents = list("nutriment" = 2, "vitamin" = 5)
-	list_reagents = list("nutriment" = 6, "capsaicin" = 5, "condensedcapsaicin" = 5, "vitamin" = 1)
+	list_reagents = list("nutriment" = 6, "capsaicin" = 5, "condensedcapsaicin" = 5, "vitamin" = 1, "protein" = 5)
 
 /obj/item/weapon/reagent_containers/food/snacks/burger/rat
 	name = "rat burger"

@@ -9,6 +9,7 @@ env:
     - BUILD_TOOLS=false
     - BUILD_TESTING=false
     - DM_MAPFILE="loadallmaps"
+    - DME_NAME="artemis.dme"
     matrix:
     - BUILD_TOOLS=true
     - BUILD_TESTING=true
@@ -37,7 +38,7 @@ before_script:
   - tools/travis/before_build_byond.sh
 
 script:
-  - tools/travis/check_filedirs.sh tgstation.dme
+  - tools/travis/check_filedirs.sh $DME_NAME
   - tools/travis/build_tools.sh
   - tools/travis/build_byond.sh
 

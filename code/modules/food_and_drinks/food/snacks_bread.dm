@@ -59,7 +59,7 @@
 	desc = "A slice of delicious meatbread. Extra Heretical."
 	icon_state = "xenobreadslice"
 	filling_color = "#32CD32"
-	list_reagents = list("nutriment" = 6, "vitamin" = 1)
+	list_reagents = list("nutriment" = 6, "vitamin" = 1, "protein" = 2)
 
 /obj/item/weapon/reagent_containers/food/snacks/store/bread/spidermeat
 	name = "spider meat loaf"
@@ -75,7 +75,7 @@
 	desc = "A slice of meatloaf made from an animal that most likely still wants you dead."
 	icon_state = "xenobreadslice"
 	filling_color = "#7CFC00"
-	list_reagents = list("nutriment" = 6, "toxin" = 3, "vitamin" = 1)
+	list_reagents = list("nutriment" = 6, "toxin" = 3, "vitamin" = 1, "protein" = 5)
 
 /obj/item/weapon/reagent_containers/food/snacks/store/bread/banana
 	name = "banana-nut bread"

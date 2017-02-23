@@ -315,7 +315,6 @@
 		if(H.wear_suit && (H.wear_suit.flags_inv & HIDEJUMPSUIT))
 			bodyparts_to_add -= "tail_human"
 
-
 	if("waggingtail_human" in mutant_bodyparts)
 		if(H.wear_suit && (H.wear_suit.flags_inv & HIDEJUMPSUIT))
 			bodyparts_to_add -= "waggingtail_human"
@@ -357,6 +356,10 @@
 			bodyparts_to_add -= "wings_open"
 		else if ("wings" in mutant_bodyparts)
 			bodyparts_to_add -= "wings_open"
+
+	if("tentacles" in mutant_bodyparts)
+		if(!H.dna.features["tentacles"] || H.dna.features["tentacles"] == "None" || H.head && (H.head.flags_inv & HIDEHAIR) || (H.wear_mask && (H.wear_mask.flags_inv & HIDEHAIR)) || !HD || HD.status == BODYPART_ROBOTIC)
+			bodyparts_to_add -= "tentacles"
 
 	//Digitigrade legs are stuck in the phantom zone between true limbs and mutant bodyparts. Mainly it just needs more agressive updating than most limbs.
 	var/update_needed = FALSE
@@ -423,6 +426,8 @@
 					S = wings_open_list[H.dna.features["wings"]]
 				if("legs")
 					S = legs_list[H.dna.features["legs"]]
+				if("tentacles")
+					S = tentacles_list[H.dna.features["tentacles"]]
 
 			if(!S || S.icon_state == "none")
 				continue

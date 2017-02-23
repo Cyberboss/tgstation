@@ -163,7 +163,7 @@
 	name = "\improper Donk-pocket"
 	desc = "The food of choice for the seasoned traitor."
 	icon_state = "donkpocket"
-	list_reagents = list("nutriment" = 4)
+	list_reagents = list("nutriment" = 4, "protein" = 2)
 	cooked_type = /obj/item/weapon/reagent_containers/food/snacks/donkpocket/warm
 	filling_color = "#CD853F"
 	tastes = list("meat" = 2, "dough" = 2, "laziness" = 1)
@@ -236,7 +236,7 @@
 	icon_state = "hotdog"
 	bitesize = 3
 	bonus_reagents = list("nutriment" = 1, "vitamin" = 3)
-	list_reagents = list("nutriment" = 6, "ketchup" = 3, "vitamin" = 3)
+	list_reagents = list("nutriment" = 6, "ketchup" = 3, "vitamin" = 3, "protein" = 3)
 	filling_color = "#8B0000"
 	tastes = list("bun" = 3, "meat" = 2)
 
@@ -245,7 +245,7 @@
 	desc = "Has the potential to not be Dog."
 	icon_state = "meatbun"
 	bonus_reagents = list("nutriment" = 1, "vitamin" = 2)
-	list_reagents = list("nutriment" = 6, "vitamin" = 2)
+	list_reagents = list("nutriment" = 6, "vitamin" = 2, "protein" = 3)
 	filling_color = "#8B0000"
 	tastes = list("bun" = 3, "meat" = 2)
 
