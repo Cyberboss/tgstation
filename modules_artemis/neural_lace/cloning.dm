@@ -361,18 +361,33 @@
 	var/locked = FALSE
 	var/eject_wait = FALSE
 
-/obj/machinery/clonepod/growclone(clonename, ui, se, datum/species/mrace, list/features, factions)
+/obj/machinery/clonepod/growclone(ckey, clonename, ui, se, mindref, datum/species/mrace, list/features, factions)
 	if(panel_open)
 		return FALSE
 	if(mess || attempting)
 		return FALSE
+	clonemind = locate(mindref)
+	if(!istype(clonemind))	//not a mind
+		return FALSE
+	if( clonemind.current && clonemind.current.stat != DEAD )	//mind is associated with a non-dead body
+		return FALSE
+	if(clonemind.active)	//somebody is using that mind
+		if( ckey(clonemind.key)!=ckey )
+			return FALSE
+	else
+		// get_ghost() will fail if they're unable to reenter their body
+		var/mob/dead/observer/G = clonemind.get_ghost()
+		if(!G)
+			return FALSE
+	if(clonemind.damnation_type) //Can't clone the damned.
+		INVOKE_ASYNC(src, .proc/horrifyingsound)
+		mess = TRUE
+		icon_state = "pod_g"
+		update_icon()
+		return FALSE
 
 	attempting = TRUE //One at a time!!
-	locked = TRUE
 	countdown.start()
-
-	eject_wait = TRUE
-	addtimer(CALLBACK(src, .proc/wait_complete), 30)
 
 	var/mob/living/carbon/human/H = new /mob/living/carbon/human(src)
 
