@@ -92,7 +92,7 @@
 
 	var/clientfps = 0
 
-	var/parallax = PARALLAX_HIGH
+	var/parallax
 
 	var/uplink_spawn_loc = UPLINK_PDA
 
