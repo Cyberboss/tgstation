@@ -1,4 +1,5 @@
 
+/* Commented out for Artemis' job system. ~Cakey
 var/const/ENGSEC			=(1<<0)
 
 var/const/CAPTAIN			=(1<<0)
@@ -122,6 +123,7 @@ var/list/nonhuman_positions = list(
 	"pAI"
 )
 
+*/
 
 /proc/guest_jobbans(job)
 	return ((job in command_positions) || (job in nonhuman_positions) || (job in security_positions))

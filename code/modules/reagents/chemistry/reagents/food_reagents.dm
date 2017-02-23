@@ -41,17 +41,6 @@
 			C.blood_volume += blood_gain
 	..()
 
-<<<<<<< HEAD
-/datum/reagent/consumable/nutriment/protein // Bad for Skrell!
-	name = "Protein"
-	id = "protein"
-	description = "All the protein the body needs in pure form. Time to get SWOLE bro."
-	reagent_state = SOLID
-	nutriment_factor = 10 * REAGENTS_METABOLISM
-	color = "#440000"
-
-/datum/reagent/consumable/vitamin
-=======
 /datum/reagent/consumable/nutriment/on_new(list/supplied_data)
 	// taste data can sometimes be ("salt" = 3, "chips" = 1)
 	// and we want it to be in the form ("salt" = 0.75, "chips" = 0.25)
@@ -84,7 +73,6 @@
 	data = taste_amounts
 
 /datum/reagent/consumable/nutriment/vitamin
->>>>>>> refs/remotes/origin/pr/1
 	name = "Vitamin"
 	id = "vitamin"
 	description = "All the best vitamins, minerals, and carbohydrates the body needs in pure form."

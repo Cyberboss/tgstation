@@ -1,8 +1,5 @@
 var/const/CALL_SHUTTLE_REASON_LENGTH = 12
 
-/datum/subsystem/shuttle
-	var/emergencyCallAmount = 0		//how many times the escape shuttle was called
-
 // The communications computer
 /obj/machinery/computer/communications
 	name = "communications console"

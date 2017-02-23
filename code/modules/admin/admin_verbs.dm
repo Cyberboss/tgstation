@@ -20,6 +20,7 @@ var/list/admin_verbs_default = list(
 	/client/proc/cmd_admin_pm_panel,		/*admin-pm list*/
 	/client/proc/stop_sounds
 	)
+/* Commented out for Artemis' extra commands. ~Cakey
 var/list/admin_verbs_admin = list(
 	/client/proc/player_panel_new,		/*shows an interface for all players, with links to various panels*/
 	/client/proc/invisimin,				/*allows our mob to go invisible/visible*/
@@ -67,6 +68,7 @@ var/list/admin_verbs_admin = list(
 	/client/proc/toggleSNPC, /* Toggles an npc's processing mode */
 	/client/proc/open_shuttle_manipulator /* Opens shuttle manipulator UI */
 	)
+*/
 var/list/admin_verbs_ban = list(
 	/client/proc/unban_panel,
 	/client/proc/DB_ban_panel,

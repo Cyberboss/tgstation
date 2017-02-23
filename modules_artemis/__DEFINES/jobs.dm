@@ -14,7 +14,7 @@ var/global/list/assistant_occupations = list(
 	"Assistant",
 	"Cargo Technician",
 	"Chaplain",
-	"Lawyer",
+	"Janitor",
 	"Librarian"
 )
 
