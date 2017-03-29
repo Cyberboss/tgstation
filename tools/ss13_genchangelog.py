@@ -212,4 +212,3 @@ if len(del_after):
         if os.path.isfile(fileName):
             print(' Deleting {0} (delete-after set)...'.format(fileName))
             os.remove(fileName)
-
