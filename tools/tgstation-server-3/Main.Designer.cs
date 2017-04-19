@@ -327,6 +327,7 @@
             this.RepoApplyButton.Text = "Apply Changes";
             this.RepoApplyButton.UseVisualStyleBackColor = true;
             this.RepoApplyButton.Visible = false;
+            this.RepoApplyButton.Click += new System.EventHandler(this.RepoApplyButton_Click);
             // 
             // RepoCommitterNameTextBox
             // 

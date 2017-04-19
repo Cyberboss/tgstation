@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace TGStationServer3
 {
@@ -145,7 +146,34 @@ namespace TGStationServer3
 		private void DisposeRepo()
 		{
 			if (Repo != null)
+			{
 				Repo.Dispose();
+				Repo = null;
+			}
+		}
+		private void RepoApplyButton_Click(object sender, EventArgs e)
+		{
+			var Config = Properties.Settings.Default;
+			var Reclone = Config.RepoURL != RepoRemoteTextBox.Text;
+			if (Reclone)
+			{
+				var DialogResult = MessageBox.Show("Changing the remote URL requires a re-cloning of the repository. Continue?", "Confim", MessageBoxButtons.YesNo);
+				if (DialogResult == DialogResult.No)
+					return;
+			}
+			Config.RepoURL = RepoRemoteTextBox.Text;
+			Config.RepoBranch = RepoBranchTextBox.Text;
+			Config.CommitterName = RepoCommitterNameTextBox.Text;
+			Config.CommitterEmail = RepoEmailTextBox.Text;
+
+			Config.Save();
+
+			DisposeRepo();
+
+			if (Reclone)
+				Git.Delete();
+
+			PopulateRepoFields();
 		}
 	}
 }
