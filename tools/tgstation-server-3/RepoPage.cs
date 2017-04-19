@@ -31,7 +31,13 @@ namespace TGStationServer3
 
 		private void RepoBGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			PopulateRepoFields();
 			RepoProgressBar.Visible = false;
+			RemoteNameTitle.Visible = true;
+			RepoRemoteTextBox.Visible = true;
+			BranchNameTitle.Visible = true;
+			RepoBranchTextBox.Visible = true;
+	
 			if (Repo == null)
 			{
 				//repo unavailable
@@ -39,7 +45,33 @@ namespace TGStationServer3
 				CloneRepositoryButton.Visible = true;
 			}
 			else
+			{
 				RepoProgressBarLabel.Visible = false;
+
+				CurrentRevisionLabel.Visible = true;
+				CurrentRevisionTitle.Visible = true;
+				IdentityLabel.Visible = true;
+				CommiterNameTitle.Visible = true;
+				CommitterEmailTitle.Visible = true;
+				RepoCommitterNameTextBox.Visible = true;
+				RepoEmailTextBox.Visible = true;
+				TestMergeButton.Visible = true;
+				TestMergeListLabel.Visible = true;
+				TestMergeListTitle.Visible = true;
+				UpdateRepoButton.Visible = true;
+				UpdateToShaButton.Visible = true;
+				RepoApplyButton.Visible = true;
+			}
+		}
+
+		private void PopulateRepoFields()
+		{
+			var Config = Properties.Settings.Default;
+			CurrentRevisionLabel.Text = Repo != null ? Repo.GetCurrentSha() : "Unknown";
+			RepoRemoteTextBox.Text = Config.RepoURL;
+			RepoBranchTextBox.Text = Config.RepoBranch;
+			RepoCommitterNameTextBox.Text = Config.CommitterName;
+			RepoEmailTextBox.Text = Config.CommitterEmail;
 		}
 
 		private void RepoBGW_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -55,7 +87,7 @@ namespace TGStationServer3
 			percenttouse -= 50;
 
 			if (percenttouse > 50)
-			RepoProgressBar.Value = percenttouse;
+				RepoProgressBar.Value = percenttouse;
 		}
 		
 		private void RepoBGW_DoWork(object sender, DoWorkEventArgs e)
@@ -94,9 +126,17 @@ namespace TGStationServer3
 		private void CloneRepositoryButton_Click(object sender, EventArgs e)
 		{
 			RWA = RepoWorkerAction.Load;
+			var Config = Properties.Settings.Default;
+
+			Config.RepoURL = RepoRemoteTextBox.Text;
+			RepoProgressBarLabel.Text = String.Format("Cloning into {0}", Config.RepoURL);
+			Config.RepoBranch = RepoBranchTextBox.Text;
+
 			CloneRepositoryButton.Visible = false;
-			var RepoURL = Properties.Settings.Default.RepoURL;
-			RepoProgressBarLabel.Text = String.Format("Cloning into {0}", RepoURL);
+			RemoteNameTitle.Visible = false;
+			RepoRemoteTextBox.Visible = false;
+			BranchNameTitle.Visible = false;
+			RepoBranchTextBox.Visible = false;
 			RepoProgressBar.Visible = true;
 			RepoProgressBar.Value = 0;
 			RepoProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;

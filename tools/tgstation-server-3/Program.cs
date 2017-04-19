@@ -17,6 +17,7 @@ namespace TGStationServer3
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Main());
+			Properties.Settings.Default.Save();
 		}
 	}
 }
