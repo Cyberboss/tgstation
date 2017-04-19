@@ -12,10 +12,9 @@ namespace TGStationServer3
 {
 	public partial class Main : Form
 	{
-		private Git Repo;
-
 		ContextMenu TrayMenu;
 		NotifyIcon TrayIcon;
+
 		public Main()
 		{
 			InitializeComponent();            // Create a simple tray menu with only one item.
@@ -37,9 +36,13 @@ namespace TGStationServer3
 
 			Resize += OnResize;
 			FormClosing += OnClosing;
+			FormClosed += OnExit;
 
-			//Repo = new Git("https://github.com/tgstation/tgstation.git", "master", "/tg/station Server 3", "cyberboss1994@hotmail.com");
+			MouseDown += Main_MouseDown;
+
+			InitRepoPage();
 		}
+		#region Form Events
 		private void OnResize(object sender, EventArgs e)
 		{
 			if (WindowState == FormWindowState.Minimized)
@@ -56,10 +59,15 @@ namespace TGStationServer3
 		{
 			if (e.CloseReason == CloseReason.UserClosing)
 			{
-				//Use the exit button or the tray icon
-				WindowState = FormWindowState.Minimized;
-				e.Cancel = true;
+				var DialogResult = MessageBox.Show("Are you sure you want to shutdown the server?", "Confim", MessageBoxButtons.YesNo);
+				e.Cancel = DialogResult == DialogResult.No;
 			}
+		}
+		#endregion
+
+		private void TrayOpen(object sender, EventArgs e)
+		{
+			WindowState = FormWindowState.Normal;
 		}
 
 		private void OnExit(object sender, EventArgs e)
@@ -70,16 +78,6 @@ namespace TGStationServer3
 
 		//Turns off the server and irc bot
 		private void Shutdown()
-		{
-
-		}
-
-		private void TrayOpen(object sender, EventArgs e)
-		{
-			WindowState = FormWindowState.Normal;
-		}
-
-		private static void FirstInstall(string AInstallPath)
 		{
 
 		}

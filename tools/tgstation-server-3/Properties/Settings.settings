@@ -1,7 +1,30 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
-  <Profiles>
-    <Profile Name="(Default)" />
-  </Profiles>
-  <Settings />
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TGStationServer3.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="RepoURL" Type="System.String" Scope="User">
+      <Value Profile="(Default)">https://github.com/tgstation/tgstation.git</Value>
+    </Setting>
+    <Setting Name="ProjectName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tgstation</Value>
+    </Setting>
+    <Setting Name="ServerPort" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">2337</Value>
+    </Setting>
+    <Setting Name="RepoBranch" Type="System.String" Scope="User">
+      <Value Profile="(Default)">master</Value>
+    </Setting>
+    <Setting Name="PushChangelogToGit" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="ByondPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">C:\Program Files (x86)\BYOND\bin</Value>
+    </Setting>
+    <Setting Name="CommitterName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tgstation-server</Value>
+    </Setting>
+    <Setting Name="CommitterEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tgstation-server@users.noreply.github.com</Value>
+    </Setting>
+  </Settings>
 </SettingsFile>

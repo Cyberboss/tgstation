@@ -2,6 +2,7 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using System.ComponentModel;
 using System;
 
 namespace TGStationServer3
@@ -13,21 +14,40 @@ namespace TGStationServer3
 		string BranchName;
 		Repository Repo;
 		Identity Ident;
+		BackgroundWorker ProgressReporter;
 		
-		public Git(string RepoURL, string BranchName, string CommitterName, string CommitterEmail)
+		public Git(string RepoURL, string BranchName, string CommitterName, string CommitterEmail, BackgroundWorker BGW)
 		{
 			this.BranchName = BranchName;
 			Ident = new Identity(CommitterName, CommitterEmail);
+			ProgressReporter = BGW;
 			if (!Exists())
 			{
 				if(Directory.Exists(RepoPath))
 					Directory.Delete(RepoPath, true);
-				Repository.Clone(RepoURL, RepoPath);
+				var Opts = new CloneOptions();
+				Opts.BranchName = BranchName;
+				Opts.RecurseSubmodules = true;
+				Opts.OnTransferProgress = HandleTransferProgress;
+				Opts.OnCheckoutProgress = HandleCheckoutProgress;
+				Repository.Clone(RepoURL, RepoPath, Opts);
 			}
 			Repo = new Repository(RepoPath);
-			Commands.Checkout(Repo, BranchName);
 		}
-		
+		private bool HandleTransferProgress(TransferProgress progress)
+		{
+			if (ProgressReporter.CancellationPending)
+				return false;
+
+			ProgressReporter.ReportProgress((int) (((float) progress.ReceivedObjects / progress.TotalObjects) * 50));
+
+			return true;
+		}
+		private void HandleCheckoutProgress(string path, int completedSteps, int totalSteps)
+		{
+			ProgressReporter.ReportProgress(50 + (int)(((float)completedSteps / totalSteps) * 50));
+		}
+
 		public static bool Exists()
 		{
 			return Repository.IsValid(RepoPath);
