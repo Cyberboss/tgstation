@@ -366,12 +366,12 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Size = new System.Drawing.Size(868, 366);
             this.tabPage1.TabIndex = 1;
             this.tabPage1.Text = "BYOND";
-            this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // tabPage2
             // 
