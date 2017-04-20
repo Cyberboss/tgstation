@@ -195,13 +195,5 @@ Temporary Items
 
 #VS stuff
 
-[Dd]ebug/
-[Dd]ebugPublic/
-[Rr]elease/
-[Rr]eleases/
-x64/
-x86/
-bld/
-[Bb]in/
-[Oo]bj/
-[Ll]og/
+tools/tgstation-server-3/bin/*
+tools/tgstation-server-3/obj/*
