@@ -25,11 +25,13 @@ namespace TGStationServer3
 			{
 				if(Directory.Exists(RepoPath))
 					Directory.Delete(RepoPath, true);
-				var Opts = new CloneOptions();
-				Opts.BranchName = BranchName;
-				Opts.RecurseSubmodules = true;
-				Opts.OnTransferProgress = HandleTransferProgress;
-				Opts.OnCheckoutProgress = HandleCheckoutProgress;
+				var Opts = new CloneOptions()
+				{
+					BranchName = BranchName,
+					RecurseSubmodules = true,
+					OnTransferProgress = HandleTransferProgress,
+					OnCheckoutProgress = HandleCheckoutProgress
+				};
 				Repository.Clone(RepoURL, RepoPath, Opts);
 			}
 			Repo = new Repository(RepoPath);
@@ -82,8 +84,10 @@ namespace TGStationServer3
 		{
 			try
 			{
-				var Opts = new CheckoutOptions();
-				Opts.CheckoutModifiers = CheckoutModifiers.Force;
+				var Opts = new CheckoutOptions()
+				{
+					CheckoutModifiers = CheckoutModifiers.Force
+				};
 				Commands.Checkout(Repo, sha, Opts);
 				return null;
 			}
