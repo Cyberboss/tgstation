@@ -34,30 +34,33 @@
             this.CloseButton = new System.Windows.Forms.Button();
             this.MinimizeButton = new System.Windows.Forms.Button();
             this.TitleLabel = new System.Windows.Forms.Label();
-            this.TabControl = new System.Windows.Forms.TabControl();
+            this.BYONDPanel = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
+            this.CurrentRevisionLabel = new System.Windows.Forms.Label();
+            this.RepoEmailTextBox = new System.Windows.Forms.TextBox();
+            this.RepoCommitterNameTextBox = new System.Windows.Forms.TextBox();
+            this.RepoApplyButton = new System.Windows.Forms.Button();
+            this.RepoBranchTextBox = new System.Windows.Forms.TextBox();
+            this.RepoRemoteTextBox = new System.Windows.Forms.TextBox();
+            this.UpdateToShaButton = new System.Windows.Forms.Button();
+            this.UpdateRepoButton = new System.Windows.Forms.Button();
+            this.TestMergeButton = new System.Windows.Forms.Button();
+            this.CommitterEmailTitle = new System.Windows.Forms.Label();
+            this.CommiterNameTitle = new System.Windows.Forms.Label();
+            this.IdentityLabel = new System.Windows.Forms.Label();
+            this.TestMergeListLabel = new System.Windows.Forms.Label();
+            this.TestMergeListTitle = new System.Windows.Forms.Label();
+            this.RemoteNameTitle = new System.Windows.Forms.Label();
+            this.BranchNameTitle = new System.Windows.Forms.Label();
+            this.CurrentRevisionTitle = new System.Windows.Forms.Label();
             this.CloneRepositoryButton = new System.Windows.Forms.Button();
             this.RepoProgressBarLabel = new System.Windows.Forms.Label();
             this.RepoProgressBar = new System.Windows.Forms.ProgressBar();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
-            this.CurrentRevisionTitle = new System.Windows.Forms.Label();
-            this.BranchNameTitle = new System.Windows.Forms.Label();
-            this.RemoteNameTitle = new System.Windows.Forms.Label();
-            this.TestMergeListTitle = new System.Windows.Forms.Label();
-            this.TestMergeListLabel = new System.Windows.Forms.Label();
-            this.IdentityLabel = new System.Windows.Forms.Label();
-            this.CommiterNameTitle = new System.Windows.Forms.Label();
-            this.CommitterEmailTitle = new System.Windows.Forms.Label();
-            this.TestMergeButton = new System.Windows.Forms.Button();
-            this.UpdateRepoButton = new System.Windows.Forms.Button();
-            this.UpdateToShaButton = new System.Windows.Forms.Button();
-            this.RepoRemoteTextBox = new System.Windows.Forms.TextBox();
-            this.RepoBranchTextBox = new System.Windows.Forms.TextBox();
-            this.RepoApplyButton = new System.Windows.Forms.Button();
-            this.RepoCommitterNameTextBox = new System.Windows.Forms.TextBox();
-            this.RepoEmailTextBox = new System.Windows.Forms.TextBox();
-            this.CurrentRevisionLabel = new System.Windows.Forms.Label();
-            this.TabControl.SuspendLayout();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.BYONDPanel.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,14 +96,17 @@
             this.TitleLabel.TabIndex = 2;
             this.TitleLabel.Text = "/tg/station 13 Server Contol Panel";
             // 
-            // TabControl
+            // BYONDPanel
             // 
-            this.TabControl.Controls.Add(this.RepoPanel);
-            this.TabControl.Location = new System.Drawing.Point(12, 60);
-            this.TabControl.Name = "TabControl";
-            this.TabControl.SelectedIndex = 0;
-            this.TabControl.Size = new System.Drawing.Size(876, 392);
-            this.TabControl.TabIndex = 3;
+            this.BYONDPanel.Controls.Add(this.RepoPanel);
+            this.BYONDPanel.Controls.Add(this.tabPage1);
+            this.BYONDPanel.Controls.Add(this.tabPage2);
+            this.BYONDPanel.Controls.Add(this.tabPage3);
+            this.BYONDPanel.Location = new System.Drawing.Point(12, 60);
+            this.BYONDPanel.Name = "BYONDPanel";
+            this.BYONDPanel.SelectedIndex = 0;
+            this.BYONDPanel.Size = new System.Drawing.Size(876, 392);
+            this.BYONDPanel.TabIndex = 3;
             // 
             // RepoPanel
             // 
@@ -131,6 +137,195 @@
             this.RepoPanel.Size = new System.Drawing.Size(868, 366);
             this.RepoPanel.TabIndex = 0;
             this.RepoPanel.Text = "Repository";
+            // 
+            // CurrentRevisionLabel
+            // 
+            this.CurrentRevisionLabel.AutoSize = true;
+            this.CurrentRevisionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrentRevisionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CurrentRevisionLabel.Location = new System.Drawing.Point(162, 14);
+            this.CurrentRevisionLabel.Name = "CurrentRevisionLabel";
+            this.CurrentRevisionLabel.Size = new System.Drawing.Size(82, 18);
+            this.CurrentRevisionLabel.TabIndex = 20;
+            this.CurrentRevisionLabel.Text = "Unknown";
+            this.CurrentRevisionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.CurrentRevisionLabel.Visible = false;
+            // 
+            // RepoEmailTextBox
+            // 
+            this.RepoEmailTextBox.Location = new System.Drawing.Point(90, 217);
+            this.RepoEmailTextBox.Name = "RepoEmailTextBox";
+            this.RepoEmailTextBox.Size = new System.Drawing.Size(535, 20);
+            this.RepoEmailTextBox.TabIndex = 19;
+            this.RepoEmailTextBox.Visible = false;
+            // 
+            // RepoCommitterNameTextBox
+            // 
+            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(90, 191);
+            this.RepoCommitterNameTextBox.Name = "RepoCommitterNameTextBox";
+            this.RepoCommitterNameTextBox.Size = new System.Drawing.Size(535, 20);
+            this.RepoCommitterNameTextBox.TabIndex = 18;
+            this.RepoCommitterNameTextBox.Visible = false;
+            // 
+            // RepoApplyButton
+            // 
+            this.RepoApplyButton.Location = new System.Drawing.Point(722, 331);
+            this.RepoApplyButton.Name = "RepoApplyButton";
+            this.RepoApplyButton.Size = new System.Drawing.Size(140, 29);
+            this.RepoApplyButton.TabIndex = 17;
+            this.RepoApplyButton.Text = "Apply Changes";
+            this.RepoApplyButton.UseVisualStyleBackColor = true;
+            this.RepoApplyButton.Visible = false;
+            this.RepoApplyButton.Click += new System.EventHandler(this.RepoApplyButton_Click);
+            // 
+            // RepoBranchTextBox
+            // 
+            this.RepoBranchTextBox.Location = new System.Drawing.Point(90, 89);
+            this.RepoBranchTextBox.Name = "RepoBranchTextBox";
+            this.RepoBranchTextBox.Size = new System.Drawing.Size(535, 20);
+            this.RepoBranchTextBox.TabIndex = 15;
+            this.RepoBranchTextBox.Visible = false;
+            // 
+            // RepoRemoteTextBox
+            // 
+            this.RepoRemoteTextBox.Location = new System.Drawing.Point(90, 58);
+            this.RepoRemoteTextBox.Name = "RepoRemoteTextBox";
+            this.RepoRemoteTextBox.Size = new System.Drawing.Size(535, 20);
+            this.RepoRemoteTextBox.TabIndex = 14;
+            this.RepoRemoteTextBox.Visible = false;
+            // 
+            // UpdateToShaButton
+            // 
+            this.UpdateToShaButton.Location = new System.Drawing.Point(722, 81);
+            this.UpdateToShaButton.Name = "UpdateToShaButton";
+            this.UpdateToShaButton.Size = new System.Drawing.Size(140, 29);
+            this.UpdateToShaButton.TabIndex = 13;
+            this.UpdateToShaButton.Text = "Checkout Commit";
+            this.UpdateToShaButton.UseVisualStyleBackColor = true;
+            this.UpdateToShaButton.Visible = false;
+            // 
+            // UpdateRepoButton
+            // 
+            this.UpdateRepoButton.Location = new System.Drawing.Point(722, 11);
+            this.UpdateRepoButton.Name = "UpdateRepoButton";
+            this.UpdateRepoButton.Size = new System.Drawing.Size(140, 29);
+            this.UpdateRepoButton.TabIndex = 12;
+            this.UpdateRepoButton.Text = "Update to Remote";
+            this.UpdateRepoButton.UseVisualStyleBackColor = true;
+            this.UpdateRepoButton.Visible = false;
+            // 
+            // TestMergeButton
+            // 
+            this.TestMergeButton.Location = new System.Drawing.Point(722, 46);
+            this.TestMergeButton.Name = "TestMergeButton";
+            this.TestMergeButton.Size = new System.Drawing.Size(140, 29);
+            this.TestMergeButton.TabIndex = 11;
+            this.TestMergeButton.Text = "Test Merge PR";
+            this.TestMergeButton.UseVisualStyleBackColor = true;
+            this.TestMergeButton.Visible = false;
+            // 
+            // CommitterEmailTitle
+            // 
+            this.CommitterEmailTitle.AutoSize = true;
+            this.CommitterEmailTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommitterEmailTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommitterEmailTitle.Location = new System.Drawing.Point(6, 217);
+            this.CommitterEmailTitle.Name = "CommitterEmailTitle";
+            this.CommitterEmailTitle.Size = new System.Drawing.Size(67, 18);
+            this.CommitterEmailTitle.TabIndex = 10;
+            this.CommitterEmailTitle.Text = "E-mail:";
+            this.CommitterEmailTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommitterEmailTitle.Visible = false;
+            // 
+            // CommiterNameTitle
+            // 
+            this.CommiterNameTitle.AutoSize = true;
+            this.CommiterNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommiterNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommiterNameTitle.Location = new System.Drawing.Point(6, 191);
+            this.CommiterNameTitle.Name = "CommiterNameTitle";
+            this.CommiterNameTitle.Size = new System.Drawing.Size(62, 18);
+            this.CommiterNameTitle.TabIndex = 9;
+            this.CommiterNameTitle.Text = "Name:";
+            this.CommiterNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommiterNameTitle.Visible = false;
+            // 
+            // IdentityLabel
+            // 
+            this.IdentityLabel.AutoSize = true;
+            this.IdentityLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.IdentityLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.IdentityLabel.Location = new System.Drawing.Point(6, 142);
+            this.IdentityLabel.Name = "IdentityLabel";
+            this.IdentityLabel.Size = new System.Drawing.Size(257, 18);
+            this.IdentityLabel.TabIndex = 8;
+            this.IdentityLabel.Text = "Changelog Committer Identity";
+            this.IdentityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.IdentityLabel.Visible = false;
+            // 
+            // TestMergeListLabel
+            // 
+            this.TestMergeListLabel.AutoSize = true;
+            this.TestMergeListLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TestMergeListLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.TestMergeListLabel.Location = new System.Drawing.Point(181, 266);
+            this.TestMergeListLabel.Name = "TestMergeListLabel";
+            this.TestMergeListLabel.Size = new System.Drawing.Size(50, 18);
+            this.TestMergeListLabel.TabIndex = 7;
+            this.TestMergeListLabel.Text = "None";
+            this.TestMergeListLabel.Visible = false;
+            // 
+            // TestMergeListTitle
+            // 
+            this.TestMergeListTitle.AutoSize = true;
+            this.TestMergeListTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TestMergeListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.TestMergeListTitle.Location = new System.Drawing.Point(6, 266);
+            this.TestMergeListTitle.Name = "TestMergeListTitle";
+            this.TestMergeListTitle.Size = new System.Drawing.Size(169, 18);
+            this.TestMergeListTitle.TabIndex = 6;
+            this.TestMergeListTitle.Text = "Active Test Merges:";
+            this.TestMergeListTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.TestMergeListTitle.Visible = false;
+            // 
+            // RemoteNameTitle
+            // 
+            this.RemoteNameTitle.AutoSize = true;
+            this.RemoteNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RemoteNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.RemoteNameTitle.Location = new System.Drawing.Point(6, 57);
+            this.RemoteNameTitle.Name = "RemoteNameTitle";
+            this.RemoteNameTitle.Size = new System.Drawing.Size(78, 18);
+            this.RemoteNameTitle.TabIndex = 5;
+            this.RemoteNameTitle.Text = "Remote:";
+            this.RemoteNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.RemoteNameTitle.Visible = false;
+            // 
+            // BranchNameTitle
+            // 
+            this.BranchNameTitle.AutoSize = true;
+            this.BranchNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BranchNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.BranchNameTitle.Location = new System.Drawing.Point(6, 89);
+            this.BranchNameTitle.Name = "BranchNameTitle";
+            this.BranchNameTitle.Size = new System.Drawing.Size(70, 18);
+            this.BranchNameTitle.TabIndex = 4;
+            this.BranchNameTitle.Text = "Branch:";
+            this.BranchNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.BranchNameTitle.Visible = false;
+            // 
+            // CurrentRevisionTitle
+            // 
+            this.CurrentRevisionTitle.AutoSize = true;
+            this.CurrentRevisionTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CurrentRevisionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CurrentRevisionTitle.Location = new System.Drawing.Point(6, 14);
+            this.CurrentRevisionTitle.Name = "CurrentRevisionTitle";
+            this.CurrentRevisionTitle.Size = new System.Drawing.Size(150, 18);
+            this.CurrentRevisionTitle.TabIndex = 3;
+            this.CurrentRevisionTitle.Text = "Current Revision:";
+            this.CurrentRevisionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.CurrentRevisionTitle.Visible = false;
             // 
             // CloneRepositoryButton
             // 
@@ -169,194 +364,34 @@
             this.RepoBGW.WorkerSupportsCancellation = true;
             this.RepoBGW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.RepoBGW_DoWork);
             // 
-            // CurrentRevisionTitle
+            // tabPage1
             // 
-            this.CurrentRevisionTitle.AutoSize = true;
-            this.CurrentRevisionTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentRevisionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CurrentRevisionTitle.Location = new System.Drawing.Point(6, 14);
-            this.CurrentRevisionTitle.Name = "CurrentRevisionTitle";
-            this.CurrentRevisionTitle.Size = new System.Drawing.Size(150, 18);
-            this.CurrentRevisionTitle.TabIndex = 3;
-            this.CurrentRevisionTitle.Text = "Current Revision:";
-            this.CurrentRevisionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.CurrentRevisionTitle.Visible = false;
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Size = new System.Drawing.Size(868, 366);
+            this.tabPage1.TabIndex = 1;
+            this.tabPage1.Text = "BYOND";
+            this.tabPage1.UseVisualStyleBackColor = true;
             // 
-            // BranchNameTitle
+            // tabPage2
             // 
-            this.BranchNameTitle.AutoSize = true;
-            this.BranchNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BranchNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.BranchNameTitle.Location = new System.Drawing.Point(6, 89);
-            this.BranchNameTitle.Name = "BranchNameTitle";
-            this.BranchNameTitle.Size = new System.Drawing.Size(70, 18);
-            this.BranchNameTitle.TabIndex = 4;
-            this.BranchNameTitle.Text = "Branch:";
-            this.BranchNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.BranchNameTitle.Visible = false;
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(868, 366);
+            this.tabPage2.TabIndex = 2;
+            this.tabPage2.Text = "Server";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
-            // RemoteNameTitle
+            // tabPage3
             // 
-            this.RemoteNameTitle.AutoSize = true;
-            this.RemoteNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.RemoteNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.RemoteNameTitle.Location = new System.Drawing.Point(6, 57);
-            this.RemoteNameTitle.Name = "RemoteNameTitle";
-            this.RemoteNameTitle.Size = new System.Drawing.Size(78, 18);
-            this.RemoteNameTitle.TabIndex = 5;
-            this.RemoteNameTitle.Text = "Remote:";
-            this.RemoteNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.RemoteNameTitle.Visible = false;
-            // 
-            // TestMergeListTitle
-            // 
-            this.TestMergeListTitle.AutoSize = true;
-            this.TestMergeListTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestMergeListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.TestMergeListTitle.Location = new System.Drawing.Point(6, 266);
-            this.TestMergeListTitle.Name = "TestMergeListTitle";
-            this.TestMergeListTitle.Size = new System.Drawing.Size(169, 18);
-            this.TestMergeListTitle.TabIndex = 6;
-            this.TestMergeListTitle.Text = "Active Test Merges:";
-            this.TestMergeListTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.TestMergeListTitle.Visible = false;
-            // 
-            // TestMergeListLabel
-            // 
-            this.TestMergeListLabel.AutoSize = true;
-            this.TestMergeListLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestMergeListLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.TestMergeListLabel.Location = new System.Drawing.Point(181, 266);
-            this.TestMergeListLabel.Name = "TestMergeListLabel";
-            this.TestMergeListLabel.Size = new System.Drawing.Size(50, 18);
-            this.TestMergeListLabel.TabIndex = 7;
-            this.TestMergeListLabel.Text = "None";
-            this.TestMergeListLabel.Visible = false;
-            // 
-            // IdentityLabel
-            // 
-            this.IdentityLabel.AutoSize = true;
-            this.IdentityLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.IdentityLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.IdentityLabel.Location = new System.Drawing.Point(6, 142);
-            this.IdentityLabel.Name = "IdentityLabel";
-            this.IdentityLabel.Size = new System.Drawing.Size(257, 18);
-            this.IdentityLabel.TabIndex = 8;
-            this.IdentityLabel.Text = "Changelog Committer Identity";
-            this.IdentityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.IdentityLabel.Visible = false;
-            // 
-            // CommiterNameTitle
-            // 
-            this.CommiterNameTitle.AutoSize = true;
-            this.CommiterNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommiterNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommiterNameTitle.Location = new System.Drawing.Point(6, 191);
-            this.CommiterNameTitle.Name = "CommiterNameTitle";
-            this.CommiterNameTitle.Size = new System.Drawing.Size(62, 18);
-            this.CommiterNameTitle.TabIndex = 9;
-            this.CommiterNameTitle.Text = "Name:";
-            this.CommiterNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommiterNameTitle.Visible = false;
-            // 
-            // CommitterEmailTitle
-            // 
-            this.CommitterEmailTitle.AutoSize = true;
-            this.CommitterEmailTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommitterEmailTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommitterEmailTitle.Location = new System.Drawing.Point(6, 217);
-            this.CommitterEmailTitle.Name = "CommitterEmailTitle";
-            this.CommitterEmailTitle.Size = new System.Drawing.Size(67, 18);
-            this.CommitterEmailTitle.TabIndex = 10;
-            this.CommitterEmailTitle.Text = "E-mail:";
-            this.CommitterEmailTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommitterEmailTitle.Visible = false;
-            // 
-            // TestMergeButton
-            // 
-            this.TestMergeButton.Location = new System.Drawing.Point(722, 46);
-            this.TestMergeButton.Name = "TestMergeButton";
-            this.TestMergeButton.Size = new System.Drawing.Size(140, 29);
-            this.TestMergeButton.TabIndex = 11;
-            this.TestMergeButton.Text = "Test Merge PR";
-            this.TestMergeButton.UseVisualStyleBackColor = true;
-            this.TestMergeButton.Visible = false;
-            // 
-            // UpdateRepoButton
-            // 
-            this.UpdateRepoButton.Location = new System.Drawing.Point(722, 11);
-            this.UpdateRepoButton.Name = "UpdateRepoButton";
-            this.UpdateRepoButton.Size = new System.Drawing.Size(140, 29);
-            this.UpdateRepoButton.TabIndex = 12;
-            this.UpdateRepoButton.Text = "Update to Remote";
-            this.UpdateRepoButton.UseVisualStyleBackColor = true;
-            this.UpdateRepoButton.Visible = false;
-            // 
-            // UpdateToShaButton
-            // 
-            this.UpdateToShaButton.Location = new System.Drawing.Point(722, 81);
-            this.UpdateToShaButton.Name = "UpdateToShaButton";
-            this.UpdateToShaButton.Size = new System.Drawing.Size(140, 29);
-            this.UpdateToShaButton.TabIndex = 13;
-            this.UpdateToShaButton.Text = "Checkout Commit";
-            this.UpdateToShaButton.UseVisualStyleBackColor = true;
-            this.UpdateToShaButton.Visible = false;
-            // 
-            // RepoRemoteTextBox
-            // 
-            this.RepoRemoteTextBox.Location = new System.Drawing.Point(90, 58);
-            this.RepoRemoteTextBox.Name = "RepoRemoteTextBox";
-            this.RepoRemoteTextBox.Size = new System.Drawing.Size(535, 20);
-            this.RepoRemoteTextBox.TabIndex = 14;
-            this.RepoRemoteTextBox.Visible = false;
-            // 
-            // RepoBranchTextBox
-            // 
-            this.RepoBranchTextBox.Location = new System.Drawing.Point(90, 89);
-            this.RepoBranchTextBox.Name = "RepoBranchTextBox";
-            this.RepoBranchTextBox.Size = new System.Drawing.Size(535, 20);
-            this.RepoBranchTextBox.TabIndex = 15;
-            this.RepoBranchTextBox.Visible = false;
-            // 
-            // RepoApplyButton
-            // 
-            this.RepoApplyButton.Location = new System.Drawing.Point(722, 331);
-            this.RepoApplyButton.Name = "RepoApplyButton";
-            this.RepoApplyButton.Size = new System.Drawing.Size(140, 29);
-            this.RepoApplyButton.TabIndex = 17;
-            this.RepoApplyButton.Text = "Apply Changes";
-            this.RepoApplyButton.UseVisualStyleBackColor = true;
-            this.RepoApplyButton.Visible = false;
-            this.RepoApplyButton.Click += new System.EventHandler(this.RepoApplyButton_Click);
-            // 
-            // RepoCommitterNameTextBox
-            // 
-            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(90, 191);
-            this.RepoCommitterNameTextBox.Name = "RepoCommitterNameTextBox";
-            this.RepoCommitterNameTextBox.Size = new System.Drawing.Size(535, 20);
-            this.RepoCommitterNameTextBox.TabIndex = 18;
-            this.RepoCommitterNameTextBox.Visible = false;
-            // 
-            // RepoEmailTextBox
-            // 
-            this.RepoEmailTextBox.Location = new System.Drawing.Point(90, 217);
-            this.RepoEmailTextBox.Name = "RepoEmailTextBox";
-            this.RepoEmailTextBox.Size = new System.Drawing.Size(535, 20);
-            this.RepoEmailTextBox.TabIndex = 19;
-            this.RepoEmailTextBox.Visible = false;
-            // 
-            // CurrentRevisionLabel
-            // 
-            this.CurrentRevisionLabel.AutoSize = true;
-            this.CurrentRevisionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CurrentRevisionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CurrentRevisionLabel.Location = new System.Drawing.Point(162, 14);
-            this.CurrentRevisionLabel.Name = "CurrentRevisionLabel";
-            this.CurrentRevisionLabel.Size = new System.Drawing.Size(82, 18);
-            this.CurrentRevisionLabel.TabIndex = 20;
-            this.CurrentRevisionLabel.Text = "Unknown";
-            this.CurrentRevisionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.CurrentRevisionLabel.Visible = false;
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(868, 366);
+            this.tabPage3.TabIndex = 3;
+            this.tabPage3.Text = "Logs";
+            this.tabPage3.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -364,7 +399,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
             this.ClientSize = new System.Drawing.Size(900, 500);
-            this.Controls.Add(this.TabControl);
+            this.Controls.Add(this.BYONDPanel);
             this.Controls.Add(this.TitleLabel);
             this.Controls.Add(this.MinimizeButton);
             this.Controls.Add(this.CloseButton);
@@ -372,7 +407,7 @@
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "/tg/station 13 Server";
-            this.TabControl.ResumeLayout(false);
+            this.BYONDPanel.ResumeLayout(false);
             this.RepoPanel.ResumeLayout(false);
             this.RepoPanel.PerformLayout();
             this.ResumeLayout(false);
@@ -385,7 +420,7 @@
 		private System.Windows.Forms.Button CloseButton;
 		private System.Windows.Forms.Button MinimizeButton;
 		private System.Windows.Forms.Label TitleLabel;
-		private System.Windows.Forms.TabControl TabControl;
+		private System.Windows.Forms.TabControl BYONDPanel;
 		private System.Windows.Forms.TabPage RepoPanel;
 		private System.Windows.Forms.Label RepoProgressBarLabel;
 		private System.Windows.Forms.ProgressBar RepoProgressBar;
@@ -408,6 +443,9 @@
 		private System.Windows.Forms.Label RemoteNameTitle;
 		private System.Windows.Forms.Label BranchNameTitle;
 		private System.Windows.Forms.Label CurrentRevisionTitle;
+		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TabPage tabPage3;
 	}
 }
 

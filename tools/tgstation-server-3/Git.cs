@@ -23,8 +23,8 @@ namespace TGStationServer3
 			ProgressReporter = BGW;
 			if (!Exists())
 			{
-				if(Directory.Exists(RepoPath))
-					Directory.Delete(RepoPath, true);
+                if (Directory.Exists(RepoPath))
+                    Delete();
 				var Opts = new CloneOptions()
 				{
 					BranchName = BranchName,
@@ -36,6 +36,12 @@ namespace TGStationServer3
 			}
 			Repo = new Repository(RepoPath);
 		}
+
+		public static void Delete()
+        {
+            Directory.Delete(RepoPath, true);
+        }
+
 		private bool HandleTransferProgress(TransferProgress progress)
 		{
 			if (ProgressReporter.CancellationPending)
