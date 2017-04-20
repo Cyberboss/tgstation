@@ -1,4 +1,4 @@
-﻿namespace TGStationServer3
+﻿namespace TGControlPanel
 {
 	partial class Main
 	{
@@ -176,7 +176,6 @@
             this.RepoApplyButton.Text = "Apply Changes";
             this.RepoApplyButton.UseVisualStyleBackColor = true;
             this.RepoApplyButton.Visible = false;
-            this.RepoApplyButton.Click += new System.EventHandler(this.RepoApplyButton_Click);
             // 
             // RepoBranchTextBox
             // 
@@ -362,7 +361,6 @@
             // 
             this.RepoBGW.WorkerReportsProgress = true;
             this.RepoBGW.WorkerSupportsCancellation = true;
-            this.RepoBGW.DoWork += new System.ComponentModel.DoWorkEventHandler(this.RepoBGW_DoWork);
             // 
             // tabPage1
             // 

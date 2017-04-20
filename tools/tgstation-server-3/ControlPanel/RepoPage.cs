@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 
-namespace TGStationServer3
+namespace TGControlPanel
 {
 	partial class Main
 	{
@@ -15,12 +15,11 @@ namespace TGStationServer3
 			RevertToSha,
 		}
 		RepoWorkerAction RWA;
-		Git Repo;
 
-		string RepoError;
+		//string RepoError;
 	
-		int PRToMerge;
-		string ShaToRevert;
+		//int PRToMerge;
+		//string ShaToRevert;
 
 		private void InitRepoPage()
 		{
@@ -38,8 +37,9 @@ namespace TGStationServer3
 			RepoRemoteTextBox.Visible = true;
 			BranchNameTitle.Visible = true;
 			RepoBranchTextBox.Visible = true;
-	
-			if (Repo == null)
+
+			/*
+			if (Repo != null)
 			{
 				//repo unavailable
 				RepoProgressBarLabel.Text = "Unable to locate repository";
@@ -63,12 +63,13 @@ namespace TGStationServer3
 				UpdateToShaButton.Visible = true;
 				RepoApplyButton.Visible = true;
 			}
+			*/
 		}
 
 		private void PopulateRepoFields()
 		{
 			var Config = Properties.Settings.Default;
-			CurrentRevisionLabel.Text = Repo != null ? Repo.GetCurrentSha() : "Unknown";
+			//CurrentRevisionLabel.Text = Repo != null ? Repo.GetCurrentSha() : "Unknown";
 			RepoRemoteTextBox.Text = Config.RepoURL;
 			RepoBranchTextBox.Text = Config.RepoBranch;
 			RepoCommitterNameTextBox.Text = Config.CommitterName;
@@ -90,7 +91,7 @@ namespace TGStationServer3
 			if (percenttouse > 50)
 				RepoProgressBar.Value = percenttouse;
 		}
-		
+		/*
 		private void RepoBGW_DoWork(object sender, DoWorkEventArgs e)
 		{
 			RepoError = null;
@@ -123,7 +124,7 @@ namespace TGStationServer3
 					break;
 			};
 		}
-
+		*/
 		private void CloneRepositoryButton_Click(object sender, EventArgs e)
 		{
 			RWA = RepoWorkerAction.Load;
@@ -145,11 +146,13 @@ namespace TGStationServer3
 		}
 		private void DisposeRepo()
 		{
+			/*
 			if (Repo != null)
 			{
 				Repo.Dispose();
 				Repo = null;
 			}
+			*/
 		}
 		private void RepoApplyButton_Click(object sender, EventArgs e)
 		{
@@ -170,8 +173,8 @@ namespace TGStationServer3
 
 			DisposeRepo();
 
-			if (Reclone)
-				Git.Delete();
+			//if (Reclone)
+			//	Git.Delete();
 
 			PopulateRepoFields();
 		}

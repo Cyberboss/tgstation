@@ -8,7 +8,7 @@ using System.Text;
 using System.IO;
 using System.Windows.Forms;
 
-namespace TGStationServer3
+namespace TGControlPanel
 {
 	public partial class Main : Form
 	{
