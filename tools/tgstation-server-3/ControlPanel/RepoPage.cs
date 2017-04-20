@@ -68,12 +68,15 @@ namespace TGControlPanel
 
 		private void PopulateRepoFields()
 		{
-			var Config = Properties.Settings.Default;
-			//CurrentRevisionLabel.Text = Repo != null ? Repo.GetCurrentSha() : "Unknown";
-			RepoRemoteTextBox.Text = Config.RepoURL;
-			RepoBranchTextBox.Text = Config.RepoBranch;
-			RepoCommitterNameTextBox.Text = Config.CommitterName;
-			RepoEmailTextBox.Text = Config.CommitterEmail;
+			/*
+				var Config = Properties.Settings.Default;
+				//CurrentRevisionLabel.Text = Repo != null ? Repo.GetCurrentSha() : "Unknown";
+				RepoRemoteTextBox.Text = Config.RepoURL;
+				RepoBranchTextBox.Text = Config.RepoBranch;
+				RepoCommitterNameTextBox.Text = Config.CommitterName;
+				RepoEmailTextBox.Text = Config.CommitterEmail;
+			}
+			*/
 		}
 
 		private void RepoBGW_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -128,11 +131,11 @@ namespace TGControlPanel
 		private void CloneRepositoryButton_Click(object sender, EventArgs e)
 		{
 			RWA = RepoWorkerAction.Load;
-			var Config = Properties.Settings.Default;
+			//var Config = Properties.Settings.Default;
 
-			Config.RepoURL = RepoRemoteTextBox.Text;
-			RepoProgressBarLabel.Text = String.Format("Cloning into {0}", Config.RepoURL);
-			Config.RepoBranch = RepoBranchTextBox.Text;
+			//Config.RepoURL = RepoRemoteTextBox.Text;
+			//RepoProgressBarLabel.Text = String.Format("Cloning into {0}", Config.RepoURL);
+			//Config.RepoBranch = RepoBranchTextBox.Text;
 
 			CloneRepositoryButton.Visible = false;
 			RemoteNameTitle.Visible = false;
@@ -156,6 +159,7 @@ namespace TGControlPanel
 		}
 		private void RepoApplyButton_Click(object sender, EventArgs e)
 		{
+			/*
 			var Config = Properties.Settings.Default;
 			var Reclone = Config.RepoURL != RepoRemoteTextBox.Text;
 			if (Reclone)
@@ -177,6 +181,7 @@ namespace TGControlPanel
 			//	Git.Delete();
 
 			PopulateRepoFields();
+			*/
 		}
 	}
 }

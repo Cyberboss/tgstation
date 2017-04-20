@@ -15,6 +15,14 @@ namespace ServerService
 		public Service1()
 		{
 			InitializeComponent();
+
+			if (!System.Diagnostics.EventLog.SourceExists("TgstationServerSource"))
+			{
+				System.Diagnostics.EventLog.CreateEventSource(
+				   "TgstationServerSource", "TgstationServerLog");
+			}
+			EventLog.Source = "TgstationServerSource";
+			EventLog.Log = "TgstationServerLog";
 		}
 
 		protected override void OnStart(string[] args)
