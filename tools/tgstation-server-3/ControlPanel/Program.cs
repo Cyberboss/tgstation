@@ -17,7 +17,7 @@ namespace TGControlPanel
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Main());
-			Properties.Settings.Default.Save();
+			//Properties.Settings.Default.Save();
 		}
 	}
 }

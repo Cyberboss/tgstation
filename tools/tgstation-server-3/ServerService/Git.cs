@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel;
 using System;
+using TGServiceInterface;
 
 namespace TGStationServer3
 {
 	//Everything here returns an error message if it failed or null if it succeeded
-	class Git : IDisposable
+	class Git : ITGRepository
 	{
 		const string RepoPath = "../gamecode";
 		string BranchName;

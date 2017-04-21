@@ -1,22 +1,44 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.ServiceModel;
+using System.ServiceModel.Channels;
 
 namespace DDClickRelayTest
 {
-	static class Program
+	[ServiceContract]
+	public interface IStringReverser
 	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[STAThread]
-		static void Main()
+		[OperationContract]
+		string ReverseString(string value);
+	}
+
+	class Program
+	{
+		static void Main(string[] args)
 		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new Main());
+			System.Diagnostics.Debugger.Launch();
+			ChannelFactory<IStringReverser> httpFactory =
+			  new ChannelFactory<IStringReverser>(
+				new BasicHttpBinding(),
+				new EndpointAddress(
+				  "http://localhost:8000/Reverse"));
+
+			ChannelFactory<IStringReverser> pipeFactory =
+			  new ChannelFactory<IStringReverser>(
+				new NetNamedPipeBinding(),
+				new EndpointAddress(
+				  "net.pipe://localhost/PipeReverse"));
+
+			IStringReverser httpProxy =
+			  httpFactory.CreateChannel();
+
+			IStringReverser pipeProxy =
+			  pipeFactory.CreateChannel();
+			while (true)
+			{
+				string str = Console.ReadLine();
+				Console.WriteLine("http: " + httpProxy.ReverseString(str));
+				Console.WriteLine("pipe: " + pipeProxy.ReverseString(str));
+			}
 		}
 	}
 }
