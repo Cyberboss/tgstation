@@ -7,13 +7,14 @@ using System;
 using System.Text;
 using TGServiceInterface;
 using System.Security.Cryptography;
+using System.Web.Script.Serialization;
 
 namespace ServerService
 {
-	//Everything here returns an error message if it failed or null if it succeeded
 	class Git : ITGRepository
 	{
 		const string RepoPath = "../gamecode";
+		const string PRJobFile = "../prtestjob.json";
 
 		object RepoLock = new object();
 
@@ -226,6 +227,26 @@ namespace ServerService
 			var Config = Properties.Settings.Default;
 			return new Signature(new Identity(Config.CommitterName, Config.CommitterEmail), DateTimeOffset.Now);
 		}
+
+		void DeletePRList()
+		{
+			if (File.Exists(PRJobFile))
+				File.Delete(PRJobFile);
+		}
+		IDictionary<int, string> GetCurrentPRList()
+		{
+			if (!File.Exists(PRJobFile))
+				return new Dictionary<int, string>();
+			var rawdata = File.ReadAllText(PRJobFile);
+			var Deserializer = new JavaScriptSerializer();
+			return Deserializer.Deserialize<Dictionary<int, string>>(rawdata);
+		}
+		void SetCurrentPRList(IDictionary<int, string> list)
+		{
+			var Serializer = new JavaScriptSerializer();
+			var rawdata = Serializer.Serialize(list);
+			File.WriteAllText(PRJobFile, rawdata);
+		}
 		public string MergePullRequest(int PRNumber)
 		{
 			lock (RepoLock)
@@ -248,6 +269,8 @@ namespace ServerService
 
 					var Config = Properties.Settings.Default;
 
+					var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
+
 					//so we'll know if this fails
 					var Result = Repo.Merge(PRBranchName, MakeSig());
 					switch (Result.Status)
@@ -257,6 +280,10 @@ namespace ServerService
 						case MergeStatus.UpToDate:
 							return "Already up to date with PR.";
 					}
+
+					var CurrentPRs = GetCurrentPRList();
+					CurrentPRs.Add(PRNumber, PRSha);
+					SetCurrentPRList(CurrentPRs);
 					return null;
 				}
 				catch (Exception E)
@@ -276,9 +303,16 @@ namespace ServerService
 					error = result;
 					return null;
 				}
-
-				error = null;
-				return new Dictionary<int, string>();
+				try
+				{
+					error = null;
+					return GetCurrentPRList();
+				}
+				catch (Exception e)
+				{
+					error = e.ToString();
+					return null;
+				}
 			}
 		}
 
@@ -361,6 +395,7 @@ namespace ServerService
 
 					// Commit to the repository
 					Repo.Commit(message, authorandcommitter, authorandcommitter);
+					DeletePRList();
 					return null;
 				}
 				catch (Exception e)
@@ -392,6 +427,7 @@ namespace ServerService
 								Password = Encoding.UTF8.GetString(plaintext)
 							});
 					Repo.Network.Push(Repo.Head, options);
+					DeletePRList();
 					return null;
 				}
 				catch (Exception e)
