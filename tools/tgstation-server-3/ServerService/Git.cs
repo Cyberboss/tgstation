@@ -8,14 +8,13 @@ using System.Text;
 using TGServiceInterface;
 using System.Security.Cryptography;
 using System.Web.Script.Serialization;
-using System.ServiceModel;
 
-namespace ServerService
+namespace TGServerService
 {
 	class Git : ITGRepository, IDisposable
 	{
-		const string RepoPath = "../gamecode";
-		const string PRJobFile = "../prtestjob.json";
+		const string RepoPath = "C:/tgstation-server-3/gitrepo";
+		const string PRJobFile = "C:/tgstation-server-3/prtestjob.json";
 
 		object RepoLock = new object();
 
@@ -83,29 +82,23 @@ namespace ServerService
 			currentProgress = (int)(((float)completedSteps / totalSteps) * 100);
 		}
 
-		public string Setup(string RepoURL, string BranchName)
+		private class TwoStrings
+		{
+			public string a, b;
+		}
+
+		void Clone(object twostrings)
 		{
 			lock (RepoLock)
 			{
+				var ts = (TwoStrings)twostrings;
+				var RepoURL = ts.a;
+				var BranchName = ts.b;
 				try
 				{
 					DisposeRepo();
-					if (Exists())
-					{
-						try
-						{
-							//check if we have the right remote set
-							var TempRepo = new Repository(RepoPath);
-							if (TempRepo.Network.Remotes.First().Url == RepoURL)
-								return Checkout(BranchName);
-							TempRepo.Dispose();
-						}
-						catch { }
-
-
-						if (Directory.Exists(RepoPath))
-							Directory.Delete(RepoPath, true);
-					}
+					if (Directory.Exists(RepoPath))
+						Directory.Delete(RepoPath, true);
 
 					var Opts = new CloneOptions()
 					{
@@ -115,17 +108,18 @@ namespace ServerService
 						OnCheckoutProgress = HandleCheckoutProgress
 					};
 					Repository.Clone(RepoURL, RepoPath, Opts);
-					return LoadRepo();
-				}
-				catch (Exception e)
-				{
-					return e.ToString();
+					LoadRepo();
 				}
 				finally
 				{
 					currentProgress = -1;
 				}
 			}
+		}
+
+		public void Setup(string RepoURL, string BranchName)
+		{
+			new Thread(new ParameterizedThreadStart(Clone)).Start(new TwoStrings { a = RepoURL, b = BranchName });
 		}
 
 		string GetShaOrBranch(out string error, bool branch)

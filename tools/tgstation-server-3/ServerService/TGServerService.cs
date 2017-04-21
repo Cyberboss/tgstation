@@ -9,20 +9,22 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ServiceModel;
 using TGServiceInterface;
+using System.IO;
 
-namespace ServerService
+namespace TGServerService
 {
-	public partial class ServerService : ServiceBase
+	public partial class TGServerService : ServiceBase
 	{
 		ServiceHost host;
-		public ServerService()
+		public TGServerService()
 		{
 			InitializeComponent();
 		}
 
 		protected override void OnStart(string[] args)
 		{
-			System.Diagnostics.Debugger.Launch();
+			Directory.CreateDirectory("C:/tgstation-server-3");
+
 			host = new ServiceHost(typeof(TGStationServer),
 			  new Uri[]{
 				new Uri(String.Format("http://localhost:{0}", Properties.Settings.Default.WCFPort)),
@@ -30,7 +32,6 @@ namespace ServerService
 			  });
 
 			host.AddServiceEndpoint(typeof(ITGStationServer), new NetNamedPipeBinding(), "PipeTGStationServerService");
-
 			host.Open();
 		}
 

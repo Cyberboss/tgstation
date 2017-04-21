@@ -1,8 +1,10 @@
 ﻿using System;
+using System.ServiceModel;
 using TGServiceInterface;
 
-namespace ServerService
+namespace TGServerService
 {
+	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
 	class TGStationServer : Git, ITGStationServer
 	{
 	}

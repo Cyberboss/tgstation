@@ -1,4 +1,5 @@
-﻿using System.ServiceModel;
+﻿using System;
+using System.ServiceModel;
 using System.Windows.Forms;
 using TGServiceInterface;
 
@@ -10,9 +11,11 @@ namespace DDClickRelayTest
 		public static ITGRepository repo;
 		static void Main(string[] args)
 		{
+			var binding = new NetNamedPipeBinding();
+			binding.SendTimeout = new TimeSpan(0, 5, 0);	//cloning can take a while
 			ChannelFactory<ITGStationServer> pipeFactory =
 			  new ChannelFactory<ITGStationServer>(
-				new NetNamedPipeBinding(),
+				binding,
 				new EndpointAddress(
 				  "net.pipe://localhost/PipeTGStationServerService"));
 

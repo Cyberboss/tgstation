@@ -7,8 +7,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{F32EDA25-0855-411C-AF5E-F0D042917E2D}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ServerService</RootNamespace>
-    <AssemblyName>ServerService</AssemblyName>
+    <RootNamespace>TGServerService</RootNamespace>
+    <AssemblyName>TGServerService</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -68,11 +68,11 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="ServerService.cs">
+    <Compile Include="TGServerService.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ServerService.Designer.cs">
-      <DependentUpon>ServerService.cs</DependentUpon>
+    <Compile Include="TGServerService.Designer.cs">
+      <DependentUpon>TGServerService.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,8 +89,8 @@
     <EmbeddedResource Include="ProjectInstaller.resx">
       <DependentUpon>ProjectInstaller.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ServerService.resx">
-      <DependentUpon>ServerService.cs</DependentUpon>
+    <EmbeddedResource Include="TGServerService.resx">
+      <DependentUpon>TGServerService.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

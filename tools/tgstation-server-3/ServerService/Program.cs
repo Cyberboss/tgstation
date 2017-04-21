@@ -5,7 +5,7 @@ using System.ServiceProcess;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ServerService
+namespace TGServerService
 {
 	static class Program
 	{
@@ -17,7 +17,7 @@ namespace ServerService
 			ServiceBase[] ServicesToRun;
 			ServicesToRun = new ServiceBase[]
 			{
-				new ServerService()
+				new TGServerService()
 			};
 			ServiceBase.Run(ServicesToRun);
 		}

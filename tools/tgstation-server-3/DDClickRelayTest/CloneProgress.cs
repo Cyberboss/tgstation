@@ -17,19 +17,23 @@ namespace DDClickRelayTest
 		{
 			MessageBox.Show("I will now clone the repo");
 			backgroundWorker1.RunWorkerAsync();
+			timer1.Start();
 		}
 
 		private void backgroundWorker1_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
 		{
 			settingUp = true;
 			Program.repo.Setup("https://github.com/tgstation/tgstation.git");
-			settingUp = false;
 		}
 
 		private void timer1_Tick(object sender, EventArgs e)
 		{
 			if (settingUp)
-				progressBar1.Value = Program.repo.GetProgress();
+			{
+				var value = Program.repo.GetProgress();
+				if (value != -1)
+					progressBar1.Value = value;
+			}		
 		}
 	}
 }
