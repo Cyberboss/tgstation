@@ -4,6 +4,7 @@ using System.ServiceModel;
 namespace TGServiceInterface
 {
 	//for managing the code repository
+	//note, the only way to run git clean on the repo is to run Setup again
 	[ServiceContract(CallbackContract = typeof(ITGProgressCallback))]
 	public interface ITGRepository : ITGAtomic
 	{
@@ -27,11 +28,11 @@ namespace TGServiceInterface
 		[OperationContract]
 		string GetBranch(out string error);
 
-		//hard checkout the the passed branch or sha
+		//hard checks outW the passed branch or sha
 		//returns null on success, error message on failure
 		//uses the progress callback
 		[OperationContract]
-		string Checkout(string branchorsha)
+		string Checkout(string branchorsha);
 
 		//Fetches the origin and hard resets the current branch
 		//returns null on success, error message on failure
@@ -55,5 +56,38 @@ namespace TGServiceInterface
 		//returns null on failure and error will be set
 		[OperationContract]
 		IDictionary<int, string> MergedPullRequests(out string error);
+
+		//Gets the name of the current git committer
+		[OperationContract]
+		string GetCommitterName();
+
+		//Sets the name of the current git committer
+		[OperationContract]
+		void SetCommitterName(string newName);
+		//Gets the name of the current git email
+		[OperationContract]
+		string GetCommitterEmail();
+
+		//Sets the name of the current git email
+		[OperationContract]
+		void SetCommitterEmail(string newEmail);
+
+		//Gets the username of the current git credentials
+		[OperationContract]
+		string GetCredentialUsername();
+
+		//Sets the git remote credentials
+		[OperationContract]
+		void SetCredentials(string username, string password);
+
+		//Equivalent to running git commit -a -m '<message>' with the set git identity
+		//returns null on success, error on failure
+		[OperationContract]
+		string Commit(string message);
+
+		//pushes the current branch to origin with the set git credentials
+		//returns null on success, error on failure
+		[OperationContract]
+		string Push();
 	}
 }
