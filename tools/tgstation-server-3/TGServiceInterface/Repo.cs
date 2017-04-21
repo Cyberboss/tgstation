@@ -5,8 +5,8 @@ namespace TGServiceInterface
 {
 	//for managing the code repository
 	//note, the only way to run git clean on the repo is to run Setup again
-	[ServiceContract(CallbackContract = typeof(ITGProgressCallback))]
-	public interface ITGRepository : ITGAtomic
+	[ServiceContract]
+	public interface ITGRepository : ITGProgressQuery, ITGAtomic
 	{
 		//check if the repository is valid, if not Setup must be called
 		[OperationContract]

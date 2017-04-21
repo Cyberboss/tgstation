@@ -22,28 +22,24 @@ namespace ServerService
 
 		protected override void OnStart(string[] args)
 		{
-			/*
 			System.Diagnostics.Debugger.Launch();
 			host = new ServiceHost(typeof(TGStationServer),
 			  new Uri[]{
-				new Uri("http://localhost:{0}", Properties.Settings.Default.WCFPort),
+				new Uri(String.Format("http://localhost:{0}", Properties.Settings.Default.WCFPort)),
 				new Uri("net.pipe://localhost")
 			  });
 
-			host.AddServiceEndpoint(typeof(ITGStationServer), new NetNamedPipeBinding(), "PipeInterface");
+			host.AddServiceEndpoint(typeof(ITGStationServer), new NetNamedPipeBinding(), "PipeTGStationServerService");
 
 			host.Open();
-			*/
 		}
 
 		protected override void OnStop()
 		{
 			try
 			{
-				/*
 				host.Close();
 				host = null;
-				*/
 			}
 			finally
 			{

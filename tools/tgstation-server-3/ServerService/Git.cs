@@ -8,10 +8,11 @@ using System.Text;
 using TGServiceInterface;
 using System.Security.Cryptography;
 using System.Web.Script.Serialization;
+using System.ServiceModel;
 
 namespace ServerService
 {
-	class Git : ITGRepository
+	class Git : ITGRepository, IDisposable
 	{
 		const string RepoPath = "../gamecode";
 		const string PRJobFile = "../prtestjob.json";
@@ -19,6 +20,7 @@ namespace ServerService
 		object RepoLock = new object();
 
 		Repository Repo;
+		int currentProgress = -1;
 		
 		public bool IsBusy()
 		{
@@ -28,6 +30,11 @@ namespace ServerService
 				return false;
 			}
 			return true;
+		}
+
+		public int GetProgress()
+		{
+			return currentProgress;
 		}
 
 		//Sets up the repo object
@@ -68,12 +75,12 @@ namespace ServerService
 
 		bool HandleTransferProgress(TransferProgress progress)
 		{
-			//TODO
+			currentProgress = (int)(((float)progress.ReceivedObjects / progress.TotalObjects) * 100);
 			return true;
 		}
 		void HandleCheckoutProgress(string path, int completedSteps, int totalSteps)
 		{
-			//TODO
+			currentProgress = (int)(((float)completedSteps / totalSteps) * 100);
 		}
 
 		public string Setup(string RepoURL, string BranchName)
@@ -108,12 +115,15 @@ namespace ServerService
 						OnCheckoutProgress = HandleCheckoutProgress
 					};
 					Repository.Clone(RepoURL, RepoPath, Opts);
-
 					return LoadRepo();
 				}
 				catch (Exception e)
 				{
 					return e.ToString();
+				}
+				finally
+				{
+					currentProgress = -1;
 				}
 			}
 		}

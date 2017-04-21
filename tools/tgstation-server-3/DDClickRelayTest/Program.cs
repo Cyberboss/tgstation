@@ -1,44 +1,36 @@
-﻿using System;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
+﻿using System.ServiceModel;
+using System.Windows.Forms;
+using TGServiceInterface;
 
 namespace DDClickRelayTest
 {
-	[ServiceContract]
-	public interface IStringReverser
-	{
-		[OperationContract]
-		string ReverseString(string value);
-	}
 
 	class Program
 	{
+		public static ITGRepository repo;
 		static void Main(string[] args)
 		{
-			System.Diagnostics.Debugger.Launch();
-			ChannelFactory<IStringReverser> httpFactory =
-			  new ChannelFactory<IStringReverser>(
-				new BasicHttpBinding(),
-				new EndpointAddress(
-				  "http://localhost:8000/Reverse"));
-
-			ChannelFactory<IStringReverser> pipeFactory =
-			  new ChannelFactory<IStringReverser>(
+			ChannelFactory<ITGStationServer> pipeFactory =
+			  new ChannelFactory<ITGStationServer>(
 				new NetNamedPipeBinding(),
 				new EndpointAddress(
-				  "net.pipe://localhost/PipeReverse"));
+				  "net.pipe://localhost/PipeTGStationServerService"));
 
-			IStringReverser httpProxy =
-			  httpFactory.CreateChannel();
+			
+			ITGStationServer server = pipeFactory.CreateChannel();
 
-			IStringReverser pipeProxy =
-			  pipeFactory.CreateChannel();
-			while (true)
+			repo = server;
+
+			if (repo.Exists())
 			{
-				string str = Console.ReadLine();
-				Console.WriteLine("http: " + httpProxy.ReverseString(str));
-				Console.WriteLine("pipe: " + pipeProxy.ReverseString(str));
+				MessageBox.Show("The repo already exists");
+				return;
 			}
+			
+	
+			Application.EnableVisualStyles();
+			Application.SetCompatibleTextRenderingDefault(false);
+			Application.Run(new CloneProgress());
 		}
 	}
 }

@@ -3,9 +3,7 @@
 namespace TGServiceInterface
 {
 	[ServiceContract]
-	public interface ITGStationServer
+	public interface ITGStationServer : ITGRepository
 	{
-		[OperationContract]
-		ITGRepository Repository();
 	}
 }
