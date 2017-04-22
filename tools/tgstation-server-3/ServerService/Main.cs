@@ -5,7 +5,21 @@ using TGServiceInterface;
 namespace TGServerService
 {
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
-	class TGStationServer : Git, ITGStationServer
+	[ServiceKnownType(typeof(Repository))]
+	[ServiceKnownType(typeof(Byond))]
+	class TGStationServer: ITGStationServer
 	{
+		Repository Repo = new Repository();
+		Byond _Byond = new Byond();
+
+		public ITGRepository Repository()
+		{
+			return Repo;
+		}
+
+		public ITGByond Byond()
+		{
+			return _Byond;
+		}
 	}
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Threading;
 using System.ServiceModel;
 using System.Windows.Forms;
 using TGServiceInterface;
@@ -12,7 +12,6 @@ namespace DDClickRelayTest
 		static void Main(string[] args)
 		{
 			var binding = new NetNamedPipeBinding();
-			binding.SendTimeout = new TimeSpan(0, 5, 0);	//cloning can take a while
 			ChannelFactory<ITGStationServer> pipeFactory =
 			  new ChannelFactory<ITGStationServer>(
 				binding,
@@ -20,17 +19,21 @@ namespace DDClickRelayTest
 				  "net.pipe://localhost/PipeTGStationServerService"));
 
 			
-			ITGStationServer server = pipeFactory.CreateChannel();
+			var server = pipeFactory.CreateChannel();
 
-			repo = server;
+			var byond = server.Byond();
 
-			if (repo.Exists())
+			byond.UpdateToVersion(551, 1381);
+
+			do
 			{
-				MessageBox.Show("The repo already exists");
-				return;
-			}
-			
-	
+				Thread.Sleep(1000);
+			} while (byond.IsBusy());
+
+			var error = byond.GetError();
+			MessageBox.Show(error != null ? error : "Operation completed successfully");
+
+			return;
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new CloneProgress());

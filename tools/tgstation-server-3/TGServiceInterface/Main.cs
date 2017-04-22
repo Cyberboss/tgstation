@@ -3,7 +3,13 @@
 namespace TGServiceInterface
 {
 	[ServiceContract]
-	public interface ITGStationServer : ITGRepository
+	[ServiceKnownType(typeof(ITGRepository))]
+	[ServiceKnownType(typeof(ITGByond))]
+	public interface ITGStationServer
 	{
+		[OperationContract]
+		ITGRepository Repository();
+		[OperationContract]
+		ITGByond Byond();
 	}
 }
