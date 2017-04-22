@@ -195,14 +195,7 @@ Temporary Items
 
 #VS stuff
 
-tools/tgstation-server-3/ControlPanel/bin/*
-tools/tgstation-server-3/ControlPanel/obj/*
+tools/tgstation-server-3/*/bin/*
+tools/tgstation-server-3/*/obj/*
 
-tools/tgstation-server-3/ServerService/bin/*
-tools/tgstation-server-3/ServerService/obj/*
-
-tools/tgstation-server-3/DDClickRelayTest/bin/*
-tools/tgstation-server-3/DDClickRelayTest/obj/*
-
-tools/tgstation-server-3/TGServiceInterface/obj/*
-tools/tgstation-server-3/TGServiceInterface/bin/*
+/tools/tgstation-server-3/packages
