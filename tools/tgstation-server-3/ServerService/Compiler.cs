@@ -41,11 +41,20 @@ namespace TGServerService
 		List<string> copyExcludeList = new List<string> { ".git", "data", "config" };
 
 		bool compiledSucessfully = false;
-
-		TGStationServer()
+		
+		Thread CompilerThread;
+	
+		void InitCompiler()
 		{
 			if(File.Exists(LiveDirTest))
 				File.Delete(LiveDirTest);
+		}
+
+		void DisposeCompiler()
+		{
+			if (CompilerThread == null)
+				return;
+			CompilerThread.Abort();	//this will safely kill dm
 		}
 
 		void CreateSymlink(string link, string target)
@@ -194,13 +203,15 @@ namespace TGServerService
 					Monitor.Exit(RepoLock);
 				}
 
+				using (var DM = new Process())	//will kill the process if the thread is terminated
+				{
+					DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
+					DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" + Properties.Settings.Default.ProjectName + ".dme";
+					DM.Start();
+					DM.WaitForExit();
+					compiledSucessfully = DM.ExitCode == 0;
+				}
 
-				var DM = new Process();
-				DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
-				DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" +  Properties.Settings.Default.ProjectName + ".dme";
-				DM.Start();
-				DM.WaitForExit();
-				compiledSucessfully = DM.ExitCode == 0;
 				if (compiledSucessfully)
 				{
 					Directory.Delete(GameDirLive);
@@ -216,12 +227,8 @@ namespace TGServerService
 
 			if(GetVersion(false) == null)
 				return false;
-
-			var t = new Thread(new ThreadStart(CompileImpl))
-			{
-				IsBackground = true //don't slow me down
-			};
-			t.Start();
+			
+			new Thread(new ThreadStart(CompileImpl)).Start();
 			return true;
 		}
 	}

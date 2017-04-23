@@ -20,6 +20,23 @@ namespace TGServerService
 		object ByondLock = new object();
 		string lastError = null;
 
+		Thread RevisionStaging;
+
+		void InitByond()
+		{
+			//linger not
+			if (File.Exists(RevisionDownloadPath))
+				File.Delete(RevisionDownloadPath);
+			Program.DeleteDirectory(StagingDirectory);
+		}
+
+		void DisposeByond()
+		{
+			if (RevisionStaging != null)
+				RevisionStaging.Abort();
+			InitByond();
+		}
+
 		bool BusyCheckNoLock()
 		{
 			switch (updateStat)
