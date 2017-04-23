@@ -66,7 +66,8 @@ namespace TGServerService
 		void InitDreamDaemon()
 		{
 			Proc = new Process();
-			Proc.StartInfo.FileName = "D:\\byond\\bin\\dreamdaemon.exe";
+			Proc.StartInfo.FileName = ByondDirectory + "/bin/dreamdaemon.exe";
+			Proc.StartInfo.UseShellExecute = false;
 		}
 
 		void DisposeDreamDaemon()
@@ -98,7 +99,7 @@ namespace TGServerService
 				t = DDWatchdog;
 				DDWatchdog = null;
 			}
-			if (t != null)
+			if (t != null && t.IsAlive)
 			{
 				t.Abort();
 				t.Join();
@@ -129,6 +130,7 @@ namespace TGServerService
 				while (true)
 				{
 					Proc.WaitForExit();
+					Proc.Close();
 					lock (watchdogLock)
 					{
 						currentStatus = TGDreamDaemonStatus.HardRebooting;
@@ -136,13 +138,21 @@ namespace TGServerService
 					//we would have been killed if we wanted to stop so lets check for updates
 					ApplyStagedUpdate();
 
-					var res = StartImpl();
+					var res = StartImpl(true);
 					if (res != null)
 						throw new Exception("Hard restart failed: " + res);
 				}
 			}
 			catch(ThreadAbortException)
 			{
+				//No Mr bond, I expect you to die
+				try
+				{
+					Proc.Kill();
+					Proc.Close();
+				}
+				catch
+				{ }
 				return;
 			}
 			catch (Exception e)
@@ -172,15 +182,31 @@ namespace TGServerService
 		{
 			//TODO
 		}
+
+		public string CanStart()
+		{
+			lock (watchdogLock)
+			{
+				if (GetVersion(false) == null)
+					return "Byond is not installed!";
+				var DMB = GameDirLive + "/" + Properties.Settings.Default.ProjectName + ".dmb";
+				if (!File.Exists(DMB))
+					return String.Format("Unable to find {0}!", DMB);
+				return null;
+			}
+		}
+
 		public string Start()
 		{
-			lock (watchdogLock) {
-				if (DDWatchdog != null)
-					return "Server already running";
+			lock (watchdogLock)
+			{
 				if (currentStatus != TGDreamDaemonStatus.Offline)
 					return "Server already running";
 			}
-			return StartImpl();
+			var res = CanStart();
+			if (res != null)
+				return res;
+			return StartImpl(false);
 		}
 		string SecurityWord()
 		{
@@ -214,19 +240,17 @@ namespace TGServerService
 			}
 		}
 
-		string StartImpl() {
+		string StartImpl(bool watchdog) {
 			try
 			{
+				var res = CanStart();
+				if (res != null)
+					return res;
+
 				lock (watchdogLock)
 				{
-					if (GetVersion(false) == null)
-						return "Byond is not installed!";
-
 					var Config = Properties.Settings.Default;
 					var DMB = GameDirLive + "/" + Config.ProjectName + ".dmb";
-
-					if (!File.Exists(DMB))
-						return String.Format("Unable to find {0}!", DMB);
 
 					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord());
 					Proc.Start();
@@ -234,6 +258,7 @@ namespace TGServerService
 				if (!Proc.WaitForInputIdle(20000))
 				{
 					Proc.Kill();
+					Proc.Close();
 					return "Server start is taking more that 20s! Aborting!";
 				}
 
@@ -253,13 +278,18 @@ namespace TGServerService
 						{
 							ClickVisibility();
 							currentStatus = TGDreamDaemonStatus.Online;
-							DDWatchdog = new Thread(new ThreadStart(Watchdog));
+							if (!watchdog)
+							{
+								DDWatchdog = new Thread(new ThreadStart(Watchdog));
+								DDWatchdog.Start();
+							}
 						}
 						return null;
 					}
 				}
 
 				Proc.Kill();
+				Proc.Close();
 				return "Could not find locate the Dream Daemon window!";
 			}catch (Exception e)
 			{

@@ -2,23 +2,14 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TGServerService.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
-    <Setting Name="RepoURL" Type="System.String" Scope="User">
-      <Value Profile="(Default)">https://github.com/tgstation/tgstation.git</Value>
-    </Setting>
     <Setting Name="ProjectName" Type="System.String" Scope="User">
       <Value Profile="(Default)">tgstation</Value>
     </Setting>
     <Setting Name="ServerPort" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">2337</Value>
     </Setting>
-    <Setting Name="RepoBranch" Type="System.String" Scope="User">
-      <Value Profile="(Default)">master</Value>
-    </Setting>
     <Setting Name="PushChangelogToGit" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ByondPath" Type="System.String" Scope="User">
-      <Value Profile="(Default)">C:\Program Files (x86)\BYOND\bin</Value>
     </Setting>
     <Setting Name="CommitterName" Type="System.String" Scope="User">
       <Value Profile="(Default)">tgstation-server</Value>

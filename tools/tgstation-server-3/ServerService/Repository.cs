@@ -20,10 +20,11 @@ namespace TGServerService
 		const string PRJobFile = "prtestjob.json";
 
 		object RepoLock = new object();
+		bool cloning = false;
 
 		Repository Repo;
 		int currentProgress = -1;
-		
+
 		public bool OperationInProgress()
 		{
 			if (Monitor.TryEnter(RepoLock))
@@ -94,6 +95,9 @@ namespace TGServerService
 		{
 			if (!Monitor.TryEnter(RepoLock))
 				return;
+			if (cloning)
+				return;
+			cloning = true;
 			try
 			{
 				if (!Monitor.TryEnter(CompilerLock))
@@ -108,7 +112,8 @@ namespace TGServerService
 						DisposeRepo();
 						Program.DeleteDirectory(RepoPath);
 						Program.DeleteDirectory(StaticBackupDir);
-						Program.CopyDirectory(StaticDirs, StaticBackupDir);
+						if (Directory.Exists(StaticDirs))
+							Program.CopyDirectory(StaticDirs, StaticBackupDir);
 						Program.DeleteDirectory(StaticDirs);
 
 						var Opts = new CloneOptions()
@@ -140,17 +145,16 @@ namespace TGServerService
 			{ } //don't crash the service
 			finally
 			{
+				cloning = false;
 				Monitor.Exit(RepoLock);
 			}
 		}
-
 		public void Setup(string RepoURL, string BranchName)
 		{
-			var t = new Thread(new ParameterizedThreadStart(Clone))
+			new Thread(new ParameterizedThreadStart(Clone))
 			{
 				IsBackground = true //make sure we don't hold up shutdown
-			};
-			t.Start(new TwoStrings { a = RepoURL, b = BranchName });
+			}.Start(new TwoStrings { a = RepoURL, b = BranchName });
 		}
 
 		string GetShaOrBranch(out string error, bool branch)

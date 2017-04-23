@@ -43,6 +43,8 @@ namespace TGServerService
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
 				AddEndpoint<ITGCompiler>();
+				AddEndpoint<ITGDreamDaemon>();
+				AddEndpoint<ITGStatusCheck>();
 
 				host.Open();
 			}

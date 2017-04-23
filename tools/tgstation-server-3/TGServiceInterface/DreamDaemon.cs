@@ -30,6 +30,12 @@ namespace TGServiceInterface
 		[OperationContract]
 		TGDreamDaemonStatus DaemonStatus();
 
+		//Check if a call to Start will fail
+		//returns the error that would occur
+		//null otherwise
+		[OperationContract]
+		string CanStart();
+
 		//starts the server
 		//returns null on success or error on failure
 		[OperationContract]
@@ -62,9 +68,11 @@ namespace TGServiceInterface
 
 		//returns true if the world is accepting new players, false other wise
 		//has no effect if the server isn't online
+		[OperationContract]
 		bool WorldOpen();
 
 		//Change the status of the world being open
+		[OperationContract]
 		void SetWorldOpen(bool open);
 	}
 }

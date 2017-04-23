@@ -11,7 +11,7 @@ namespace TGServerService
 		//call partial constructors/destructors from here
 		//called when the service is started.... maybe?
 		//Its only called once and it's guaranteed to be called by the time the first WCF call is made
-		TGStationServer()
+		public TGStationServer()
 		{
 			InitByond();
 			InitCompiler();

@@ -25,18 +25,6 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://github.com/tgstation/tgstation.git")]
-        public string RepoURL {
-            get {
-                return ((string)(this["RepoURL"]));
-            }
-            set {
-                this["RepoURL"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("tgstation")]
         public string ProjectName {
             get {
@@ -61,18 +49,6 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("master")]
-        public string RepoBranch {
-            get {
-                return ((string)(this["RepoBranch"]));
-            }
-            set {
-                this["RepoBranch"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool PushChangelogToGit {
             get {
@@ -80,18 +56,6 @@ namespace TGServerService.Properties {
             }
             set {
                 this["PushChangelogToGit"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Program Files (x86)\\BYOND\\bin")]
-        public string ByondPath {
-            get {
-                return ((string)(this["ByondPath"]));
-            }
-            set {
-                this["ByondPath"] = value;
             }
         }
         

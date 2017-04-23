@@ -9,41 +9,50 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
+			Setup();
 
-			TestRun();
+			MessageBox.Show(Server.GetComponent<ITGDreamDaemon>().Start() ?? "Server started");
 		}
 
 		//Sets up everything and starts the server
-		static void TestRun()
+		static void Setup()
 		{
-
-			Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
-			do
+			if (!Server.GetComponent<ITGRepository>().Exists())
 			{
-				Thread.Sleep(1000);
-			} while (Server.GetComponent<ITGRepository>().OperationInProgress());
+				Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
+				do
+				{
+					Thread.Sleep(1000);
+				} while (Server.GetComponent<ITGRepository>().OperationInProgress());
 
+				CheckByond();
+
+				Server.GetComponent<ITGCompiler>().Initialize();
+			}
+			else
+				CheckByond();
+
+			if (Server.GetComponent<ITGDreamDaemon>().CanStart() != null)
+			{
+				Server.GetComponent<ITGCompiler>().Compile();
+
+				do
+				{
+					Thread.Sleep(1000);
+				} while (Server.GetComponent<ITGCompiler>().Compiling());
+			}
+
+		}
+
+		static void CheckByond()
+		{
+			if (Server.GetComponent<ITGByond>().GetVersion(false) != null)
+				return;
 			Server.GetComponent<ITGByond>().UpdateToVersion(511, 1381);
-
 			do
 			{
 				Thread.Sleep(1000);
 			} while (Server.GetComponent<ITGByond>().CurrentStatus() != TGByondStatus.Idle);
-
-			Server.GetComponent<ITGCompiler>().Initialize();
-
-			Server.GetComponent<ITGCompiler>().Compile();
-
-			do
-			{
-				Thread.Sleep(1000);
-			} while (Server.GetComponent<ITGCompiler>().Compiling());
-
-
-			MessageBox.Show("Hold on to your butts...");
-
-			MessageBox.Show(Server.GetComponent<ITGDreamDaemon>().Start() ?? "Spared no expense");
-
 		}
 	}
 }

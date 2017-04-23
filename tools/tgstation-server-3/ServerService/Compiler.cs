@@ -42,7 +42,7 @@ namespace TGServerService
 		object LiveDirCheckLock = new object();
 		object CompilerThreadLock = new object();
 
-		List<string> copyExcludeList = new List<string> { ".git", "data", "config" };
+		List<string> copyExcludeList = new List<string> { ".git", "data", "config", "libmysql.dll" };	//shit we handle
 
 		bool compiledSucessfully = false;
 		
