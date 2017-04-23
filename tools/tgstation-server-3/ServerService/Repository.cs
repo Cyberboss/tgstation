@@ -14,11 +14,14 @@ namespace TGServerService
 	partial class TGStationServer : ITGRepository, IDisposable
 	{
 		const string RepoPath = "gitrepo";
+		const string RepoConfig = RepoPath + "/config";
+		const string RepoData = RepoPath + "/data";
+
 		const string PRJobFile = "prtestjob.json";
 
 		object RepoLock = new object();
 
-		LibGit2Sharp.Repository Repo;
+		Repository Repo;
 		int currentProgress = -1;
 		
 		public bool OperationInProgress()
@@ -41,7 +44,7 @@ namespace TGServerService
 		{
 			if (Repo != null)
 				return null;
-			if (!LibGit2Sharp.Repository.IsValid(RepoPath))
+			if (!Repository.IsValid(RepoPath))
 				return "Repository does not exist";
 			try
 			{
@@ -68,7 +71,7 @@ namespace TGServerService
 		{
 			lock (RepoLock)
 			{
-				return LibGit2Sharp.Repository.IsValid(RepoPath);
+				return Repository.IsValid(RepoPath);
 			}
 		}
 
@@ -93,33 +96,49 @@ namespace TGServerService
 				return;
 			try
 			{
-				var ts = (TwoStrings)twostrings;
-				var RepoURL = ts.a;
-				var BranchName = ts.b;
+				if (!Monitor.TryEnter(CompilerLock))
+					return;
 				try
 				{
-					DisposeRepo();
-					Program.DeleteDirectory(RepoPath);
-
-					var Opts = new CloneOptions()
+					var ts = (TwoStrings)twostrings;
+					var RepoURL = ts.a;
+					var BranchName = ts.b;
+					try
 					{
-						BranchName = BranchName,
-						RecurseSubmodules = true,
-						OnTransferProgress = HandleTransferProgress,
-						OnCheckoutProgress = HandleCheckoutProgress
-					};
-					LibGit2Sharp.Repository.Clone(RepoURL, RepoPath, Opts);
-					LoadRepo();
+						DisposeRepo();
+						Program.DeleteDirectory(RepoPath);
+						Program.DeleteDirectory(StaticDirs);
+
+						var Opts = new CloneOptions()
+						{
+							BranchName = BranchName,
+							RecurseSubmodules = true,
+							OnTransferProgress = HandleTransferProgress,
+							OnCheckoutProgress = HandleCheckoutProgress
+						};
+						Repository.Clone(RepoURL, RepoPath, Opts);
+						LoadRepo();
+						Directory.CreateDirectory(StaticLogDir);
+						Program.CopyDirectory(RepoConfig, StaticConfigDir);
+						Program.CopyDirectory(RepoData, StaticDataDir);
+					}
+					finally
+					{
+						currentProgress = -1;
+					}
 				}
 				finally
 				{
-					currentProgress = -1;
+					Monitor.Exit(CompilerLock);
 				}
 			}
 			catch
 
-			{ }	//don't crash the service
-			Monitor.Exit(RepoLock);
+			{ } //don't crash the service
+			finally
+			{
+				Monitor.Exit(RepoLock);
+			}
 		}
 
 		public void Setup(string RepoURL, string BranchName)

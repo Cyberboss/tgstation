@@ -22,6 +22,7 @@ namespace TGServiceInterface
 		bool Exists();
 
 		//Deletes whatever may be left over and clones the repo at remote and checks out branch master
+		//WARNING THIS WILL DELETE CONFIG AND DATA DIRS
 		//runs asyncronously, use IsBusy, GetProgress, and Exists to check status
 		[OperationContract]
 		void Setup(string remote, string branch = "master");

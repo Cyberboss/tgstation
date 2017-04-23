@@ -151,8 +151,10 @@ namespace TGServerService
 				if (!BusyCheckNoLock())
 				{
 					updateStat = TGByondStatus.Starting;
-					var t = new Thread(new ParameterizedThreadStart(UpdateToVersionImpl));
-					t.IsBackground = true;	//don't slow me down
+					var t = new Thread(new ParameterizedThreadStart(UpdateToVersionImpl))
+					{
+						IsBackground = true //don't slow me down
+					};
 					t.Start(new VersionInfo { major = ma, minor = mi });
 					return true;
 				}
@@ -160,24 +162,34 @@ namespace TGServerService
 			}
 		}
 
-		public void ApplyStagedUpdate()
+		public bool ApplyStagedUpdate()
 		{
-			lock (ByondLock)
+			if (Compiling())
+				return false;
+			lock (CompilerLock)
 			{
-				if (updateStat != TGByondStatus.Staged)
-					return;
-				try
+				lock (ByondLock)
 				{
-					Program.DeleteDirectory(ByondDirectory);
-					Directory.Move(StagingDirectoryInner, ByondDirectory);
-					Directory.Delete(StagingDirectory, true);
-					lastError = null;
+					if (updateStat != TGByondStatus.Staged)
+						return false;
+					try
+					{
+						Program.DeleteDirectory(ByondDirectory);
+						Directory.Move(StagingDirectoryInner, ByondDirectory);
+						Directory.Delete(StagingDirectory, true);
+						lastError = null;
+						return true;
+					}
+					catch (Exception e)
+					{
+						lastError = e.ToString();
+						return false;
+					}
+					finally
+					{
+						updateStat = TGByondStatus.Idle;
+					}
 				}
-				catch(Exception e)
-				{
-					lastError = e.ToString();
-				}
-				updateStat = TGByondStatus.Idle;
 			}
 		}
 	}

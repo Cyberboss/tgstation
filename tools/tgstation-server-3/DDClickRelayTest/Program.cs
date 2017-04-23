@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.ServiceModel;
+﻿using System.Threading;
 using System.Windows.Forms;
 using TGServiceInterface;
 
