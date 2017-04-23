@@ -36,12 +36,13 @@ namespace TGServerService
 					EventLog.WriteEntry("Creating server directory: " + Config.ServerDirectory);
 					Directory.CreateDirectory(Config.ServerDirectory);
 				Directory.SetCurrentDirectory(Config.ServerDirectory);
-
-				var serviceAddress = String.Format("net.pipe://localhost/{0}", Declarations.PipeName);
-				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri(serviceAddress) });
+				
+				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") });
 
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
+
+				host.Open();
 			}
 			catch
 			{
@@ -53,7 +54,7 @@ namespace TGServerService
 		void AddEndpoint<T>()
 		{
 			var typetype = typeof(T);
-			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), typetype.Name);
+			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Declarations.MasterPipeName + "/" + typetype.Name);
 		}
 
 		protected override void OnStop()

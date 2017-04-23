@@ -3,6 +3,6 @@ namespace TGServiceInterface
 {
 	public class Declarations
 	{
-		public static string PipeName = "TGStationServerService";
+		public static string MasterPipeName = "TGStationServerService";
 	}
 }

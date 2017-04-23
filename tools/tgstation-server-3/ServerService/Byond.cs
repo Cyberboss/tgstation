@@ -9,9 +9,11 @@ namespace TGServerService
 {
 	partial class TGStationServer : ITGByond
 	{
-		const string ByondDirectory = "C:\\tgstation-server-3\\BYOND";
-		const string StagingDirectory = "C:\\tgstation-server-3\\BYOND_staged";
-		const string RevisionDownloadPath = "C:\\tgstation-server-3\\BYONDRevision.zip";
+		const string ByondDirectory = "C:/tgstation-server-3/BYOND";
+		const string StagingDirectory = "C:/tgstation-server-3/BYOND_staged";
+		const string StagingDirectoryInner = "C:/tgstation-server-3/BYOND_staged/byond";
+		const string RevisionDownloadPath = "C:/tgstation-server-3/BYONDRevision.zip";
+		const string VersionFile = "/byond_version.dat";
 		const string ByondRevisionsURL = "https://secure.byond.com/download/build/{0}/{0}.{1}_byond.zip";
 
 		TGByondStatus updateStat = TGByondStatus.Idle;
@@ -66,7 +68,24 @@ namespace TGServerService
 
 		public string GetError()
 		{
-			return lastError;
+			lock (ByondLock)
+			{
+				return lastError;
+			}
+		}
+
+		public string GetVersion(bool staged)
+		{
+			lock (ByondLock)
+			{
+				string DirToUse = staged ? StagingDirectoryInner : ByondDirectory;
+				if (Directory.Exists(DirToUse)) {
+					string file = DirToUse + VersionFile;
+					if(File.Exists(file))
+						return File.ReadAllText(file);
+				}
+				return null;
+			}
 		}
 
 		class VersionInfo
@@ -93,7 +112,7 @@ namespace TGServerService
 
 				var client = new WebClient();
 				var vi = (VersionInfo)param;
-				client.DownloadFile(string.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
+				client.DownloadFile(String.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
 
 				lock (ByondLock)
 				{
@@ -101,13 +120,18 @@ namespace TGServerService
 				}
 
 				ZipFile.ExtractToDirectory(RevisionDownloadPath, StagingDirectory);
+				lock (ByondLock)
+				{
+					File.WriteAllText(StagingDirectoryInner + VersionFile, String.Format("{0}.{1}", vi.major, vi.minor));
+				}
+				File.Delete(RevisionDownloadPath);
 
 				lock (ByondLock)
 				{
 					updateStat = TGByondStatus.Staged;
 				}
 
-				if (false)  //TODO: Some way to check if the server is running
+				if (true)  //TODO: Some way to check if the server is running
 					ApplyStagedUpdate();
 				else
 					lastError = "Awaiting server restart...";
@@ -145,7 +169,8 @@ namespace TGServerService
 				{
 					if (Directory.Exists(ByondDirectory))
 						Directory.Delete(ByondDirectory, true);
-					Directory.Move(StagingDirectory, ByondDirectory);
+					Directory.Move(StagingDirectoryInner, ByondDirectory);
+					Directory.Delete(StagingDirectory, true);
 					lastError = null;
 				}
 				catch(Exception e)

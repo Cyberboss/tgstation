@@ -31,5 +31,11 @@ namespace TGServiceInterface
 		//will return an error message otherwise
 		[OperationContract]
 		string GetError();
+
+		//Get the currently installed BYOND version
+		//setting staged to true checks the version of the staged update
+		//returns null if there is no version
+		[OperationContract]
+		string GetVersion(bool staged);
 	}
 }

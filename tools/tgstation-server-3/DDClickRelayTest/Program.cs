@@ -11,14 +11,14 @@ namespace DDClickRelayTest
 	{
 		public static T GetServerComponent<T>()
 		{
-			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}", Declarations.PipeName))).CreateChannel();
+			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}/{1}", Declarations.MasterPipeName, typeof(T).Name))).CreateChannel();
 		}
 		static void Main(string[] args)
 		{
 
 			var byond = GetServerComponent<ITGByond>();
 
-			byond.UpdateToVersion(551, 1381);
+			byond.UpdateToVersion(511, 1381);
 
 			do
 			{
