@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.ServiceModel;
 using System.Windows.Forms;
 using TGServiceInterface;
@@ -8,35 +9,24 @@ namespace DDClickRelayTest
 
 	class Program
 	{
-		public static ITGRepository repo;
+		public static T GetServerComponent<T>()
+		{
+			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}", Declarations.MasterPipeName))).CreateChannel();
+		}
 		static void Main(string[] args)
 		{
-			var binding = new NetNamedPipeBinding();
-			ChannelFactory<ITGStationServer> pipeFactory =
-			  new ChannelFactory<ITGStationServer>(
-				binding,
-				new EndpointAddress(
-				  "net.pipe://localhost/PipeTGStationServerService"));
 
-			
-			var server = pipeFactory.CreateChannel();
-
-			var byond = server.Byond();
+			var byond = GetServerComponent<ITGByond>();
 
 			byond.UpdateToVersion(551, 1381);
 
 			do
 			{
 				Thread.Sleep(1000);
-			} while (byond.IsBusy());
+			} while (byond.CurrentStatus() != TGByondStatus.Idle);
 
 			var error = byond.GetError();
-			MessageBox.Show(error != null ? error : "Operation completed successfully");
-
-			return;
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new CloneProgress());
+			MessageBox.Show(error ?? "Operation completed successfully");
 		}
 	}
 }

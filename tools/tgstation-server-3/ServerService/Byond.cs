@@ -7,21 +7,14 @@ using TGServiceInterface;
 
 namespace TGServerService
 {
-	class Byond : ITGByond
+	partial class TGStationServer : ITGByond
 	{
 		const string ByondDirectory = "C:\\tgstation-server-3\\BYOND";
 		const string StagingDirectory = "C:\\tgstation-server-3\\BYOND_staged";
 		const string RevisionDownloadPath = "C:\\tgstation-server-3\\BYONDRevision.zip";
 		const string ByondRevisionsURL = "https://secure.byond.com/download/build/{0}/{0}.{1}_byond.zip";
-		enum UpdateStatus
-		{
-			None,
-			Downloading,
-			Staging,
-			Staged,
-			Updating,
-		}
-		UpdateStatus updateStat = UpdateStatus.None;
+
+		TGByondStatus updateStat = TGByondStatus.Idle;
 		object ByondLock = new object();
 		string lastError = null;
 
@@ -30,21 +23,22 @@ namespace TGServerService
 			switch (updateStat)
 			{
 				default:
-				case UpdateStatus.Downloading:
-				case UpdateStatus.Staging:
-				case UpdateStatus.Updating:
+				case TGByondStatus.Starting:
+				case TGByondStatus.Downloading:
+				case TGByondStatus.Staging:
+				case TGByondStatus.Updating:
 					return true;
-				case UpdateStatus.None:
-				case UpdateStatus.Staged:
+				case TGByondStatus.Idle:
+				case TGByondStatus.Staged:
 					return false;
 			}
 		}
 
-		public bool IsBusy()
+		public TGByondStatus CurrentStatus()
 		{
 			lock (ByondLock)
 			{
-				return BusyCheckNoLock();
+				return updateStat;
 			}
 		}
 		public int GetProgress()
@@ -53,12 +47,17 @@ namespace TGServerService
 			{
 				switch (updateStat)
 				{
-					case UpdateStatus.None:
+					case TGByondStatus.Idle:
 						return 0;
-					case UpdateStatus.Downloading:
-						return 33;
-					case UpdateStatus.Updating:
-						return 66;
+					case TGByondStatus.Starting:
+					case TGByondStatus.Downloading:
+						return 25;
+					case TGByondStatus.Staging:
+						return 50;
+					case TGByondStatus.Staged:
+						return 75;
+					case TGByondStatus.Updating:
+						return 90;
 					default:
 						return 100;
 				}
@@ -78,9 +77,9 @@ namespace TGServerService
 		public void UpdateToVersionImpl(object param)
 		{
 			lock (ByondLock) { 
-				if (BusyCheckNoLock())
+				if (updateStat != TGByondStatus.Starting)
 					return;
-				updateStat = UpdateStatus.Downloading;
+				updateStat = TGByondStatus.Downloading;
 			}
 
 
@@ -98,14 +97,14 @@ namespace TGServerService
 
 				lock (ByondLock)
 				{
-					updateStat = UpdateStatus.Staging;
+					updateStat = TGByondStatus.Staging;
 				}
 
 				ZipFile.ExtractToDirectory(RevisionDownloadPath, StagingDirectory);
 
 				lock (ByondLock)
 				{
-					updateStat = UpdateStatus.Staged;
+					updateStat = TGByondStatus.Staged;
 				}
 
 				if (false)  //TODO: Some way to check if the server is running
@@ -117,21 +116,30 @@ namespace TGServerService
 			{
 				lock (ByondLock)
 				{
-					updateStat = UpdateStatus.None;
+					updateStat = TGByondStatus.Idle;
 					lastError = e.ToString();
 				}
 			}
 		}
-		public void UpdateToVersion(int ma, int mi)
+		public bool UpdateToVersion(int ma, int mi)
 		{
-			new Thread(new ParameterizedThreadStart(UpdateToVersionImpl)).Start(new VersionInfo { major = ma, minor = mi  });
+			lock (ByondLock)
+			{
+				if (!BusyCheckNoLock())
+				{
+					updateStat = TGByondStatus.Starting;
+					new Thread(new ParameterizedThreadStart(UpdateToVersionImpl)).Start(new VersionInfo { major = ma, minor = mi });
+					return true;
+				}
+				return false; 
+			}
 		}
 
 		public void ApplyStagedUpdate()
 		{
 			lock (ByondLock)
 			{
-				if (updateStat != UpdateStatus.Staged)
+				if (updateStat != TGByondStatus.Staged)
 					return;
 				try
 				{
@@ -144,7 +152,7 @@ namespace TGServerService
 				{
 					lastError = e.ToString();
 				}
-				updateStat = UpdateStatus.None;
+				updateStat = TGByondStatus.Idle;
 			}
 		}
 	}

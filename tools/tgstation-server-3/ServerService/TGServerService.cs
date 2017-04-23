@@ -1,23 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
-using System.ServiceModel;
-using TGServiceInterface;
 using System.IO;
+using System.ServiceModel;
+using System.ServiceProcess;
+using TGServiceInterface;
 
 namespace TGServerService
 {
 	public partial class TGServerService : ServiceBase
 	{
 		static TGServerService ActiveService;
-		const string ServerDirectory = "C:\\tgstation-server-3";
+
 		ServiceHost host;
+		
 		public TGServerService()
 		{
 			InitializeComponent();
@@ -25,16 +19,19 @@ namespace TGServerService
 
 		protected override void OnStart(string[] args)
 		{
+			//System.Diagnostics.Debugger.Launch();
 			ActiveService = this;
 			try
 			{
-				if (args.Length >= 2 && args[0].ToLower() == "--set-port")
+				var Config = Properties.Settings.Default;
+
+				if (args.Length >= 2 && args[0].ToLower() == "--port")
 				{
 					try
 					{
 						var new_port = args[1].Trim();
-						EventLog.WriteEntry("Attempting to set opening port to: " + new_port);
-						Properties.Settings.Default.WCFPort = Convert.ToUInt16(args[1]);
+						EventLog.WriteEntry("Commandline setting port to: " + new_port);
+						Config.WCFPort = Convert.ToUInt16(new_port);
 					}
 					catch
 					{
@@ -42,26 +39,33 @@ namespace TGServerService
 					}
 				}
 
-				if (!Directory.Exists(ServerDirectory))
-					EventLog.WriteEntry("Creating server directory: " + ServerDirectory);
-					Directory.CreateDirectory(ServerDirectory);
+				if (!Directory.Exists(Config.ServerDirectory))
+					EventLog.WriteEntry("Creating server directory: " + Config.ServerDirectory);
+					Directory.CreateDirectory(Config.ServerDirectory);
+				Directory.SetCurrentDirectory(Config.ServerDirectory);
 
-				EventLog.WriteEntry("Creating WCF host on port: " + Properties.Settings.Default.WCFPort);
+				EventLog.WriteEntry("Creating WCF host on port: " + Config.WCFPort);
 
 				host = new ServiceHost(typeof(TGStationServer),
 				  new Uri[]{
-				new Uri(String.Format("http://localhost:{0}", Properties.Settings.Default.WCFPort)),
+				new Uri(String.Format("http://localhost:{0}", Config.WCFPort)),
 				new Uri("net.pipe://localhost")
 				  });
 
-				host.AddServiceEndpoint(typeof(ITGStationServer), new NetNamedPipeBinding(), "PipeTGStationServerService");
-				host.Open();
+				AddEndpoint<ITGRepository>();
+				AddEndpoint<ITGByond>();
 			}
 			catch
 			{
 				ActiveService = null;
 				throw;
 			}
+		}
+
+		void AddEndpoint<T>()
+		{
+			var typetype = typeof(T);
+			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Declarations.MasterPipeName);
 		}
 
 		protected override void OnStop()

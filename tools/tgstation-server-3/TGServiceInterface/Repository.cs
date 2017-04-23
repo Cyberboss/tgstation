@@ -6,8 +6,17 @@ namespace TGServiceInterface
 	//for managing the code repository
 	//note, the only way to run git clean on the repo is to run Setup again
 	[ServiceContract]
-	public interface ITGRepository : ITGProgressQuery, ITGAtomic
+	public interface ITGRepository
 	{
+		//returns true if something is using the repo
+		//calls are serialized, so calling a git operation function if this is true will cause it to block until the previous operation completes
+		[OperationContract]
+		bool OperationInProgress();
+
+		//returns the current progress of a clone or checkout operation
+		[OperationContract]
+		int CheckoutProgress();
+
 		//check if the repository is valid, if not Setup must be called
 		[OperationContract]
 		bool Exists();

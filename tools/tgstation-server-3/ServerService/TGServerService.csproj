@@ -56,8 +56,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Byond.cs" />
+    <Compile Include="InterfaceBase.cs" />
     <Compile Include="Repository.cs" />
-    <Compile Include="Main.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>
     </Compile>

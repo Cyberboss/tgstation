@@ -166,5 +166,17 @@ namespace TGServerService.Properties {
                 this["WCFPort"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:/tgstation-server-3")]
+        public string ServerDirectory {
+            get {
+                return ((string)(this["ServerDirectory"]));
+            }
+            set {
+                this["ServerDirectory"] = value;
+            }
+        }
     }
 }

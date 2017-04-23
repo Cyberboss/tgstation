@@ -11,17 +11,17 @@ using System.Web.Script.Serialization;
 
 namespace TGServerService
 {
-	class Repository : ITGRepository, IDisposable
+	partial class TGStationServer : ITGRepository, IDisposable
 	{
-		const string RepoPath = "C:/tgstation-server-3/gitrepo";
-		const string PRJobFile = "C:/tgstation-server-3/prtestjob.json";
+		const string RepoPath = "gitrepo";
+		const string PRJobFile = "prtestjob.json";
 
 		object RepoLock = new object();
 
 		LibGit2Sharp.Repository Repo;
 		int currentProgress = -1;
 		
-		public bool IsBusy()
+		public bool OperationInProgress()
 		{
 			if (Monitor.TryEnter(RepoLock))
 			{
@@ -31,7 +31,7 @@ namespace TGServerService
 			return true;
 		}
 
-		public int GetProgress()
+		public int CheckoutProgress()
 		{
 			return currentProgress;
 		}
@@ -187,7 +187,8 @@ namespace TGServerService
 				{
 					var Opts = new CheckoutOptions()
 					{
-						CheckoutModifiers = CheckoutModifiers.Force
+						CheckoutModifiers = CheckoutModifiers.Force,
+						OnCheckoutProgress = HandleCheckoutProgress,
 					};
 					Commands.Checkout(Repo, sha, Opts);
 					return ResetNoLock();
