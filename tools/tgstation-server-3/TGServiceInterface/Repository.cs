@@ -13,7 +13,7 @@ namespace TGServiceInterface
 		[OperationContract]
 		bool OperationInProgress();
 
-		//returns the current progress of a clone or checkout operation
+		//returns the current progress of a setup, update, or checkout operation
 		[OperationContract]
 		int CheckoutProgress();
 
@@ -59,7 +59,7 @@ namespace TGServiceInterface
 		//Returns a list of PR# -> Sha of the currently merged pull requests
 		//returns null on failure and error will be set
 		[OperationContract]
-		IDictionary<int, string> MergedPullRequests(out string error);
+		IDictionary<string, string> MergedPullRequests(out string error);
 
 		//Gets the name of the current git committer
 		[OperationContract]

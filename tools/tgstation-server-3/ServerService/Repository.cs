@@ -215,6 +215,8 @@ namespace TGServerService
 					foreach (Remote R in Repo.Network.Remotes)
 					{
 						IEnumerable<string> refSpecs = R.FetchRefSpecs.Select(X => X.Specification);
+						var fos = new FetchOptions();
+						fos.OnTransferProgress += HandleTransferProgress;
 						Commands.Fetch(Repo, R.Name, refSpecs, null, logMessage);
 					}
 					Repo.Reset(ResetMode.Hard, String.Format("origin/{0}", Repo.Head.FriendlyName));
@@ -248,15 +250,15 @@ namespace TGServerService
 			if (File.Exists(PRJobFile))
 				File.Delete(PRJobFile);
 		}
-		IDictionary<int, string> GetCurrentPRList()
+		IDictionary<string, string> GetCurrentPRList()
 		{
 			if (!File.Exists(PRJobFile))
-				return new Dictionary<int, string>();
+				return new Dictionary<string, string>();
 			var rawdata = File.ReadAllText(PRJobFile);
 			var Deserializer = new JavaScriptSerializer();
-			return Deserializer.Deserialize<Dictionary<int, string>>(rawdata);
+			return Deserializer.Deserialize<Dictionary<string, string>>(rawdata);
 		}
-		void SetCurrentPRList(IDictionary<int, string> list)
+		void SetCurrentPRList(IDictionary<string, string> list)
 		{
 			var Serializer = new JavaScriptSerializer();
 			var rawdata = Serializer.Serialize(list);
@@ -300,7 +302,7 @@ namespace TGServerService
 					}
 
 					var CurrentPRs = GetCurrentPRList();
-					CurrentPRs.Add(PRNumber, PRSha);
+					CurrentPRs.Add(PRNumber.ToString(), PRSha);
 					SetCurrentPRList(CurrentPRs);
 					return null;
 				}
@@ -311,7 +313,7 @@ namespace TGServerService
 			}
 		}
 
-		public IDictionary<int, string> MergedPullRequests(out string error)
+		public IDictionary<string, string> MergedPullRequests(out string error)
 		{
 			lock (RepoLock)
 			{

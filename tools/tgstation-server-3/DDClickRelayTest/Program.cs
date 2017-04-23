@@ -13,8 +13,8 @@ namespace DDClickRelayTest
 		{
 
 			var repo = Server.GetComponent<ITGRepository>();
-			MessageBox.Show(repo.Update() ?? "Success");
-			//MessageBox.Show(repo.MergePullRequest(26465) ?? "Success");
+			string error;
+			var thing = repo.MergedPullRequests(out error);
 
 		}
 		static void TestRun()
