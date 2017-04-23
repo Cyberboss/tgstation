@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.ServiceModel;
-using System.ServiceModel.Channels;
 using System.ServiceProcess;
+using System.Threading;
 using TGServiceInterface;
 
 namespace TGServerService
@@ -63,6 +63,8 @@ namespace TGServerService
 			{
 				host.Close();
 				host = null;
+
+
 			}
 			finally
 			{

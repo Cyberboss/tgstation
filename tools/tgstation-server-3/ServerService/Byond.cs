@@ -107,8 +107,7 @@ namespace TGServerService
 				//remove leftovers
 				if (File.Exists(RevisionDownloadPath))
 					File.Delete(RevisionDownloadPath);
-				if (Directory.Exists(StagingDirectory))
-					Directory.Delete(StagingDirectory, true);
+				Program.DeleteDirectory(StagingDirectory);
 
 				var client = new WebClient();
 				var vi = (VersionInfo)param;
@@ -152,7 +151,9 @@ namespace TGServerService
 				if (!BusyCheckNoLock())
 				{
 					updateStat = TGByondStatus.Starting;
-					new Thread(new ParameterizedThreadStart(UpdateToVersionImpl)).Start(new VersionInfo { major = ma, minor = mi });
+					var t = new Thread(new ParameterizedThreadStart(UpdateToVersionImpl));
+					t.IsBackground = true;	//don't slow me down
+					t.Start(new VersionInfo { major = ma, minor = mi });
 					return true;
 				}
 				return false; 
@@ -167,8 +168,7 @@ namespace TGServerService
 					return;
 				try
 				{
-					if (Directory.Exists(ByondDirectory))
-						Directory.Delete(ByondDirectory, true);
+					Program.DeleteDirectory(ByondDirectory);
 					Directory.Move(StagingDirectoryInner, ByondDirectory);
 					Directory.Delete(StagingDirectory, true);
 					lastError = null;

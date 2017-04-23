@@ -91,15 +91,15 @@ namespace TGServerService
 		{
 			if (!Monitor.TryEnter(RepoLock))
 				return;
-			try { 
+			try
+			{
 				var ts = (TwoStrings)twostrings;
 				var RepoURL = ts.a;
 				var BranchName = ts.b;
 				try
 				{
 					DisposeRepo();
-					if (Directory.Exists(RepoPath))
-						Directory.Delete(RepoPath, true);
+					Program.DeleteDirectory(RepoPath);
 
 					var Opts = new CloneOptions()
 					{
@@ -116,15 +116,17 @@ namespace TGServerService
 					currentProgress = -1;
 				}
 			}
-			finally
-			{
-				Monitor.Exit(RepoLock);
-			}
+			catch
+
+			{ }	//don't crash the service
+			Monitor.Exit(RepoLock);
 		}
 
 		public void Setup(string RepoURL, string BranchName)
 		{
-			new Thread(new ParameterizedThreadStart(Clone)).Start(new TwoStrings { a = RepoURL, b = BranchName });
+			var t = new Thread(new ParameterizedThreadStart(Clone));
+			t.IsBackground = true;	//make sure we don't hold up shutdown
+			t.Start(new TwoStrings { a = RepoURL, b = BranchName });
 		}
 
 		string GetShaOrBranch(out string error, bool branch)
@@ -141,7 +143,7 @@ namespace TGServerService
 				try
 				{
 					error = null;
-					return branch ? Repo.Head.CanonicalName : Repo.Head.Tip.Sha; ;
+					return branch ? Repo.Head.FriendlyName : Repo.Head.Tip.Sha; ;
 				}
 				catch (Exception e)
 				{
@@ -215,8 +217,11 @@ namespace TGServerService
 						IEnumerable<string> refSpecs = R.FetchRefSpecs.Select(X => X.Specification);
 						Commands.Fetch(Repo, R.Name, refSpecs, null, logMessage);
 					}
-					Repo.Reset(ResetMode.Hard, String.Format("origin/{0}", Repo.Head.CanonicalName));
-					return ResetNoLock();
+					Repo.Reset(ResetMode.Hard, String.Format("origin/{0}", Repo.Head.FriendlyName));
+					var error = ResetNoLock();
+					if (error == null)
+						DeletePRList();
+					return error;
 				}
 				catch (Exception E)
 				{
@@ -273,12 +278,14 @@ namespace TGServerService
 
 					var Refspec = new List<string>();
 					var PRBranchName = String.Format("pr-{0}", PRNumber);
-					Refspec.Add(String.Format("pull/{0}/head:", PRNumber, PRBranchName));
+					Refspec.Add(String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName));
 					var logMessage = "";
+
 					Commands.Fetch(Repo, "origin", Refspec, null, logMessage);  //shitty api has no failure state for this
 
 					var Config = Properties.Settings.Default;
 
+					PRBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
 					var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
 
 					//so we'll know if this fails

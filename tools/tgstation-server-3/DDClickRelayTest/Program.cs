@@ -11,8 +11,56 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
-			Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
-			
+
+			var repo = Server.GetComponent<ITGRepository>();
+			MessageBox.Show(repo.Update() ?? "Success");
+			//MessageBox.Show(repo.MergePullRequest(26465) ?? "Success");
+
+		}
+		static void TestRun()
+		{
+
+			MessageBox.Show("Now setting up repo");
+			var repo = Server.GetComponent<ITGRepository>();
+			repo.Setup("https://github.com/tgstation/tgstation");
+
+
+			MessageBox.Show("In the meantime lets update byond to 511.1381... give me a second...");
+			var byond = Server.GetComponent<ITGByond>();
+
+			if (!byond.UpdateToVersion(511, 1381))
+			{
+				MessageBox.Show("Last op failed");
+				return;
+			}
+
+			do
+			{
+				Thread.Sleep(1000);
+			} while (byond.CurrentStatus() != TGByondStatus.Idle);
+
+			var error = byond.GetError();
+			if (error != null)
+			{
+				MessageBox.Show(error);
+				return;
+			}
+
+			MessageBox.Show("Done! Now we wait for the git clone....");
+
+
+			do
+			{
+				Thread.Sleep(1000);
+			} while (repo.OperationInProgress());
+
+			if (!repo.Exists())
+			{
+				MessageBox.Show("Badness happened");
+				return;
+			}
+
+			MessageBox.Show("Now lets try merging a PR");
 		}
 	}
 }
