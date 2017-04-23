@@ -107,6 +107,8 @@ namespace TGServerService
 					{
 						DisposeRepo();
 						Program.DeleteDirectory(RepoPath);
+						Program.DeleteDirectory(StaticBackupDir);
+						Program.CopyDirectory(StaticDirs, StaticBackupDir);
 						Program.DeleteDirectory(StaticDirs);
 
 						var Opts = new CloneOptions()
@@ -121,6 +123,7 @@ namespace TGServerService
 						Directory.CreateDirectory(StaticLogDir);
 						Program.CopyDirectory(RepoConfig, StaticConfigDir);
 						Program.CopyDirectory(RepoData, StaticDataDir);
+						File.Copy(RepoPath + LibMySQLFile, StaticDirs + LibMySQLFile, true);
 					}
 					finally
 					{

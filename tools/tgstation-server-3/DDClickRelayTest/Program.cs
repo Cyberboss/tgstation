@@ -9,55 +9,41 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
-			//Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
-			Server.GetComponent<ITGCompiler>().Compile();
-			//MessageBox.Show(Server.GetComponent<ITGCompiler>().Initialize() ?? "Operation completed sucessfully!");
 
+			TestRun();
 		}
+
+		//Sets up everything and starts the server
 		static void TestRun()
 		{
 
-			MessageBox.Show("Now setting up repo");
-			var repo = Server.GetComponent<ITGRepository>();
-			repo.Setup("https://github.com/tgstation/tgstation");
-
-
-			MessageBox.Show("In the meantime lets update byond to 511.1381... give me a second...");
-			var byond = Server.GetComponent<ITGByond>();
-
-			if (!byond.UpdateToVersion(511, 1381))
+			Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
+			do
 			{
-				MessageBox.Show("Last op failed");
-				return;
-			}
+				Thread.Sleep(1000);
+			} while (Server.GetComponent<ITGRepository>().OperationInProgress());
+
+			Server.GetComponent<ITGByond>().UpdateToVersion(511, 1381);
 
 			do
 			{
 				Thread.Sleep(1000);
-			} while (byond.CurrentStatus() != TGByondStatus.Idle);
+			} while (Server.GetComponent<ITGByond>().CurrentStatus() != TGByondStatus.Idle);
 
-			var error = byond.GetError();
-			if (error != null)
-			{
-				MessageBox.Show(error);
-				return;
-			}
+			Server.GetComponent<ITGCompiler>().Initialize();
 
-			MessageBox.Show("Done! Now we wait for the git clone....");
-
+			Server.GetComponent<ITGCompiler>().Compile();
 
 			do
 			{
 				Thread.Sleep(1000);
-			} while (repo.OperationInProgress());
+			} while (Server.GetComponent<ITGCompiler>().Compiling());
 
-			if (!repo.Exists())
-			{
-				MessageBox.Show("Badness happened");
-				return;
-			}
 
-			MessageBox.Show("Now lets try merging a PR");
+			MessageBox.Show("Hold on to your butts...");
+
+			MessageBox.Show(Server.GetComponent<ITGDreamDaemon>().Start() ?? "Spared no expense");
+
 		}
 	}
 }

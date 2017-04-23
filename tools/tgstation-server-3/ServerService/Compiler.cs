@@ -24,6 +24,9 @@ namespace TGServerService
 		const string StaticDataDir = StaticDirs + "/data";
 		const string StaticConfigDir = StaticDirs + "/config";
 		const string StaticLogDir = StaticDirs + "/logs";
+		const string StaticBackupDir = "Static_BACKUP";
+
+		const string LibMySQLFile = "/libmysql.dll";
 
 		const string GameDir = "Game";
 		const string GameDirA = GameDir + "/A";
@@ -63,7 +66,7 @@ namespace TGServerService
 
 		void CreateSymlink(string link, string target)
 		{
-			if (!CreateSymbolicLink(new DirectoryInfo(link).FullName, new DirectoryInfo(target).FullName, SymbolicLink.Directory))
+			if (!CreateSymbolicLink(new DirectoryInfo(link).FullName, new DirectoryInfo(target).FullName, File.Exists(target) ? SymbolicLink.File : SymbolicLink.Directory))
 				throw new Exception(String.Format("Failed to create symlink from {0} to {1}!", target, link));
 		}
 
@@ -99,6 +102,9 @@ namespace TGServerService
 
 					CreateSymlink(GameDirA + "/config", StaticConfigDir);
 					CreateSymlink(GameDirB + "/config", StaticConfigDir);
+
+					CreateSymlink(GameDirA + LibMySQLFile, StaticDirs + LibMySQLFile);
+					CreateSymlink(GameDirB + LibMySQLFile, StaticDirs + LibMySQLFile);
 
 					CreateSymlink(GameDirLive, GameDirA);
 
@@ -185,6 +191,7 @@ namespace TGServerService
 					//clear out the syms first
 					Directory.Delete(resurrectee + "/data");
 					Directory.Delete(resurrectee + "/config");
+					File.Delete(resurrectee + LibMySQLFile);
 
 					Program.DeleteDirectory(resurrectee);
 
@@ -192,6 +199,7 @@ namespace TGServerService
 
 					CreateSymlink(resurrectee + "/data", StaticDataDir);
 					CreateSymlink(resurrectee + "/config", StaticConfigDir);
+					CreateSymlink(resurrectee + LibMySQLFile, StaticDirs + LibMySQLFile);
 
 					Directory.CreateDirectory(resurrectee + "/.git/logs");
 
