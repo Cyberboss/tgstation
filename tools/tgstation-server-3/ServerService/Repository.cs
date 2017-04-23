@@ -124,8 +124,10 @@ namespace TGServerService
 
 		public void Setup(string RepoURL, string BranchName)
 		{
-			var t = new Thread(new ParameterizedThreadStart(Clone));
-			t.IsBackground = true;	//make sure we don't hold up shutdown
+			var t = new Thread(new ParameterizedThreadStart(Clone))
+			{
+				IsBackground = true //make sure we don't hold up shutdown
+			};
 			t.Start(new TwoStrings { a = RepoURL, b = BranchName });
 		}
 
