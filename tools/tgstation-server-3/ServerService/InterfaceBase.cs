@@ -26,7 +26,7 @@ namespace TGServerService
 		}
 
 		//just here to test the WCF connection
-		void VerifyConnection()
+		public void VerifyConnection()
 		{}
 
 		#region IDisposable Support

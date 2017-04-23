@@ -35,7 +35,7 @@ namespace TGServiceInterface
 	public interface ITGStatusCheck
 	{
 		[OperationContract]
-		public void VerifyConnection();
+		void VerifyConnection();
 	}
 
 }
