@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
@@ -163,12 +164,18 @@ namespace TGServerService
 						break;
 				}
 			}
+			catch (ThreadAbortException)
+			{
+				return;
+			}
 			catch (Exception e)
 			{
+				TGServerService.ActiveService.EventLog.WriteEntry("Revision staging errror: " + e.ToString(), EventLogEntryType.Error);
 				lock (ByondLock)
 				{
 					updateStat = TGByondStatus.Idle;
 					lastError = e.ToString();
+					RevisionStaging = null;
 				}
 			}
 		}

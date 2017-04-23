@@ -182,6 +182,38 @@ namespace TGServerService
 			}
 			return StartImpl();
 		}
+		string SecurityWord()
+		{
+			var level = Properties.Settings.Default.ServerSecurity;
+			switch ((TGDreamDaemonSecurity)level)
+			{
+				case TGDreamDaemonSecurity.Safe:
+					return "safe";
+				case TGDreamDaemonSecurity.Trusted:
+					return "trusted";
+				case TGDreamDaemonSecurity.Ultrasafe:
+					return "ultrasafe";
+				default:
+					throw new Exception(String.Format("Bad DreamDaemon security level: {0}", level));
+			}
+		}
+
+		string VisibilityWord()
+		{
+			var level = Properties.Settings.Default.ServerVisiblity;
+			switch ((TGDreamDaemonVisibility)level)
+			{
+				case TGDreamDaemonVisibility.Invisible:
+					return "invisible";
+				case TGDreamDaemonVisibility.Private:
+					return "private";
+				case TGDreamDaemonVisibility.Public:
+					return "public";
+				default:
+					throw new Exception(String.Format("Bad DreamDaemon visibility level: {0}", level));
+			}
+		}
+
 		string StartImpl() {
 			try
 			{
@@ -190,13 +222,13 @@ namespace TGServerService
 					if (GetVersion(false) == null)
 						return "Byond is not installed!";
 
-
 					var Config = Properties.Settings.Default;
 					var DMB = GameDirLive + "/" + Config.ProjectName + ".dmb";
 
 					if (!File.Exists(DMB))
 						return String.Format("Unable to find {0}!", DMB);
 
+					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord());
 					Proc.Start();
 				}
 				if (!Proc.WaitForInputIdle(20000))
