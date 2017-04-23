@@ -169,7 +169,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("tg-station-server-3-bot")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TGS3Test")]
         public string IRCNick {
             get {
                 return ((string)(this["IRCNick"]));
@@ -195,7 +195,7 @@ namespace TGServerService.Properties {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
             "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>coderbus</string>\r\n  <string>botbus</string>\r\n</ArrayOfString>")]
+            "tring>#coderbus</string>\r\n  <string>#botbus</string>\r\n</ArrayOfString>")]
         public global::System.Collections.Specialized.StringCollection IRCChannels {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["IRCChannels"]));

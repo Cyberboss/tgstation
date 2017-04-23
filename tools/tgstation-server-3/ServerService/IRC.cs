@@ -32,6 +32,8 @@ namespace TGServerService
 		}
 		public string Connect()
 		{
+			if (Connected())
+				return null;
 			try
 			{
 				//irc.OnChannelMessage += new IrcEventHandler(OnChannelMessage); TODO
@@ -68,6 +70,7 @@ namespace TGServerService
 				foreach (var I in Config.IRCChannels)
 					irc.RfcJoin(I);
 				new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();
+				Thread.Sleep(5000);	//let it breathe
 				return null;
 			}
 			catch (Exception e)
@@ -111,7 +114,7 @@ namespace TGServerService
 			{
 				if (!Connected())
 					return "Disconnected";
-				irc.SendMessage(SendType.Message, irc.GetChannels()[0], message);
+				irc.SendMessage(SendType.Message, Properties.Settings.Default.IRCChannels[0], message);
 				return null;
 			}
 			catch (Exception e)
