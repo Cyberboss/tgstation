@@ -293,6 +293,7 @@ namespace TGServerService
 					switch (Result.Status)
 					{
 						case MergeStatus.Conflicts:
+							ResetNoLock();
 							return "Merge conflict occurred.";
 						case MergeStatus.UpToDate:
 							return "Already up to date with PR.";
