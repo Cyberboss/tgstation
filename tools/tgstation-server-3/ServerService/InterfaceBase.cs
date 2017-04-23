@@ -6,23 +6,28 @@ namespace TGServerService
 {
 	//this line basically says make one instance of the service and never delete it
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
-	partial class TGStationServer : IDisposable
+	partial class TGStationServer : IDisposable, ITGStatusCheck
 	{
 		//call partial constructors/destructors from here
-		//called when the service is started
+		//called when the service is started.... maybe?
+		//Its only called once and it's guaranteed to be called by the time the first WCF call is made
 		TGStationServer()
 		{
 			InitByond();
 			InitCompiler();
 		}
 
-		//called
+		//called when the service is stopped
 		void RunDisposals()
 		{
 			DisposeRepo();
 			DisposeByond();
 			DisposeCompiler();
 		}
+
+		//just here to test the WCF connection
+		void VerifyConnection()
+		{}
 
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls
