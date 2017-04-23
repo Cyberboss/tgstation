@@ -54,7 +54,7 @@ namespace TGServerService
 		void AddEndpoint<T>()
 		{
 			var typetype = typeof(T);
-			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Declarations.MasterPipeName + "/" + typetype.Name);
+			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Server.MasterPipeName + "/" + typetype.Name);
 		}
 
 		protected override void OnStop()
