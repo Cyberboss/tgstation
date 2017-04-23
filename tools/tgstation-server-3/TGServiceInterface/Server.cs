@@ -10,7 +10,7 @@ namespace TGServiceInterface
 		//Returns the requested server component interface
 		public static T GetComponent<T>()
 		{
-			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}/{1}", MasterPipeName, typeof(T).Name))).CreateChannel();
+			return new ChannelFactory<T>(new NetNamedPipeBinding { SendTimeout = new TimeSpan(0, 5, 0) }, new EndpointAddress(String.Format("net.pipe://localhost/{0}/{1}", MasterPipeName, typeof(T).Name))).CreateChannel();
 		}
 
 		//Used to test if the service is avaiable on the machine

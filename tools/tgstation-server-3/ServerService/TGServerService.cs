@@ -9,7 +9,7 @@ namespace TGServerService
 {
 	public partial class TGServerService : ServiceBase
 	{
-		static TGServerService ActiveService;
+		public static TGServerService ActiveService;
 
 		ServiceHost host;
 		

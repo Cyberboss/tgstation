@@ -15,14 +15,16 @@ namespace TGServerService
 		{
 			InitByond();
 			InitCompiler();
+			InitDreamDaemon();
 		}
 
 		//called when the service is stopped
 		void RunDisposals()
 		{
-			DisposeRepo();
-			DisposeByond();
+			DisposeDreamDaemon();
 			DisposeCompiler();
+			DisposeByond();
+			DisposeRepo();
 		}
 
 		//just here to test the WCF connection

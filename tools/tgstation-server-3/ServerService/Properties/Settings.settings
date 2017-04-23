@@ -41,5 +41,11 @@
     <Setting Name="ServerDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:/tgstation-server-3</Value>
     </Setting>
+    <Setting Name="ServerSecurity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">0</Value>
+    </Setting>
+    <Setting Name="ServerVisiblity" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">2</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

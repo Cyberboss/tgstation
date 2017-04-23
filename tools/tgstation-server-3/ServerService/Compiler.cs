@@ -37,6 +37,7 @@ namespace TGServerService
 
 		object CompilerLock = new object();
 		object LiveDirCheckLock = new object();
+		object CompilerThreadLock = new object();
 
 		List<string> copyExcludeList = new List<string> { ".git", "data", "config" };
 
@@ -52,9 +53,12 @@ namespace TGServerService
 
 		void DisposeCompiler()
 		{
-			if (CompilerThread == null)
-				return;
-			CompilerThread.Abort();	//this will safely kill dm
+			lock (CompilerThreadLock)
+			{
+				if (CompilerThread == null)
+					return;
+				CompilerThread.Abort(); //this will safely kill dm
+			}
 		}
 
 		void CreateSymlink(string link, string target)
@@ -171,51 +175,69 @@ namespace TGServerService
 
 		void CompileImpl()
 		{
-			lock (CompilerLock)
+			try
 			{
-				compiledSucessfully = false;
-				var resurrectee = GetDeadDir();
-
-				//clear out the syms first
-				Directory.Delete(resurrectee + "/data");
-				Directory.Delete(resurrectee + "/config");
-
-				Program.DeleteDirectory(resurrectee);
-
-				Directory.CreateDirectory(resurrectee);
-
-				CreateSymlink(resurrectee + "/data", StaticDataDir);
-				CreateSymlink(resurrectee + "/config", StaticConfigDir);
-
-				Directory.CreateDirectory(resurrectee + "/.git/logs");
-
-				if (!Monitor.TryEnter(RepoLock))
-					return;
-				try
+				lock (CompilerLock)
 				{
-					Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
-					//just the tip
-					const string HeadFile = "/.git/logs/HEAD";
-					File.Copy(RepoPath + HeadFile, resurrectee + HeadFile);
+					compiledSucessfully = false;
+					var resurrectee = GetDeadDir();
+
+					//clear out the syms first
+					Directory.Delete(resurrectee + "/data");
+					Directory.Delete(resurrectee + "/config");
+
+					Program.DeleteDirectory(resurrectee);
+
+					Directory.CreateDirectory(resurrectee);
+
+					CreateSymlink(resurrectee + "/data", StaticDataDir);
+					CreateSymlink(resurrectee + "/config", StaticConfigDir);
+
+					Directory.CreateDirectory(resurrectee + "/.git/logs");
+
+					if (!Monitor.TryEnter(RepoLock))
+						return;
+					try
+					{
+						Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
+						//just the tip
+						const string HeadFile = "/.git/logs/HEAD";
+						File.Copy(RepoPath + HeadFile, resurrectee + HeadFile);
+					}
+					finally
+					{
+						Monitor.Exit(RepoLock);
+					}
+
+					using (var DM = new Process())  //will kill the process if the thread is terminated
+					{
+						DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
+						DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" + Properties.Settings.Default.ProjectName + ".dme";
+						DM.Start();
+						DM.WaitForExit();
+						compiledSucessfully = DM.ExitCode == 0;
+					}
+
+					if (compiledSucessfully)
+					{
+						Directory.Delete(GameDirLive);
+						CreateSymlink(GameDirLive, resurrectee);
+					}
 				}
-				finally
+			}
+			catch (ThreadAbortException)
+			{
+				return;
+			}
+			catch (Exception e)
+			{
+				TGServerService.ActiveService.EventLog.WriteEntry("Compile manager errror: " + e.ToString(), EventLogEntryType.Error);
+			}
+			finally
+			{
+				lock (CompilerThreadLock)
 				{
-					Monitor.Exit(RepoLock);
-				}
-
-				using (var DM = new Process())	//will kill the process if the thread is terminated
-				{
-					DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
-					DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" + Properties.Settings.Default.ProjectName + ".dme";
-					DM.Start();
-					DM.WaitForExit();
-					compiledSucessfully = DM.ExitCode == 0;
-				}
-
-				if (compiledSucessfully)
-				{
-					Directory.Delete(GameDirLive);
-					CreateSymlink(GameDirLive, resurrectee);
+					CompilerThread = null;
 				}
 			}
 		}
@@ -227,8 +249,12 @@ namespace TGServerService
 
 			if(GetVersion(false) == null)
 				return false;
-			
-			new Thread(new ThreadStart(CompileImpl)).Start();
+
+			lock (CompilerThreadLock)
+			{
+				CompilerThread = new Thread(new ThreadStart(CompileImpl));
+				CompilerThread.Start();
+			}
 			return true;
 		}
 	}

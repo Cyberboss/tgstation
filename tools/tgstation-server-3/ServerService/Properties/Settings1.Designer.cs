@@ -178,5 +178,29 @@ namespace TGServerService.Properties {
                 this["ServerDirectory"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ServerSecurity {
+            get {
+                return ((int)(this["ServerSecurity"]));
+            }
+            set {
+                this["ServerSecurity"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int ServerVisiblity {
+            get {
+                return ((int)(this["ServerVisiblity"]));
+            }
+            set {
+                this["ServerVisiblity"] = value;
+            }
+        }
     }
 }

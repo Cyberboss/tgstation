@@ -18,7 +18,7 @@ namespace TGServerService
 
 		TGByondStatus updateStat = TGByondStatus.Idle;
 		object ByondLock = new object();
-		string lastError = null;
+		string lastError;
 
 		Thread RevisionStaging;
 
@@ -32,9 +32,12 @@ namespace TGServerService
 
 		void DisposeByond()
 		{
-			if (RevisionStaging != null)
-				RevisionStaging.Abort();
-			InitByond();
+			lock (ByondLock)
+			{
+				if (RevisionStaging != null)
+					RevisionStaging.Abort();
+				InitByond();
+			}
 		}
 
 		bool BusyCheckNoLock()
@@ -147,10 +150,18 @@ namespace TGServerService
 					updateStat = TGByondStatus.Staged;
 				}
 
-				if (true)  //TODO: Some way to check if the server is running
-					ApplyStagedUpdate();
-				else
-					lastError = "Awaiting server restart...";
+				var stat = DaemonStatus();
+				switch (stat)
+				{
+					case TGDreamDaemonStatus.Offline:
+						lastError = "Failed to apply update!";
+						if(ApplyStagedUpdate())
+							lastError = null;
+						break;
+					default:
+						lastError = "Awaiting server restart...";
+						break;
+				}
 			}
 			catch (Exception e)
 			{
@@ -168,11 +179,11 @@ namespace TGServerService
 				if (!BusyCheckNoLock())
 				{
 					updateStat = TGByondStatus.Starting;
-					var t = new Thread(new ParameterizedThreadStart(UpdateToVersionImpl))
+					RevisionStaging = new Thread(new ParameterizedThreadStart(UpdateToVersionImpl))
 					{
 						IsBackground = true //don't slow me down
 					};
-					t.Start(new VersionInfo { major = ma, minor = mi });
+					RevisionStaging.Start(new VersionInfo { major = ma, minor = mi });
 					return true;
 				}
 				return false; 
@@ -187,6 +198,7 @@ namespace TGServerService
 			{
 				lock (ByondLock)
 				{
+
 					if (updateStat != TGByondStatus.Staged)
 						return false;
 					try
