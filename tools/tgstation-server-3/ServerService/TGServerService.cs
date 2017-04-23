@@ -20,7 +20,6 @@ namespace TGServerService
 
 		protected override void OnStart(string[] args)
 		{
-			//System.Diagnostics.Debugger.Launch();
 			ActiveService = this;
 			try
 			{
@@ -33,14 +32,17 @@ namespace TGServerService
 				}
 
 				if (!Directory.Exists(Config.ServerDirectory))
+				{
 					EventLog.WriteEntry("Creating server directory: " + Config.ServerDirectory);
 					Directory.CreateDirectory(Config.ServerDirectory);
+				}
 				Directory.SetCurrentDirectory(Config.ServerDirectory);
 				
 				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") });
 
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
+				AddEndpoint<ITGCompiler>();
 
 				host.Open();
 			}

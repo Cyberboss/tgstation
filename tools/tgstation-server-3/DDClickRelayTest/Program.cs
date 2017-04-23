@@ -9,9 +9,9 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
-
-			var repo = Server.GetComponent<ITGRepository>();
-			var thing = repo.MergedPullRequests(out string error);
+			//Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
+			Server.GetComponent<ITGCompiler>().Compile();
+			//MessageBox.Show(Server.GetComponent<ITGCompiler>().Initialize() ?? "Operation completed sucessfully!");
 
 		}
 		static void TestRun()

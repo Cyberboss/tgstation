@@ -13,7 +13,7 @@ namespace TGServerService
 {
 	partial class TGStationServer : ITGRepository, IDisposable
 	{
-		const string RepoPath = "gitrepo";
+		const string RepoPath = "Repository";
 		const string RepoConfig = RepoPath + "/config";
 		const string RepoData = RepoPath + "/data";
 

@@ -14,7 +14,10 @@ namespace TGServerService
 		//http://stackoverflow.com/questions/1701457/directory-delete-doesnt-work-access-denied-error-but-under-windows-explorer-it
 		public static void DeleteDirectory(string path)
 		{
-			NormalizeAndDelete(new DirectoryInfo(path));
+			var di = new DirectoryInfo(path);
+			if (!di.Exists)
+				return;
+			NormalizeAndDelete(di);
 		}
 		static void NormalizeAndDelete(DirectoryInfo dir)
 		{

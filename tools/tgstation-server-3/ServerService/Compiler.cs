@@ -20,7 +20,6 @@ namespace TGServerService
 		}
 		#endregion
 
-
 		const string StaticDirs = "Static";
 		const string StaticDataDir = StaticDirs + "/data";
 		const string StaticConfigDir = StaticDirs + "/config";
@@ -39,16 +38,19 @@ namespace TGServerService
 		object CompilerLock = new object();
 		object LiveDirCheckLock = new object();
 
+		List<string> copyExcludeList = new List<string> { ".git", "data", "config" };
+
 		bool compiledSucessfully = false;
 
 		TGStationServer()
 		{
-			File.Delete(LiveDirTest);
+			if(File.Exists(LiveDirTest))
+				File.Delete(LiveDirTest);
 		}
 
 		void CreateSymlink(string link, string target)
 		{
-			if (!CreateSymbolicLink(link, target, File.Exists(target) ? SymbolicLink.File : SymbolicLink.Directory))
+			if (!CreateSymbolicLink(new DirectoryInfo(link).FullName, new DirectoryInfo(target).FullName, SymbolicLink.Directory))
 				throw new Exception(String.Format("Failed to create symlink from {0} to {1}!", target, link));
 		}
 
@@ -61,13 +63,13 @@ namespace TGServerService
 				try
 				{
 					Program.DeleteDirectory(GameDir);
-					Directory.CreateDirectory(GameDirA + ".git/logs");
+					Directory.CreateDirectory(GameDirA + "/.git/logs");
 
 					if (!Monitor.TryEnter(RepoLock))
 						return "Unable to lock repository!";
 					try
 					{
-						Program.CopyDirectory(RepoPath, GameDirA, new List<string> { ".git" });
+						Program.CopyDirectory(RepoPath, GameDirA, copyExcludeList);
 						//just the tip
 						const string HeadFile = "/.git/logs/HEAD";
 						File.Copy(RepoPath + HeadFile, GameDirA + HeadFile);
@@ -79,11 +81,11 @@ namespace TGServerService
 
 					Program.CopyDirectory(GameDirA, GameDirB);
 
-					CreateSymlink(StaticDataDir, GameDirA + "/data");
-					CreateSymlink(StaticDataDir, GameDirB + "/data");
+					CreateSymlink(GameDirA + "/data", StaticDataDir);
+					CreateSymlink(GameDirB + "/data", StaticDataDir);
 
-					CreateSymlink(StaticConfigDir, GameDirA + "/config");
-					CreateSymlink(StaticConfigDir, GameDirB + "/config");
+					CreateSymlink(GameDirA + "/config", StaticConfigDir);
+					CreateSymlink(GameDirB + "/config", StaticConfigDir);
 
 					CreateSymlink(GameDirLive, GameDirA);
 
@@ -104,9 +106,9 @@ namespace TGServerService
 			if (Monitor.TryEnter(CompilerLock))
 			{
 				Monitor.Exit(CompilerLock);
-				return true;
+				return false;
 			}
-			return false;
+			return true;
 		}
 
 		public bool Compiled()
@@ -117,7 +119,7 @@ namespace TGServerService
 		string GetLiveDir()
 		{
 			string TheDir;
-			File.Create(LiveDirTest);
+			File.Create(LiveDirTest).Close();
 			try
 			{
 				if (File.Exists(ADirTest))
@@ -163,10 +165,39 @@ namespace TGServerService
 			lock (CompilerLock)
 			{
 				compiledSucessfully = false;
+				var resurrectee = GetDeadDir();
+
+				//clear out the syms first
+				Directory.Delete(resurrectee + "/data");
+				Directory.Delete(resurrectee + "/config");
+
+				Program.DeleteDirectory(resurrectee);
+
+				Directory.CreateDirectory(resurrectee);
+
+				CreateSymlink(resurrectee + "/data", StaticDataDir);
+				CreateSymlink(resurrectee + "/config", StaticConfigDir);
+
+				Directory.CreateDirectory(resurrectee + "/.git/logs");
+
+				if (!Monitor.TryEnter(RepoLock))
+					return;
+				try
+				{
+					Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
+					//just the tip
+					const string HeadFile = "/.git/logs/HEAD";
+					File.Copy(RepoPath + HeadFile, resurrectee + HeadFile);
+				}
+				finally
+				{
+					Monitor.Exit(RepoLock);
+				}
+
+
 				var DM = new Process();
 				DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
-				var resurrectee = GetDeadDir();
-				DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + Properties.Settings.Default.ProjectName + ".dme";
+				DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" +  Properties.Settings.Default.ProjectName + ".dme";
 				DM.Start();
 				DM.WaitForExit();
 				compiledSucessfully = DM.ExitCode == 0;
@@ -181,6 +212,9 @@ namespace TGServerService
 		public bool Compile()
 		{
 			if (Compiling())
+				return false;
+
+			if(GetVersion(false) == null)
 				return false;
 
 			var t = new Thread(new ThreadStart(CompileImpl))
