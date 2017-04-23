@@ -132,6 +132,7 @@ namespace TGServerService
 
 				var client = new WebClient();
 				var vi = (VersionInfo)param;
+				SendMessage(String.Format("BYOND: Updating to version {0}.{1}...", vi.major, vi.minor));
 				client.DownloadFile(String.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
 
 				lock (ByondLock)
@@ -161,6 +162,7 @@ namespace TGServerService
 						break;
 					default:
 						lastError = "Awaiting server restart...";
+						SendMessage(String.Format("BYOND: Staging complete. Awaiting server restart...", vi.major, vi.minor));
 						break;
 				}
 			}
@@ -214,11 +216,13 @@ namespace TGServerService
 						Directory.Move(StagingDirectoryInner, ByondDirectory);
 						Directory.Delete(StagingDirectory, true);
 						lastError = null;
+						SendMessage("BYOND: Update completed!");
 						return true;
 					}
 					catch (Exception e)
 					{
 						lastError = e.ToString();
+						SendMessage("BYOND: Update failed!");
 						return false;
 					}
 					finally

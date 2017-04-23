@@ -104,6 +104,7 @@ namespace TGServerService
 					return;
 				try
 				{
+					SendMessage("Repo: Full reset started! Cloning RepoURL...");
 					var ts = (TwoStrings)twostrings;
 					var RepoURL = ts.a;
 					var BranchName = ts.b;
@@ -129,6 +130,7 @@ namespace TGServerService
 						Program.CopyDirectory(RepoConfig, StaticConfigDir);
 						Program.CopyDirectory(RepoData, StaticDataDir);
 						File.Copy(RepoPath + LibMySQLFile, StaticDirs + LibMySQLFile, true);
+						SendMessage("Repo: Clone complete!");
 					}
 					finally
 					{
@@ -142,7 +144,9 @@ namespace TGServerService
 			}
 			catch
 
-			{ } //don't crash the service
+			{
+				SendMessage("Repo: Setup failed!");
+			} //don't crash the service
 			finally
 			{
 				cloning = false;
@@ -213,6 +217,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
+				SendMessage("Repo: Checking out object: " + sha);
 				try
 				{
 					var Opts = new CheckoutOptions()
@@ -221,10 +226,13 @@ namespace TGServerService
 						OnCheckoutProgress = HandleCheckoutProgress,
 					};
 					Commands.Checkout(Repo, sha, Opts);
-					return ResetNoLock();
+					var res = ResetNoLock();
+					SendMessage("Repo: Checkout complete!");
+					return res;
 				}
 				catch (Exception E)
 				{
+					SendMessage("Repo: Checkout failed!");
 					return E.ToString();
 				}
 			}
@@ -237,6 +245,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
+				SendMessage("Repo: Updating to origin branch...");
 				try
 				{
 					string logMessage = "";
@@ -250,11 +259,17 @@ namespace TGServerService
 					Repo.Reset(ResetMode.Hard, String.Format("origin/{0}", Repo.Head.FriendlyName));
 					var error = ResetNoLock();
 					if (error == null)
+					{
 						DeletePRList();
+						SendMessage("Repo: Update complete!");
+					}
+					else
+						SendMessage("Repo: Update failed!");
 					return error;
 				}
 				catch (Exception E)
 				{
+					SendMessage("Repo: Update failed!");
 					return E.ToString();
 				}
 			}
@@ -299,6 +314,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
+				SendMessage(String.Format("Repo: Merging PR #{0}...", PRNumber));
 				try
 				{
 					//only supported with github
@@ -324,18 +340,22 @@ namespace TGServerService
 					{
 						case MergeStatus.Conflicts:
 							ResetNoLock();
+							SendMessage("Repo: PR Merge conflicted, aborted.");
 							return "Merge conflict occurred.";
 						case MergeStatus.UpToDate:
+							SendMessage("Repo: PR already up to date!");
 							return "Already up to date with PR.";
 					}
 
 					var CurrentPRs = GetCurrentPRList();
 					CurrentPRs.Add(PRNumber.ToString(), PRSha);
 					SetCurrentPRList(CurrentPRs);
+					SendMessage("Repo: PR merge complete!");
 					return null;
 				}
 				catch (Exception E)
 				{
+					SendMessage("Repo: PR merge failed!");
 					return E.ToString();
 				}
 			}

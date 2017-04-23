@@ -166,5 +166,67 @@ namespace TGServerService.Properties {
                 this["ServerVisiblity"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tg-station-server-3-bot")]
+        public string IRCNick {
+            get {
+                return ((string)(this["IRCNick"]));
+            }
+            set {
+                this["IRCNick"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("asdf")]
+        public string IRCPass {
+            get {
+                return ((string)(this["IRCPass"]));
+            }
+            set {
+                this["IRCPass"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>coderbus</string>\r\n  <string>botbus</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection IRCChannels {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["IRCChannels"]));
+            }
+            set {
+                this["IRCChannels"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("irc.rizon.net")]
+        public string IRCServer {
+            get {
+                return ((string)(this["IRCServer"]));
+            }
+            set {
+                this["IRCServer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("6667")]
+        public ushort IRCPort {
+            get {
+                return ((ushort)(this["IRCPort"]));
+            }
+            set {
+                this["IRCPort"] = value;
+            }
+        }
     }
 }

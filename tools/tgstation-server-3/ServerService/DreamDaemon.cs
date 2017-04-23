@@ -127,9 +127,11 @@ namespace TGServerService
 		{
 			try
 			{
+				SendMessage("DD: Server started, watchdog active...");
 				while (true)
 				{
 					Proc.WaitForExit();
+					SendMessage("DD: DreamDaemon crashed or exited! Rebooting...");
 					Proc.Close();
 					lock (watchdogLock)
 					{
@@ -157,6 +159,7 @@ namespace TGServerService
 			}
 			catch (Exception e)
 			{
+				SendMessage("DD: Watchdog thread crashed!");
 				TGServerService.ActiveService.EventLog.WriteEntry("Watch dog thread crashed! Exception: " + e.ToString(), EventLogEntryType.Error);
 			}
 			finally

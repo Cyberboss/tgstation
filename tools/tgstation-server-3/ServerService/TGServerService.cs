@@ -45,6 +45,7 @@ namespace TGServerService
 				AddEndpoint<ITGCompiler>();
 				AddEndpoint<ITGDreamDaemon>();
 				AddEndpoint<ITGStatusCheck>();
+				AddEndpoint<ITGIRC>();
 
 				host.Open();
 			}

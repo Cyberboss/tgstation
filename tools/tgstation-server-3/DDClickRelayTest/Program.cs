@@ -9,9 +9,12 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
-			Setup();
+			//Setup();
 
-			MessageBox.Show(Server.GetComponent<ITGDreamDaemon>().Start() ?? "Server started");
+			//MessageBox.Show(Server.GetComponent<ITGDreamDaemon>().Start() ?? "Server started");
+
+			Server.GetComponent<ITGIRC>().Connect();
+			Server.GetComponent<ITGIRC>().SendMessage("Hello world");
 		}
 
 		//Sets up everything and starts the server

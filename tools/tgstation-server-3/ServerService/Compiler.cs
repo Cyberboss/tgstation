@@ -78,6 +78,7 @@ namespace TGServerService
 					return "Repository is not setup!";
 				try
 				{
+					SendMessage("DM: Setting up symlinks...");
 					Program.DeleteDirectory(GameDir);
 					Directory.CreateDirectory(GameDirA + "/.git/logs");
 
@@ -115,6 +116,7 @@ namespace TGServerService
 				}
 				catch (Exception e)
 				{
+					SendMessage("DM: Setup failed!");
 					return e.ToString();
 				}
 			}
@@ -185,6 +187,7 @@ namespace TGServerService
 			{
 				lock (CompilerLock)
 				{
+					SendMessage("DM: Starting compilation...");
 					compiledSucessfully = false;
 					var resurrectee = GetDeadDir();
 
@@ -228,9 +231,12 @@ namespace TGServerService
 
 					if (compiledSucessfully)
 					{
+						SendMessage("DM: Compile complete, server will update next round!");
 						Directory.Delete(GameDirLive);
 						CreateSymlink(GameDirLive, resurrectee);
 					}
+					else
+						SendMessage("DM: Compile failed!");
 				}
 			}
 			catch (ThreadAbortException)

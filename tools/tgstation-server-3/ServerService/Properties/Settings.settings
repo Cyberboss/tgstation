@@ -38,5 +38,24 @@
     <Setting Name="ServerVisiblity" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">2</Value>
     </Setting>
+    <Setting Name="IRCNick" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tg-station-server-3-bot</Value>
+    </Setting>
+    <Setting Name="IRCPass" Type="System.String" Scope="User">
+      <Value Profile="(Default)">asdf</Value>
+    </Setting>
+    <Setting Name="IRCChannels" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
+&lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
+  &lt;string&gt;coderbus&lt;/string&gt;
+  &lt;string&gt;botbus&lt;/string&gt;
+&lt;/ArrayOfString&gt;</Value>
+    </Setting>
+    <Setting Name="IRCServer" Type="System.String" Scope="User">
+      <Value Profile="(Default)">irc.rizon.net</Value>
+    </Setting>
+    <Setting Name="IRCPort" Type="System.UInt16" Scope="User">
+      <Value Profile="(Default)">6667</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
