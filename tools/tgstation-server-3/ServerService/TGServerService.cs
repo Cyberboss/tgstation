@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.ServiceModel;
+using System.ServiceModel.Channels;
 using System.ServiceProcess;
 using TGServiceInterface;
 
@@ -25,18 +26,10 @@ namespace TGServerService
 			{
 				var Config = Properties.Settings.Default;
 
-				if (args.Length >= 2 && args[0].ToLower() == "--port")
+				if (args.Length >= 2 && args[0].ToLower() == "--directory")
 				{
-					try
-					{
-						var new_port = args[1].Trim();
-						EventLog.WriteEntry("Commandline setting port to: " + new_port);
-						Config.WCFPort = Convert.ToUInt16(new_port);
-					}
-					catch
-					{
-						EventLog.WriteEntry("Failure, not a valid port!");
-					}
+					EventLog.WriteEntry("Commandline setting directory to: " + args[1]);
+					Config.ServerDirectory = args[1];
 				}
 
 				if (!Directory.Exists(Config.ServerDirectory))
@@ -44,13 +37,8 @@ namespace TGServerService
 					Directory.CreateDirectory(Config.ServerDirectory);
 				Directory.SetCurrentDirectory(Config.ServerDirectory);
 
-				EventLog.WriteEntry("Creating WCF host on port: " + Config.WCFPort);
-
-				host = new ServiceHost(typeof(TGStationServer),
-				  new Uri[]{
-				new Uri(String.Format("http://localhost:{0}", Config.WCFPort)),
-				new Uri("net.pipe://localhost")
-				  });
+				var serviceAddress = String.Format("net.pipe://localhost/{0}", Declarations.PipeName);
+				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri(serviceAddress) });
 
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
@@ -65,7 +53,7 @@ namespace TGServerService
 		void AddEndpoint<T>()
 		{
 			var typetype = typeof(T);
-			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Declarations.MasterPipeName);
+			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), typetype.Name);
 		}
 
 		protected override void OnStop()

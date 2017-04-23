@@ -11,7 +11,7 @@ namespace DDClickRelayTest
 	{
 		public static T GetServerComponent<T>()
 		{
-			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}", Declarations.MasterPipeName))).CreateChannel();
+			return new ChannelFactory<T>(new NetNamedPipeBinding(), new EndpointAddress(String.Format("net.pipe://localhost/{0}", Declarations.PipeName))).CreateChannel();
 		}
 		static void Main(string[] args)
 		{
