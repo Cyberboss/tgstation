@@ -137,7 +137,7 @@ namespace TGServerService
 			return !Compiling() && compiledSucessfully;
 		}
 
-		string GetLiveDir()
+		string GetStagingDir()
 		{
 			string TheDir;
 			//LiveDirTest = Game/Live/LiveCheck.lk
@@ -155,6 +155,11 @@ namespace TGServerService
 			{
 				File.Delete(LiveDirTest);
 			}
+
+			TheDir = InvertDirectory(TheDir);
+
+			//So TheDir is what the Live folder is NOT pointing to
+			//Now we need to check if DD is running that folder and swap it if necessary
 
 			var rsclock = TheDir + "/" + Properties.Settings.Default.ProjectName + ".rsc.lk";
 			if (File.Exists(rsclock))
@@ -177,11 +182,6 @@ namespace TGServerService
 			else
 				return GameDirA;
 		}
-		string GetDeadDir()
-		{
-			return InvertDirectory(GetLiveDir());
-		}
-
 		void CompileImpl()
 		{
 			try
@@ -190,7 +190,7 @@ namespace TGServerService
 				{
 					SendMessage("DM: Starting compilation...");
 					compiledSucessfully = false;
-					var resurrectee = GetDeadDir();
+					var resurrectee = GetStagingDir();
 
 					//clear out the syms first
 					if(Directory.Exists(resurrectee + "/data"))
@@ -235,9 +235,11 @@ namespace TGServerService
 
 					if (compiledSucessfully)
 					{
-						SendMessage("DM: Compile complete, server will update next round!");
+						//these two lines should be atomic but this is the best we can do
 						Directory.Delete(GameDirLive);
 						CreateSymlink(GameDirLive, resurrectee);
+
+						SendMessage("DM: Compile complete, server will update next round!");
 					}
 					else
 						SendMessage("DM: Compile failed!");
@@ -263,14 +265,13 @@ namespace TGServerService
 
 		public bool Compile()
 		{
-			if (Compiling())
-				return false;
-
 			if(GetVersion(false) == null)
 				return false;
 
 			lock (CompilerThreadLock)
 			{
+				if (CompilerThread != null)
+					return false;
 				CompilerThread = new Thread(new ThreadStart(CompileImpl));
 				CompilerThread.Start();
 			}

@@ -155,6 +155,8 @@ namespace TGServerService
 			{
 				if (RepoBusy)
 					return false;
+				if (Compiling())
+					return false;
 				RepoBusy = true;
 				new Thread(new ParameterizedThreadStart(Clone))
 				{
