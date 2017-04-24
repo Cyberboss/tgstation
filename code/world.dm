@@ -316,5 +316,5 @@
 
 	status = s
 
-/world/RunningService()
-	return params["server_service"]
+/world/proc/RunningService()
+	return params[SERVER_SERVICE_PARAM]
