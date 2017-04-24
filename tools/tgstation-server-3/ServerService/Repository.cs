@@ -263,7 +263,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
-				SendMessage(String.Format("Repo: Updating to origin branch...({0})", reset ? "Hard Reset" : "Merge"));
+				SendMessage(String.Format("Repo: Updating origin branch...({0})", reset ? "Hard Reset" : "Merge"));
 				try
 				{
 					string logMessage = "";
@@ -356,16 +356,16 @@ namespace TGServerService
 					var Config = Properties.Settings.Default;
 
 					PRBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
-					//var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
+					var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
 
 					//so we'll know if this fails
 					var Result = MergeBranch(PRBranchName);
 
 					if (Result == null)
 					{
-						//var CurrentPRs = GetCurrentPRList();
-						//CurrentPRs.Add(PRNumber.ToString(), PRSha);
-						//SetCurrentPRList(CurrentPRs);
+						var CurrentPRs = GetCurrentPRList();
+						CurrentPRs.Add(PRNumber.ToString(), PRSha);
+						SetCurrentPRList(CurrentPRs);
 					}
 					return Result;
 				}

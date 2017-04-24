@@ -1,8 +1,8 @@
-﻿using System.Threading;
-using System.Windows.Forms;
+﻿using System;
+using System.Threading;
 using TGServiceInterface;
 
-namespace DDClickRelayTest
+namespace TestProg
 {
 
 	class Program
@@ -10,6 +10,21 @@ namespace DDClickRelayTest
 		static void Main(string[] args)
 		{
 
+		}
+
+		static void SendPRsToIRC()
+		{
+			var l = Server.GetComponent<ITGRepository>().MergedPullRequests(out string error);
+			if (error == null)
+			{
+				Server.GetComponent<ITGIRC>().SendMessage("Currently merged PRs:");
+				foreach (var I in l)
+				{
+					Server.GetComponent<ITGIRC>().SendMessage(String.Format("PR #{0} at commit {1}", I.Key, I.Value));
+				}
+			}
+			else
+				Server.GetComponent<ITGIRC>().SendMessage("PR Check Error: " + error);
 		}
 
 		//Sets up everything and starts the server
