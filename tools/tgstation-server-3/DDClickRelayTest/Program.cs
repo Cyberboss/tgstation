@@ -39,7 +39,7 @@ namespace TestProg
 		{
 			if (!Server.GetComponent<ITGRepository>().Exists())
 			{
-				Server.GetComponent<ITGRepository>().Setup("https://github.com/Cyberboss/tgstation");
+				Server.GetComponent<ITGRepository>().Setup("https://github.com/Cyberboss/tgstation", "tgs3");
 				do
 				{
 					Thread.Sleep(1000);
