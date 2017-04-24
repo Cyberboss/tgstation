@@ -22,7 +22,6 @@ namespace TGServerService
 		void RunDisposals()
 		{
 			DisposeDreamDaemon();
-			//Disconnect();	//See the comment about the bug in the impl
 			DisposeCompiler();
 			DisposeByond();
 			DisposeRepo();

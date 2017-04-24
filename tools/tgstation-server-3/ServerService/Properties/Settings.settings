@@ -39,7 +39,7 @@
       <Value Profile="(Default)">2</Value>
     </Setting>
     <Setting Name="IRCNick" Type="System.String" Scope="User">
-      <Value Profile="(Default)">TGS3Test</Value>
+      <Value Profile="(Default)">TGS3</Value>
     </Setting>
     <Setting Name="IRCPass" Type="System.String" Scope="User">
       <Value Profile="(Default)">asdf</Value>

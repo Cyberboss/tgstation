@@ -169,7 +169,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("TGS3Test")]
+        [global::System.Configuration.DefaultSettingValueAttribute("TGS3")]
         public string IRCNick {
             get {
                 return ((string)(this["IRCNick"]));

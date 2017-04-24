@@ -7,9 +7,10 @@ namespace TestProg
 
 	class Program
 	{
-		static void Main(string[] args)
+		static void RunTests()
 		{
-
+			Setup(false);
+			Server.GetComponent<ITGDreamDaemon>().Stop();
 		}
 
 		static void SendPRsToIRC()
@@ -28,7 +29,7 @@ namespace TestProg
 		}
 
 		//Sets up everything and starts the server
-		static void Setup()
+		static void Setup(bool forceCompile)
 		{
 			if (!Server.GetComponent<ITGRepository>().Exists())
 			{
@@ -45,7 +46,7 @@ namespace TestProg
 			else
 				CheckByond();
 
-			if (Server.GetComponent<ITGDreamDaemon>().CanStart() != null)
+			if (forceCompile || Server.GetComponent<ITGDreamDaemon>().CanStart() != null)
 			{
 				Server.GetComponent<ITGCompiler>().Compile();
 
@@ -66,6 +67,17 @@ namespace TestProg
 			{
 				Thread.Sleep(1000);
 			} while (Server.GetComponent<ITGByond>().CurrentStatus() != TGByondStatus.Idle);
+		}
+		static void Main(string[] args)
+		{
+			try
+			{
+				RunTests();
+			}
+			catch {
+				Console.WriteLine("Failed to connect to service!");
+				Console.ReadKey();
+			}
 		}
 	}
 }

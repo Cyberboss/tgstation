@@ -32,7 +32,8 @@ namespace TGServerService
 				si.Add(Config.IRCAdminChannel);
 				Config.IRCChannels = si;
 			}
-			Reconnect();
+			if(Connected())
+				Reconnect();
 		}
 		public string Connect()
 		{
