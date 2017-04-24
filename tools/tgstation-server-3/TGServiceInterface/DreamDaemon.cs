@@ -52,27 +52,17 @@ namespace TGServiceInterface
 		[OperationContract]
 		string Restart();
 
-		//Sets the security level of the server
+		//Sets the security level of the server. Requires reboot to apply
 		//note that anything higher than Trusted will disable server commands
 		[OperationContract]
 		void SetSecurityLevel(TGDreamDaemonSecurity level);
 
-		//Sets the visiblity level of the server
+		//Sets the visiblity level of the server. Requires reboot to apply
 		[OperationContract]
 		void SetVisibility(TGDreamDaemonVisibility vis);
 
-		//Sets the port to use
-		//Will require a hard reboot to take effect
+		//Sets the port to use. Requires reboot to apply
 		[OperationContract]
 		void SetPort(ushort new_port);
-
-		//returns true if the world is accepting new players, false other wise
-		//has no effect if the server isn't online
-		[OperationContract]
-		bool WorldOpen();
-
-		//Change the status of the world being open
-		[OperationContract]
-		void SetWorldOpen(bool open);
 	}
 }
