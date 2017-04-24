@@ -15,7 +15,7 @@
 
 /world/New()
 	log_world("World loaded at [time_stamp()]")
-	fdel("HardReboot.lk")
+	fdel(SERVER_SERVICE_HARD_RESET_REQUEST)
 
 #if (PRELOAD_RSC == 0)
 	external_rsc_urls = file2list("config/external_rsc_urls.txt","\n")
@@ -177,9 +177,9 @@
 
 #define WORLD_REBOOT(X) \
 	log_world("World rebooted at [time_stamp()]");\
-	if(RunningService() && fexists("HardReboot.lk")) {\
+	if(RunningService() && fexists(SERVER_SERVICE_HARD_RESET_REQUEST)) {\
 		log_world("Hard shutdown requested by service!");\
-		fdel("HardReboot.lk");\
+		fdel(SERVER_SERVICE_HARD_RESET_REQUEST);\
 		qdel(src);\
 	}\
 	..(X);\
