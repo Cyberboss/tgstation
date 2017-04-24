@@ -248,7 +248,7 @@ namespace TGServerService
 						SendMessage("DM: Compile complete, server will update next round!");
 					}
 					else
-						SendMessage("DM: Compile failed!");
+						SendMessage("DM: Compile failed!");	//Also happens for warnings
 				}
 			}
 			catch (ThreadAbortException)
