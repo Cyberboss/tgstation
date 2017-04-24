@@ -81,6 +81,8 @@ namespace TGServerService
 				try
 				{
 					SendMessage("DM: Setting up symlinks...");
+					if(Directory.Exists(GameDirLive))
+						Directory.Delete(GameDirLive);
 					Program.DeleteDirectory(GameDir);
 					Directory.CreateDirectory(GameDirA + "/.git/logs");
 
@@ -113,6 +115,8 @@ namespace TGServerService
 
 					Program.Shell("pip install PyYaml");
 					Program.Shell("pip install beautifulsoup4");
+
+					SendMessage("DM: Symlinks set up!")
 
 					return null;
 				}
