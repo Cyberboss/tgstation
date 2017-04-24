@@ -107,6 +107,7 @@ namespace TGServerService
 						DisposeRepo();
 						Program.DeleteDirectory(RepoPath);
 						Program.DeleteDirectory(StaticBackupDir);
+						DeletePRList();
 						if (Directory.Exists(StaticDirs))
 							Program.CopyDirectory(StaticDirs, StaticBackupDir);
 						Program.DeleteDirectory(StaticDirs);
