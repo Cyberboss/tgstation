@@ -194,7 +194,7 @@ namespace TGServerService
 			{
 				lock (CompilerLock)
 				{
-					SendMessage("DM: Starting compilation...");
+					SendMessage("DM: Updating from repository...");
 					compiledSucessfully = false;
 					var resurrectee = GetStagingDir();
 
@@ -208,16 +208,17 @@ namespace TGServerService
 
 					Program.DeleteDirectory(resurrectee);
 
-					Directory.CreateDirectory(resurrectee);
+					Directory.CreateDirectory(resurrectee + "/.git/logs");
 
 					CreateSymlink(resurrectee + "/data", StaticDataDir);
 					CreateSymlink(resurrectee + "/config", StaticConfigDir);
 					CreateSymlink(resurrectee + LibMySQLFile, StaticDirs + LibMySQLFile);
 
-					Directory.CreateDirectory(resurrectee + "/.git/logs");
-
 					if (!Monitor.TryEnter(RepoLock))
+					{
+						SendMessage("DM: Copy aborted, repo locked!");
 						return;
+					}
 					try
 					{
 						Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
@@ -230,10 +231,12 @@ namespace TGServerService
 						Monitor.Exit(RepoLock);
 					}
 
+					SendMessage("DM: Repo copy complete, compiling... " + resurrectee);
+
 					using (var DM = new Process())  //will kill the process if the thread is terminated
 					{
 						DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
-						DM.StartInfo.Arguments = new DirectoryInfo(resurrectee).FullName + "/" + Properties.Settings.Default.ProjectName + ".dme";
+						DM.StartInfo.Arguments = resurrectee + "/" + Properties.Settings.Default.ProjectName + ".dme";
 						DM.Start();
 						DM.WaitForExit();
 						compiledSucessfully = DM.ExitCode == 0;

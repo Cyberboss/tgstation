@@ -197,5 +197,7 @@ Temporary Items
 
 tools/tgstation-server-3/*/bin/*
 tools/tgstation-server-3/*/obj/*
+tools/tgstation-server-3/*/Debug/*
+tools/tgstation-server-3/*/Release/*
 
 /tools/tgstation-server-3/packages
