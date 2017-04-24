@@ -17,6 +17,8 @@ namespace TGServerService
 		const string VersionFile = "/byond_version.dat";
 		const string ByondRevisionsURL = "https://secure.byond.com/download/build/{0}/{0}.{1}_byond.zip";
 
+		const string HardRebootRequestFile = "/HardReboot.lk";
+
 		const string ByondConfigDir = "/BYOND/cfg";
 		const string ByondDDConfig = "/daemon.txt";
 		const string ByondNoPromptTrustedMode = "trusted-check 0";
@@ -156,7 +158,9 @@ namespace TGServerService
 					updateStat = TGByondStatus.Staged;
 				}
 
-				var stat = DaemonStatus();
+				TGDreamDaemonStatus stat = DaemonStatus();
+				while (stat == TGDreamDaemonStatus.HardRebooting)
+					Thread.Sleep(1000);	//so we don't end up in an awkward situation with the reboot request file
 				switch (stat)
 				{
 					case TGDreamDaemonStatus.Offline:
@@ -165,8 +169,8 @@ namespace TGServerService
 							lastError = null;
 						break;
 					default:
-						File.Create(GameDirA + "/HardReboot.lk").Close();
-						File.Create(GameDirB + "/HardReboot.lk").Close();
+						File.Create(GameDirA + HardRebootRequestFile).Close();
+						File.Create(GameDirB + HardRebootRequestFile).Close();
 						lastError = "Awaiting server restart...";
 						SendMessage(String.Format("BYOND: Staging complete. Awaiting server restart...", vi.major, vi.minor));
 						break;
