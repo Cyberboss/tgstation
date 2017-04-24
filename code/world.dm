@@ -174,7 +174,16 @@
 	else if("server_hop" in input)
 		show_server_hop_transfer_screen(input["server_hop"])
 
-#define WORLD_REBOOT(X) log_world("World rebooted at [time_stamp()]"); ..(X); return;
+#define WORLD_REBOOT(X) \
+	log_world("World rebooted at [time_stamp()]");\
+	if(RunningService() && fexists("HardReboot.lk")) {\
+		log_world("Hard shutdown requested by service!");\
+		fdel("HardReboot.lk");\
+		qdel(src);\
+	}\
+	..(X);\
+	return;
+
 /world/Reboot(var/reason, var/feedback_c, var/feedback_r, var/time)
 	if (reason == 1) //special reboot, do none of the normal stuff
 		if (usr)

@@ -165,6 +165,8 @@ namespace TGServerService
 							lastError = null;
 						break;
 					default:
+						File.Create(GameDirA + "/HardReboot.lk").Close();
+						File.Create(GameDirB + "/HardReboot.lk").Close();
 						lastError = "Awaiting server restart...";
 						SendMessage(String.Format("BYOND: Staging complete. Awaiting server restart...", vi.major, vi.minor));
 						break;
