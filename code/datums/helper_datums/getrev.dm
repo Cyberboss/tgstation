@@ -13,8 +13,6 @@
 				testmerge |= I
 	var/list/logs = file2list(".git/logs/HEAD")
 	logs = splittext(logs[logs.len - 1], " ")
-	for(var/I in logs)
-		log_world(I)
 	date = unix2date(text2num(logs[5]))
 	parentcommit = logs[1]
 	commit = logs[2]
