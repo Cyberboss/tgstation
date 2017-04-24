@@ -6,7 +6,8 @@
 	var/date
 
 /datum/getrev/New()
-	var/head_file = return_file_text(".git/logs/HEAD")
+	var/head_file = file2list(".git/logs/HEAD")
+	head_file = head_file[length(head_file)]
 	if(SERVERTOOLS && fexists("..\\prtestjob.lk"))
 		var/list/tmp = file2list("..\\prtestjob.lk")
 		for(var/I in tmp)
