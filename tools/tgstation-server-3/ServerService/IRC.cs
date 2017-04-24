@@ -29,6 +29,7 @@ namespace TGServerService
 				si.AddRange(channels);
 				Config.IRCChannels = si;
 			}
+			Reconnect();
 		}
 		public string Connect()
 		{

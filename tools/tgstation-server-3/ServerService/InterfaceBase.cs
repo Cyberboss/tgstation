@@ -16,6 +16,7 @@ namespace TGServerService
 			InitByond();
 			InitCompiler();
 			InitDreamDaemon();
+			Connect();
 		}
 
 		//called when the service is stopped

@@ -324,7 +324,7 @@ namespace TGServerService
 
 					var Refspec = new List<string>();
 					var PRBranchName = String.Format("pr-{0}", PRNumber);
-					Refspec.Add(String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName));
+					Refspec.Add(String.Format("pull/{0}/head:{1}", PRNumber, PRBranchName));
 					var logMessage = "";
 
 					Commands.Fetch(Repo, "origin", Refspec, null, logMessage);  //shitty api has no failure state for this
@@ -332,7 +332,7 @@ namespace TGServerService
 					var Config = Properties.Settings.Default;
 
 					PRBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
-					var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
+					//var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
 
 					//so we'll know if this fails
 					var Result = Repo.Merge(PRBranchName, MakeSig());
@@ -347,9 +347,9 @@ namespace TGServerService
 							return "Already up to date with PR.";
 					}
 
-					var CurrentPRs = GetCurrentPRList();
-					CurrentPRs.Add(PRNumber.ToString(), PRSha);
-					SetCurrentPRList(CurrentPRs);
+					//var CurrentPRs = GetCurrentPRList();
+					//CurrentPRs.Add(PRNumber.ToString(), PRSha);
+					//SetCurrentPRList(CurrentPRs);
 					SendMessage("Repo: PR merge complete!");
 					return null;
 				}

@@ -192,9 +192,12 @@ namespace TGServerService
 					var resurrectee = GetDeadDir();
 
 					//clear out the syms first
-					Directory.Delete(resurrectee + "/data");
-					Directory.Delete(resurrectee + "/config");
-					File.Delete(resurrectee + LibMySQLFile);
+					if(Directory.Exists(resurrectee + "/data"))
+						Directory.Delete(resurrectee + "/data");
+					if (Directory.Exists(resurrectee + "/config"))
+						Directory.Delete(resurrectee + "/config");
+					if(File.Exists(resurrectee + LibMySQLFile))
+						File.Delete(resurrectee + LibMySQLFile);
 
 					Program.DeleteDirectory(resurrectee);
 
@@ -245,6 +248,7 @@ namespace TGServerService
 			}
 			catch (Exception e)
 			{
+				SendMessage("DM: Compiler thread crashed!");
 				TGServerService.ActiveService.EventLog.WriteEntry("Compile manager errror: " + e.ToString(), EventLogEntryType.Error);
 			}
 			finally
