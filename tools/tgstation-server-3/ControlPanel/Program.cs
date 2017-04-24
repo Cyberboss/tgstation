@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using TGServiceInterface;
 
 namespace TGControlPanel
 {
@@ -14,10 +12,15 @@ namespace TGControlPanel
 		[STAThread]
 		static void Main()
 		{
+			var res = Server.VerifyConnection();
+			if(res != null)
+			{
+				MessageBox.Show("Unable to connect to service! Error: " + res);
+				return;
+			}
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new Main());
-			//Properties.Settings.Default.Save();
 		}
 	}
 }

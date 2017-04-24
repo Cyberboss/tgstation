@@ -199,7 +199,25 @@ namespace TGServerService
 		{
 			return GetShaOrBranch(out error, true);
 		}
-
+		public string GetRemote(out string error)
+		{
+			try
+			{
+				var res = LoadRepo();
+				if (res != null)
+				{
+					error = res;
+					return null;
+				}
+				error = null;
+				return Repo.Network.Remotes.First().Url;
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
+		}
 		string ResetNoLock()
 		{
 			try
@@ -254,7 +272,7 @@ namespace TGServerService
 					return "Merge conflict occurred.";
 				case MergeStatus.UpToDate:
 					SendMessage("Repo: Merge already up to date!");
-					return "Already up to date with PR.";
+					return "Already up to date.";
 			}
 			SendMessage(String.Format("Repo: Branch {0} successfully merged!", branchname));
 			return null;

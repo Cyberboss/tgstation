@@ -35,14 +35,12 @@ namespace TGControlPanel
 			TrayIcon.DoubleClick += TrayOpen;
 
 			Resize += OnResize;
-			FormClosing += OnClosing;
 			FormClosed += OnExit;
 
 			MouseDown += Main_MouseDown;
 
 			InitRepoPage();
 		}
-		#region Form Events
 		private void OnResize(object sender, EventArgs e)
 		{
 			if (WindowState == FormWindowState.Minimized)
@@ -55,16 +53,6 @@ namespace TGControlPanel
 			}
 		}
 
-		private void OnClosing(object sender, FormClosingEventArgs e)
-		{
-			if (e.CloseReason == CloseReason.UserClosing)
-			{
-				var DialogResult = MessageBox.Show("Are you sure you want to shutdown the server?", "Confim", MessageBoxButtons.YesNo);
-				e.Cancel = DialogResult == DialogResult.No;
-			}
-		}
-		#endregion
-
 		private void TrayOpen(object sender, EventArgs e)
 		{
 			WindowState = FormWindowState.Normal;
@@ -72,15 +60,9 @@ namespace TGControlPanel
 
 		private void OnExit(object sender, EventArgs e)
 		{
-			Shutdown();
 			Application.Exit();
 		}
-
-		//Turns off the server and irc bot
-		private void Shutdown()
-		{
-
-		}
+		
 
 		private void MinimizeButton_Click(object sender, EventArgs e)
 		{

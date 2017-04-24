@@ -38,6 +38,11 @@ namespace TGServiceInterface
 		[OperationContract]
 		string GetBranch(out string error);
 
+		//returns the url of the current origin
+		//if null, error will contain the error
+		[OperationContract]
+		string GetRemote(out string error);
+
 		//hard checks outW the passed branch or sha
 		//returns null on success, error message on failure
 		[OperationContract]

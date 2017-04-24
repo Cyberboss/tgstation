@@ -18,7 +18,6 @@
 				components.Dispose();
 				TrayIcon.Dispose();
 				TrayMenu.Dispose();
-				DisposeRepo();
 			}
 			base.Dispose(disposing);
 		}
@@ -36,19 +35,19 @@
             this.TitleLabel = new System.Windows.Forms.Label();
             this.BYONDPanel = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
+            this.TestMergeListLabel = new System.Windows.Forms.TextBox();
             this.CurrentRevisionLabel = new System.Windows.Forms.Label();
             this.RepoEmailTextBox = new System.Windows.Forms.TextBox();
             this.RepoCommitterNameTextBox = new System.Windows.Forms.TextBox();
             this.RepoApplyButton = new System.Windows.Forms.Button();
             this.RepoBranchTextBox = new System.Windows.Forms.TextBox();
             this.RepoRemoteTextBox = new System.Windows.Forms.TextBox();
-            this.UpdateToShaButton = new System.Windows.Forms.Button();
+            this.HardReset = new System.Windows.Forms.Button();
             this.UpdateRepoButton = new System.Windows.Forms.Button();
             this.TestMergeButton = new System.Windows.Forms.Button();
             this.CommitterEmailTitle = new System.Windows.Forms.Label();
             this.CommiterNameTitle = new System.Windows.Forms.Label();
             this.IdentityLabel = new System.Windows.Forms.Label();
-            this.TestMergeListLabel = new System.Windows.Forms.Label();
             this.TestMergeListTitle = new System.Windows.Forms.Label();
             this.RemoteNameTitle = new System.Windows.Forms.Label();
             this.BranchNameTitle = new System.Windows.Forms.Label();
@@ -56,10 +55,10 @@
             this.CloneRepositoryButton = new System.Windows.Forms.Button();
             this.RepoProgressBarLabel = new System.Windows.Forms.Label();
             this.RepoProgressBar = new System.Windows.Forms.ProgressBar();
-            this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDPanel.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             this.SuspendLayout();
@@ -111,19 +110,19 @@
             // RepoPanel
             // 
             this.RepoPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.RepoPanel.Controls.Add(this.TestMergeListLabel);
             this.RepoPanel.Controls.Add(this.CurrentRevisionLabel);
             this.RepoPanel.Controls.Add(this.RepoEmailTextBox);
             this.RepoPanel.Controls.Add(this.RepoCommitterNameTextBox);
             this.RepoPanel.Controls.Add(this.RepoApplyButton);
             this.RepoPanel.Controls.Add(this.RepoBranchTextBox);
             this.RepoPanel.Controls.Add(this.RepoRemoteTextBox);
-            this.RepoPanel.Controls.Add(this.UpdateToShaButton);
+            this.RepoPanel.Controls.Add(this.HardReset);
             this.RepoPanel.Controls.Add(this.UpdateRepoButton);
             this.RepoPanel.Controls.Add(this.TestMergeButton);
             this.RepoPanel.Controls.Add(this.CommitterEmailTitle);
             this.RepoPanel.Controls.Add(this.CommiterNameTitle);
             this.RepoPanel.Controls.Add(this.IdentityLabel);
-            this.RepoPanel.Controls.Add(this.TestMergeListLabel);
             this.RepoPanel.Controls.Add(this.TestMergeListTitle);
             this.RepoPanel.Controls.Add(this.RemoteNameTitle);
             this.RepoPanel.Controls.Add(this.BranchNameTitle);
@@ -137,6 +136,16 @@
             this.RepoPanel.Size = new System.Drawing.Size(868, 366);
             this.RepoPanel.TabIndex = 0;
             this.RepoPanel.Text = "Repository";
+            // 
+            // TestMergeListLabel
+            // 
+            this.TestMergeListLabel.Location = new System.Drawing.Point(184, 264);
+            this.TestMergeListLabel.Multiline = true;
+            this.TestMergeListLabel.Name = "TestMergeListLabel";
+            this.TestMergeListLabel.ReadOnly = true;
+            this.TestMergeListLabel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.TestMergeListLabel.Size = new System.Drawing.Size(499, 96);
+            this.TestMergeListLabel.TabIndex = 21;
             // 
             // CurrentRevisionLabel
             // 
@@ -176,10 +185,11 @@
             this.RepoApplyButton.Text = "Apply Changes";
             this.RepoApplyButton.UseVisualStyleBackColor = true;
             this.RepoApplyButton.Visible = false;
+            this.RepoApplyButton.Click += new System.EventHandler(this.RepoApplyButton_Click);
             // 
             // RepoBranchTextBox
             // 
-            this.RepoBranchTextBox.Location = new System.Drawing.Point(90, 89);
+            this.RepoBranchTextBox.Location = new System.Drawing.Point(122, 89);
             this.RepoBranchTextBox.Name = "RepoBranchTextBox";
             this.RepoBranchTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoBranchTextBox.TabIndex = 15;
@@ -187,21 +197,22 @@
             // 
             // RepoRemoteTextBox
             // 
-            this.RepoRemoteTextBox.Location = new System.Drawing.Point(90, 58);
+            this.RepoRemoteTextBox.Location = new System.Drawing.Point(122, 57);
             this.RepoRemoteTextBox.Name = "RepoRemoteTextBox";
             this.RepoRemoteTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoRemoteTextBox.TabIndex = 14;
             this.RepoRemoteTextBox.Visible = false;
             // 
-            // UpdateToShaButton
+            // HardReset
             // 
-            this.UpdateToShaButton.Location = new System.Drawing.Point(722, 81);
-            this.UpdateToShaButton.Name = "UpdateToShaButton";
-            this.UpdateToShaButton.Size = new System.Drawing.Size(140, 29);
-            this.UpdateToShaButton.TabIndex = 13;
-            this.UpdateToShaButton.Text = "Checkout Commit";
-            this.UpdateToShaButton.UseVisualStyleBackColor = true;
-            this.UpdateToShaButton.Visible = false;
+            this.HardReset.Location = new System.Drawing.Point(722, 81);
+            this.HardReset.Name = "HardReset";
+            this.HardReset.Size = new System.Drawing.Size(140, 29);
+            this.HardReset.TabIndex = 13;
+            this.HardReset.Text = "Reset To Remote";
+            this.HardReset.UseVisualStyleBackColor = true;
+            this.HardReset.Visible = false;
+            this.HardReset.Click += new System.EventHandler(this.HardReset_Click);
             // 
             // UpdateRepoButton
             // 
@@ -209,9 +220,10 @@
             this.UpdateRepoButton.Name = "UpdateRepoButton";
             this.UpdateRepoButton.Size = new System.Drawing.Size(140, 29);
             this.UpdateRepoButton.TabIndex = 12;
-            this.UpdateRepoButton.Text = "Update to Remote";
+            this.UpdateRepoButton.Text = "Merge from Remote";
             this.UpdateRepoButton.UseVisualStyleBackColor = true;
             this.UpdateRepoButton.Visible = false;
+            this.UpdateRepoButton.Click += new System.EventHandler(this.UpdateRepoButton_Click);
             // 
             // TestMergeButton
             // 
@@ -222,6 +234,7 @@
             this.TestMergeButton.Text = "Test Merge PR";
             this.TestMergeButton.UseVisualStyleBackColor = true;
             this.TestMergeButton.Visible = false;
+            this.TestMergeButton.Click += new System.EventHandler(this.TestMergeButton_Click);
             // 
             // CommitterEmailTitle
             // 
@@ -262,18 +275,6 @@
             this.IdentityLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.IdentityLabel.Visible = false;
             // 
-            // TestMergeListLabel
-            // 
-            this.TestMergeListLabel.AutoSize = true;
-            this.TestMergeListLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TestMergeListLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.TestMergeListLabel.Location = new System.Drawing.Point(181, 266);
-            this.TestMergeListLabel.Name = "TestMergeListLabel";
-            this.TestMergeListLabel.Size = new System.Drawing.Size(50, 18);
-            this.TestMergeListLabel.TabIndex = 7;
-            this.TestMergeListLabel.Text = "None";
-            this.TestMergeListLabel.Visible = false;
-            // 
             // TestMergeListTitle
             // 
             this.TestMergeListTitle.AutoSize = true;
@@ -307,9 +308,9 @@
             this.BranchNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
             this.BranchNameTitle.Location = new System.Drawing.Point(6, 89);
             this.BranchNameTitle.Name = "BranchNameTitle";
-            this.BranchNameTitle.Size = new System.Drawing.Size(70, 18);
+            this.BranchNameTitle.Size = new System.Drawing.Size(110, 18);
             this.BranchNameTitle.TabIndex = 4;
-            this.BranchNameTitle.Text = "Branch:";
+            this.BranchNameTitle.Text = "Branch/SHA:";
             this.BranchNameTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.BranchNameTitle.Visible = false;
             // 
@@ -357,11 +358,6 @@
             this.RepoProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.RepoProgressBar.TabIndex = 0;
             // 
-            // RepoBGW
-            // 
-            this.RepoBGW.WorkerReportsProgress = true;
-            this.RepoBGW.WorkerSupportsCancellation = true;
-            // 
             // tabPage1
             // 
             this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
@@ -390,6 +386,11 @@
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Logs";
             this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // RepoBGW
+            // 
+            this.RepoBGW.WorkerReportsProgress = true;
+            this.RepoBGW.WorkerSupportsCancellation = true;
             // 
             // Main
             // 
@@ -430,13 +431,12 @@
 		private System.Windows.Forms.Button RepoApplyButton;
 		private System.Windows.Forms.TextBox RepoBranchTextBox;
 		private System.Windows.Forms.TextBox RepoRemoteTextBox;
-		private System.Windows.Forms.Button UpdateToShaButton;
+		private System.Windows.Forms.Button HardReset;
 		private System.Windows.Forms.Button UpdateRepoButton;
 		private System.Windows.Forms.Button TestMergeButton;
 		private System.Windows.Forms.Label CommitterEmailTitle;
 		private System.Windows.Forms.Label CommiterNameTitle;
 		private System.Windows.Forms.Label IdentityLabel;
-		private System.Windows.Forms.Label TestMergeListLabel;
 		private System.Windows.Forms.Label TestMergeListTitle;
 		private System.Windows.Forms.Label RemoteNameTitle;
 		private System.Windows.Forms.Label BranchNameTitle;
@@ -444,6 +444,7 @@
 		private System.Windows.Forms.TabPage tabPage1;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TabPage tabPage3;
+		private System.Windows.Forms.TextBox TestMergeListLabel;
 	}
 }
 
