@@ -9,7 +9,7 @@ namespace TestProg
 	{
 		static void RunTests()
 		{
-			Setup(false);
+			Setup(false, true);
 			Server.GetComponent<ITGDreamDaemon>().Start();
 			CheckByond(true);
 		}
@@ -35,9 +35,9 @@ namespace TestProg
 		}
 
 		//Sets up everything and starts the server
-		static void Setup(bool forceCompile)
+		static void Setup(bool forceCompile, bool forceReset)
 		{
-			if (!Server.GetComponent<ITGRepository>().Exists())
+			if (forceReset || !Server.GetComponent<ITGRepository>().Exists())
 			{
 				Server.GetComponent<ITGRepository>().Setup("https://github.com/Cyberboss/tgstation", "tgs3");
 				do
