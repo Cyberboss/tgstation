@@ -315,3 +315,6 @@
 		s += ": [jointext(features, ", ")]"
 
 	status = s
+
+/world/RunningService()
+	return params["server_service"]

@@ -6,11 +6,8 @@
 	var/date
 
 /datum/getrev/New()
-	if(SERVERTOOLS && fexists("..\\prtestjob.lk"))
-		var/list/tmp = file2list("..\\prtestjob.lk")
-		for(var/I in tmp)
-			if(I)
-				testmerge |= I
+	if(fexists(PR_TEST_JSON))
+		testmerge = json_decode(file2text(PR_TEST_JSON))
 	var/list/logs = file2list(".git/logs/HEAD")
 	logs = splittext(logs[logs.len - 1], " ")
 	date = unix2date(text2num(logs[5]))
@@ -22,8 +19,9 @@
 		log_world(commit)
 		for(var/line in testmerge)
 			if(line)
-				log_world("Test merge active of PR #[line]")
-				feedback_add_details("testmerged_prs","[line]")
+				var/tmcommit = testmerge[line]
+				log_world("Test merge active of PR #[line] commit [tmcommit]")
+				feedback_add_details("testmerged_prs","[line][tmcommit]")
 		log_world("Based off master commit [parentcommit]")
 	else
 		log_world(parentcommit)
@@ -47,11 +45,15 @@
 		if(!json)
 			return
 
+		var/tmcommit = testmerge[line]
 		testmerge[line] = json_decode(json)
 
 		if(!testmerge[line])
 			log_world("PR details download failed: null details returned")
 			return
+
+		testmerge[line]["prtestjobcommit"] = tmcommit
+		
 		CHECK_TICK
 	log_world("PR details successfully downloaded")
 	has_pr_details = TRUE
@@ -63,7 +65,9 @@
 	for(var/line in testmerge)
 		var/details = ""
 		if(has_pr_details)
-			details = ": '" + html_encode(testmerge[line]["title"]) + "' by " + html_encode(testmerge[line]["user"]["login"])
+			details = ": '" + html_encode(testmerge[line]["title"]) + "' by " + html_encode(testmerge[line]["user"]["login"] + " at commit " + html_encode(testmerge[line]["prtestjobcommit"]))
+		else
+			details = " at commit [testmerge[line]]"
 		. += "<a href='[config.githuburl]/pull/[line]'>#[line][details]</a><br>"
 
 /client/verb/showrevinfo()
