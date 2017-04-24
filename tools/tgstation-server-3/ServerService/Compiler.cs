@@ -116,7 +116,7 @@ namespace TGServerService
 					Program.Shell("pip install PyYaml");
 					Program.Shell("pip install beautifulsoup4");
 
-					SendMessage("DM: Symlinks set up!")
+					SendMessage("DM: Symlinks set up!");
 
 					return null;
 				}
