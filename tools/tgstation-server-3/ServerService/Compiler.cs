@@ -140,6 +140,7 @@ namespace TGServerService
 		string GetLiveDir()
 		{
 			string TheDir;
+			//LiveDirTest = Game/Live/LiveCheck.lk
 			File.Create(LiveDirTest).Close();
 			try
 			{
@@ -155,7 +156,7 @@ namespace TGServerService
 				File.Delete(LiveDirTest);
 			}
 
-			var rsclock = TheDir + Properties.Settings.Default.ProjectName + ".rsc.lk";
+			var rsclock = TheDir + "/" + Properties.Settings.Default.ProjectName + ".rsc.lk";
 			if (File.Exists(rsclock))
 			{
 				try
