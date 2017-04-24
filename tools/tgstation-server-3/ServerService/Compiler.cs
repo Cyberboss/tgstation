@@ -72,6 +72,8 @@ namespace TGServerService
 
 		public string Initialize()
 		{
+			if (DaemonStatus() != TGDreamDaemonStatus.Offline)
+				return "Dream daemon must not be running";
 			lock (CompilerLock)
 			{
 				if (!Exists())  //repo

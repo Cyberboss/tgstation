@@ -9,9 +9,7 @@ namespace TestProg
 	{
 		static void RunTests()
 		{
-			Server.GetComponent<ITGDreamDaemon>().Stop();
-			CheckByond(true);
-			Server.GetComponent<ITGDreamDaemon>().Start();
+			Setup(false);
 		}
 
 		static void SendToBotBusForTesting()
