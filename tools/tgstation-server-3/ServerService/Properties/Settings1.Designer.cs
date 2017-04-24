@@ -109,7 +109,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("hunter2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("correcthorsebatterystaple")]
         public string CredentialCyphertext {
             get {
                 return ((string)(this["CredentialCyphertext"]));
@@ -181,7 +181,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("asdf")]
+        [global::System.Configuration.DefaultSettingValueAttribute("hunter2")]
         public string IRCPass {
             get {
                 return ((string)(this["IRCPass"]));
@@ -196,6 +196,7 @@ namespace TGServerService.Properties {
         [global::System.Configuration.DefaultSettingValueAttribute(@"<?xml version=""1.0"" encoding=""utf-16""?>
 <ArrayOfString xmlns:xsi=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:xsd=""http://www.w3.org/2001/XMLSchema"">
   <string>#tgstation13</string>
+  <string>#devbus</string>
   <string>#coderbus</string>
   <string>#adminbus</string>
 </ArrayOfString>")]

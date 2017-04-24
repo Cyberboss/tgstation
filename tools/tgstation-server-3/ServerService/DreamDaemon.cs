@@ -258,28 +258,29 @@ namespace TGServerService
 
 					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord());
 					Proc.Start();
-				}
-				if (!Proc.WaitForInputIdle(20000))
-				{
-					Proc.Kill();
-					Proc.Close();
-					return "Server start is taking more that 20s! Aborting!";
-				}
 
-				var Handles = EnumerateProcessWindowHandles(Proc.Id);
-
-				var NameList = new List<string>();
-				foreach (IntPtr I in Handles)
-				{
-					//We're looking for the one called "Dream Daemon"
-					int capacity = GetWindowTextLength(new HandleRef(this, I)) * 2;
-					StringBuilder stringBuilder = new StringBuilder(capacity);
-					GetWindowText(new HandleRef(this, I), stringBuilder, stringBuilder.Capacity);
-					if (stringBuilder.ToString() == "Dream Daemon")
+					if (!Proc.WaitForInputIdle(20000))
 					{
-						hwndMain = I;
-						lock (watchdogLock)
+						Proc.Kill();
+						Proc.Close();
+						return "Server start is taking more that 20s! Aborting!";
+					}
+
+					Thread.Sleep(5000);
+
+					var Handles = EnumerateProcessWindowHandles(Proc.Id);
+
+					var NameList = new List<string>();
+					foreach (IntPtr I in Handles)
+					{
+						//We're looking for the one called "Dream Daemon"
+						int capacity = GetWindowTextLength(new HandleRef(this, I)) * 2;
+						StringBuilder stringBuilder = new StringBuilder(capacity);
+						GetWindowText(new HandleRef(this, I), stringBuilder, stringBuilder.Capacity);
+						var windowName = stringBuilder.ToString();
+						if (windowName == "Dream Daemon")
 						{
+							hwndMain = I;
 							ClickVisibility();
 							currentStatus = TGDreamDaemonStatus.Online;
 							if (!watchdog)
@@ -287,14 +288,14 @@ namespace TGServerService
 								DDWatchdog = new Thread(new ThreadStart(Watchdog));
 								DDWatchdog.Start();
 							}
+							return null;
 						}
-						return null;
 					}
-				}
 
-				Proc.Kill();
-				Proc.Close();
-				return "Could not find locate the Dream Daemon window!";
+					Proc.Kill();
+					Proc.Close();
+					return "Could not find locate the Dream Daemon window!";
+				}
 			}catch (Exception e)
 			{
 				return e.ToString();

@@ -24,7 +24,7 @@
       <Value Profile="(Default)">Insufficient data for meaningful answer</Value>
     </Setting>
     <Setting Name="CredentialCyphertext" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hunter2</Value>
+      <Value Profile="(Default)">correcthorsebatterystaple</Value>
     </Setting>
     <Setting Name="WCFPort" Type="System.UInt16" Scope="User">
       <Value Profile="(Default)">8000</Value>
@@ -42,12 +42,13 @@
       <Value Profile="(Default)">TGS3</Value>
     </Setting>
     <Setting Name="IRCPass" Type="System.String" Scope="User">
-      <Value Profile="(Default)">asdf</Value>
+      <Value Profile="(Default)">hunter2</Value>
     </Setting>
     <Setting Name="IRCChannels" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
 &lt;ArrayOfString xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema"&gt;
   &lt;string&gt;#tgstation13&lt;/string&gt;
+  &lt;string&gt;#devbus&lt;/string&gt;
   &lt;string&gt;#coderbus&lt;/string&gt;
   &lt;string&gt;#adminbus&lt;/string&gt;
 &lt;/ArrayOfString&gt;</Value>

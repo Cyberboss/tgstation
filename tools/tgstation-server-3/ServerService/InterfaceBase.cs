@@ -22,7 +22,6 @@ namespace TGServerService
 		void RunDisposals()
 		{
 			DisposeDreamDaemon();
-			DisposeIRC();
 			DisposeCompiler();
 			DisposeByond();
 			DisposeRepo();

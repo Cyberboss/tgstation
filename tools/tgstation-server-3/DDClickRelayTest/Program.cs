@@ -9,8 +9,14 @@ namespace TestProg
 	{
 		static void RunTests()
 		{
-			Setup(false);
 			Server.GetComponent<ITGDreamDaemon>().Stop();
+			CheckByond(true);
+			Server.GetComponent<ITGDreamDaemon>().Start();
+		}
+
+		static void SendToBotBusForTesting()
+		{
+			Server.GetComponent<ITGIRC>().Setup(null, 0, "TGS3Test", null, new string[] { }, "#botbus");
 		}
 
 		static void SendPRsToIRC()
@@ -39,12 +45,12 @@ namespace TestProg
 					Thread.Sleep(1000);
 				} while (Server.GetComponent<ITGRepository>().OperationInProgress());
 
-				CheckByond();
+				CheckByond(false);
 
 				Server.GetComponent<ITGCompiler>().Initialize();
 			}
 			else
-				CheckByond();
+				CheckByond(false);
 
 			if (forceCompile || Server.GetComponent<ITGDreamDaemon>().CanStart() != null)
 			{
@@ -58,9 +64,9 @@ namespace TestProg
 
 		}
 
-		static void CheckByond()
+		static void CheckByond(bool forceUpdate)
 		{
-			if (Server.GetComponent<ITGByond>().GetVersion(false) != null)
+			if (!forceUpdate && Server.GetComponent<ITGByond>().GetVersion(false) != null)
 				return;
 			Server.GetComponent<ITGByond>().UpdateToVersion(511, 1381);
 			do

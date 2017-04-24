@@ -17,6 +17,10 @@ namespace TGServerService
 		const string VersionFile = "/byond_version.dat";
 		const string ByondRevisionsURL = "https://secure.byond.com/download/build/{0}/{0}.{1}_byond.zip";
 
+		const string ByondConfigDir = "/BYOND/cfg";
+		const string ByondDDConfig = "/daemon.txt";
+		const string ByondNoPromptTrustedMode = "trusted-check 0";
+
 		TGByondStatus updateStat = TGByondStatus.Idle;
 		object ByondLock = new object();
 		string lastError;
@@ -212,6 +216,11 @@ namespace TGServerService
 						return false;
 					try
 					{
+						//IMPORTANT: SET THE BYOND CONFIG TO NOT PROMPT FOR TRUSTED MODE REEE
+						var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + ByondConfigDir;
+						Directory.CreateDirectory(dir);
+						File.WriteAllText(dir + ByondDDConfig, ByondNoPromptTrustedMode);
+
 						Program.DeleteDirectory(ByondDirectory);
 						Directory.Move(StagingDirectoryInner, ByondDirectory);
 						Directory.Delete(StagingDirectory, true);

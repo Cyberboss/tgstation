@@ -35,13 +35,6 @@ namespace TGServerService
 			if(Connected())
 				Reconnect();
 		}
-		void DisposeIRC()
-		{
-			//just change our nick so we can avoid the bug
-			if (Connected())
-				irc.RfcNick("_");
-			Thread.Sleep(1000);
-		}
 		public string Connect()
 		{
 			if (Connected())
