@@ -14,7 +14,8 @@ namespace TGServerService
 	//manages clicking the hidden DD window
 	partial class TGStationServer : ITGDreamDaemon
 	{
-		//TODO: API for checking when the game reboots
+
+		const string HardRebootRequestFile = "/HardReboot.lk";
 
 		Process Proc;
 
@@ -46,6 +47,16 @@ namespace TGServerService
 			}
 		}
 
+		void RequestRestart()
+		{
+			while (DaemonStatus() == TGDreamDaemonStatus.HardRebooting)
+				Thread.Sleep(1000);
+			if (DaemonStatus() != TGDreamDaemonStatus.Online)
+				return;
+			File.Create(GameDirA + HardRebootRequestFile).Close();
+			File.Create(GameDirB + HardRebootRequestFile).Close();
+		}
+
 		public string Stop()
 		{
 			Thread t;
@@ -69,6 +80,7 @@ namespace TGServerService
 			lock (watchdogLock)
 			{
 				Properties.Settings.Default.ServerPort = new_port;
+				RequestRestart();
 			}
 		}
 
@@ -245,11 +257,13 @@ namespace TGServerService
 		public void SetVisibility(TGDreamDaemonVisibility NewVis)
 		{
 			Properties.Settings.Default.ServerVisiblity = (int)NewVis;
+			RequestRestart();
 		}
 
 		public void SetSecurityLevel(TGDreamDaemonSecurity level)
 		{
 			Properties.Settings.Default.ServerSecurity = (int)level;
+			RequestRestart();
 		}
 	}
 }
