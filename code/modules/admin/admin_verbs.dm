@@ -108,9 +108,12 @@ GLOBAL_LIST_INIT(admin_verbs_spawn, list(/datum/admins/proc/spawn_atom,/client/p
 GLOBAL_PROTECT(admin_verbs_server)
 GLOBAL_LIST_INIT(admin_verbs_server, AVerbsServer())
 /proc/AVerbsServer()
-	return list(
+	. = list(
 	/datum/admins/proc/startnow,
 	/datum/admins/proc/restart,
+	#ifdef TESTING
+	/datum/admins/proc/reboot_dd,
+	#endif
 	/datum/admins/proc/end_round,
 	/datum/admins/proc/delay,
 	/datum/admins/proc/toggleaban,
@@ -125,6 +128,8 @@ GLOBAL_LIST_INIT(admin_verbs_server, AVerbsServer())
 	/client/proc/panicbunker,
 	/client/proc/toggle_hub
 	)
+	if(world.RunningService())
+		. += /datum/admins/proc/reboot_dd
 GLOBAL_PROTECT(admin_verbs_debug)
 GLOBAL_LIST_INIT(admin_verbs_debug, AVerbsDebug())
 /proc/AVerbsDebug()

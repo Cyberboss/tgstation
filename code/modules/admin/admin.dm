@@ -422,6 +422,32 @@
 		feedback_add_details("admin_verb","Hard Restart") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!
 		world.Reboot("Initiated by [usr.client.holder.fakekey ? "Admin" : usr.key].", "end_error", "admin reboot - by [usr.key] [usr.client.holder.fakekey ? "(stealth)" : ""]", 10)
 
+/datum/admins/proc/reboot_dd()
+	set category = "Server"
+	set name = "Reboot DreamDaemon"
+
+#ifndef TESTING
+	if(!world.RunningService())
+		to_chat(usr, "<span class='adminnotice'>The DreamDaemon instance isn't running through the server tools. Command unavailable")
+		return
+#endif
+
+	if(!check_rights(R_SERVER, TRUE))
+		return
+
+	if(alert(usr, "Warning: This will close DreamDaemon and rely on the server watchdog to reboot it. ARE YOU SURE?", "DreamDaemon Reboot", "Reboot", "Cancel") != "Reboot" || !usr)
+		return
+	
+	var/n1 = rand(1,9)
+	var/n2 = rand(1,9)
+
+	if((input() as null|num) != n1 + n2)
+
+	if(!usr)
+		return
+
+	qdel(world)
+
 /datum/admins/proc/end_round()
 	set category = "Server"
 	set name = "End Round"

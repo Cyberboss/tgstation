@@ -175,11 +175,11 @@ SUBSYSTEM_DEF(garbage)
 /proc/qdel(datum/D, force=FALSE)
 	if(!D)
 		return
+	if(!istype(D))
+		del(D)
 #ifdef TESTING
 	SSgarbage.qdel_list += "[D.type]"
 #endif
-	if(!istype(D))
-		del(D)
 	else if(isnull(D.gc_destroyed))
 		D.gc_destroyed = GC_CURRENTLY_BEING_QDELETED
 		var/start_time = world.time
