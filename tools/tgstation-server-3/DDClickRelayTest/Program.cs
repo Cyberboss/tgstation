@@ -9,6 +9,7 @@ namespace TestProg
 	{
 		static void RunTests()
 		{
+			Setup(true, false);
 			Server.GetComponent<ITGDreamDaemon>().Start();
 			CheckByond(true);
 		}
