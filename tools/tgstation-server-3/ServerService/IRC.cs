@@ -12,7 +12,7 @@ namespace TGServerService
 	{
 		public static IrcClient irc = new IrcClient() { SupportNonRfc = true };
 		int reconnectAttempt = 0;
-		public void Setup(string url, ushort port, string username, string password, string[] channels)
+		public void Setup(string url, ushort port, string username, string password, string[] channels, string adminChannel)
 		{
 			var Config = Properties.Settings.Default;
 			if (url != null)
@@ -23,10 +23,13 @@ namespace TGServerService
 				Config.IRCNick = username;
 			if (password != null)
 				Config.IRCPass = password;
+			if (adminChannel != null)
+				Config.IRCAdminChannel = adminChannel;
 			if (channels != null)
 			{
 				var si = new StringCollection();
 				si.AddRange(channels);
+				si.Add(Config.IRCAdminChannel);
 				Config.IRCChannels = si;
 			}
 			Reconnect();
@@ -71,7 +74,6 @@ namespace TGServerService
 				foreach (var I in Config.IRCChannels)
 					irc.RfcJoin(I);
 				new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();
-				Thread.Sleep(5000);	//let it breathe
 				return null;
 			}
 			catch (Exception e)
@@ -87,7 +89,6 @@ namespace TGServerService
 				irc.Listen();
 			}
 			catch { }
-			Disconnect();
 		}
 
 		public string Reconnect()
@@ -100,6 +101,8 @@ namespace TGServerService
 		{ 
 			try
 			{
+				//because of a bug in smart irc this takes forever and there's nothing we can really do about it 
+				//If you want it fixed, get this damn pull request through https://github.com/meebey/SmartIrc4net/pull/31
 				irc.Disconnect();
 			}
 			catch
@@ -109,13 +112,18 @@ namespace TGServerService
 		{
 			return irc.IsConnected;
 		}
-		public string SendMessage(string message)
+		public string SendMessage(string message, bool adminOnly = false)
 		{
 			try
 			{
 				if (!Connected())
 					return "Disconnected";
-				irc.SendMessage(SendType.Message, Properties.Settings.Default.IRCChannels[0], message);
+				var Config = Properties.Settings.Default;
+				if (adminOnly)
+					irc.SendMessage(SendType.Message, Config.IRCAdminChannel, message);
+				else
+					foreach(var I in Config.IRCChannels)
+						irc.SendMessage(SendType.Message, I, message);
 				return null;
 			}
 			catch (Exception e)

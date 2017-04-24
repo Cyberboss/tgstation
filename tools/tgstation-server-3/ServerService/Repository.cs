@@ -20,19 +20,17 @@ namespace TGServerService
 		const string PRJobFile = "prtestjob.json";
 
 		object RepoLock = new object();
-		bool cloning = false;
+		bool RepoBusy = false;
 
 		Repository Repo;
 		int currentProgress = -1;
 
 		public bool OperationInProgress()
 		{
-			if (Monitor.TryEnter(RepoLock))
+			lock(RepoLock)
 			{
-				Monitor.Exit(RepoLock);
-				return false;
+				return RepoBusy;
 			}
-			return true;
 		}
 
 		public int CheckoutProgress()
@@ -72,7 +70,7 @@ namespace TGServerService
 		{
 			lock (RepoLock)
 			{
-				return Repository.IsValid(RepoPath);
+				return RepoBusy || Repository.IsValid(RepoPath);
 			}
 		}
 
@@ -93,11 +91,7 @@ namespace TGServerService
 
 		void Clone(object twostrings)
 		{
-			if (!Monitor.TryEnter(RepoLock))
-				return;
-			if (cloning)
-				return;
-			cloning = true;
+			//busy flag set by caller
 			try
 			{
 				if (!Monitor.TryEnter(CompilerLock))
@@ -149,16 +143,25 @@ namespace TGServerService
 			} //don't crash the service
 			finally
 			{
-				cloning = false;
-				Monitor.Exit(RepoLock);
+				lock (RepoLock)
+				{
+					RepoBusy = false;
+				}
 			}
 		}
-		public void Setup(string RepoURL, string BranchName)
+		public bool Setup(string RepoURL, string BranchName)
 		{
-			new Thread(new ParameterizedThreadStart(Clone))
+			lock (RepoLock)
 			{
-				IsBackground = true //make sure we don't hold up shutdown
-			}.Start(new TwoStrings { a = RepoURL, b = BranchName });
+				if (RepoBusy)
+					return false;
+				RepoBusy = true;
+				new Thread(new ParameterizedThreadStart(Clone))
+				{
+					IsBackground = true //make sure we don't hold up shutdown
+				}.Start(new TwoStrings { a = RepoURL, b = BranchName });
+				return true;
+			}
 		}
 
 		string GetShaOrBranch(out string error, bool branch)
@@ -237,15 +240,30 @@ namespace TGServerService
 				}
 			}
 		}
-
-		public string Update()
+		string MergeBranch(string branchname)
+		{
+			var Result = Repo.Merge(branchname, MakeSig());
+			switch (Result.Status)
+			{
+				case MergeStatus.Conflicts:
+					ResetNoLock();
+					SendMessage("Repo: Merge conflicted, aborted.");
+					return "Merge conflict occurred.";
+				case MergeStatus.UpToDate:
+					SendMessage("Repo: Merge already up to date!");
+					return "Already up to date with PR.";
+			}
+			SendMessage(String.Format("Repo: Branch {0} successfully merged!", branchname));
+			return null;
+		}
+		public string Update(bool reset)
 		{
 			lock (RepoLock)
 			{
 				var result = LoadRepo();
 				if (result != null)
 					return result;
-				SendMessage("Repo: Updating to origin branch...");
+				SendMessage(String.Format("Repo: Updating to origin branch...({0})", reset ? "Hard Reset" : "Merge"));
 				try
 				{
 					string logMessage = "";
@@ -256,16 +274,22 @@ namespace TGServerService
 						fos.OnTransferProgress += HandleTransferProgress;
 						Commands.Fetch(Repo, R.Name, refSpecs, null, logMessage);
 					}
-					Repo.Reset(ResetMode.Hard, String.Format("origin/{0}", Repo.Head.FriendlyName));
-					var error = ResetNoLock();
-					if (error == null)
+
+					var originBranch = String.Format("origin/{0}", Repo.Head.FriendlyName);
+					if (reset)
 					{
-						DeletePRList();
-						SendMessage("Repo: Update complete!");
+						Repo.Reset(ResetMode.Hard, originBranch);
+						var error = ResetNoLock();
+						if (error == null)
+						{
+							DeletePRList();
+							SendMessage("Repo: Update complete!");
+						}
+						else
+							SendMessage("Repo: Update failed!");
+						return error;
 					}
-					else
-						SendMessage("Repo: Update failed!");
-					return error;
+					return MergeBranch(originBranch);
 				}
 				catch (Exception E)
 				{
@@ -335,23 +359,15 @@ namespace TGServerService
 					//var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
 
 					//so we'll know if this fails
-					var Result = Repo.Merge(PRBranchName, MakeSig());
-					switch (Result.Status)
-					{
-						case MergeStatus.Conflicts:
-							ResetNoLock();
-							SendMessage("Repo: PR Merge conflicted, aborted.");
-							return "Merge conflict occurred.";
-						case MergeStatus.UpToDate:
-							SendMessage("Repo: PR already up to date!");
-							return "Already up to date with PR.";
-					}
+					var Result = MergeBranch(PRBranchName);
 
-					//var CurrentPRs = GetCurrentPRList();
-					//CurrentPRs.Add(PRNumber.ToString(), PRSha);
-					//SetCurrentPRList(CurrentPRs);
-					SendMessage("Repo: PR merge complete!");
-					return null;
+					if (Result == null)
+					{
+						//var CurrentPRs = GetCurrentPRList();
+						//CurrentPRs.Add(PRNumber.ToString(), PRSha);
+						//SetCurrentPRList(CurrentPRs);
+					}
+					return Result;
 				}
 				catch (Exception E)
 				{

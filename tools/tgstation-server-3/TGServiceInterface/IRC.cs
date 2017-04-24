@@ -7,7 +7,7 @@ namespace TGServiceInterface
 	{
 		//Sets up IRC info, null fields don't change the current value
 		[OperationContract]
-		void Setup(string url_port = null, ushort port = 0, string username = null, string password = null, string[] channels = null);
+		void Setup(string url_port = null, ushort port = 0, string username = null, string password = null, string[] channels = null, string adminchannel = null);
 
 		//returns true if the irc bot is connected, false otherwise
 		[OperationContract]
@@ -29,6 +29,6 @@ namespace TGServiceInterface
 		[OperationContract]
 		//Sends a message to irc
 		//returns null on success, error on failure
-		string SendMessage(string msg);
+		string SendMessage(string msg, bool adminOnly = false);
 	}
 }

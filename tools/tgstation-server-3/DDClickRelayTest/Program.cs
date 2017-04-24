@@ -9,7 +9,7 @@ namespace DDClickRelayTest
 	{
 		static void Main(string[] args)
 		{
-			Server.GetComponent<ITGDreamDaemon>().Start();
+
 		}
 
 		//Sets up everything and starts the server

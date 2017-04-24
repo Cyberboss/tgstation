@@ -4,25 +4,25 @@ using TGServiceInterface;
 
 namespace TGServerService
 {
-	//this line basically says make one instance of the service and never delete it
+	//this line basically says make one instance of the service, use it multithreaded for requests, and never delete it
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
 	partial class TGStationServer : IDisposable, ITGStatusCheck
 	{
 		//call partial constructors/destructors from here
-		//called when the service is started.... maybe?
-		//Its only called once and it's guaranteed to be called by the time the first WCF call is made
+		//called when the service is started
 		public TGStationServer()
 		{
 			InitByond();
 			InitCompiler();
 			InitDreamDaemon();
-			Connect();
+			Connect(); //IRC
 		}
 
 		//called when the service is stopped
 		void RunDisposals()
 		{
 			DisposeDreamDaemon();
+			//Disconnect();	//See the comment about the bug in the impl
 			DisposeCompiler();
 			DisposeByond();
 			DisposeRepo();
