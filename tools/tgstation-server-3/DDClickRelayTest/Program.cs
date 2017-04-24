@@ -10,6 +10,8 @@ namespace TestProg
 		static void RunTests()
 		{
 			Setup(false);
+			Server.GetComponent<ITGDreamDaemon>().Start();
+			CheckByond(true);
 		}
 
 		static void SendToBotBusForTesting()
@@ -37,7 +39,7 @@ namespace TestProg
 		{
 			if (!Server.GetComponent<ITGRepository>().Exists())
 			{
-				Server.GetComponent<ITGRepository>().Setup("https://github.com/tgstation/tgstation");
+				Server.GetComponent<ITGRepository>().Setup("https://github.com/Cyberboss/tgstation");
 				do
 				{
 					Thread.Sleep(1000);
