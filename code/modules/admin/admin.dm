@@ -428,7 +428,7 @@
 
 #ifndef TESTING
 	if(!world.RunningService())
-		to_chat(usr, "<span class='adminnotice'>The DreamDaemon instance isn't running through the server tools. Command unavailable")
+		to_chat(usr, "<span class='adminnotice'>The DreamDaemon instance isn't running through the server tools. Command unavailable.</span>")
 		return
 #endif
 
