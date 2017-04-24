@@ -1,0 +1,8 @@
+image: Visual Studio 2017
+
+build:
+  project: tools/tgstation-server-3/TGStationServer3.sln
+
+  parallel: true
+
+  verbosity: minimal
