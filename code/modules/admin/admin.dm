@@ -441,7 +441,8 @@
 	var/n1 = rand(1,9)
 	var/n2 = rand(1,9)
 
-	if((input() as null|num) != n1 + n2)
+	if((input(usr, "Additional verification. Please input the answer to [n1] + [n2]:", "DreamDaemon Reboot") as null|num) != n1 + n2)
+		return
 
 	if(!usr)
 		return
