@@ -8,7 +8,7 @@
 /datum/getrev/New()
 	if(fexists(PR_TEST_JSON))
 		testmerge = json_decode(file2text(PR_TEST_JSON))
-	var/list/logs = file2list(".git/logs/HEAD")
+	var/list/logs = world.file2list(".git/logs/HEAD")
 	logs = splittext(logs[logs.len - 1], " ")
 	date = unix2date(text2num(logs[5]))
 	parentcommit = logs[1]
