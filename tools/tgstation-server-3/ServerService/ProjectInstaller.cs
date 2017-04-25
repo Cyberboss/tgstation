@@ -11,8 +11,8 @@ namespace ServerService
 		{
 			InitializeComponent();
 		}
-
-		private void serviceProcessInstaller1_AfterInstall(object sender, InstallEventArgs e)
+		
+		private void serviceInstaller1_AfterInstall(object sender, InstallEventArgs e)
 		{
 			using (ServiceController sc = new ServiceController(serviceInstaller1.ServiceName))
 			{
