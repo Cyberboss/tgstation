@@ -12,7 +12,7 @@ namespace TGServerService
 	{
 		public static IrcClient irc = new IrcClient() { SupportNonRfc = true };
 		int reconnectAttempt = 0;
-		public void Setup(string url, ushort port, string username, string password, string[] channels, string adminChannel, bool enabled)
+		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, bool enabled)
 		{
 			var Config = Properties.Settings.Default;
 			if (url != null)
@@ -21,8 +21,6 @@ namespace TGServerService
 				Config.IRCPort = port;
 			if (username != null)
 				Config.IRCNick = username;
-			if (password != null)
-				Config.IRCPass = password;
 			if (adminChannel != null)
 				Config.IRCAdminChannel = adminChannel;
 			if (channels != null)
@@ -36,6 +34,23 @@ namespace TGServerService
 
 			if(Connected())
 				Reconnect();
+		}
+		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
+		{
+			var Config = Properties.Settings.Default;
+			if (identifyTarget != null)
+				Config.IRCIdentifyTarget = identifyTarget;
+			if (identifyCommand != null)
+				Config.IRCIdentifyCommand = identifyCommand;
+			Config.IRCIdentifyRequired = required;
+			if (Connected())
+				Login();
+		}
+		void Login()
+		{
+			var Config = Properties.Settings.Default;
+			if (Config.IRCIdentifyRequired)
+				irc.SendMessage(SendType.Message, Config.IRCIdentifyTarget, Config.IRCIdentifyCommand);
 		}
 		public string Connect()
 		{
@@ -74,8 +89,7 @@ namespace TGServerService
 				{
 					return "Bot name is already taken: " + e.ToString();
 				}
-
-				irc.SendMessage(SendType.Message, "NickServ", "identify " + Config.IRCPass);
+				Login();
 				foreach (var I in Config.IRCChannels)
 					irc.RfcJoin(I);
 				new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();

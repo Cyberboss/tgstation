@@ -181,13 +181,13 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("hunter2")]
-        public string IRCPass {
+        [global::System.Configuration.DefaultSettingValueAttribute("NickServ")]
+        public string IRCIdentifyTarget {
             get {
-                return ((string)(this["IRCPass"]));
+                return ((string)(this["IRCIdentifyTarget"]));
             }
             set {
-                this["IRCPass"] = value;
+                this["IRCIdentifyTarget"] = value;
             }
         }
         
@@ -254,6 +254,30 @@ namespace TGServerService.Properties {
             }
             set {
                 this["IRCEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("hunter2")]
+        public string IRCIdentifyCommand {
+            get {
+                return ((string)(this["IRCIdentifyCommand"]));
+            }
+            set {
+                this["IRCIdentifyCommand"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IRCIdentifyRequired {
+            get {
+                return ((bool)(this["IRCIdentifyRequired"]));
+            }
+            set {
+                this["IRCIdentifyRequired"] = value;
             }
         }
     }

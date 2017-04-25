@@ -14,7 +14,7 @@ namespace TestProg
 
 		static void SendToBotBusForTesting()
 		{
-			Server.GetComponent<ITGIRC>().Setup(null, 0, "TGS3Test", null, new string[] { }, "#botbus");
+			Server.GetComponent<ITGIRC>().Setup(null, 0, "TGS3Test", new string[] { }, "#botbus");
 			Server.GetComponent<ITGIRC>().Connect();
 		}
 

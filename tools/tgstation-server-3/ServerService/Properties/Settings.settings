@@ -41,8 +41,8 @@
     <Setting Name="IRCNick" Type="System.String" Scope="User">
       <Value Profile="(Default)">TGS3</Value>
     </Setting>
-    <Setting Name="IRCPass" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hunter2</Value>
+    <Setting Name="IRCIdentifyTarget" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NickServ</Value>
     </Setting>
     <Setting Name="IRCChannels" Type="System.Collections.Specialized.StringCollection" Scope="User">
       <Value Profile="(Default)">&lt;?xml version="1.0" encoding="utf-16"?&gt;
@@ -63,6 +63,12 @@
       <Value Profile="(Default)">adminbus</Value>
     </Setting>
     <Setting Name="IRCEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="IRCIdentifyCommand" Type="System.String" Scope="User">
+      <Value Profile="(Default)">hunter2</Value>
+    </Setting>
+    <Setting Name="IRCIdentifyRequired" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>
