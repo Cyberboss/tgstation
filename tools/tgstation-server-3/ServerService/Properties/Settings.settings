@@ -62,5 +62,8 @@
     <Setting Name="IRCAdminChannel" Type="System.String" Scope="User">
       <Value Profile="(Default)">adminbus</Value>
     </Setting>
+    <Setting Name="IRCEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

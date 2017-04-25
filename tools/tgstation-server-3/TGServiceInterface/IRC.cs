@@ -7,7 +7,7 @@ namespace TGServiceInterface
 	{
 		//Sets up IRC info, null fields don't change the current value
 		[OperationContract]
-		void Setup(string url_port = null, ushort port = 0, string username = null, string password = null, string[] channels = null, string adminchannel = null);
+		void Setup(string url_port = null, ushort port = 0, string username = null, string password = null, string[] channels = null, string adminchannel = null, bool enabled = true);
 
 		//returns true if the irc bot is connected, false otherwise
 		[OperationContract]

@@ -244,5 +244,17 @@ namespace TGServerService.Properties {
                 this["IRCAdminChannel"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IRCEnabled {
+            get {
+                return ((bool)(this["IRCEnabled"]));
+            }
+            set {
+                this["IRCEnabled"] = value;
+            }
+        }
     }
 }

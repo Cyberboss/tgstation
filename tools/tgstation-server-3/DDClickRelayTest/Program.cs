@@ -10,13 +10,12 @@ namespace TestProg
 		static void RunTests()
 		{
 			SendToBotBusForTesting();
-			Setup(false, false);
-			Server.GetComponent<ITGDreamDaemon>().Start();
 		}
 
 		static void SendToBotBusForTesting()
 		{
 			Server.GetComponent<ITGIRC>().Setup(null, 0, "TGS3Test", null, new string[] { }, "#botbus");
+			Server.GetComponent<ITGIRC>().Connect();
 		}
 
 		static void SendPRsToIRC()

@@ -12,7 +12,7 @@ namespace TGServerService
 	{
 		public static IrcClient irc = new IrcClient() { SupportNonRfc = true };
 		int reconnectAttempt = 0;
-		public void Setup(string url, ushort port, string username, string password, string[] channels, string adminChannel)
+		public void Setup(string url, ushort port, string username, string password, string[] channels, string adminChannel, bool enabled)
 		{
 			var Config = Properties.Settings.Default;
 			if (url != null)
@@ -32,6 +32,8 @@ namespace TGServerService
 				si.Add(Config.IRCAdminChannel);
 				Config.IRCChannels = si;
 			}
+			Config.IRCEnabled = enabled;
+
 			if(Connected())
 				Reconnect();
 		}
@@ -39,10 +41,12 @@ namespace TGServerService
 		{
 			if (Connected())
 				return null;
+			var Config = Properties.Settings.Default;
+			if (!Config.IRCEnabled)
+				return "IRC disabled by config.";
 			try
 			{
 				//irc.OnChannelMessage += new IrcEventHandler(OnChannelMessage); TODO
-				var Config = Properties.Settings.Default;
 				try
 				{
 					irc.Connect(Config.IRCServer, Config.IRCPort);
@@ -118,7 +122,7 @@ namespace TGServerService
 			try
 			{
 				if (!Connected())
-					return "Disconnected";
+					return "Disconnected.";
 				var Config = Properties.Settings.Default;
 				if (adminOnly)
 					irc.SendMessage(SendType.Message, Config.IRCAdminChannel, message);
