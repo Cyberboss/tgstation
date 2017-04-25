@@ -377,7 +377,13 @@ namespace TGServerService
 					var Config = Properties.Settings.Default;
 
 					PRBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
-					var PRSha = Repo.Branches[PRBranchName].Tip.Sha;
+
+					var branch = Repo.Branches[PRBranchName];
+					if (branch == null)
+					{
+						SendMessage("REPO: PR could not be fetched. Does it exist?");
+						return String.Format("PR #{0} could not be fetched. Does it exist?", PRNumber);
+					}
 
 					//so we'll know if this fails
 					var Result = MergeBranch(PRBranchName);
@@ -385,7 +391,7 @@ namespace TGServerService
 					if (Result == null)
 					{
 						var CurrentPRs = GetCurrentPRList();
-						CurrentPRs.Add(PRNumber.ToString(), PRSha);
+						CurrentPRs.Add(PRNumber.ToString(), branch.Tip.Sha);
 						SetCurrentPRList(CurrentPRs);
 					}
 					return Result;
