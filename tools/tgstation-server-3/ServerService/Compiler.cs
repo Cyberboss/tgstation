@@ -62,6 +62,16 @@ namespace TGServerService
 			}
 		}
 
+		public string CompileError()
+		{
+			lock (CompilerLock)
+			{
+				var err = lastCompilerError;
+				lastCompilerError = null;
+				return err;
+			}
+		}
+
 		void DisposeCompiler()
 		{
 			lock (CompilerLock)
@@ -84,6 +94,7 @@ namespace TGServerService
 			{
 				if (compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
 					return false;
+				lastCompilerError = null;
 				compilerCurrentStatus = TGCompilerStatus.Initializing;
 				CompilerThread = new Thread(new ThreadStart(InitializeImpl));
 				CompilerThread.Start();
@@ -344,6 +355,7 @@ namespace TGServerService
 			{
 				if (GetVersion(false) == null || compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
 					return false;
+				lastCompilerError = null;
 				compilerCurrentStatus = TGCompilerStatus.Compiling;
 				CompilerThread = new Thread(new ThreadStart(CompileImpl));
 				CompilerThread.Start();

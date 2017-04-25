@@ -37,6 +37,6 @@ namespace TGServiceInterface
 		//null means the operation succeeded
 		//will return an error message otherwise
 		//this returns to normal after being checked or starting an operation
-		string GetError();
+		string CompileError();
 	}
 }

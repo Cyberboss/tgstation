@@ -82,6 +82,9 @@ namespace TGCommandLine
 					if (!DM.Compile())
 					{
 						Console.WriteLine("Error: Unable to start compilation! If the game directory is not initialized try running 'dm initialize'");
+						var err = DM.CompileError();
+						if (err != null)
+							Console.WriteLine(err);
 						return ExitCode.ServerError;
 					}
 					Console.WriteLine("Compile job started");
@@ -92,13 +95,40 @@ namespace TGCommandLine
 						{
 							Thread.Sleep(1000);
 						} while (DM.GetStatus() == TGCompilerStatus.Compiling);
-						Console.WriteLine(DM.GetError() ?? "Compilation successful");
+						Console.WriteLine(DM.CompileError() ?? "Compilation successful");
+					}
+					break;
+				case "initialize":
+					stat = DM.GetStatus();
+					if (stat == TGCompilerStatus.Compiling || stat == TGCompilerStatus.Initializing)
+					{
+						Console.WriteLine("Error: Compiler is " + ((stat == TGCompilerStatus.Initializing) ? "already initialized!" : " already running!"));
+						return ExitCode.ServerError;
+					}
+					if (!DM.Initialize())
+					{
+						Console.WriteLine("Error: Unable to start initialization! If the game directory is not initialized try running 'dm initialize'");
+						var err = DM.CompileError();
+						if (err != null)
+							Console.WriteLine(err);
+						return ExitCode.ServerError;
+					}
+					Console.WriteLine("Initialize job started");
+					if (param == "--wait")
+					{
+						Console.WriteLine("Awaiting completion...");
+						do
+						{
+							Thread.Sleep(1000);
+						} while (DM.GetStatus() == TGCompilerStatus.Initializing);
+						Console.WriteLine(DM.CompileError() ?? "Initialization successful");
 					}
 					break;
 				case "?":
 				case "help":
 					Console.WriteLine("DM commands:");
 					Console.WriteLine();
+					Console.WriteLine("initialize [--wait]\t-\tStarts an initialization job optionally waiting for completion.");
 					Console.WriteLine("compile [--wait]\t-\tStarts a compile/update job optionally waiting for completion.");
 					break;
 				default:
