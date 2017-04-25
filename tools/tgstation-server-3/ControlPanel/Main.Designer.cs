@@ -16,8 +16,6 @@
 			if (disposing && (components != null))
 			{
 				components.Dispose();
-				TrayIcon.Dispose();
-				TrayMenu.Dispose();
 			}
 			base.Dispose(disposing);
 		}
@@ -365,7 +363,7 @@
             this.Controls.Add(this.BYONDPanel);
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "/tg/station 13 Server";
+            this.Text = "/tg/station 13 Server Control Panel";
             this.BYONDPanel.ResumeLayout(false);
             this.RepoPanel.ResumeLayout(false);
             this.RepoPanel.PerformLayout();
