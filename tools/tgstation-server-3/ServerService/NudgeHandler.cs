@@ -44,7 +44,7 @@ namespace TGServerService
 
 				Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
-				listener.Bind(new IPEndPoint(IPAddress.Any, port));
+				listener.Bind(new IPEndPoint(IPAddress.Any, 45678));
 				listener.Listen(5);
 
 				// Start listening for connections.  

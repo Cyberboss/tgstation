@@ -58,15 +58,18 @@ namespace TGServerService
 				else
 				{
 					irc.RfcNick(Config.IRCNick);
-					foreach(var I in channels)
+					if (channels != null)
 					{
-						if (!oldchannels.Contains(I))
-							irc.RfcJoin(I);
-					}
-					foreach (var I in oldchannels)
-					{
-						if (!Config.IRCChannels.Contains(I))
-							irc.RfcPart(I);
+						foreach (var I in channels)
+						{
+							if (!oldchannels.Contains(I))
+								irc.RfcJoin(I);
+						}
+						foreach (var I in oldchannels)
+						{
+							if (!Config.IRCChannels.Contains(I))
+								irc.RfcPart(I);
+						}
 					}
 				}
 		}

@@ -60,7 +60,7 @@
       <Value Profile="(Default)">6667</Value>
     </Setting>
     <Setting Name="IRCAdminChannel" Type="System.String" Scope="User">
-      <Value Profile="(Default)">adminbus</Value>
+      <Value Profile="(Default)">#adminbus</Value>
     </Setting>
     <Setting Name="IRCEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

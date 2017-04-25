@@ -201,3 +201,4 @@ tools/tgstation-server-3/*/Debug/*
 tools/tgstation-server-3/*/Release/*
 
 /tools/tgstation-server-3/packages
+*.user

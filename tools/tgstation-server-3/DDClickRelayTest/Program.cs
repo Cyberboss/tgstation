@@ -95,9 +95,6 @@ namespace TGCommandLine
 						Console.WriteLine(DM.GetError() ?? "Compilation successful");
 					}
 					break;
-				case "status":
-
-					break;
 				case "?":
 				case "help":
 					Console.WriteLine("DM commands:");
@@ -190,6 +187,21 @@ namespace TGCommandLine
 					foreach (var I in IRC.Channels())
 						Console.WriteLine("\t" + I);
 					break;
+				case "enable":
+					IRC.Setup(null, 0, null, null, null, TGIRCEnableType.Enable);
+					IRC.Connect();
+					break;
+				case "disable":
+					IRC.Setup(null, 0, null, null, null, TGIRCEnableType.Disable);
+					break;
+				case "admin":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					IRC.Setup(null, 0, null, null, param);
+					break;
 				case "?":
 				case "help":
 					Console.WriteLine("IRC commands:");
@@ -199,6 +211,9 @@ namespace TGCommandLine
 					Console.WriteLine("part <channel>\t-\tLeaves a channel");
 					Console.WriteLine("announce <message>\t-\tSends a message to all connected channels");
 					Console.WriteLine("channels\t-\tList configured channels");
+					Console.WriteLine("enable\t-\tEnables the IRC bot");
+					Console.WriteLine("disable\t-\tDisables the IRC bot");
+					Console.WriteLine("admin\t-\tSets the admin IRC channel");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

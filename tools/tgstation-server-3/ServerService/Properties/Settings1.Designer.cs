@@ -235,7 +235,7 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("adminbus")]
+        [global::System.Configuration.DefaultSettingValueAttribute("#adminbus")]
         public string IRCAdminChannel {
             get {
                 return ((string)(this["IRCAdminChannel"]));
