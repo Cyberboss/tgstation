@@ -22,6 +22,9 @@ namespace TGServerService
 					splits.RemoveAt(0);
 					SendMessage("GAME: " + String.Join(" ", splits));
 					break;
+				case "killme":
+					Restart();
+					break;
 			}
 		}
 

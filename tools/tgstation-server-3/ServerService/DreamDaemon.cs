@@ -27,6 +27,9 @@ namespace TGServerService
 		const int DDBadStartTime = 10;
 		const int DDRestartMaxRetries = 5;
 
+		object restartLock = new object();
+		bool RestartInProgress = false;
+
 		void InitDreamDaemon()
 		{
 			Proc = new Process();
@@ -94,15 +97,34 @@ namespace TGServerService
 
 		public string Restart()
 		{
-			Stop();
-			return Start();
+			if (!Monitor.TryEnter(restartLock))
+				return "Restart already in progress";
+			RestartInProgress = true;
+			try
+			{
+				Stop();
+				var res = Start();
+				if(res != null)
+					RestartInProgress = false;
+				return res;
+			}
+			finally
+			{
+				Monitor.Exit(restartLock);
+			}
 		}
 
 		void Watchdog()
 		{
 			try
 			{
-				SendMessage("DD: Server started, watchdog active...");
+				lock (restartLock)
+				{
+					if (!RestartInProgress)
+						SendMessage("DD: Server started, watchdog active...");
+					else
+						RestartInProgress = false;
+				}
 				var retries = DDRestartMaxRetries;
 				while (true)
 				{
@@ -244,6 +266,7 @@ namespace TGServerService
 					{
 						Proc.Kill();
 						Proc.Close();
+						currentStatus = TGDreamDaemonStatus.Offline;
 						return String.Format("Server start is taking more that {0}s! Aborting!", DDHangStartTime);
 					}
 
@@ -258,6 +281,7 @@ namespace TGServerService
 			}
 			catch (Exception e)
 			{
+				currentStatus = TGDreamDaemonStatus.Offline;
 				return e.ToString();
 			}
 		}

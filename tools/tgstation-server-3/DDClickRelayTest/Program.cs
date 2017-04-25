@@ -17,7 +17,6 @@ namespace TGCommandLine
 		}
 		static ExitCode RunCommandLine(string[] args)
 		{
-
 			string command = null, param1 = null, param2 = null;
 			if(args.Length > 0)
 				command = args[0].Trim().ToLower();
@@ -70,17 +69,21 @@ namespace TGCommandLine
 			{
 				case "start":
 					var res = DD.Start();
-					if(res != null)
+					if (res != null)
 					{
 						Console.WriteLine("Failed to start: " + res);
 						return ExitCode.ServerError;
 					}
 					break;
+				case "stop":
+					DD.Stop();
+					break;
 				case "?":
 				case "help":
 					Console.WriteLine("DD commands:");
 					Console.WriteLine();
-					Console.WriteLine("start\t-\tStarts the server");
+					Console.WriteLine("start\t-\tStarts the server and watchdog");
+					Console.WriteLine("stop\t-\tStops the server and watchdog");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

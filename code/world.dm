@@ -183,7 +183,7 @@
 	if(RunningService() && fexists(SERVER_SERVICE_HARD_RESET_REQUEST)) {\
 		log_world("Hard shutdown requested by service!");\
 		fdel(SERVER_SERVICE_HARD_RESET_REQUEST);\
-		qdel(src);\
+		ServiceReboot();\	//this will either kill us or return
 	}\
 	..(X);\
 	return;
@@ -337,3 +337,6 @@
 
 /world/proc/IRCBroadcast(msg)
 	ExportService("irc [msg]")
+
+/world/proc/ServiceReboot()
+	ExportService("killme")

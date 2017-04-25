@@ -447,7 +447,7 @@
 	if(!usr)
 		return
 
-	qdel(world)
+	world.ServiceReboot()
 
 /datum/admins/proc/end_round()
 	set category = "Server"
