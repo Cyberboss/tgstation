@@ -195,7 +195,7 @@ namespace TGServerService
 				else
 					foreach(var I in Config.IRCChannels)
 						irc.SendMessage(SendType.Message, I, message);
-				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send{0}: {1}", adminOnly ? "ADMIN" : "", message));
+				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send{0}: {1}", adminOnly ? " (ADMIN)" : "", message));
 				return null;
 			}
 			catch (Exception e)
