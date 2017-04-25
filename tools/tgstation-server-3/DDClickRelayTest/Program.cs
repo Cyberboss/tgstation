@@ -145,7 +145,7 @@ namespace TGCommandLine
 					}
 					IRC.Setup(null, 0, null, channels);
 					break;
-				case "quit":
+				case "part":
 					if (param == null)
 					{
 						Console.WriteLine("Missing parameter!");
@@ -160,6 +160,11 @@ namespace TGCommandLine
 							continue;
 						new_channels.Add(I);
 					}
+					if(new_channels.Count == 0)
+					{
+						Console.WriteLine("Error: Cannot part from the last channel!");
+						return ExitCode.BadCommand;
+					}
 					IRC.Setup(null, 0, null, new_channels.ToArray());
 					break;
 				case "announce":
@@ -168,7 +173,18 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
-					IRC.SendMessage("SCP: " + param);
+					var res = IRC.SendMessage("SCP: " + param);
+					if(res != null)
+					{
+						Console.WriteLine("Error: " + res);
+						return ExitCode.ServerError;
+					}
+					break;
+				case "channels":
+					Console.WriteLine("Currently configured channels:");
+					Console.WriteLine("\tAdmin Channel: " + IRC.AdminChannel());
+					foreach (var I in IRC.Channels())
+						Console.WriteLine("\t" + I);
 					break;
 				case "?":
 				case "help":
@@ -176,8 +192,9 @@ namespace TGCommandLine
 					Console.WriteLine();
 					Console.WriteLine("nick <name>\t-\tSets the IRC nickname");
 					Console.WriteLine("join <channel>\t-\tJoins a channel");
-					Console.WriteLine("quit <channel>\t-\tLeaves a channel");
+					Console.WriteLine("part <channel>\t-\tLeaves a channel");
 					Console.WriteLine("announce <message>\t-\tSends a message to all connected channels");
+					Console.WriteLine("channels\t-\tList configured channels");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

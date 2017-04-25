@@ -36,7 +36,8 @@ namespace TGServerService
 			{
 				var si = new StringCollection();
 				si.AddRange(channels);
-				si.Add(Config.IRCAdminChannel);
+				if(!si.Contains(Config.IRCAdminChannel))
+					si.Add(Config.IRCAdminChannel);
 				Config.IRCChannels = si;
 			}
 			switch (enabled)
