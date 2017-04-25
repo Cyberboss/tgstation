@@ -101,7 +101,7 @@ namespace TGServerService
 					var ts = (TwoStrings)twostrings;
 					var RepoURL = ts.a;
 					var BranchName = ts.b;
-					SendMessage(String.Format("Repo: Full reset started! Cloning {0} branch of {1} ...", BranchName, RepoURL));
+					SendMessage(String.Format("REPO: Full reset started! Cloning {0} branch of {1} ...", BranchName, RepoURL));
 					try
 					{
 						DisposeRepo();
@@ -125,7 +125,7 @@ namespace TGServerService
 						Program.CopyDirectory(RepoConfig, StaticConfigDir);
 						Program.CopyDirectory(RepoData, StaticDataDir);
 						File.Copy(RepoPath + LibMySQLFile, StaticDirs + LibMySQLFile, true);
-						SendMessage("Repo: Clone complete!");
+						SendMessage("REPO: Clone complete!");
 					}
 					finally
 					{
@@ -140,7 +140,7 @@ namespace TGServerService
 			catch
 
 			{
-				SendMessage("Repo: Setup failed!");
+				SendMessage("REPO: Setup failed!");
 			} //don't crash the service
 			finally
 			{
@@ -241,7 +241,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
-				SendMessage("Repo: Checking out object: " + sha);
+				SendMessage("REPO: Checking out object: " + sha);
 				try
 				{
 					var Opts = new CheckoutOptions()
@@ -251,12 +251,12 @@ namespace TGServerService
 					};
 					Commands.Checkout(Repo, sha, Opts);
 					var res = ResetNoLock();
-					SendMessage("Repo: Checkout complete!");
+					SendMessage("REPO: Checkout complete!");
 					return res;
 				}
 				catch (Exception E)
 				{
-					SendMessage("Repo: Checkout failed!");
+					SendMessage("REPO: Checkout failed!");
 					return E.ToString();
 				}
 			}
@@ -268,13 +268,13 @@ namespace TGServerService
 			{
 				case MergeStatus.Conflicts:
 					ResetNoLock();
-					SendMessage("Repo: Merge conflicted, aborted.");
+					SendMessage("REPO: Merge conflicted, aborted.");
 					return "Merge conflict occurred.";
 				case MergeStatus.UpToDate:
-					SendMessage("Repo: Merge already up to date!");
+					SendMessage("REPO: Merge already up to date!");
 					return "Already up to date.";
 			}
-			SendMessage(String.Format("Repo: Branch {0} successfully merged!", branchname));
+			SendMessage(String.Format("REPO: Branch {0} successfully merged!", branchname));
 			return null;
 		}
 		public string Update(bool reset)
@@ -284,7 +284,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
-				SendMessage(String.Format("Repo: Updating origin branch...({0})", reset ? "Hard Reset" : "Merge"));
+				SendMessage(String.Format("REPO: Updating origin branch...({0})", reset ? "Hard Reset" : "Merge"));
 				try
 				{
 					string logMessage = "";
@@ -304,17 +304,17 @@ namespace TGServerService
 						if (error == null)
 						{
 							DeletePRList();
-							SendMessage("Repo: Update complete!");
+							SendMessage("REPO: Update complete!");
 						}
 						else
-							SendMessage("Repo: Update failed!");
+							SendMessage("REPO: Update failed!");
 						return error;
 					}
 					return MergeBranch(originBranch);
 				}
 				catch (Exception E)
 				{
-					SendMessage("Repo: Update failed!");
+					SendMessage("REPO: Update failed!");
 					return E.ToString();
 				}
 			}
@@ -359,7 +359,7 @@ namespace TGServerService
 				var result = LoadRepo();
 				if (result != null)
 					return result;
-				SendMessage(String.Format("Repo: Merging PR #{0}...", PRNumber));
+				SendMessage(String.Format("REPO: Merging PR #{0}...", PRNumber));
 				try
 				{
 					//only supported with github
@@ -392,7 +392,7 @@ namespace TGServerService
 				}
 				catch (Exception E)
 				{
-					SendMessage("Repo: PR merge failed!");
+					SendMessage("REPO: PR merge failed!");
 					return E.ToString();
 				}
 			}
