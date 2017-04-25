@@ -43,6 +43,8 @@ namespace TGCommandLine
 						return IRCCommand(param1, param2);
 					case "dm":
 						return DMCommand(param1, param2);
+					case "dd":
+						return DDCommand(param1);
 					case "?":
 					case "help":
 						ConsoleHelp();
@@ -57,6 +59,33 @@ namespace TGCommandLine
 			{
 				Console.WriteLine("Connection interrupted!");
 				return ExitCode.ConnectionError;
+			}
+			return ExitCode.Normal;
+		}
+		static ExitCode DDCommand(string command)
+		{
+			var DD = Server.GetComponent<ITGDreamDaemon>();
+
+			switch (command)
+			{
+				case "start":
+					var res = DD.Start();
+					if(res != null)
+					{
+						Console.WriteLine("Failed to start: " + res);
+						return ExitCode.ServerError;
+					}
+					break;
+				case "?":
+				case "help":
+					Console.WriteLine("DD commands:");
+					Console.WriteLine();
+					Console.WriteLine("start\t-\tStarts the server");
+					break;
+				default:
+					Console.WriteLine("Invalid command: " + command);
+					Console.WriteLine("Type 'dd help' for available commands.");
+					return ExitCode.BadCommand;
 			}
 			return ExitCode.Normal;
 		}
@@ -128,8 +157,8 @@ namespace TGCommandLine
 				case "help":
 					Console.WriteLine("DM commands:");
 					Console.WriteLine();
-					Console.WriteLine("initialize [--wait]\t-\tStarts an initialization job optionally waiting for completion.");
-					Console.WriteLine("compile [--wait]\t-\tStarts a compile/update job optionally waiting for completion.");
+					Console.WriteLine("initialize [--wait]\t-\tStarts an initialization job optionally waiting for completion");
+					Console.WriteLine("compile [--wait]\t-\tStarts a compile/update job optionally waiting for completion");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

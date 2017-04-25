@@ -104,7 +104,7 @@ namespace TGServerService
 
 		TGCompilerStatus IsInitialized()
 		{
-			if (Directory.Exists(GameDirB + LibMySQLFile))	//its a good tell, jim
+			if (File.Exists(GameDirB + LibMySQLFile))	//its a good tell, jim
 				return TGCompilerStatus.Initialized;
 			return TGCompilerStatus.Uninitialized;
 		}
@@ -195,6 +195,10 @@ namespace TGServerService
 					Program.Shell("pip install beautifulsoup4");
 
 					SendMessage("DM: Symlinks set up!");
+					lock (CompilerLock)
+					{
+						compilerCurrentStatus = TGCompilerStatus.Initialized;
+					}
 				}
 				catch (ThreadAbortException)
 				{
@@ -220,23 +224,29 @@ namespace TGServerService
 		string GetStagingDir()
 		{
 			string TheDir;
-			File.Create(LiveDirTest).Close();
-			try
+			if (!Directory.Exists(GameDirLive))
+				TheDir = GameDirA;
+			else
 			{
-				if (File.Exists(ADirTest))
-					TheDir = GameDirA;
-				else if (File.Exists(BDirTest))
-					TheDir = GameDirB;
-				else
-					throw new Exception("Unable to determine current live directory!");
-			}
-			finally
-			{
-				File.Delete(LiveDirTest);
-			}
+				File.Create(LiveDirTest).Close();
+				try
+				{
+					if (File.Exists(ADirTest))
+						TheDir = GameDirA;
+					else if (File.Exists(BDirTest))
+						TheDir = GameDirB;
+					else
+						throw new Exception("Unable to determine current live directory!");
+				}
+				finally
+				{
+					File.Delete(LiveDirTest);
+				}
 
-			TheDir = InvertDirectory(TheDir);
 
+				TheDir = InvertDirectory(TheDir);
+
+			}
 			//So TheDir is what the Live folder is NOT pointing to
 			//Now we need to check if DD is running that folder and swap it if necessary
 

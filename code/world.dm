@@ -333,7 +333,7 @@
 	return params[SERVER_SERVICE_PARAM]
 
 /world/proc/ExportService(command)
-	shell("tools/nudge.py \"[command]\"")
+	shell("python tools/nudge.py \"[command]\"")
 
 /world/proc/IRCBroadcast(msg)
 	ExportService("irc [msg]")
