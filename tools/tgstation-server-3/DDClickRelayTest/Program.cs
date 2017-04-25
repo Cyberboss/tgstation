@@ -66,9 +66,10 @@ namespace TGCommandLine
 			switch (command)
 			{
 				case "compile":
-					if (DM.Compiling())
+					var stat = DM.GetStatus();
+					if (stat != TGCompilerStatus.Initialized)
 					{
-						Console.Write("Error: Compilation job already in progress!");
+						Console.WriteLine("Error: Compiler is " + ((stat == TGCompilerStatus.Uninitialized) ? "unintialized!" : "busy with another task!"));
 						return ExitCode.ServerError;
 					}
 					
@@ -90,9 +91,12 @@ namespace TGCommandLine
 						do
 						{
 							Thread.Sleep(1000);
-						} while (DM.Compiling());
-						Console.WriteLine(DM.Compiled() ? "Compilation successful" : "Compilation failed!");
+						} while (DM.GetStatus() == TGCompilerStatus.Compiling);
+						Console.WriteLine(DM.GetError() ?? "Compilation successful");
 					}
+					break;
+				case "status":
+
 					break;
 				case "?":
 				case "help":

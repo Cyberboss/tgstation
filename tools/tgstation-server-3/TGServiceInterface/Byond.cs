@@ -26,9 +26,10 @@ namespace TGServiceInterface
 		//returns true if the operation started
 		[OperationContract]
 		bool UpdateToVersion(int major, int minor);
-		
+
 		//null means the operation succeeded
 		//will return an error message otherwise
+		//this returns to normal after being checked or starting an operation
 		[OperationContract]
 		string GetError();
 

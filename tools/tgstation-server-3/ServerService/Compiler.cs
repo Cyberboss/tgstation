@@ -38,13 +38,12 @@ namespace TGServerService
 		const string BDirTest = GameDirB + LiveFile;
 		const string LiveDirTest = GameDirLive + LiveFile;
 
+
+		List<string> copyExcludeList = new List<string> { ".git", "data", "config", "libmysql.dll" };   //shit we handle
+
 		object CompilerLock = new object();
-		object LiveDirCheckLock = new object();
-		object CompilerThreadLock = new object();
-
-		List<string> copyExcludeList = new List<string> { ".git", "data", "config", "libmysql.dll" };	//shit we handle
-
-		bool compiledSucessfully = false;
+		TGCompilerStatus compilerCurrentStatus;
+		string lastCompilerError;
 		
 		Thread CompilerThread;
 	
@@ -52,13 +51,22 @@ namespace TGServerService
 		{
 			if(File.Exists(LiveDirTest))
 				File.Delete(LiveDirTest);
+			compilerCurrentStatus = IsInitialized();
+		}
+
+		public TGCompilerStatus GetStatus()
+		{
+			lock (CompilerLock)
+			{
+				return compilerCurrentStatus;
+			}
 		}
 
 		void DisposeCompiler()
 		{
-			lock (CompilerThreadLock)
+			lock (CompilerLock)
 			{
-				if (CompilerThread == null)
+				if (CompilerThread == null || !CompilerThread.IsAlive)
 					return;
 				CompilerThread.Abort(); //this will safely kill dm
 			}
@@ -70,24 +78,85 @@ namespace TGServerService
 				throw new Exception(String.Format("Failed to create symlink from {0} to {1}!", target, link));
 		}
 
-		public string Initialize()
+		public bool Initialize()
 		{
-			if (DaemonStatus() != TGDreamDaemonStatus.Offline)
-				return "Dream daemon must not be running";
 			lock (CompilerLock)
 			{
-				if (!Exists())  //repo
-					return "Repository is not setup!";
+				if (compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
+					return false;
+				compilerCurrentStatus = TGCompilerStatus.Initializing;
+				CompilerThread = new Thread(new ThreadStart(InitializeImpl));
+				CompilerThread.Start();
+				return true;
+			}
+		}
+
+		TGCompilerStatus IsInitialized()
+		{
+			if (Directory.Exists(GameDirB + LibMySQLFile))	//its a good tell, jim
+				return TGCompilerStatus.Initialized;
+			return TGCompilerStatus.Uninitialized;
+		}
+
+		public void InitializeImpl()
+		{
+			try
+			{
+				if (DaemonStatus() != TGDreamDaemonStatus.Offline)
+				{
+					lock (CompilerLock)
+					{
+						lastCompilerError = "Dream daemon must not be running";
+						compilerCurrentStatus = IsInitialized();
+						return;
+					}
+				}
+
+				if (!Exists()) //repo
+				{
+					lock (CompilerLock)
+					{
+						lastCompilerError = "Repository is not setup!";
+						compilerCurrentStatus = IsInitialized();
+						return;
+					}
+				}
 				try
 				{
 					SendMessage("DM: Setting up symlinks...");
-					if(Directory.Exists(GameDirLive))
+
+					if (Directory.Exists(GameDirB + LibMySQLFile))
+						Directory.Delete(GameDirB + LibMySQLFile);
+
+					if (Directory.Exists(GameDirLive))
 						Directory.Delete(GameDirLive);
+
+					if (Directory.Exists(GameDirA + "/data"))
+						Directory.Delete(GameDirA + "/data");
+
+					if (Directory.Exists(GameDirA + "/config"))
+						Directory.Delete(GameDirA + "/config");
+
+					if (Directory.Exists(GameDirA + LibMySQLFile))
+						Directory.Delete(GameDirA + LibMySQLFile);
+
+					if (Directory.Exists(GameDirB + "/data"))
+						Directory.Delete(GameDirB + "/data");
+
+					if (Directory.Exists(GameDirB + "/config"))
+						Directory.Delete(GameDirB + "/config");
+
 					Program.DeleteDirectory(GameDir);
+
 					Directory.CreateDirectory(GameDirA + "/.git/logs");
 
 					if (!Monitor.TryEnter(RepoLock))
-						return "Unable to lock repository!";
+						lock (CompilerLock)
+						{
+							lastCompilerError = "Unable to lock repository!";
+							compilerCurrentStatus = TGCompilerStatus.Uninitialized;
+							return;
+						}
 					try
 					{
 						Program.CopyDirectory(RepoPath, GameDirA, copyExcludeList);
@@ -111,42 +180,35 @@ namespace TGServerService
 					CreateSymlink(GameDirA + LibMySQLFile, StaticDirs + LibMySQLFile);
 					CreateSymlink(GameDirB + LibMySQLFile, StaticDirs + LibMySQLFile);
 
-					CreateSymlink(GameDirLive, GameDirA);
-
 					Program.Shell("pip install PyYaml");
 					Program.Shell("pip install beautifulsoup4");
 
 					SendMessage("DM: Symlinks set up!");
-
-					return null;
+				}
+				catch (ThreadAbortException)
+				{
+					return;
 				}
 				catch (Exception e)
 				{
-					SendMessage("DM: Setup failed!");
-					return e.ToString();
+					lock (CompilerLock)
+					{
+						SendMessage("DM: Setup failed!");
+						lastCompilerError = e.ToString();
+						compilerCurrentStatus = TGCompilerStatus.Uninitialized;
+						return;
+					}
 				}
 			}
-		}
-
-		public bool Compiling()
-		{
-			if (Monitor.TryEnter(CompilerLock))
+			catch (ThreadAbortException)
 			{
-				Monitor.Exit(CompilerLock);
-				return false;
+				return;
 			}
-			return true;
-		}
-
-		public bool Compiled()
-		{
-			return !Compiling() && compiledSucessfully;
-		}
+		}		
 
 		string GetStagingDir()
 		{
 			string TheDir;
-			//LiveDirTest = Game/Live/LiveCheck.lk
 			File.Create(LiveDirTest).Close();
 			try
 			{
@@ -188,72 +250,77 @@ namespace TGServerService
 			else
 				return GameDirA;
 		}
+
 		void CompileImpl()
 		{
 			try
 			{
-				lock (CompilerLock)
+				SendMessage("DM: Updating from repository...");
+				var resurrectee = GetStagingDir();
+
+				//clear out the syms first
+				if (Directory.Exists(resurrectee + "/data"))
+					Directory.Delete(resurrectee + "/data");
+
+				if (Directory.Exists(resurrectee + "/config"))
+					Directory.Delete(resurrectee + "/config");
+
+				if (File.Exists(resurrectee + LibMySQLFile))
+					File.Delete(resurrectee + LibMySQLFile);
+
+				Program.DeleteDirectory(resurrectee);
+
+				Directory.CreateDirectory(resurrectee + "/.git/logs");
+
+				CreateSymlink(resurrectee + "/data", StaticDataDir);
+				CreateSymlink(resurrectee + "/config", StaticConfigDir);
+				CreateSymlink(resurrectee + LibMySQLFile, StaticDirs + LibMySQLFile);
+
+				if (!Monitor.TryEnter(RepoLock))
 				{
-					SendMessage("DM: Updating from repository...");
-					compiledSucessfully = false;
-					var resurrectee = GetStagingDir();
-
-					//clear out the syms first
-					if(Directory.Exists(resurrectee + "/data"))
-						Directory.Delete(resurrectee + "/data");
-					if (Directory.Exists(resurrectee + "/config"))
-						Directory.Delete(resurrectee + "/config");
-					if(File.Exists(resurrectee + LibMySQLFile))
-						File.Delete(resurrectee + LibMySQLFile);
-
-					Program.DeleteDirectory(resurrectee);
-
-					Directory.CreateDirectory(resurrectee + "/.git/logs");
-
-					CreateSymlink(resurrectee + "/data", StaticDataDir);
-					CreateSymlink(resurrectee + "/config", StaticConfigDir);
-					CreateSymlink(resurrectee + LibMySQLFile, StaticDirs + LibMySQLFile);
-
-					if (!Monitor.TryEnter(RepoLock))
+					SendMessage("DM: Copy aborted, repo locked!");
+					lock (CompilerLock)
 					{
-						SendMessage("DM: Copy aborted, repo locked!");
+						lastCompilerError = "The repo could not be locked for copying";
+						compilerCurrentStatus = TGCompilerStatus.Initialized;	//still fairly valid
 						return;
 					}
-					try
-					{
-						Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
-						//just the tip
-						const string HeadFile = "/.git/logs/HEAD";
-						File.Copy(RepoPath + HeadFile, resurrectee + HeadFile);
-					}
-					finally
-					{
-						Monitor.Exit(RepoLock);
-					}
+				}
+				try
+				{
+					Program.CopyDirectory(RepoPath, resurrectee, copyExcludeList);
+					//just the tip
+					const string HeadFile = "/.git/logs/HEAD";
+					File.Copy(RepoPath + HeadFile, resurrectee + HeadFile);
+				}
+				finally
+				{
+					Monitor.Exit(RepoLock);
+				}
 
-					SendMessage("DM: Repo copy complete, compiling...");
+				SendMessage("DM: Repo copy complete, compiling...");
 
-					using (var DM = new Process())  //will kill the process if the thread is terminated
-					{
-						DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
-						DM.StartInfo.Arguments = resurrectee + "/" + Properties.Settings.Default.ProjectName + ".dme";
-						DM.StartInfo.UseShellExecute = false;
-						DM.Start();
-						DM.WaitForExit();
-						compiledSucessfully = DM.ExitCode == 0;
-					}
+				using (var DM = new Process())  //will kill the process if the thread is terminated
+				{
+					DM.StartInfo.FileName = ByondDirectory + "/bin/dm.exe";
+					DM.StartInfo.Arguments = resurrectee + "/" + Properties.Settings.Default.ProjectName + ".dme";
+					DM.StartInfo.UseShellExecute = false;
+					DM.Start();
+					DM.WaitForExit();
 
-					if (compiledSucessfully)
+					if (DM.ExitCode == 0)
 					{
 						//these two lines should be atomic but this is the best we can do
-						Directory.Delete(GameDirLive);
+						if (Directory.Exists(GameDirLive))
+							Directory.Delete(GameDirLive);
 						CreateSymlink(GameDirLive, resurrectee);
 
 						SendMessage("DM: Compile complete, server will update next round!");
 					}
 					else
-						SendMessage("DM: Compile failed!");	//Also happens for warnings
+						SendMessage("DM: Compile failed!"); //Also happens for warnings
 				}
+
 			}
 			catch (ThreadAbortException)
 			{
@@ -263,25 +330,21 @@ namespace TGServerService
 			{
 				SendMessage("DM: Compiler thread crashed!");
 				TGServerService.ActiveService.EventLog.WriteEntry("Compile manager errror: " + e.ToString(), EventLogEntryType.Error);
-			}
-			finally
-			{
-				lock (CompilerThreadLock)
+				lock (CompilerLock)
 				{
-					CompilerThread = null;
+					lastCompilerError = e.ToString();
+					compilerCurrentStatus = TGCompilerStatus.Initialized;   //still fairly valid
 				}
 			}
 		}
 
 		public bool Compile()
 		{
-			if(GetVersion(false) == null)
-				return false;
-
-			lock (CompilerThreadLock)
+			lock (CompilerLock)
 			{
-				if (CompilerThread != null)
+				if (GetVersion(false) == null || compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
 					return false;
+				compilerCurrentStatus = TGCompilerStatus.Compiling;
 				CompilerThread = new Thread(new ThreadStart(CompileImpl));
 				CompilerThread.Start();
 			}

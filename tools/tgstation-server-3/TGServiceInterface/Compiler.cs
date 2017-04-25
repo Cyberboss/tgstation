@@ -2,6 +2,13 @@
 
 namespace TGServiceInterface
 {
+	public enum TGCompilerStatus
+	{
+		Uninitialized,
+		Initializing,
+		Initialized,
+		Compiling,
+	}
 	[ServiceContract]
 	public interface ITGCompiler
 	{
@@ -9,28 +16,27 @@ namespace TGServiceInterface
 		//this will reset everything and terminate dream daemon if it is running
 		//this will not reset the static directories
 		//requires the repository to be set up and locks it for the duration of the operation
-		//does not compiler the game
-		//returns null on success, error on failure
+		//does not compile the game
+		//runs asyncronously
+		//returns true if the operation began, false if it could not start
 		[OperationContract]
-		string Initialize();
+		bool Initialize();
 
 		//Does all the necessary actions to take the revision currently in the repository
 		//and compile it to be run on the next server reboot
-		//requires byond to be set up
+		//requires byond to be set up and the compiler to be initialized
 		//runs asyncronously
-		//returns true if the operation began, false if compilation is already in progress
+		//returns true if the operation began, false if it could not start
 		[OperationContract]
 		bool Compile();
 
-		//Returns true if there are compilation/directory operations in progress
-		//false otherwise
+		//Returns the current compiler status
 		[OperationContract]
-		bool Compiling();
+		TGCompilerStatus GetStatus();
 
-		//Returns true if the last compilation was successful
-		//false otherwise
-		//Value meaningless if Compiling returns true
-		[OperationContract]
-		bool Compiled();
+		//null means the operation succeeded
+		//will return an error message otherwise
+		//this returns to normal after being checked or starting an operation
+		string GetError();
 	}
 }

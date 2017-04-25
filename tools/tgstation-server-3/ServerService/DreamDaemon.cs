@@ -49,12 +49,20 @@ namespace TGServerService
 
 		void RequestRestart()
 		{
-			while (DaemonStatus() == TGDreamDaemonStatus.HardRebooting)
+			while (true)
+			{
+				Monitor.Enter(watchdogLock);
+				if (currentStatus == TGDreamDaemonStatus.HardRebooting)
+					break;
+				Monitor.Exit(watchdogLock);
 				Thread.Sleep(1000);
-			if (DaemonStatus() != TGDreamDaemonStatus.Online)
-				return;
-			File.Create(GameDirA + HardRebootRequestFile).Close();
-			File.Create(GameDirB + HardRebootRequestFile).Close();
+			}
+			if (DaemonStatus() == TGDreamDaemonStatus.Online)
+			{
+				File.Create(GameDirA + HardRebootRequestFile).Close();
+				File.Create(GameDirB + HardRebootRequestFile).Close();
+			}
+			Monitor.Exit(watchdogLock);
 		}
 
 		public string Stop()
@@ -125,8 +133,6 @@ namespace TGServerService
 							SendMessage("DD: DreamDaemon crashed or exited! Rebooting...");
 						}
 					}
-					//we would have been killed if we wanted to stop so lets check for updates
-					ApplyStagedUpdate();
 
 					var res = StartImpl(true);
 					if (res != null)
@@ -174,10 +180,12 @@ namespace TGServerService
 
 		public string Start()
 		{
+			ApplyStagedUpdate();
 			lock (watchdogLock)
 			{
 				if (currentStatus != TGDreamDaemonStatus.Offline)
 					return "Server already running";
+				currentStatus = TGDreamDaemonStatus.HardRebooting;
 			}
 			var res = CanStart();
 			if (res != null)

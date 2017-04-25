@@ -149,7 +149,7 @@ namespace TGServerService
 				{
 					updateStat = TGByondStatus.Staged;
 				}
-				
+
 				switch (DaemonStatus())
 				{
 					case TGDreamDaemonStatus.Offline:
@@ -200,10 +200,10 @@ namespace TGServerService
 
 		public bool ApplyStagedUpdate()
 		{
-			if (Compiling())
-				return false;
 			lock (CompilerLock)
 			{
+				if (compilerCurrentStatus == TGCompilerStatus.Compiling)
+					return false;
 				lock (ByondLock)
 				{
 
