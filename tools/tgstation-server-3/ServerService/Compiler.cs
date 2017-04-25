@@ -337,9 +337,21 @@ namespace TGServerService
 						CreateSymlink(GameDirLive, resurrectee);
 
 						SendMessage("DM: Compile complete, server will update next round!");
+						lock (CompilerLock)
+						{
+							lastCompilerError = null;
+							compilerCurrentStatus = TGCompilerStatus.Initialized;   //still fairly valid
+						}
 					}
 					else
+					{
 						SendMessage("DM: Compile failed!"); //Also happens for warnings
+						lock (CompilerLock)
+						{
+							lastCompilerError = "DM compile failure";
+							compilerCurrentStatus = TGCompilerStatus.Initialized;   //still fairly valid
+						}
+					}
 				}
 
 			}

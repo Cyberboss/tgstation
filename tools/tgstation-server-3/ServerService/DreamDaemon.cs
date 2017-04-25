@@ -163,7 +163,8 @@ namespace TGServerService
 			}
 			catch(ThreadAbortException)
 			{
-				SendMessage("DD: Watchdog exiting...");
+				if(!RestartInProgress)
+					SendMessage("DD: Watchdog exiting...");
 				//No Mr bond, I expect you to die
 				try
 				{
