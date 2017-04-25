@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Threading;
 using TGServiceInterface;
@@ -30,6 +31,7 @@ namespace TGServerService
 				Config.IRCNick = username;
 			if (adminChannel != null)
 				Config.IRCAdminChannel = adminChannel;
+			var oldchannels = Properties.Settings.Default.IRCChannels;
 			if (channels != null)
 			{
 				var si = new StringCollection();
@@ -55,9 +57,31 @@ namespace TGServerService
 				else
 				{
 					irc.RfcNick(Config.IRCNick);
-					irc.RfcRestart();
-					JoinChannels();
+					foreach(var I in channels)
+					{
+						if (!oldchannels.Contains(I))
+							irc.RfcJoin(I);
+					}
+					foreach (var I in oldchannels)
+					{
+						if (!Config.IRCChannels.Contains(I))
+							irc.RfcPart(I);
+					}
 				}
+		}
+		public string[] Channels()
+		{
+			return CollectionToArray(Properties.Settings.Default.IRCChannels);
+		}
+		public string[] CollectionToArray(StringCollection sc)
+		{
+			string[] strArray = new string[sc.Count];
+			sc.CopyTo(strArray, 0);
+			return strArray;
+		}
+		public string AdminChannel()
+		{
+			return Properties.Settings.Default.IRCAdminChannel;
 		}
 		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
 		{

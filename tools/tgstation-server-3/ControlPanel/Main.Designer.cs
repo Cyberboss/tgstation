@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Panels = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
             this.TestMergeListLabel = new System.Windows.Forms.TextBox();
@@ -554,6 +555,7 @@
             this.ClientSize = new System.Drawing.Size(900, 415);
             this.Controls.Add(this.Panels);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;

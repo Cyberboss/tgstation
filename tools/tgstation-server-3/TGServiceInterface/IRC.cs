@@ -40,5 +40,13 @@ namespace TGServiceInterface
 		//Sends a message to irc
 		//returns null on success, error on failure
 		string SendMessage(string msg, bool adminOnly = false);
+
+		//Get channels we are set to connect to, includes the admin channel
+		[OperationContract]
+		string[] Channels();
+
+		//Get the admin channel
+		[OperationContract]
+		string AdminChannel();
 	}
 }

@@ -22,13 +22,13 @@
         "Entry"
         {
         "MsmKey" = "8:_07D8FE8FBB12021D5AD299AB33F11373"
-        "OwnerKey" = "8:_71FD85A022B9441FAA5D12E6A49522BE"
+        "OwnerKey" = "8:_E14920686F914C888EBBCDDF784B69F6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_07D8FE8FBB12021D5AD299AB33F11373"
-        "OwnerKey" = "8:_E14920686F914C888EBBCDDF784B69F6"
+        "OwnerKey" = "8:_71FD85A022B9441FAA5D12E6A49522BE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -93,6 +93,12 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_CF54285BD1D6469CA2A286A1C438AF7A"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_E14920686F914C888EBBCDDF784B69F6"
         "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
@@ -112,13 +118,13 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_71FD85A022B9441FAA5D12E6A49522BE"
+        "OwnerKey" = "8:_E14920686F914C888EBBCDDF784B69F6"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E14920686F914C888EBBCDDF784B69F6"
+        "OwnerKey" = "8:_71FD85A022B9441FAA5D12E6A49522BE"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -194,6 +200,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
         "Release"
@@ -218,6 +232,14 @@
             "PrerequisitesLocation" = "2:1"
             "Url" = "8:"
             "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.6.1"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.6.1 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.6.1"
+                    }
+                }
             }
         }
     }
@@ -633,6 +655,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_CF54285BD1D6469CA2A286A1C438AF7A"
+            {
+            "SourcePath" = "8:..\\tgs.ico"
+            "TargetName" = "8:tgs.ico"
+            "Tag" = "8:"
+            "Folder" = "8:_FE819AEDA8824FA0B70884A7A71BB6F9"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E643E3891E4D9C235B3BE239E41B0F69"
             {
             "AssemblyRegister" = "3:1"
@@ -738,7 +780,7 @@
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:https://github.com/tgstation/tgstation"
-        "ARPPRODUCTICON" = "8:"
+        "ARPPRODUCTICON" = "8:_CF54285BD1D6469CA2A286A1C438AF7A"
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
