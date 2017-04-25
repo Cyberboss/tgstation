@@ -183,7 +183,7 @@
 	if(RunningService() && fexists(SERVER_SERVICE_HARD_RESET_REQUEST)) {\
 		log_world("Hard shutdown requested by service!");\
 		fdel(SERVER_SERVICE_HARD_RESET_REQUEST);\
-		ServiceReboot();\	//this will either kill us or return
+		ServiceReboot();\
 	}\
 	..(X);\
 	return;
