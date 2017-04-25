@@ -1,88 +1,57 @@
 ﻿using System;
-using System.Threading;
 using TGServiceInterface;
 
-namespace TestProg
+namespace TGCommandLine
 {
 
 	class Program
 	{
-		static void RunTests()
+		enum ExitCode
 		{
-			SendToBotBusForTesting();
+			Normal = 0,
+			ConnectionError = 1,
+			BadCommand = 2,
 		}
-
-		static void SendToBotBusForTesting()
+		static ExitCode RunCommandLine(string[] args)
 		{
-			Server.GetComponent<ITGIRC>().Setup(null, 0, "TGS3Test", new string[] { }, "#botbus");
-			Server.GetComponent<ITGIRC>().Connect();
-		}
 
-		static void SendPRsToIRC()
-		{
-			var l = Server.GetComponent<ITGRepository>().MergedPullRequests(out string error);
-			if (error == null)
+			string command = null;
+			if(args.Length > 0)
+				command = args[0].Trim();
+			string param;
+			if (args.Length > 1)
+				param = args[1].Trim();
+
+			var res = Server.VerifyConnection();
+			if (res != null)
 			{
-				Server.GetComponent<ITGIRC>().SendMessage("Currently merged PRs:");
-				foreach (var I in l)
-				{
-					Server.GetComponent<ITGIRC>().SendMessage(String.Format("PR #{0} at commit {1}", I.Key, I.Value));
-				}
-			}
-			else
-				Server.GetComponent<ITGIRC>().SendMessage("PR Check Error: " + error);
-		}
-
-		//Sets up everything and starts the server
-		static void Setup(bool forceCompile, bool forceReset)
-		{
-			if (forceReset || !Server.GetComponent<ITGRepository>().Exists())
-			{
-				Server.GetComponent<ITGRepository>().Setup("https://github.com/Cyberboss/tgstation", "tgs3");
-				do
-				{
-					Thread.Sleep(1000);
-				} while (Server.GetComponent<ITGRepository>().OperationInProgress());
-
-				CheckByond(false);
-
-				Server.GetComponent<ITGCompiler>().Initialize();
-			}
-			else
-				CheckByond(false);
-
-			if (forceCompile || Server.GetComponent<ITGDreamDaemon>().CanStart() != null)
-			{
-				Server.GetComponent<ITGCompiler>().Compile();
-
-				do
-				{
-					Thread.Sleep(1000);
-				} while (Server.GetComponent<ITGCompiler>().Compiling());
+				Console.WriteLine("Failed to connect to server!");
+				return ExitCode.ConnectionError;
 			}
 
+			switch (command)
+			{
+				case "?":
+				case "help":
+					ConsoleHelp();
+					break;
+				default:
+					Console.WriteLine("Invalid command: " + command);
+					Console.WriteLine("Type '?' or 'help' for available commands.");
+					return ExitCode.BadCommand;
+			}
+			return ExitCode.Normal;
 		}
 
-		static void CheckByond(bool forceUpdate)
+		static void ConsoleHelp()
 		{
-			if (!forceUpdate && Server.GetComponent<ITGByond>().GetVersion(false) != null)
-				return;
-			Server.GetComponent<ITGByond>().UpdateToVersion(511, 1381);
-			do
-			{
-				Thread.Sleep(1000);
-			} while (Server.GetComponent<ITGByond>().CurrentStatus() != TGByondStatus.Idle);
+			Console.WriteLine("/tg/station 13 Server Control Panel:");
+			Console.WriteLine();
 		}
-		static void Main(string[] args)
+
+		static int Main(string[] args)
 		{
-			try
-			{
-				RunTests();
-			}
-			catch {
-				Console.WriteLine("Failed to connect to service!");
-				Console.ReadKey();
-			}
+			return (int)RunCommandLine(args);
 		}
 	}
 }
