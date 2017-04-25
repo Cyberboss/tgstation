@@ -10,10 +10,10 @@ namespace TGServerService
 {
 	partial class TGStationServer : ITGByond
 	{
-		const string ByondDirectory = "C:/tgstation-server-3/BYOND";
-		const string StagingDirectory = "C:/tgstation-server-3/BYOND_staged";
-		const string StagingDirectoryInner = "C:/tgstation-server-3/BYOND_staged/byond";
-		const string RevisionDownloadPath = "C:/tgstation-server-3/BYONDRevision.zip";
+		const string ByondDirectory = "/BYOND";
+		const string StagingDirectory = "/BYOND_staged";
+		const string StagingDirectoryInner = "/BYOND_staged/byond";
+		const string RevisionDownloadPath = "/BYONDRevision.zip";
 		const string VersionFile = "/byond_version.dat";
 		const string ByondRevisionsURL = "https://secure.byond.com/download/build/{0}/{0}.{1}_byond.zip";
 
