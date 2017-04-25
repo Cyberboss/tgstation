@@ -28,6 +28,10 @@ namespace TGControlPanel
 			{
 				MessageBox.Show("An unhandled exception occurred. This usually means we lost connection to the service. Error" + e.ToString());
 			}
+			finally
+			{
+				Properties.Settings.Default.Save();
+			}
 		}
 	}
 }

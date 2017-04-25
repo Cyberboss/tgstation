@@ -28,7 +28,8 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-            this.BYONDPanel = new System.Windows.Forms.TabControl();
+            this.components = new System.ComponentModel.Container();
+            this.Panels = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
             this.TestMergeListLabel = new System.Windows.Forms.TextBox();
             this.CurrentRevisionLabel = new System.Windows.Forms.Label();
@@ -50,25 +51,40 @@
             this.CloneRepositoryButton = new System.Windows.Forms.Button();
             this.RepoProgressBarLabel = new System.Windows.Forms.Label();
             this.RepoProgressBar = new System.Windows.Forms.ProgressBar();
-            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.BYONDPanel = new System.Windows.Forms.TabPage();
+            this.StagedVersionLabel = new System.Windows.Forms.Label();
+            this.StagedVersionTitle = new System.Windows.Forms.Label();
+            this.StatusLabel = new System.Windows.Forms.Label();
+            this.VersionLabel = new System.Windows.Forms.Label();
+            this.VersionTitle = new System.Windows.Forms.Label();
+            this.MinorVersionLabel = new System.Windows.Forms.Label();
+            this.MajorVersionLabel = new System.Windows.Forms.Label();
+            this.UpdateButton = new System.Windows.Forms.Button();
+            this.MinorVersionNumeric = new System.Windows.Forms.NumericUpDown();
+            this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
+            this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
-            this.BYONDPanel.SuspendLayout();
+            this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
+            this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
+            this.BYONDPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).BeginInit();
             this.SuspendLayout();
             // 
-            // BYONDPanel
+            // Panels
             // 
-            this.BYONDPanel.Controls.Add(this.RepoPanel);
-            this.BYONDPanel.Controls.Add(this.tabPage1);
-            this.BYONDPanel.Controls.Add(this.tabPage2);
-            this.BYONDPanel.Controls.Add(this.tabPage3);
-            this.BYONDPanel.Location = new System.Drawing.Point(12, 12);
-            this.BYONDPanel.Name = "BYONDPanel";
-            this.BYONDPanel.SelectedIndex = 0;
-            this.BYONDPanel.Size = new System.Drawing.Size(876, 392);
-            this.BYONDPanel.TabIndex = 3;
+            this.Panels.Controls.Add(this.RepoPanel);
+            this.Panels.Controls.Add(this.BYONDPanel);
+            this.Panels.Controls.Add(this.tabPage2);
+            this.Panels.Controls.Add(this.tabPage3);
+            this.Panels.Location = new System.Drawing.Point(12, 12);
+            this.Panels.Name = "Panels";
+            this.Panels.SelectedIndex = 0;
+            this.Panels.Size = new System.Drawing.Size(876, 392);
+            this.Panels.TabIndex = 3;
             // 
             // RepoPanel
             // 
@@ -320,21 +336,169 @@
             this.RepoProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.RepoProgressBar.TabIndex = 0;
             // 
-            // tabPage1
+            // BYONDPanel
             // 
-            this.tabPage1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
-            this.tabPage1.Name = "tabPage1";
-            this.tabPage1.Size = new System.Drawing.Size(868, 369);
-            this.tabPage1.TabIndex = 1;
-            this.tabPage1.Text = "BYOND";
+            this.BYONDPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.BYONDPanel.Controls.Add(this.StagedVersionLabel);
+            this.BYONDPanel.Controls.Add(this.StagedVersionTitle);
+            this.BYONDPanel.Controls.Add(this.StatusLabel);
+            this.BYONDPanel.Controls.Add(this.VersionLabel);
+            this.BYONDPanel.Controls.Add(this.VersionTitle);
+            this.BYONDPanel.Controls.Add(this.MinorVersionLabel);
+            this.BYONDPanel.Controls.Add(this.MajorVersionLabel);
+            this.BYONDPanel.Controls.Add(this.UpdateButton);
+            this.BYONDPanel.Controls.Add(this.MinorVersionNumeric);
+            this.BYONDPanel.Controls.Add(this.MajorVersionNumeric);
+            this.BYONDPanel.Controls.Add(this.UpdateProgressBar);
+            this.BYONDPanel.Location = new System.Drawing.Point(4, 22);
+            this.BYONDPanel.Name = "BYONDPanel";
+            this.BYONDPanel.Size = new System.Drawing.Size(868, 366);
+            this.BYONDPanel.TabIndex = 1;
+            this.BYONDPanel.Text = "BYOND";
+            // 
+            // StagedVersionLabel
+            // 
+            this.StagedVersionLabel.AutoSize = true;
+            this.StagedVersionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StagedVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.StagedVersionLabel.Location = new System.Drawing.Point(425, 112);
+            this.StagedVersionLabel.Name = "StagedVersionLabel";
+            this.StagedVersionLabel.Size = new System.Drawing.Size(82, 18);
+            this.StagedVersionLabel.TabIndex = 11;
+            this.StagedVersionLabel.Text = "Unknown";
+            this.StagedVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.StagedVersionLabel.Visible = false;
+            // 
+            // StagedVersionTitle
+            // 
+            this.StagedVersionTitle.AutoSize = true;
+            this.StagedVersionTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StagedVersionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.StagedVersionTitle.Location = new System.Drawing.Point(214, 112);
+            this.StagedVersionTitle.Name = "StagedVersionTitle";
+            this.StagedVersionTitle.Size = new System.Drawing.Size(202, 18);
+            this.StagedVersionTitle.TabIndex = 10;
+            this.StagedVersionTitle.Text = "Current staged version:";
+            this.StagedVersionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.StagedVersionTitle.Visible = false;
+            // 
+            // StatusLabel
+            // 
+            this.StatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.StatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.StatusLabel.Location = new System.Drawing.Point(303, 320);
+            this.StatusLabel.Name = "StatusLabel";
+            this.StatusLabel.Size = new System.Drawing.Size(253, 37);
+            this.StatusLabel.TabIndex = 9;
+            this.StatusLabel.Text = "Idle";
+            this.StatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // VersionLabel
+            // 
+            this.VersionLabel.AutoSize = true;
+            this.VersionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.VersionLabel.Location = new System.Drawing.Point(425, 74);
+            this.VersionLabel.Name = "VersionLabel";
+            this.VersionLabel.Size = new System.Drawing.Size(82, 18);
+            this.VersionLabel.TabIndex = 8;
+            this.VersionLabel.Text = "Unknown";
+            this.VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // VersionTitle
+            // 
+            this.VersionTitle.AutoSize = true;
+            this.VersionTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.VersionTitle.Location = new System.Drawing.Point(214, 74);
+            this.VersionTitle.Name = "VersionTitle";
+            this.VersionTitle.Size = new System.Drawing.Size(205, 18);
+            this.VersionTitle.TabIndex = 7;
+            this.VersionTitle.Text = "Current BYOND version:";
+            this.VersionTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MinorVersionLabel
+            // 
+            this.MinorVersionLabel.AutoSize = true;
+            this.MinorVersionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MinorVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.MinorVersionLabel.Location = new System.Drawing.Point(521, 180);
+            this.MinorVersionLabel.Name = "MinorVersionLabel";
+            this.MinorVersionLabel.Size = new System.Drawing.Size(59, 18);
+            this.MinorVersionLabel.TabIndex = 6;
+            this.MinorVersionLabel.Text = "Minor:";
+            this.MinorVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MajorVersionLabel
+            // 
+            this.MajorVersionLabel.AutoSize = true;
+            this.MajorVersionLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.MajorVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.MajorVersionLabel.Location = new System.Drawing.Point(276, 180);
+            this.MajorVersionLabel.Name = "MajorVersionLabel";
+            this.MajorVersionLabel.Size = new System.Drawing.Size(60, 18);
+            this.MajorVersionLabel.TabIndex = 5;
+            this.MajorVersionLabel.Text = "Major:";
+            this.MajorVersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // UpdateButton
+            // 
+            this.UpdateButton.Location = new System.Drawing.Point(372, 252);
+            this.UpdateButton.Name = "UpdateButton";
+            this.UpdateButton.Size = new System.Drawing.Size(118, 28);
+            this.UpdateButton.TabIndex = 3;
+            this.UpdateButton.Text = "Update";
+            this.UpdateButton.UseVisualStyleBackColor = true;
+            this.UpdateButton.Click += new System.EventHandler(this.UpdateButton_Click);
+            // 
+            // MinorVersionNumeric
+            // 
+            this.MinorVersionNumeric.Location = new System.Drawing.Point(490, 210);
+            this.MinorVersionNumeric.Maximum = new decimal(new int[] {
+            10000,
+            0,
+            0,
+            0});
+            this.MinorVersionNumeric.Name = "MinorVersionNumeric";
+            this.MinorVersionNumeric.Size = new System.Drawing.Size(120, 20);
+            this.MinorVersionNumeric.TabIndex = 2;
+            this.MinorVersionNumeric.Value = new decimal(new int[] {
+            1381,
+            0,
+            0,
+            0});
+            // 
+            // MajorVersionNumeric
+            // 
+            this.MajorVersionNumeric.Location = new System.Drawing.Point(245, 210);
+            this.MajorVersionNumeric.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.MajorVersionNumeric.Name = "MajorVersionNumeric";
+            this.MajorVersionNumeric.Size = new System.Drawing.Size(120, 20);
+            this.MajorVersionNumeric.TabIndex = 1;
+            this.MajorVersionNumeric.Value = new decimal(new int[] {
+            511,
+            0,
+            0,
+            0});
+            // 
+            // UpdateProgressBar
+            // 
+            this.UpdateProgressBar.Location = new System.Drawing.Point(107, 286);
+            this.UpdateProgressBar.MarqueeAnimationSpeed = 50;
+            this.UpdateProgressBar.Name = "UpdateProgressBar";
+            this.UpdateProgressBar.Size = new System.Drawing.Size(650, 31);
+            this.UpdateProgressBar.TabIndex = 0;
             // 
             // tabPage2
             // 
             this.tabPage2.Location = new System.Drawing.Point(4, 22);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(868, 369);
+            this.tabPage2.Size = new System.Drawing.Size(868, 366);
             this.tabPage2.TabIndex = 2;
             this.tabPage2.Text = "Server";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -344,7 +508,7 @@
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(868, 369);
+            this.tabPage3.Size = new System.Drawing.Size(868, 366);
             this.tabPage3.TabIndex = 3;
             this.tabPage3.Text = "Logs";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -354,25 +518,35 @@
             this.RepoBGW.WorkerReportsProgress = true;
             this.RepoBGW.WorkerSupportsCancellation = true;
             // 
+            // BYONDTimer
+            // 
+            this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
             this.ClientSize = new System.Drawing.Size(900, 415);
-            this.Controls.Add(this.BYONDPanel);
+            this.Controls.Add(this.Panels);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "/tg/station 13 Server Control Panel";
-            this.BYONDPanel.ResumeLayout(false);
+            this.Panels.ResumeLayout(false);
             this.RepoPanel.ResumeLayout(false);
             this.RepoPanel.PerformLayout();
+            this.BYONDPanel.ResumeLayout(false);
+            this.BYONDPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).EndInit();
             this.ResumeLayout(false);
 
 		}
 
 		#endregion
-		private System.Windows.Forms.TabControl BYONDPanel;
+		private System.Windows.Forms.TabControl Panels;
 		private System.Windows.Forms.TabPage RepoPanel;
 		private System.Windows.Forms.Label RepoProgressBarLabel;
 		private System.Windows.Forms.ProgressBar RepoProgressBar;
@@ -394,10 +568,22 @@
 		private System.Windows.Forms.Label RemoteNameTitle;
 		private System.Windows.Forms.Label BranchNameTitle;
 		private System.Windows.Forms.Label CurrentRevisionTitle;
-		private System.Windows.Forms.TabPage tabPage1;
+		private System.Windows.Forms.TabPage BYONDPanel;
 		private System.Windows.Forms.TabPage tabPage2;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.TextBox TestMergeListLabel;
+		private System.Windows.Forms.Button UpdateButton;
+		private System.Windows.Forms.NumericUpDown MinorVersionNumeric;
+		private System.Windows.Forms.NumericUpDown MajorVersionNumeric;
+		private System.Windows.Forms.ProgressBar UpdateProgressBar;
+		private System.Windows.Forms.Label MajorVersionLabel;
+		private System.Windows.Forms.Label MinorVersionLabel;
+		private System.Windows.Forms.Label VersionLabel;
+		private System.Windows.Forms.Label VersionTitle;
+		private System.Windows.Forms.Label StatusLabel;
+		private System.Windows.Forms.Timer BYONDTimer;
+		private System.Windows.Forms.Label StagedVersionLabel;
+		private System.Windows.Forms.Label StagedVersionTitle;
 	}
 }
 

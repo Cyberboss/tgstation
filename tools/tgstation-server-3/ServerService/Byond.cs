@@ -68,34 +68,14 @@ namespace TGServerService
 				return updateStat;
 			}
 		}
-		public int GetProgress()
-		{
-			lock (ByondLock)
-			{
-				switch (updateStat)
-				{
-					case TGByondStatus.Idle:
-						return 0;
-					case TGByondStatus.Starting:
-					case TGByondStatus.Downloading:
-						return 25;
-					case TGByondStatus.Staging:
-						return 50;
-					case TGByondStatus.Staged:
-						return 75;
-					case TGByondStatus.Updating:
-						return 90;
-					default:
-						return 100;
-				}
-			}
-		}
 
 		public string GetError()
 		{
 			lock (ByondLock)
 			{
-				return lastError;
+				var error = lastError;
+				lastError = null;
+				return error;
 			}
 		}
 
@@ -137,7 +117,21 @@ namespace TGServerService
 				var client = new WebClient();
 				var vi = (VersionInfo)param;
 				SendMessage(String.Format("BYOND: Updating to version {0}.{1}...", vi.major, vi.minor));
-				client.DownloadFile(String.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
+
+				try
+				{
+					client.DownloadFile(String.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
+				}
+				catch
+				{
+					SendMessage("BYOND: Update download failed. Does the specified version exist?");
+					lastError = String.Format("Download of BYOND version {0}.{1} failed! Does it exist?", vi.major, vi.minor);
+					lock (ByondLock)
+					{
+						updateStat = TGByondStatus.Idle;
+					}
+					return;
+				}
 
 				lock (ByondLock)
 				{
@@ -159,9 +153,10 @@ namespace TGServerService
 				switch (DaemonStatus())
 				{
 					case TGDreamDaemonStatus.Offline:
-						lastError = "Failed to apply update!";
 						if(ApplyStagedUpdate())
 							lastError = null;
+						else
+							lastError = "Failed to apply update!";
 						break;
 					default:
 						RequestRestart();
@@ -214,28 +209,31 @@ namespace TGServerService
 
 					if (updateStat != TGByondStatus.Staged)
 						return false;
-					try
-					{
-						//IMPORTANT: SET THE BYOND CONFIG TO NOT PROMPT FOR TRUSTED MODE REEE
-						var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + ByondConfigDir;
-						Directory.CreateDirectory(dir);
-						File.WriteAllText(dir + ByondDDConfig, ByondNoPromptTrustedMode);
+					updateStat = TGByondStatus.Updating;
+				}
+				try
+				{
+					//IMPORTANT: SET THE BYOND CONFIG TO NOT PROMPT FOR TRUSTED MODE REEE
+					var dir = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + ByondConfigDir;
+					Directory.CreateDirectory(dir);
+					File.WriteAllText(dir + ByondDDConfig, ByondNoPromptTrustedMode);
 
-						Program.DeleteDirectory(ByondDirectory);
-						Directory.Move(StagingDirectoryInner, ByondDirectory);
-						Directory.Delete(StagingDirectory, true);
-						lastError = null;
-						SendMessage("BYOND: Update completed!");
-						return true;
-					}
-					catch (Exception e)
-					{
-						lastError = e.ToString();
-						SendMessage("BYOND: Update failed!");
-						return false;
-					}
-					finally
-					{
+					Program.DeleteDirectory(ByondDirectory);
+					Directory.Move(StagingDirectoryInner, ByondDirectory);
+					Directory.Delete(StagingDirectory, true);
+					lastError = null;
+					SendMessage("BYOND: Update completed!");
+					return true;
+				}
+				catch (Exception e)
+				{
+					lastError = e.ToString();
+					SendMessage("BYOND: Update failed!");
+					return false;
+				}
+				finally
+				{
+					lock(ByondLock) {
 						updateStat = TGByondStatus.Idle;
 					}
 				}

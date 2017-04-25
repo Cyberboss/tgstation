@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace TGControlPanel
 {
@@ -14,8 +6,16 @@ namespace TGControlPanel
 	{
 		public Main()
 		{
-			InitializeComponent(); 
+			InitializeComponent();
+			Panels.SelectedIndexChanged += Panels_SelectedIndexChanged;
+			Panels.SelectedIndex += Properties.Settings.Default.LastPageIndex;
 			InitRepoPage();
+			InitBYONDPage();
+		}
+
+		private void Panels_SelectedIndexChanged(object sender, System.EventArgs e)
+		{
+			Properties.Settings.Default.LastPageIndex = Panels.SelectedIndex;
 		}
 	}
 }
