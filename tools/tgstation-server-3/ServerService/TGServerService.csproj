@@ -75,6 +75,7 @@
     <Compile Include="DreamDaemon.cs" />
     <Compile Include="InterfaceBase.cs" />
     <Compile Include="IRC.cs" />
+    <Compile Include="NudgeHandler.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

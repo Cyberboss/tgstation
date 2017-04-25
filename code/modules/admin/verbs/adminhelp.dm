@@ -568,7 +568,7 @@ GLOBAL_DATUM_INIT(ahelp_tickets, /datum/admin_help_tickets, new)
 
 /proc/send2irc(msg,msg2)
 	if(config.useircbot)
-		shell("python nudge.py [msg] [msg2]")
+		world.ExportService("send2irc \"[msg] [msg2]\"")
 	return
 
 /proc/send2otherserver(source,msg,type = "Ahelp")

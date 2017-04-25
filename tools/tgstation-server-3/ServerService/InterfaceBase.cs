@@ -16,6 +16,7 @@ namespace TGServerService
 			InitCompiler();
 			InitDreamDaemon();
 			Connect(); //IRC
+			InitNudge();
 		}
 
 		//called when the service is stopped

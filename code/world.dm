@@ -15,6 +15,9 @@
 
 /world/New()
 	log_world("World loaded at [time_stamp()]")
+
+	IRCBroadcast("New round starting on [SSmapping.config.map_name]!");
+
 	fdel(SERVER_SERVICE_HARD_RESET_REQUEST)
 
 #if (PRELOAD_RSC == 0)
@@ -328,3 +331,9 @@
 
 /world/proc/RunningService()
 	return params[SERVER_SERVICE_PARAM]
+
+/world/proc/ExportService(command)
+	shell("tools/nudge.py \"[command]\"")
+
+/world/proc/IRCBroadcast(msg)
+	ExportService("irc [msg]")
