@@ -67,6 +67,8 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
+            this.IRCPanel = new System.Windows.Forms.TabPage();
+            this.ConfigPanel = new System.Windows.Forms.TabPage();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             this.BYONDPanel.SuspendLayout();
@@ -80,6 +82,8 @@
             this.Panels.Controls.Add(this.BYONDPanel);
             this.Panels.Controls.Add(this.tabPage2);
             this.Panels.Controls.Add(this.tabPage3);
+            this.Panels.Controls.Add(this.IRCPanel);
+            this.Panels.Controls.Add(this.ConfigPanel);
             this.Panels.Location = new System.Drawing.Point(12, 12);
             this.Panels.Name = "Panels";
             this.Panels.SelectedIndex = 0;
@@ -522,6 +526,26 @@
             // 
             this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
             // 
+            // IRCPanel
+            // 
+            this.IRCPanel.Location = new System.Drawing.Point(4, 22);
+            this.IRCPanel.Name = "IRCPanel";
+            this.IRCPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.IRCPanel.Size = new System.Drawing.Size(868, 366);
+            this.IRCPanel.TabIndex = 4;
+            this.IRCPanel.Text = "IRC";
+            this.IRCPanel.UseVisualStyleBackColor = true;
+            // 
+            // ConfigPanel
+            // 
+            this.ConfigPanel.Location = new System.Drawing.Point(4, 22);
+            this.ConfigPanel.Name = "ConfigPanel";
+            this.ConfigPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.ConfigPanel.Size = new System.Drawing.Size(868, 366);
+            this.ConfigPanel.TabIndex = 5;
+            this.ConfigPanel.Text = "Config";
+            this.ConfigPanel.UseVisualStyleBackColor = true;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -584,6 +608,8 @@
 		private System.Windows.Forms.Timer BYONDTimer;
 		private System.Windows.Forms.Label StagedVersionLabel;
 		private System.Windows.Forms.Label StagedVersionTitle;
+		private System.Windows.Forms.TabPage IRCPanel;
+		private System.Windows.Forms.TabPage ConfigPanel;
 	}
 }
 

@@ -12,13 +12,20 @@ namespace TGServerService
 	{
 		public static IrcClient irc = new IrcClient() { SupportNonRfc = true };
 		int reconnectAttempt = 0;
-		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, bool enabled)
+		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, TGIRCEnableType enabled)
 		{
 			var Config = Properties.Settings.Default;
+			var ServerChange = false;
 			if (url != null)
+			{
 				Config.IRCServer = url;
+				ServerChange = true;
+			}
 			if (port != 0)
+			{
 				Config.IRCPort = port;
+				ServerChange = true;
+			}
 			if (username != null)
 				Config.IRCNick = username;
 			if (adminChannel != null)
@@ -30,10 +37,27 @@ namespace TGServerService
 				si.Add(Config.IRCAdminChannel);
 				Config.IRCChannels = si;
 			}
-			Config.IRCEnabled = enabled;
+			switch (enabled)
+			{
+				case TGIRCEnableType.Enable:
+					Config.IRCEnabled = true;
+					break;
+				case TGIRCEnableType.Disable:
+					Config.IRCEnabled = false;
+					break;
+				default:
+					break;
+			}
 
-			if(Connected())
-				Reconnect();
+			if (Connected())
+				if (ServerChange)
+					Reconnect();
+				else
+				{
+					irc.RfcNick(Config.IRCNick);
+					irc.RfcRestart();
+					JoinChannels();
+				}
 		}
 		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
 		{
@@ -45,6 +69,11 @@ namespace TGServerService
 			Config.IRCIdentifyRequired = required;
 			if (Connected())
 				Login();
+		}
+		void JoinChannels()
+		{
+			foreach (var I in Properties.Settings.Default.IRCChannels)
+				irc.RfcJoin(I);
 		}
 		void Login()
 		{
@@ -90,8 +119,7 @@ namespace TGServerService
 					return "Bot name is already taken: " + e.ToString();
 				}
 				Login();
-				foreach (var I in Config.IRCChannels)
-					irc.RfcJoin(I);
+				JoinChannels();
 				new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();
 				return null;
 			}

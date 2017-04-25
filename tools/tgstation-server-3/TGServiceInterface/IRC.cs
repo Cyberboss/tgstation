@@ -2,12 +2,18 @@
 
 namespace TGServiceInterface
 {
+	public enum TGIRCEnableType
+	{
+		DoNotModify,
+		Enable,
+		Disable,
+	}
 	[ServiceContract]
 	public interface ITGIRC
 	{
 		//Sets up IRC info, default fields don't change the current value
 		[OperationContract]
-		void Setup(string url_port = null, ushort port = 0, string username = null, string[] channels = null, string adminchannel = null, bool enabled = true);
+		void Setup(string url_port = null, ushort port = 0, string username = null, string[] channels = null, string adminchannel = null, TGIRCEnableType enabled = TGIRCEnableType.DoNotModify);
 
 		//Sets up auth IRC info, null fields don't change the current value
 		[OperationContract]
