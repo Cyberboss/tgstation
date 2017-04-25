@@ -9,25 +9,52 @@ namespace TGControlPanel
 {
 	partial class Main
 	{
+
+		enum RepoAction {
+			Clone,
+			Checkout,
+			Update,
+			Merge,
+			Reset,
+			Test,
+			Wait,
+		}
+
+		RepoAction action;
 		string CloneRepoURL;
-		string CloneRepoBranch;
+		string CheckoutBranch;
+		int TestPR;
+
+		string repoError;
+
 		private void InitRepoPage()
 		{
 			RepoBGW.ProgressChanged += RepoBGW_ProgressChanged;
 			RepoBGW.RunWorkerCompleted += RepoBGW_RunWorkerCompleted;
+			RepoBGW.DoWork += RepoBGW_DoWork;
+			var Repo = Server.GetComponent<ITGRepository>();
 			PopulateRepoFields();
 		}
 
 		private void RepoBGW_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
 		{
+			RepoProgressBar.Value = 100;
+			RepoProgressBar.Style = ProgressBarStyle.Blocks;
+			RepoPanel.UseWaitCursor = false;
 			PopulateRepoFields();
 		}
 
 		private void PopulateRepoFields()
 		{
-			var Repo = Server.GetComponent<ITGRepository>();
-			
+			if (repoError != null)
+				MessageBox.Show("An error occured: " + repoError);
 
+			if (RepoBusyCheck())
+				return;
+
+			var Repo = Server.GetComponent<ITGRepository>();
+
+			RepoProgressBar.Style = ProgressBarStyle.Marquee;
 			RepoProgressBar.Visible = false;
 			RemoteNameTitle.Visible = true;
 			RepoRemoteTextBox.Visible = true;
@@ -83,16 +110,54 @@ namespace TGControlPanel
 			}
 		}
 
+		bool RepoBusyCheck()
+		{
+			if (Server.GetComponent<ITGRepository>().OperationInProgress())
+			{
+				DoAsyncOp(RepoAction.Wait, "Waiting for repository to finish another action");
+				return true;
+			}
+			return false;
+		}
 		private void RepoBGW_ProgressChanged(object sender, ProgressChangedEventArgs e)
 		{
-			RepoProgressBar.Value = e.ProgressPercentage;
+			var val = e.ProgressPercentage;
+			if (val < 0)
+				return;
+			RepoProgressBar.Style = ProgressBarStyle.Blocks;
+			RepoProgressBar.Value = val;
 		}
 
 		private void RepoBGW_DoWork(object sender, DoWorkEventArgs e)
 		{
 			//Only for clones
 			var Repo = Server.GetComponent<ITGRepository>();
-			Repo.Setup(CloneRepoURL, CloneRepoBranch);
+
+			switch (action) {
+				case RepoAction.Clone:
+					repoError = Repo.Setup(CloneRepoURL, CheckoutBranch) ? null : "The repository is currently undergoing an operation. Please wait for it to complete.";
+					break;
+				case RepoAction.Checkout:
+					repoError = Repo.Checkout(CheckoutBranch);
+					break;
+				case RepoAction.Merge:
+					repoError = Repo.Update(false);
+					break;
+				case RepoAction.Reset:
+					repoError = Repo.Reset();
+					break;
+				case RepoAction.Test:
+					repoError = Repo.MergePullRequest(TestPR);
+					break;
+				case RepoAction.Update:
+					repoError = Repo.Update(true);
+					break;
+				case RepoAction.Wait:
+					break;
+				default:
+					//reeee
+					return;
+			}
 
 			do
 			{
@@ -104,22 +169,54 @@ namespace TGControlPanel
 		private void CloneRepositoryButton_Click(object sender, EventArgs e)
 		{
 			CloneRepoURL = RepoRemoteTextBox.Text;
-			CloneRepoBranch = RepoBranchTextBox.Text;
-			RepoProgressBarLabel.Text = String.Format("Cloning into {0}", RepoRemoteTextBox.Text);
+			CheckoutBranch = RepoBranchTextBox.Text;
 
+			DoAsyncOp(RepoAction.Clone, String.Format("Cloning {0} branch of {1}...", CheckoutBranch, CloneRepoURL));
+		}
+		void DoAsyncOp(RepoAction ra, string message)
+		{
+			if (ra != RepoAction.Wait && RepoBusyCheck())
+				return;
+
+			CurrentRevisionLabel.Visible = false;
+			CurrentRevisionTitle.Visible = false;
+			CommiterNameTitle.Visible = false;
+			CommitterEmailTitle.Visible = false;
+			RepoCommitterNameTextBox.Visible = false;
+			RepoEmailTextBox.Visible = false;
+			TestMergeListLabel.Visible = false;
+			TestMergeListTitle.Visible = false;
+			RepoApplyButton.Visible = false;
+			UpdateRepoButton.Visible = false;
+			TestMergeButton.Visible = false;
 			CloneRepositoryButton.Visible = false;
 			RemoteNameTitle.Visible = false;
 			RepoRemoteTextBox.Visible = false;
 			BranchNameTitle.Visible = false;
 			RepoBranchTextBox.Visible = false;
 			RepoProgressBar.Visible = true;
+			HardReset.Visible = false;
+			IdentityLabel.Visible = false;
+
+			RepoPanel.UseWaitCursor = true;
+
 			RepoProgressBar.Value = 0;
-			RepoProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+			RepoProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+
+			RepoProgressBarLabel.Text = message;
+			RepoProgressBarLabel.Visible = true;
+
+			action = ra;
+			repoError = null;
+
 			RepoBGW.RunWorkerAsync();
 		}
 		private void RepoApplyButton_Click(object sender, EventArgs e)
 		{
 			var Repo = Server.GetComponent<ITGRepository>();
+
+			if (RepoBusyCheck())
+				return;
 
 			var remote = Repo.GetRemote(out string error);
 			if (remote == null) {
@@ -143,16 +240,9 @@ namespace TGControlPanel
 					MessageBox.Show("Error: " + error);
 					return;
 				}
-
-
-				if (branch != RepoBranchTextBox.Text) {
-					var result = Repo.Checkout(RepoBranchTextBox.Text);
-					if(result != null)
-					{
-						MessageBox.Show("Error: " + result);
-						return;
-					}
-				}
+				
+				CheckoutBranch = RepoBranchTextBox.Text;
+				DoAsyncOp(RepoAction.Checkout, String.Format("Checking out {0}...", CheckoutBranch));
 
 				Repo.SetCommitterName(RepoCommitterNameTextBox.Text);
 				Repo.SetCommitterEmail(RepoEmailTextBox.Text);
@@ -160,36 +250,27 @@ namespace TGControlPanel
 			else
 				CloneRepositoryButton_Click(null, null);
 		}
-		private void UpdateRepo(bool reset)
-		{
-			var Repo = Server.GetComponent<ITGRepository>();
-			MessageBox.Show(Repo.Update(reset) ?? "Operation success!");
-			PopulateRepoFields();
-		}
 		private void UpdateRepoButton_Click(object sender, EventArgs e)
 		{
-			UpdateRepo(false);
+			DoAsyncOp(RepoAction.Merge, "Merging origin branch...");
 		}
 		private void HardReset_Click(object sender, EventArgs e)
 		{
-			UpdateRepo(true);
+			DoAsyncOp(RepoAction.Update, "Updating and resetting to origin branch...");
 		}
 		private void TestMergeButton_Click(object sender, EventArgs e)
 		{
 			string input = Interaction.InputBox("Merge PR", "Enter the number of the PR you wish to merge", "", 0, 0).Trim();
-			ushort Result;
 			try
 			{
-				Result = Convert.ToUInt16(input);
+				TestPR = Convert.ToInt32(input);
 			}
 			catch
 			{
 				MessageBox.Show("Invalid PR number: " + input);
 				return;
 			}
-
-			MessageBox.Show(Server.GetComponent<ITGRepository>().MergePullRequest(Result) ?? "Operation success!");
-			PopulateRepoFields();
+			DoAsyncOp(RepoAction.Test, String.Format("Merging latest commit of PR #{0}...", TestPR));
 		}
 	}
 }
