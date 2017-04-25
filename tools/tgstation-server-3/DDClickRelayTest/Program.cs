@@ -29,16 +29,24 @@ namespace TGCommandLine
 				return ExitCode.ConnectionError;
 			}
 
-			switch (command)
+			try
 			{
-				case "?":
-				case "help":
-					ConsoleHelp();
-					break;
-				default:
-					Console.WriteLine("Invalid command: " + command);
-					Console.WriteLine("Type '?' or 'help' for available commands.");
-					return ExitCode.BadCommand;
+				switch (command)
+				{
+					case "?":
+					case "help":
+						ConsoleHelp();
+						break;
+					default:
+						Console.WriteLine("Invalid command: " + command);
+						Console.WriteLine("Type '?' or 'help' for available commands.");
+						return ExitCode.BadCommand;
+				}
+			}
+			catch
+			{
+				Console.WriteLine("Connection interrupted!");
+				return ExitCode.ConnectionError;
 			}
 			return ExitCode.Normal;
 		}
