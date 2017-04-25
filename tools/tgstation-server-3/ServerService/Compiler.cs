@@ -231,7 +231,7 @@ namespace TGServerService
 						Monitor.Exit(RepoLock);
 					}
 
-					SendMessage("DM: Repo copy complete, compiling... " + resurrectee);
+					SendMessage("DM: Repo copy complete, compiling...");
 
 					using (var DM = new Process())  //will kill the process if the thread is terminated
 					{
