@@ -66,15 +66,17 @@
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.RepoBGW = new System.ComponentModel.BackgroundWorker();
-            this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
             this.IRCPanel = new System.Windows.Forms.TabPage();
             this.ConfigPanel = new System.Windows.Forms.TabPage();
+            this.RepoBGW = new System.ComponentModel.BackgroundWorker();
+            this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
+            this.TestmergeSelector = new System.Windows.Forms.NumericUpDown();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             this.BYONDPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
             this.SuspendLayout();
             // 
             // Panels
@@ -94,6 +96,7 @@
             // RepoPanel
             // 
             this.RepoPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.RepoPanel.Controls.Add(this.TestmergeSelector);
             this.RepoPanel.Controls.Add(this.TestMergeListLabel);
             this.RepoPanel.Controls.Add(this.CurrentRevisionLabel);
             this.RepoPanel.Controls.Add(this.RepoEmailTextBox);
@@ -189,7 +192,7 @@
             // 
             // HardReset
             // 
-            this.HardReset.Location = new System.Drawing.Point(722, 81);
+            this.HardReset.Location = new System.Drawing.Point(722, 46);
             this.HardReset.Name = "HardReset";
             this.HardReset.Size = new System.Drawing.Size(140, 29);
             this.HardReset.TabIndex = 13;
@@ -211,7 +214,7 @@
             // 
             // TestMergeButton
             // 
-            this.TestMergeButton.Location = new System.Drawing.Point(722, 46);
+            this.TestMergeButton.Location = new System.Drawing.Point(722, 81);
             this.TestMergeButton.Name = "TestMergeButton";
             this.TestMergeButton.Size = new System.Drawing.Size(140, 29);
             this.TestMergeButton.TabIndex = 11;
@@ -518,15 +521,6 @@
             this.tabPage3.Text = "Logs";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // RepoBGW
-            // 
-            this.RepoBGW.WorkerReportsProgress = true;
-            this.RepoBGW.WorkerSupportsCancellation = true;
-            // 
-            // BYONDTimer
-            // 
-            this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
-            // 
             // IRCPanel
             // 
             this.IRCPanel.Location = new System.Drawing.Point(4, 22);
@@ -546,6 +540,27 @@
             this.ConfigPanel.TabIndex = 5;
             this.ConfigPanel.Text = "Config";
             this.ConfigPanel.UseVisualStyleBackColor = true;
+            // 
+            // RepoBGW
+            // 
+            this.RepoBGW.WorkerReportsProgress = true;
+            this.RepoBGW.WorkerSupportsCancellation = true;
+            // 
+            // BYONDTimer
+            // 
+            this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
+            // 
+            // TestmergeSelector
+            // 
+            this.TestmergeSelector.Location = new System.Drawing.Point(722, 116);
+            this.TestmergeSelector.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.TestmergeSelector.Name = "TestmergeSelector";
+            this.TestmergeSelector.Size = new System.Drawing.Size(140, 20);
+            this.TestmergeSelector.TabIndex = 22;
             // 
             // Main
             // 
@@ -567,6 +582,7 @@
             this.BYONDPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -612,6 +628,7 @@
 		private System.Windows.Forms.Label StagedVersionTitle;
 		private System.Windows.Forms.TabPage IRCPanel;
 		private System.Windows.Forms.TabPage ConfigPanel;
+		private System.Windows.Forms.NumericUpDown TestmergeSelector;
 	}
 }
 

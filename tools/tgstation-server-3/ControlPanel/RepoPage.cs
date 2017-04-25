@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualBasic;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Threading;
@@ -260,16 +259,9 @@ namespace TGControlPanel
 		}
 		private void TestMergeButton_Click(object sender, EventArgs e)
 		{
-			string input = Interaction.InputBox("Merge PR", "Enter the number of the PR you wish to merge", "", 0, 0).Trim();
-			try
-			{
-				TestPR = Convert.ToInt32(input);
-			}
-			catch
-			{
-				MessageBox.Show("Invalid PR number: " + input);
+			if (TestmergeSelector.Value == 0)
 				return;
-			}
+			TestPR = (int)TestmergeSelector.Value;
 			DoAsyncOp(RepoAction.Test, String.Format("Merging latest commit of PR #{0}...", TestPR));
 		}
 	}
