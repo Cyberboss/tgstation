@@ -74,7 +74,7 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
-					var splits = param.Split(':');
+					var splits = param.Split('|');
 					if (!Repo.Setup(splits[0], splits.Length > 1 ? splits[1] : "master"))
 					{
 						Console.WriteLine("Error: Repo is busy!");
