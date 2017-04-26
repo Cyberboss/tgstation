@@ -40,6 +40,8 @@ namespace TGCommandLine
 				{
 					case "irc":
 						return IRCCommand(param1, param2);
+					case "byond":
+						return BYONDCommand(param1, param2);
 					case "dm":
 						return DMCommand(param1, param2);
 					case "dd":
@@ -111,6 +113,75 @@ namespace TGCommandLine
 				default:
 					Console.WriteLine("Invalid command: " + command);
 					Console.WriteLine("Type 'dd help' for available commands.");
+					return ExitCode.BadCommand;
+			}
+			return ExitCode.Normal;
+		}
+		static ExitCode BYONDCommand(string command, string param)
+		{
+			var BYOND = Server.GetComponent<ITGByond>();
+			switch (command)
+			{
+				case "update":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					var splits = param.Split('.');
+					var failed = splits.Length != 2;
+					int Major = 0, Minor = 0;
+					if (!failed)
+					{
+						try
+						{
+							Major = Convert.ToInt32(splits[0]);
+							Minor = Convert.ToInt32(splits[1]);
+						}
+						catch
+						{
+							failed = true;
+						}
+					}
+					if (failed)
+					{
+
+						Console.WriteLine("Please enter version as <Major>.<Minor>");
+						return ExitCode.BadCommand;
+					}
+					if (!BYOND.UpdateToVersion(Major, Minor))
+
+					{
+						Console.WriteLine("Failed to begin update!");
+						return ExitCode.ServerError;
+					}
+					var stat = BYOND.CurrentStatus();
+					while (stat != TGByondStatus.Idle && stat != TGByondStatus.Staged)
+					{
+						Thread.Sleep(100);
+						stat = BYOND.CurrentStatus();
+					}
+					var res = BYOND.GetError();
+					if(res != null)
+					{
+						Console.WriteLine("Error: " + res);
+						return ExitCode.ServerError;
+					}
+					Console.WriteLine(stat == TGByondStatus.Staged ? "Update staged and will apply next DD reboot": "Update finished"); 
+					break;
+				case "version":
+					Console.WriteLine(BYOND.GetVersion(param == "--staged") ?? "Unistalled");
+					break;
+				case "?":
+				case "help":
+					Console.WriteLine("BYOND commands:");
+					Console.WriteLine();
+					Console.WriteLine("version [--staged]\t-\tPrint the currently installed BYOND version");
+					Console.WriteLine("update <Major>.<Minor>\t-\tUpdates the BYOND installation to the specified version");
+					break;
+				default:
+					Console.WriteLine("Invalid command: " + command);
+					Console.WriteLine("Type 'byond help' for available commands.");
 					return ExitCode.BadCommand;
 			}
 			return ExitCode.Normal;
@@ -345,7 +416,8 @@ namespace TGCommandLine
 			Console.WriteLine("Avaiable commands (type 'help' after command for more info):");
 			Console.WriteLine();
 			Console.WriteLine("irc\t-\tManage the IRC user");
-			Console.WriteLine("repo\t-\tManage the git repository");
+			Console.WriteLine("repo\t-\tManage the git repository"); ;
+			Console.WriteLine("byond\t-\tManage BYOND installation");
 			Console.WriteLine("dm\t-\tManage compiling the server");
 			Console.WriteLine("dd\t-\tManage DreamDaemon");
 		}

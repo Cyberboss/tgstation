@@ -160,7 +160,7 @@ namespace TGServerService
 						break;
 					default:
 						RequestRestart();
-						lastError = "Awaiting server restart...";
+						lastError = "Update staged. Awaiting server restart...";
 						SendMessage(String.Format("BYOND: Staging complete. Awaiting server restart...", vi.major, vi.minor));
 						break;
 				}
