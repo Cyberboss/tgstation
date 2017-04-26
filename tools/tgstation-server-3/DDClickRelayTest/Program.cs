@@ -44,6 +44,8 @@ namespace TGCommandLine
 						return DMCommand(param1, param2);
 					case "dd":
 						return DDCommand(param1);
+					case "repo":
+						return RepoCommand(param1, param2);
 					case "?":
 					case "help":
 						ConsoleHelp();
@@ -58,6 +60,43 @@ namespace TGCommandLine
 			{
 				Console.WriteLine("Connection interrupted!");
 				return ExitCode.ConnectionError;
+			}
+			return ExitCode.Normal;
+		}
+		static ExitCode RepoCommand(string command, string param)
+		{
+			var Repo = Server.GetComponent<ITGRepository>();
+			switch (command)
+			{
+				case "update":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					switch (param)
+					{
+						case "hard":
+							Console.WriteLine(Repo.Update(true) ?? "Success");
+							break;
+						case "merge":
+							Console.WriteLine(Repo.Update(true) ?? "Success");
+							break;
+						default:
+							Console.WriteLine("Invalid parameter: " + param);
+							return ExitCode.BadCommand;
+					}
+					break;
+				case "?":
+				case "help":
+					Console.WriteLine("Repo commands:");
+					Console.WriteLine();
+					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
+					break;
+				default:
+					Console.WriteLine("Invalid command: " + command);
+					Console.WriteLine("Type 'dd help' for available commands.");
+					return ExitCode.BadCommand;
 			}
 			return ExitCode.Normal;
 		}
@@ -291,7 +330,9 @@ namespace TGCommandLine
 			Console.WriteLine("Avaiable commands (type 'help' after command for more info):");
 			Console.WriteLine();
 			Console.WriteLine("irc\t-\tManage the IRC user");
+			Console.WriteLine("repo\t-\tManage the git repository");
 			Console.WriteLine("dm\t-\tManage compiling the server");
+			Console.WriteLine("dd\t-\tManage DreamDaemon");
 		}
 
 		static int Main(string[] args)
