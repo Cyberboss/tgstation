@@ -220,7 +220,7 @@ namespace TGServerService
 
 					Program.DeleteDirectory(ByondDirectory);
 					Directory.Move(StagingDirectoryInner, ByondDirectory);
-					Program.DeleteDirectory(StagingDirectory, true);
+					Program.DeleteDirectory(StagingDirectory);
 					lastError = null;
 					SendMessage("BYOND: Update completed!");
 					return true;
