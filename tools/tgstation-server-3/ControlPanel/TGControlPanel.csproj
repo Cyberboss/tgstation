@@ -91,6 +91,9 @@
     <Compile Include="RepoPage.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ServerPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <EmbeddedResource Include="Main.resx">
       <DependentUpon>Main.cs</DependentUpon>
     </EmbeddedResource>

@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Panels = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
+            this.TestmergeSelector = new System.Windows.Forms.NumericUpDown();
             this.TestMergeListLabel = new System.Windows.Forms.TextBox();
             this.CurrentRevisionLabel = new System.Windows.Forms.Label();
             this.RepoEmailTextBox = new System.Windows.Forms.TextBox();
@@ -64,26 +65,31 @@
             this.MinorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.ServerPanel = new System.Windows.Forms.TabPage();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.IRCPanel = new System.Windows.Forms.TabPage();
             this.ConfigPanel = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
-            this.TestmergeSelector = new System.Windows.Forms.NumericUpDown();
+            this.ServerStatusTitle = new System.Windows.Forms.Label();
+            this.ServerStatusLabel = new System.Windows.Forms.Label();
+            this.compilerProgressBar = new System.Windows.Forms.ProgressBar();
+            this.initializeButton = new System.Windows.Forms.Button();
+            this.compileButton = new System.Windows.Forms.Button();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
             this.BYONDPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
+            this.ServerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panels
             // 
             this.Panels.Controls.Add(this.RepoPanel);
             this.Panels.Controls.Add(this.BYONDPanel);
-            this.Panels.Controls.Add(this.tabPage2);
+            this.Panels.Controls.Add(this.ServerPanel);
             this.Panels.Controls.Add(this.tabPage3);
             this.Panels.Controls.Add(this.IRCPanel);
             this.Panels.Controls.Add(this.ConfigPanel);
@@ -123,6 +129,18 @@
             this.RepoPanel.Size = new System.Drawing.Size(868, 366);
             this.RepoPanel.TabIndex = 0;
             this.RepoPanel.Text = "Repository";
+            // 
+            // TestmergeSelector
+            // 
+            this.TestmergeSelector.Location = new System.Drawing.Point(722, 116);
+            this.TestmergeSelector.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.TestmergeSelector.Name = "TestmergeSelector";
+            this.TestmergeSelector.Size = new System.Drawing.Size(140, 20);
+            this.TestmergeSelector.TabIndex = 22;
             // 
             // TestMergeListLabel
             // 
@@ -501,15 +519,20 @@
             this.UpdateProgressBar.Size = new System.Drawing.Size(650, 31);
             this.UpdateProgressBar.TabIndex = 0;
             // 
-            // tabPage2
+            // ServerPanel
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(868, 366);
-            this.tabPage2.TabIndex = 2;
-            this.tabPage2.Text = "Server";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.ServerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ServerPanel.Controls.Add(this.compileButton);
+            this.ServerPanel.Controls.Add(this.initializeButton);
+            this.ServerPanel.Controls.Add(this.compilerProgressBar);
+            this.ServerPanel.Controls.Add(this.ServerStatusLabel);
+            this.ServerPanel.Controls.Add(this.ServerStatusTitle);
+            this.ServerPanel.Location = new System.Drawing.Point(4, 22);
+            this.ServerPanel.Name = "ServerPanel";
+            this.ServerPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.ServerPanel.Size = new System.Drawing.Size(868, 366);
+            this.ServerPanel.TabIndex = 2;
+            this.ServerPanel.Text = "Server";
             // 
             // tabPage3
             // 
@@ -550,17 +573,56 @@
             // 
             this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
             // 
-            // TestmergeSelector
+            // ServerStatusTitle
             // 
-            this.TestmergeSelector.Location = new System.Drawing.Point(722, 116);
-            this.TestmergeSelector.Maximum = new decimal(new int[] {
-            1000000,
-            0,
-            0,
-            0});
-            this.TestmergeSelector.Name = "TestmergeSelector";
-            this.TestmergeSelector.Size = new System.Drawing.Size(140, 20);
-            this.TestmergeSelector.TabIndex = 22;
+            this.ServerStatusTitle.AutoSize = true;
+            this.ServerStatusTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.ServerStatusTitle.Location = new System.Drawing.Point(15, 17);
+            this.ServerStatusTitle.Name = "ServerStatusTitle";
+            this.ServerStatusTitle.Size = new System.Drawing.Size(125, 18);
+            this.ServerStatusTitle.TabIndex = 8;
+            this.ServerStatusTitle.Text = "Server Status:";
+            this.ServerStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ServerStatusLabel
+            // 
+            this.ServerStatusLabel.AutoSize = true;
+            this.ServerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.ServerStatusLabel.Location = new System.Drawing.Point(146, 17);
+            this.ServerStatusLabel.Name = "ServerStatusLabel";
+            this.ServerStatusLabel.Size = new System.Drawing.Size(82, 18);
+            this.ServerStatusLabel.TabIndex = 9;
+            this.ServerStatusLabel.Text = "Unknown";
+            this.ServerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // compilerProgressBar
+            // 
+            this.compilerProgressBar.Location = new System.Drawing.Point(110, 302);
+            this.compilerProgressBar.MarqueeAnimationSpeed = 50;
+            this.compilerProgressBar.Name = "compilerProgressBar";
+            this.compilerProgressBar.Size = new System.Drawing.Size(650, 31);
+            this.compilerProgressBar.TabIndex = 10;
+            // 
+            // initializeButton
+            // 
+            this.initializeButton.Enabled = false;
+            this.initializeButton.Location = new System.Drawing.Point(263, 237);
+            this.initializeButton.Name = "initializeButton";
+            this.initializeButton.Size = new System.Drawing.Size(118, 28);
+            this.initializeButton.TabIndex = 11;
+            this.initializeButton.Text = "Initialize";
+            this.initializeButton.UseVisualStyleBackColor = true;
+            // 
+            // compileButton
+            // 
+            this.compileButton.Location = new System.Drawing.Point(469, 237);
+            this.compileButton.Name = "compileButton";
+            this.compileButton.Size = new System.Drawing.Size(118, 28);
+            this.compileButton.TabIndex = 12;
+            this.compileButton.Text = "Compile";
+            this.compileButton.UseVisualStyleBackColor = true;
             // 
             // Main
             // 
@@ -578,11 +640,13 @@
             this.Panels.ResumeLayout(false);
             this.RepoPanel.ResumeLayout(false);
             this.RepoPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).EndInit();
             this.BYONDPanel.ResumeLayout(false);
             this.BYONDPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).EndInit();
+            this.ServerPanel.ResumeLayout(false);
+            this.ServerPanel.PerformLayout();
             this.ResumeLayout(false);
 
 		}
@@ -611,7 +675,7 @@
 		private System.Windows.Forms.Label BranchNameTitle;
 		private System.Windows.Forms.Label CurrentRevisionTitle;
 		private System.Windows.Forms.TabPage BYONDPanel;
-		private System.Windows.Forms.TabPage tabPage2;
+		private System.Windows.Forms.TabPage ServerPanel;
 		private System.Windows.Forms.TabPage tabPage3;
 		private System.Windows.Forms.TextBox TestMergeListLabel;
 		private System.Windows.Forms.Button UpdateButton;
@@ -629,6 +693,11 @@
 		private System.Windows.Forms.TabPage IRCPanel;
 		private System.Windows.Forms.TabPage ConfigPanel;
 		private System.Windows.Forms.NumericUpDown TestmergeSelector;
+		private System.Windows.Forms.Label ServerStatusTitle;
+		private System.Windows.Forms.Button compileButton;
+		private System.Windows.Forms.Button initializeButton;
+		private System.Windows.Forms.ProgressBar compilerProgressBar;
+		private System.Windows.Forms.Label ServerStatusLabel;
 	}
 }
 

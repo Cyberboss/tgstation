@@ -17,5 +17,10 @@ namespace TGControlPanel
 		{
 			Properties.Settings.Default.LastPageIndex = Panels.SelectedIndex;
 		}
+
+		private void UpdateButton_Click(object sender, System.EventArgs e)
+		{
+
+		}
 	}
 }
