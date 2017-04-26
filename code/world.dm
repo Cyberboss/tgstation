@@ -340,4 +340,5 @@
 
 /world/proc/ServiceReboot()
 	to_chat(src, "<span class='boldannounce'>Hard reboot triggered, you will automatically reconnect...</span>")
+	sleep(1)	//so people actually get the message
 	ExportService("killme")
