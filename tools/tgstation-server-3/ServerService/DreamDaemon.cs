@@ -92,6 +92,8 @@ namespace TGServerService
 			try
 			{
 				Stop();
+				//IMPORTANT: SLEEP FOR A MOMENT OR WONDOWS WON'T RELEASE THE FUCKING BYOND DLL HANDLES!!!! REEEEEEE
+				Thread.Sleep(3000);
 				var res = Start();
 				if(res != null)
 					RestartInProgress = false;
