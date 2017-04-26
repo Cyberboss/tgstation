@@ -59,6 +59,7 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -75,7 +76,8 @@
     <Compile Include="DreamDaemon.cs" />
     <Compile Include="InterfaceBase.cs" />
     <Compile Include="IRC.cs" />
-    <Compile Include="NudgeHandler.cs" />
+    <Compile Include="Interop.cs" />
+    <Compile Include="QueuedLock.cs" />
     <Compile Include="Repository.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

@@ -22,6 +22,7 @@ namespace TGServerService
 		object watchdogLock = new object();
 		Thread DDWatchdog;
 		TGDreamDaemonStatus currentStatus;
+		ushort currentPort = 0;
 
 		const int DDHangStartTime = 30;
 		const int DDBadStartTime = 10;
@@ -135,6 +136,7 @@ namespace TGServerService
 					lock (watchdogLock)
 					{
 						currentStatus = TGDreamDaemonStatus.HardRebooting;
+						currentPort = 0;
 						Proc.Close();
 
 						if ((DateTime.Now - starttime).Seconds < DDBadStartTime)
@@ -186,6 +188,7 @@ namespace TGServerService
 				lock (watchdogLock)
 				{
 					currentStatus = TGDreamDaemonStatus.Offline;
+					currentPort = 0;
 				}
 			}
 		}
@@ -210,6 +213,7 @@ namespace TGServerService
 				if (currentStatus != TGDreamDaemonStatus.Offline)
 					return "Server already running";
 				currentStatus = TGDreamDaemonStatus.HardRebooting;
+				currentPort = 0;
 			}
 			var res = CanStart();
 			if (res != null)
@@ -261,7 +265,8 @@ namespace TGServerService
 					var Config = Properties.Settings.Default;
 					var DMB = GameDirLive + "/" + Config.ProjectName + ".dmb";
 
-					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -params server_service=1 -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord());
+					GenCommsKey();
+					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -params server_service={4} -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord(), serviceCommsKey);
 					Proc.Start();
 
 					if (!Proc.WaitForInputIdle(DDHangStartTime * 1000))
@@ -269,9 +274,10 @@ namespace TGServerService
 						Proc.Kill();
 						Proc.Close();
 						currentStatus = TGDreamDaemonStatus.Offline;
+						currentPort = 0;
 						return String.Format("Server start is taking more that {0}s! Aborting!", DDHangStartTime);
 					}
-
+					currentPort = Config.ServerPort;
 					currentStatus = TGDreamDaemonStatus.Online;
 					if (!watchdog)
 					{
