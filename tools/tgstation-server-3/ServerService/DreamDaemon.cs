@@ -36,6 +36,15 @@ namespace TGServerService
 			Proc = new Process();
 			Proc.StartInfo.FileName = ByondDirectory + "/bin/dreamdaemon.exe";
 			Proc.StartInfo.UseShellExecute = false;
+
+			if (Properties.Settings.Default.DDAutoStart)
+				//break this off so we don't hold up starting the service
+				new Thread(new ThreadStart(InitStart));
+		}
+
+		void InitStart()
+		{
+			Start();
 		}
 
 		void DisposeDreamDaemon()
@@ -293,6 +302,16 @@ namespace TGServerService
 		{
 			Properties.Settings.Default.ServerSecurity = (int)level;
 			RequestRestart();
+		}
+
+		public bool Autostart()
+		{
+			return Properties.Settings.Default.DDAutoStart;
+		}
+
+		public void SetAutostart(bool on)
+		{
+			Properties.Settings.Default.DDAutoStart = on;
 		}
 	}
 }

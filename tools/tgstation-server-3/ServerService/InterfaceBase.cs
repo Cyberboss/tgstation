@@ -12,11 +12,11 @@ namespace TGServerService
 		//called when the service is started
 		public TGStationServer()
 		{
+			Connect(); //IRC
 			InitByond();
 			InitCompiler();
-			InitDreamDaemon();
-			Connect(); //IRC
 			InitInterop();
+			InitDreamDaemon();
 		}
 
 		//called when the service is stopped

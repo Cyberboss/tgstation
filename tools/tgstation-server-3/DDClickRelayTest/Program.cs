@@ -45,7 +45,7 @@ namespace TGCommandLine
 					case "dm":
 						return DMCommand(param1, param2);
 					case "dd":
-						return DDCommand(param1);
+						return DDCommand(param1, param2);
 					case "repo":
 						return RepoCommand(param1, param2);
 					case "?":
@@ -186,7 +186,7 @@ namespace TGCommandLine
 			}
 			return ExitCode.Normal;
 		}
-		static ExitCode DDCommand(string command)
+		static ExitCode DDCommand(string command, string param)
 		{
 			var DD = Server.GetComponent<ITGDreamDaemon>();
 
@@ -203,12 +203,34 @@ namespace TGCommandLine
 				case "stop":
 					DD.Stop();
 					break;
+				case "autostart":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					switch (param.ToLower()) {
+						case "on":
+							DD.SetAutostart(true);
+							break;
+						case "off":
+							DD.SetAutostart(false);
+							break;
+						case "check":
+							Console.WriteLine(DD.Autostart() ? "Autostart is on" : "Autostart is off");
+							break;
+						default:
+							Console.WriteLine("Please enter on, off, or check");
+							return ExitCode.BadCommand;
+					}
+					break;
 				case "?":
 				case "help":
 					Console.WriteLine("DD commands:");
 					Console.WriteLine();
 					Console.WriteLine("start\t-\tStarts the server and watchdog");
 					Console.WriteLine("stop\t-\tStops the server and watchdog");
+					Console.WriteLine("autostart <on|off|check>\t-\tChange or check autostarting of the game server");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

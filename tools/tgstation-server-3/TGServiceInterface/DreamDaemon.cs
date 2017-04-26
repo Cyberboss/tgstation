@@ -64,5 +64,13 @@ namespace TGServiceInterface
 		//Sets the port to use. Requires reboot to apply
 		[OperationContract]
 		void SetPort(ushort new_port);
+
+		//returns true if Start() is called when the service starts, false otherwise
+		[OperationContract]
+		bool Autostart();
+
+		//Set whether or not DD starts with the service
+		[OperationContract]
+		void SetAutostart(bool on);
 	}
 }

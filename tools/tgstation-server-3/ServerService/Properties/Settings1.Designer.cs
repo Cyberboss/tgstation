@@ -280,5 +280,17 @@ namespace TGServerService.Properties {
                 this["IRCIdentifyRequired"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool DDAutoStart {
+            get {
+                return ((bool)(this["DDAutoStart"]));
+            }
+            set {
+                this["DDAutoStart"] = value;
+            }
+        }
     }
 }
