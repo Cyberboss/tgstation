@@ -99,6 +99,7 @@ namespace TGServerService
 		{
 			if (!Monitor.TryEnter(restartLock))
 				return "Restart already in progress";
+			SendMessage("DD: Hard restart triggered");
 			RestartInProgress = true;
 			try
 			{

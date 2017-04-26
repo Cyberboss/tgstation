@@ -24,7 +24,6 @@ namespace TGServerService
 					break;
 				case "killme":
 					Restart();
-					SendMessage("DD: Hard restart triggered");
 					break;
 			}
 		}
