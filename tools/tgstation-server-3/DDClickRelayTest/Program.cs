@@ -74,7 +74,7 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
-					var splits = param.Split('|');
+					var splits = param.Split(';');
 					if (!Repo.Setup(splits[0], splits.Length > 1 ? splits[1] : "master"))
 					{
 						Console.WriteLine("Error: Repo is busy!");
@@ -105,7 +105,7 @@ namespace TGCommandLine
 				case "help":
 					Console.WriteLine("Repo commands:");
 					Console.WriteLine();
-					Console.WriteLine("setup <git-url>[:branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
+					Console.WriteLine("setup <git-url>[;branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
 					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
 					break;
 				default:
