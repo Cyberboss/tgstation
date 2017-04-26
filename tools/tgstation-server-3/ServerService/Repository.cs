@@ -156,7 +156,7 @@ namespace TGServerService
 			{
 				if (RepoBusy)
 					return false;
-				if (compilerCurrentStatus != TGCompilerStatus.Initialized || compilerCurrentStatus != TGCompilerStatus.Uninitialized)
+				if (compilerCurrentStatus != TGCompilerStatus.Initialized && compilerCurrentStatus != TGCompilerStatus.Uninitialized)
 					return false;
 				RepoBusy = true;
 				new Thread(new ParameterizedThreadStart(Clone))

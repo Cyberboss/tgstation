@@ -53,20 +53,7 @@ namespace TGServerService
 
 		void RequestRestart()
 		{
-			while (true)
-			{
-				Monitor.Enter(watchdogLock);
-				if (currentStatus == TGDreamDaemonStatus.HardRebooting)
-					break;
-				Monitor.Exit(watchdogLock);
-				Thread.Sleep(1000);
-			}
-			if (DaemonStatus() == TGDreamDaemonStatus.Online)
-			{
-				File.Create(GameDirA + HardRebootRequestFile).Close();
-				File.Create(GameDirB + HardRebootRequestFile).Close();
-			}
-			Monitor.Exit(watchdogLock);
+			SendCommand("hard_reboot");
 		}
 
 		public string Stop()

@@ -18,8 +18,6 @@
 
 	IRCBroadcast("New round starting on [SSmapping.config.map_name]!");
 
-	fdel(SERVER_SERVICE_HARD_RESET_REQUEST)
-
 #if (PRELOAD_RSC == 0)
 	external_rsc_urls = world.file2list("config/external_rsc_urls.txt","\n")
 	var/i=1
@@ -68,6 +66,8 @@
 		GLOB.diary << "TOPIC: \"[T]\", from:[addr], master:[master], key:[key]"
 
 	var/list/input = params2list(T)
+	if(input["serviceCommsKey"])
+		return ServiceCommand(input)
 	var/key_valid = (global.comms_allowed && input["key"] == global.comms_key)
 	var/static/last_irc_status = 0
 
@@ -180,9 +180,8 @@
 
 #define WORLD_REBOOT(X) \
 	log_world("World rebooted at [time_stamp()]");\
-	if(RunningService() && fexists(SERVER_SERVICE_HARD_RESET_REQUEST)) {\
-		log_world("Hard shutdown requested by service!");\
-		fdel(SERVER_SERVICE_HARD_RESET_REQUEST);\
+	if(GLOB.service_requested_hard_restart) {\
+		log_world("Sending shutdown request!");\
 		ServiceReboot();\
 	}\
 	..(X);\
@@ -341,4 +340,26 @@
 /world/proc/ServiceReboot()
 	to_chat(src, "<span class='boldannounce'>Hard reboot triggered, you will automatically reconnect...</span>")
 	sleep(1)	//so people actually get the message
-	ExportService("killme")
+	ExportService("killme")	//should not return, EVAH
+
+/world/proc/ServiceCommand(list/params)
+	var/sCK = RunningService()
+	var/their_sCK = params["serviceCommsKey"]
+
+	if(!their_sCK || their_sCK != sCK)
+		return "Invalid comms key!";
+
+	var/command = params["command"]
+	if(!command)
+		return "No command!"
+	
+	switch(command)
+		if("hard_reboot")
+			if(!GLOB.service_requested_hard_restart)
+				GLOB.service_requested_hard_restart = TRUE
+				log_world("Hard reboot requested by service")
+				message_admins("The world will hard reboot at the end of the game. Requested by service.")
+				feedback_set("service_hard_restart", TRUE)
+		else
+			return "Unknown command: [command]"
+	

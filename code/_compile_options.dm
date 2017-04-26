@@ -69,6 +69,5 @@
 #endif
 
 //keep these in sync with TGS3
-#define SERVER_SERVICE_HARD_RESET_REQUEST "HardReboot.lk"
 #define SERVER_SERVICE_PARAM "server_service"
 #define PR_TEST_JSON "..\\..\\prtestjob.json"	

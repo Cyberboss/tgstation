@@ -68,6 +68,20 @@ namespace TGCommandLine
 			var Repo = Server.GetComponent<ITGRepository>();
 			switch (command)
 			{
+				case "setup":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					var splits = param.Split(':');
+					if (!Repo.Setup(splits[0], splits.Length > 1 ? splits[1] : "master"))
+					{
+						Console.WriteLine("Error: Repo is busy!");
+						return ExitCode.ServerError;
+					}
+					Console.Write("Setting up repo. This will take a while...");
+					break;
 				case "update":
 					if (param == null)
 					{
@@ -91,6 +105,7 @@ namespace TGCommandLine
 				case "help":
 					Console.WriteLine("Repo commands:");
 					Console.WriteLine();
+					Console.WriteLine("setup <git-url>[:branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
 					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
 					break;
 				default:
