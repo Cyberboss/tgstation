@@ -360,7 +360,7 @@
 				GLOB.service_requested_hard_restart = TRUE
 				log_world("Hard reboot requested by service")
 				message_admins("The world will hard reboot at the end of the game. Requested by service.")
-				feedback_set("service_hard_restart", TRUE)
+				SSblackbox.set_val("service_hard_restart", TRUE)
 		else
 			return "Unknown command: [command]"
 
