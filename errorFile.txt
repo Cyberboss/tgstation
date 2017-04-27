@@ -1,0 +1,12 @@
+
+The operation could not be completed. The parameter is incorrect. 
+
+
+The operation could not be completed. The parameter is incorrect. 
+
+------ Starting pre-build validation for project 'TGServiceInstaller' ------ 
+ERROR: An error occurred while validating.  HRESULT = '8000000A'
+------ Pre-build validation for project 'TGServiceInstaller' completed ------
+1>------ Build started: Project: TGServiceInstaller, Configuration: Release ------
+========== Build: 0 succeeded, 1 failed, 4 up-to-date, 0 skipped ==========
+
