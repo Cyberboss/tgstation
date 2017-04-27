@@ -8,7 +8,7 @@ clone_depth: 1
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
 before_build:
-  - nuget restore
+  - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build:
   project: tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
   verbosity: minimal
