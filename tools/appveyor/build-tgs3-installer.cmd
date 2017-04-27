@@ -1,3 +1,3 @@
 set DEVENV="C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe"
-%DEVENV%
+%DEVENV% /Setup
 %DEVENV% tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj /Out "errorFile.txt"
