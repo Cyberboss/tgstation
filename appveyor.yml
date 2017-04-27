@@ -10,6 +10,7 @@ artifacts:
   name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build:
