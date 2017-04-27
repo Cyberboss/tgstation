@@ -17,9 +17,8 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
-  - cmd: tools/appveyor/build-tgs3-installer.cmd
-  - ps: cat errorFile.txt
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /Setup
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj'
 deploy:
   release: tgstation-server-3-v$(appveyor_build_version)
   description: 'The /tg/station server suite'
