@@ -5,9 +5,8 @@ skip_branch_with_pr: true
 image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
-
 artifacts:
-- path: tools/tgstation-server-3/ServiceInstaller/Release
+- path: tools/tgstation-server-3/ServiceInstaller/Release/*
   name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
