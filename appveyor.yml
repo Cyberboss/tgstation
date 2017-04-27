@@ -6,12 +6,11 @@ image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
 artifacts:
-- path: tools/tgstation-server-3/ServiceInstaller/Release/**/*
+- path: tools/tgstation-server-3/ServiceInstaller/Release/*.msi
   name: TG Station Server Installer
-init:
-  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build:
@@ -20,6 +19,7 @@ build:
   verbosity: minimal
 after_build:
   - cmd: tools/appveyor/build-tgs3-installer.cmd
+  - ps: cat errorFile.txt
 deploy:
   release: tgstation-server-3-v$(appveyor_build_version)
   description: 'The /tg/station server suite'
