@@ -7,5 +7,6 @@ configuration: Release
 clone_depth: 1
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
-build_script: 
-  - "\"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/devenv.exe\" /build \"Release\" tools/tgstation-server-3/TGStationServer3.sln"
+build:
+  project: tools/tgstation-server-3/TGStationServer3.sln
+  verbosity: minimal
