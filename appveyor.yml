@@ -6,7 +6,7 @@ image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
 artifacts:
-- path: tools/tgstation-server-3/**/*
+- path: tools/tgstation-server-3/ServiceInstaller/Release/**/*
   name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
@@ -18,6 +18,7 @@ build:
   verbosity: minimal
 build_script:
   - cmd: tools/appveyor/build-tgs3-installer.cmd
+  - ps: cat errorFile.txt
 deploy:
   release: tgstation-server-3-v$(appveyor_build_version)
   description: 'The /tg/station server suite'
