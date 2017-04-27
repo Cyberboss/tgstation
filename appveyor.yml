@@ -17,6 +17,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /InstallVSTemplates'
   - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /Setup'
   - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj'
 deploy:
