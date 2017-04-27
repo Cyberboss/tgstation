@@ -23,10 +23,10 @@ deploy:
   description: 'The /tg/station server suite'
   provider: GitHub
   auth_token:
-    secure: github_oath_token # your encrypted token from GitHub
-  artifact: /.*\.nupkg/            # upload all NuGet packages to release assets
+    secure: github_oath_token
+  artifact: /.*
   draft: false
   prerelease: false
   on:
-    branch: master                 # release from master branch only
-    appveyor_repo_tag: true        # deploy on tag push only
+    branch: master
+    appveyor_repo_tag: true
