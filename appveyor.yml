@@ -17,6 +17,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
+  - ps: Set-ItemProperty -Path HKCU:\SOFTWARE\Microsoft\VisualStudio\15.0_Config\MSBuild -Name EnableOutOfProcBuild -Value 0
   - cmd: tools/appveyor/build-tgs3-installer.cmd
   - ps: cat errorFile.txt
 deploy:
