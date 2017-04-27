@@ -10,4 +10,4 @@ install:
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build_script:
-  - cmd: - '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/devenv.exe" /build "Release" tools/tgstation-server-3/TGStationServer3.sln'
+  - cmd: '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/devenv.exe" /build "Release" tools/tgstation-server-3/TGStationServer3.sln'
