@@ -5,9 +5,17 @@ skip_branch_with_pr: true
 image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
+
+artifacts:
+- path: tools/tgstation-server-3/ServiceInstaller/Release
+  name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
-build_script:
+build:
+  project: tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
+  parallel: true
+  verbosity: minimal
+after_build:
   - cmd: '"C:/Program Files (x86)/Microsoft Visual Studio/2017/Community/Common7/IDE/devenv.exe" /build "Release" tools/tgstation-server-3/TGStationServer3.sln'
