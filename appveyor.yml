@@ -17,6 +17,7 @@ build:
   parallel: true
   verbosity: minimal
 after_build:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - cmd: tools/appveyor/build-tgs3-installer.cmd
   - ps: cat errorFile.txt
 deploy:
