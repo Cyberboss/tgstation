@@ -19,7 +19,8 @@ build:
 after_build:
   - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /InstallVSTemplates'
   - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" /Setup'
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj'
+  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj /Out errorFile.txt'
+  - cat errorFile.txt
 deploy:
   release: tgstation-server-3-v$(appveyor_build_version)
   description: 'The /tg/station server suite'
@@ -32,3 +33,5 @@ deploy:
   on:
     branch: master
     appveyor_repo_tag: true
+on_finish:
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
