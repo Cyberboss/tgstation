@@ -5,9 +5,6 @@ skip_branch_with_pr: true
 image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
-artifacts:
-- path: tools/tgstation-server-3/ServiceInstaller/Release/*.msi
-  name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
 before_build:
@@ -16,20 +13,3 @@ build:
   project: tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
   parallel: true
   verbosity: minimal
-after_build:
-  - '"C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE\devenv.exe" tools/tgstation-server-3/TGStationServer3.sln /Build Release /Project ServiceInstaller\ServiceInstaller.vdproj /Out errorFile.txt'
-  - cat errorFile.txt
-deploy:
-  release: tgstation-server-3-v$(appveyor_build_version)
-  description: 'The /tg/station server suite'
-  provider: GitHub
-  auth_token:
-    secure: github_oath_token
-  artifact: /.*
-  draft: false
-  prerelease: false
-  on:
-    branch: master
-    appveyor_repo_tag: true
-on_finish:
-  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
