@@ -8,4 +8,4 @@ clone_depth: 1
 install:
   - ps: tools\appveyor\vs-2017-installer-templates.ps1
 build_script: 
-  - cmd: tools\appveyor\build.cmd
+  - cmd: "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\Common7\IDE" /build "Release" tools/tgstation-server-3/TGStationServer3.sln
