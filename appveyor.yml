@@ -16,7 +16,7 @@ build:
   project: tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
   parallel: true
   verbosity: minimal
-build_script:
+after_build:
   - cmd: tools/appveyor/build-tgs3-installer.cmd
   - ps: cat errorFile.txt
 deploy:
