@@ -80,6 +80,7 @@ namespace TGServerService
 		void GenCommsKey() 
 		{
 			serviceCommsKey = Membership.GeneratePassword(CommsKeyLen, 0);
+			TGServerService.ActiveService.EventLog.WriteEntry("Service Comms Key set to: " + serviceCommsKey);
 		}
 
 		void InitInterop()
