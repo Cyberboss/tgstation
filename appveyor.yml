@@ -6,8 +6,7 @@ image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
 artifacts:
-- path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*.msi
-  path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*.cab
+- path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*
   name: TG Station Server Installer
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3.sln
