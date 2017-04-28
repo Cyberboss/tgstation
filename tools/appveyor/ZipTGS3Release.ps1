@@ -4,4 +4,4 @@ $destination = "TGS3.zip"
 
 Add-Type -assembly "system.io.compression.filesystem"
 
-[io.compression.zipfile]::CreateFromDirectory("tools/tgstation-server-3/TGServiceInstaller/bin/Release", $destination) 
+[io.compression.zipfile]::CreateFromDirectory("($Env:APPVEYOR_BUILD_FOLDER)tools/tgstation-server-3/TGServiceInstaller/bin/Release", $destination) 
