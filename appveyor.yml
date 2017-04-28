@@ -5,11 +5,26 @@ skip_branch_with_pr: true
 image: Visual Studio 2017
 configuration: Release
 clone_depth: 1
+artifacts:
+- path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*
+  name: TG Station Server Installer
 install:
   - ps: tools/appveyor/vs-2017-installer-templates.ps1
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build:
-  project: tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
+  project: tools/tgstation-server-3/TGStationServer3.sln
   parallel: true
   verbosity: minimal
+deploy:
+  release: tgstation-server-3-v$(appveyor_build_version)
+  description: 'The /tg/station server suite'
+  provider: GitHub
+  auth_token:
+    secure: github_oath_token
+  artifact: /.*
+  draft: false
+  prerelease: false
+  on:
+    branch: master
+    appveyor_repo_tag: true

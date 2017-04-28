@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <Product Id="*" Name="TGServiceInstaller" Language="1033" Version="1.0.0.0" Manufacturer="/tg/station 13" UpgradeCode="663badae-ddca-4aa9-8f3f-3b7b20332eac">
+    <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
+    <MediaTemplate />
+
+    <Feature Id="ProductFeature" Title="TGServiceInstaller" Level="1">
+      <ComponentGroupRef Id="ProductComponents" />
+    </Feature>
+  </Product>
+
+  <Fragment>
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="ProgramFilesFolder">
+        <Directory Id="INSTALLFOLDER" Name="TGServiceInstaller" />
+      </Directory>
+    </Directory>
+  </Fragment>
+
+  <Fragment>
+    <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
+      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
+      <Component Id="TGCommandLine">
+        <File Source="$(var.TGCommandLine.TargetPath)" />
+      </Component>
+      <Component Id="TGServerService">
+        <File Source="$(var.TGServerService.TargetPath)" />
+        <ServiceInstall Id="ServiceInstaller" Type="ownProcess"
+                Name="[name]"
+                DisplayName="[displayname]"
+                Description="[description]"
+								Start="auto"
+								Account="LocalSystem"
+								ErrorControl="normal"
+								/>
+        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="JobService" Wait="yes" />
+      </Component>
+      <Component Id="LibGit2Sharp">
+        <File Source="$(var.TGServerService.TargetDir)/LibGit2Sharp.dll" />
+      </Component>
+      <Component Id="log4net">
+        <File Source="$(var.TGServerService.TargetDir)/log4net.dll" />
+      </Component>
+      <Component Id="SmartIrc4net">
+        <File Source="$(var.TGServerService.TargetDir)/Meebey.SmartIrc4net.dll" />
+      </Component>
+      <Component Id="StarkSoftProxy">
+        <File Source="$(var.TGServerService.TargetDir)/StarkSoftProxy.dll" />
+      </Component>
+      <Component Id="TGControlPanel">
+        <File Source="$(var.TGControlPanel.TargetPath)" />
+      </Component>
+      <Component Id="TGServiceInterface">
+        <File Source="$(var.TGServiceInterface.TargetPath)" />
+      </Component>
+    </ComponentGroup>
+  </Fragment>
+</Wix>
