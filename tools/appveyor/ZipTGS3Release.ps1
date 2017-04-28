@@ -1,5 +1,5 @@
-$src = $Env:APPVEYOR_BUILD_FOLDER + "tools\tgstation-server-3\TGServiceInstaller\bin\Release"
-$destination = $Env:APPVEYOR_BUILD_FOLDER + "TGS3.zip"
+$src = $Env:APPVEYOR_BUILD_FOLDER + "\tools\tgstation-server-3\TGServiceInstaller\bin\Release"
+$destination = $Env:APPVEYOR_BUILD_FOLDER + "\TGS3.zip"
 
  If(Test-path $destination) {Remove-item $destination}
 
