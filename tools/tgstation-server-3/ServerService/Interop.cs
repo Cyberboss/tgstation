@@ -13,7 +13,7 @@ namespace TGServerService
 	partial class TGStationServer
 	{
 		QueuedLock topicLock = new QueuedLock();
-		Socket topicSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+		Socket topicSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { SendTimeout = 5000, ReceiveTimeout = 5000 };
 
 		const int CommsKeyLen = 64;
 		string serviceCommsKey;	//regenerated every DD restart
@@ -74,7 +74,9 @@ namespace TGServerService
 					if (raw_string.Length > 6)
 						returnedString = raw_string.Substring(5, raw_string.Length - 6);
 				}
-				catch { }
+				catch {
+					returnedString = "Topic recieve error!";
+				}
 
 				TGServerService.ActiveService.EventLog.WriteEntry("Topic: \"" + topicdata + "\" Returned: " + returnedString);
 				return returnedString;
