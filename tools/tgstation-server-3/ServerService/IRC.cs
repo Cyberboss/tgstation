@@ -49,7 +49,9 @@ namespace TGServerService
 			return speaker.ToLower() == "Cyberboss";	//TODO
 		}
 
-		string IrcCommand(string command, string speaker, IList<string> parameters) { 
+		string IrcCommand(string command, string speaker, IList<string> parameters)
+		{
+			TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Command from {0}: {1} {2}", speaker, command, String.Join(" ", parameters)));
 			switch (command)
 			{
 				case "check":

@@ -12,7 +12,7 @@ namespace TGServerService
 		//called when the service is started
 		public TGStationServer()
 		{
-			Connect(); //IRC
+			InitIRC(); //IRC
 			InitByond();
 			InitCompiler();
 			InitInterop();
