@@ -49,6 +49,8 @@ GLOBAL_PROTECT(reboot_mode)
 			if(!istext(msg) || !msg)
 				return "No message set!"
 			to_chat(src, "<span class='boldannounce'>[msg]</span>")
+		if("irc_check")
+			return "[clients.len] players on [SSmapping.config.map_name], Mode: [GLOB.master_mode]; Round [SSticker.HasRoundStarted() ? (SSticker.IsRoundInProgress() ? "Finishing" : "Active") : "Starting"] -- [config.server ? config.server : "byond://[address]:[port]"]" 
 		else
 			return "Unknown command: [command]"
 

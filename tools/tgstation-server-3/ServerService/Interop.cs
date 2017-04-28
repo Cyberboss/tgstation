@@ -34,15 +34,15 @@ namespace TGServerService
 			}
 		}
 
-		void SendCommand(string cmd)
+		string SendCommand(string cmd)
 		{
 			lock (watchdogLock)
 			{
-				SendTopic(String.Format("serviceCommsKey={0};command={1}", serviceCommsKey, cmd), currentPort);
+				return SendTopic(String.Format("serviceCommsKey={0};command={1}", serviceCommsKey, cmd), currentPort);
 			}
 		}
 
-		void SendTopic(string topicdata, ushort port, bool retry = false)
+		string SendTopic(string topicdata, ushort port, bool retry = false)
 		{
 			if (!retry)
 				topicLock.Enter();
@@ -64,12 +64,31 @@ namespace TGServerService
 				packet[3] = (byte)(packet.Length - 4);
 
 				topicSender.Send(packet);
+
+				string returnedString = "NULL";
+				try
+				{
+					var returnedData = new byte[512];
+					topicSender.Receive(returnedData);
+					var raw_string = Encoding.ASCII.GetString(returnedData);
+					if (raw_string.Length > 6)
+						returnedString = raw_string.Substring(5, raw_string.Length - 6);
+				}
+				catch { }
+
+				TGServerService.ActiveService.EventLog.WriteEntry("Topic: \"" + topicdata + "\" Returned: " + returnedString);
+				return returnedString;
 			}
 			catch
 			{
 				topicSender.Disconnect(true);
 				if (!retry)
-					SendTopic(topicdata, port, true);
+					return SendTopic(topicdata, port, true);
+				else
+				{
+					TGServerService.ActiveService.EventLog.WriteEntry("Failed to send topic: " + topicdata, EventLogEntryType.Error);
+					return "Topic delivery failed!";
+				}
 			}
 			finally
 			{

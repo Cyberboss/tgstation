@@ -11,8 +11,62 @@ namespace TGServerService
 
 	partial class TGStationServer : ITGIRC
 	{
-		public static IrcClient irc = new IrcClient() { SupportNonRfc = true };
+		public static IrcClient irc;
 		int reconnectAttempt = 0;
+		void InitIRC()
+		{
+			irc = new IrcClient() { SupportNonRfc = true };
+			irc.OnChannelMessage += Irc_OnChannelMessage;
+			Connect();
+		}
+
+
+
+		private void Irc_OnChannelMessage(object sender, IrcEventArgs e)
+		{
+			var speaker = e.Data.Nick;
+			var message = e.Data.Message.Trim();
+			var splits = message.Split(' ');
+			if (splits[0].ToLower() != irc.Nickname.ToLower())
+				return;
+			if (splits.Length == 1)
+			{
+				SendMessage("Hi!");
+				return;
+			}
+
+			var asList = new List<string>(splits);
+			asList.RemoveAt(0);
+			var command = asList[0].ToLower();
+			asList.RemoveAt(0);
+
+			SendMessage(IrcCommand(command, speaker, asList));
+
+		}
+
+		bool HasIRCAdmin(string speaker)
+		{
+			return speaker.ToLower() == "Cyberboss";	//TODO
+		}
+
+		string IrcCommand(string command, string speaker, IList<string> parameters) { 
+			switch (command)
+			{
+				case "check":
+					switch (DaemonStatus())
+					{
+						case TGDreamDaemonStatus.Offline:
+							return "OFFLINE";
+						case TGDreamDaemonStatus.HardRebooting:
+							return "REBOOTING";
+						case TGDreamDaemonStatus.Online:
+							return SendCommand("irc_check");
+					}
+					break;
+			}
+			return "Unknown command: " + command;
+		}
+
 		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, TGIRCEnableType enabled)
 		{
 			var Config = Properties.Settings.Default;
