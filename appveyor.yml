@@ -6,7 +6,7 @@ configuration: Release
 clone_depth: 1
 artifacts:
 - path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*
-  name: TG Station Server Installer
+  name: TGS3
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3.sln
 build:
@@ -19,7 +19,7 @@ deploy:
   provider: GitHub
   auth_token:
     secure: 9Yf+FtoE7nf36V3dyVRANkNZ7og4dp/0uojCS51vrvIeNOTIM8Nq24lylgVBOhSL
-  artifact: .*
+  artifact: TGS3
   draft: false
   prerelease: false
   on:
