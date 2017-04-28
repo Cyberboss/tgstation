@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="Byond.cs" />
     <Compile Include="Compiler.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="DreamDaemon.cs" />
     <Compile Include="InterfaceBase.cs" />
     <Compile Include="IRC.cs" />
