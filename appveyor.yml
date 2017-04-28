@@ -13,6 +13,8 @@ build:
   project: tools/tgstation-server-3/TGStationServer3.sln
   parallel: true
   verbosity: minimal
+after_build:
+  - ps: "tools/appveyor/ZipTGS3Release.ps1"
 deploy:
   release: $(APPVEYOR_REPO_TAG_NAME)
   description: 'The /tg/station server suite'
