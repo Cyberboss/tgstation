@@ -8,15 +8,27 @@
 
     <Feature Id="ProductFeature" Title="TGServiceInstaller" Level="1">
       <ComponentGroupRef Id="ProductComponents" />
+      <ComponentGroupRef Id="Gitx86Components" />
+      <ComponentGroupRef Id="Gitx64Components" />
     </Feature>
   </Product>
 
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="TG Station Server" />
+        <Directory Id="INSTALLFOLDER" Name="TG Station Server">
+          <Directory Id ="LibFolder" Name="lib">
+            <Directory Id ="Win32Folder" Name="win32">
+              <Directory Id ="x86Folder" Name="x86" />
+              <Directory Id ="x64Folder" Name="x64" />
+            </Directory>
+          </Directory>
+        </Directory>
       </Directory>
+
+      <Directory Id="DesktopFolder" Name="Desktop" />
     </Directory>
+    
   </Fragment>
 
   <Fragment>
@@ -50,10 +62,28 @@
         <File Source="$(var.TGServerService.TargetDir)/StarkSoftProxy.dll" />
       </Component>
       <Component Id="TGControlPanel">
-        <File Source="$(var.TGControlPanel.TargetPath)" />
+        <File Source="$(var.TGControlPanel.TargetPath)" KeyPath="yes">
+          <Shortcut
+            Id="DesktopShortcut"
+            Directory="DesktopFolder"
+            Name="TG Control Panel"
+            WorkingDirectory="INSTALLFOLDER" 
+            Advertise="yes"/>
+        </File>
       </Component>
       <Component Id="TGServiceInterface">
         <File Source="$(var.TGServiceInterface.TargetPath)" />
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="Gitx86Components" Directory="x86Folder">
+
+      <Component Id="LibGit2Sharpx86">
+        <File Source="$(var.TGServerService.TargetDir)lib\win32\x86\git2-a5cf255.dll" Id="LibGit2Sharpx86dll"/>
+      </Component>
+    </ComponentGroup>
+    <ComponentGroup Id="Gitx64Components" Directory="x64Folder">
+      <Component Id="LibGit2Sharpx64">
+        <File Source="$(var.TGServerService.TargetDir)lib\win32\x64\git2-a5cf255.dll" Id="LibGit2Sharpx64dll" />
       </Component>
     </ComponentGroup>
   </Fragment>
