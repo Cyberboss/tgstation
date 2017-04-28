@@ -179,11 +179,10 @@
 		show_server_hop_transfer_screen(input["server_hop"])
 
 #define WORLD_REBOOT(X) \
-	log_world("World rebooted at [time_stamp()]");\
-	if(GLOB.service_requested_hard_restart) {\
-		log_world("Sending shutdown request!");\
+	if(GLOB.reboot_mode)\
 		ServiceReboot();\
-	}\
+	log_world("World rebooted at [time_stamp()]");\
+	to_chat(world, "<span class='boldannounce'>Rebooting world...</span>");\
 	..(X);\
 	return;
 
@@ -226,7 +225,6 @@
 	Master.Shutdown()	//run SS shutdowns
 	RoundEndAnimation(round_end_sound_sent)
 	kick_clients_in_lobby("<span class='boldannounce'>The round came to an end with you in the lobby.</span>", 1) //second parameter ensures only afk clients are kicked
-	to_chat(world, "<span class='boldannounce'>Rebooting world...</span>")
 	for(var/thing in GLOB.clients)
 		var/client/C = thing
 		if(C && config.server)	//if you set a server location in config.txt, it sends you there instead of trying to reconnect to the same world address. -- NeoFite
@@ -328,39 +326,3 @@
 
 /world/proc/has_round_started()
 	return SSticker.HasRoundStarted()
-
-/world/proc/RunningService()
-	return params[SERVER_SERVICE_PARAM]
-
-/world/proc/ExportService(command)
-	shell("python tools/nudge.py \"[command]\"")
-
-/world/proc/IRCBroadcast(msg)
-	ExportService("irc [msg]")
-
-/world/proc/ServiceReboot()
-	to_chat(src, "<span class='boldannounce'>Hard reboot triggered, you will automatically reconnect...</span>")
-	sleep(1)	//so people actually get the message
-	ExportService("killme")	//should not return, EVAH
-
-/world/proc/ServiceCommand(list/params)
-	var/sCK = RunningService()
-	var/their_sCK = params["serviceCommsKey"]
-
-	if(!their_sCK || their_sCK != sCK)
-		return "Invalid comms key!";
-
-	var/command = params["command"]
-	if(!command)
-		return "No command!"
-	
-	switch(command)
-		if("hard_reboot")
-			if(!GLOB.service_requested_hard_restart)
-				GLOB.service_requested_hard_restart = TRUE
-				log_world("Hard reboot requested by service")
-				message_admins("The world will hard reboot at the end of the game. Requested by service.")
-				SSblackbox.set_val("service_hard_restart", TRUE)
-		else
-			return "Unknown command: [command]"
-

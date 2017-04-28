@@ -60,9 +60,14 @@ namespace TGServerService
 			}
 		}
 
-		void RequestRestart()
+		public void RequestRestart()
 		{
 			SendCommand("hard_reboot");
+		}
+
+		public void RequestStop()
+		{
+			SendCommand("graceful_shutdown");
 		}
 
 		public string Stop()

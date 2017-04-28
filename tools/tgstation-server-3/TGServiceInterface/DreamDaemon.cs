@@ -52,6 +52,14 @@ namespace TGServiceInterface
 		[OperationContract]
 		string Restart();
 
+		//Restarts the server after the currently running round ends
+		[OperationContract]
+		void RequestRestart();
+
+		//Stops the server after the currently running round ends
+		[OperationContract]
+		void RequestStop();
+
 		//Sets the security level of the server. Requires reboot to apply
 		//note that anything higher than Trusted will disable server commands
 		[OperationContract]
