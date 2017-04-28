@@ -8,8 +8,6 @@ clone_depth: 1
 artifacts:
 - path: tools/tgstation-server-3/TGServiceInstaller/bin/Release/*
   name: TG Station Server Installer
-install:
-  - ps: tools/appveyor/vs-2017-installer-templates.ps1
 before_build:
   - nuget restore tools/tgstation-server-3/TGStationServer3-NoInstaller.sln
 build:
