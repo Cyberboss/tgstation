@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
-  <Product Id="*" Name="TGServiceInstaller" Language="1033" Version="1.0.0.0" Manufacturer="/tg/station 13" UpgradeCode="663badae-ddca-4aa9-8f3f-3b7b20332eac">
+  <Product Id="*" Name="TG Station Server" Language="1033" Version="1.0.0.0" Manufacturer="/tg/station 13" UpgradeCode="663badae-ddca-4aa9-8f3f-3b7b20332eac">
     <Package InstallerVersion="200" Compressed="yes" InstallScope="perMachine" />
 
     <MajorUpgrade DowngradeErrorMessage="A newer version of [ProductName] is already installed." />
@@ -14,7 +14,7 @@
   <Fragment>
     <Directory Id="TARGETDIR" Name="SourceDir">
       <Directory Id="ProgramFilesFolder">
-        <Directory Id="INSTALLFOLDER" Name="TGServiceInstaller" />
+        <Directory Id="INSTALLFOLDER" Name="TG Station Server" />
       </Directory>
     </Directory>
   </Fragment>
@@ -28,14 +28,14 @@
       <Component Id="TGServerService">
         <File Source="$(var.TGServerService.TargetPath)" />
         <ServiceInstall Id="ServiceInstaller" Type="ownProcess"
-                Name="[name]"
-                DisplayName="[displayname]"
-                Description="[description]"
+                Name="TG Station Server"
+                DisplayName="TG Station Server"
+                Description="/tg/station Server Service"
 								Start="auto"
 								Account="LocalSystem"
 								ErrorControl="normal"
 								/>
-        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="JobService" Wait="yes" />
+        <ServiceControl Id="StartService" Start="install" Stop="both" Remove="uninstall" Name="TG Station Server" Wait="yes" />
       </Component>
       <Component Id="LibGit2Sharp">
         <File Source="$(var.TGServerService.TargetDir)/LibGit2Sharp.dll" />
