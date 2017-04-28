@@ -96,9 +96,17 @@ namespace TGServerService
 			}
 		}
 
-		void GenCommsKey() 
+		void GenCommsKey()
 		{
-			serviceCommsKey = Membership.GeneratePassword(CommsKeyLen, 0);
+			var charsToRemove = new string[] { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "[", "{", "]", "}", ";", ":", "<", ">", "|", ".", "/", "?" };
+			serviceCommsKey = String.Empty;
+			do {
+				var tmp = Membership.GeneratePassword(CommsKeyLen, 0);
+				foreach (var c in charsToRemove)
+					tmp = tmp.Replace(c, String.Empty);
+				serviceCommsKey += tmp;
+			} while (serviceCommsKey.Length < CommsKeyLen);
+			serviceCommsKey = serviceCommsKey.Substring(0, CommsKeyLen);
 			TGServerService.ActiveService.EventLog.WriteEntry("Service Comms Key set to: " + serviceCommsKey);
 		}
 
