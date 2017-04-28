@@ -65,6 +65,10 @@ namespace TGServerService
 							return SendCommand("irc_check");
 					}
 					break;
+				case "byond":
+					if (parameters.Count > 0 && parameters[0].ToLower() == "--staged")
+						return GetVersion(true) ?? "None";
+					return GetVersion(false) ?? "Uninstalled";
 			}
 			return "Unknown command: " + command;
 		}
