@@ -66,16 +66,16 @@
             this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.ServerPanel = new System.Windows.Forms.TabPage();
+            this.compileButton = new System.Windows.Forms.Button();
+            this.initializeButton = new System.Windows.Forms.Button();
+            this.compilerProgressBar = new System.Windows.Forms.ProgressBar();
+            this.ServerStatusLabel = new System.Windows.Forms.Label();
+            this.ServerStatusTitle = new System.Windows.Forms.Label();
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.IRCPanel = new System.Windows.Forms.TabPage();
             this.ConfigPanel = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
-            this.ServerStatusTitle = new System.Windows.Forms.Label();
-            this.ServerStatusLabel = new System.Windows.Forms.Label();
-            this.compilerProgressBar = new System.Windows.Forms.ProgressBar();
-            this.initializeButton = new System.Windows.Forms.Button();
-            this.compileButton = new System.Windows.Forms.Button();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -141,6 +141,7 @@
             this.TestmergeSelector.Name = "TestmergeSelector";
             this.TestmergeSelector.Size = new System.Drawing.Size(140, 20);
             this.TestmergeSelector.TabIndex = 22;
+            this.TestmergeSelector.Visible = false;
             // 
             // TestMergeListLabel
             // 
@@ -151,6 +152,7 @@
             this.TestMergeListLabel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.TestMergeListLabel.Size = new System.Drawing.Size(499, 96);
             this.TestMergeListLabel.TabIndex = 21;
+            this.TestMergeListLabel.Visible = false;
             // 
             // CurrentRevisionLabel
             // 
@@ -533,6 +535,57 @@
             this.ServerPanel.TabIndex = 2;
             this.ServerPanel.Text = "Server";
             // 
+            // compileButton
+            // 
+            this.compileButton.Location = new System.Drawing.Point(469, 237);
+            this.compileButton.Name = "compileButton";
+            this.compileButton.Size = new System.Drawing.Size(118, 28);
+            this.compileButton.TabIndex = 12;
+            this.compileButton.Text = "Compile";
+            this.compileButton.UseVisualStyleBackColor = true;
+            // 
+            // initializeButton
+            // 
+            this.initializeButton.Enabled = false;
+            this.initializeButton.Location = new System.Drawing.Point(263, 237);
+            this.initializeButton.Name = "initializeButton";
+            this.initializeButton.Size = new System.Drawing.Size(118, 28);
+            this.initializeButton.TabIndex = 11;
+            this.initializeButton.Text = "Initialize";
+            this.initializeButton.UseVisualStyleBackColor = true;
+            // 
+            // compilerProgressBar
+            // 
+            this.compilerProgressBar.Location = new System.Drawing.Point(110, 302);
+            this.compilerProgressBar.MarqueeAnimationSpeed = 50;
+            this.compilerProgressBar.Name = "compilerProgressBar";
+            this.compilerProgressBar.Size = new System.Drawing.Size(650, 31);
+            this.compilerProgressBar.TabIndex = 10;
+            // 
+            // ServerStatusLabel
+            // 
+            this.ServerStatusLabel.AutoSize = true;
+            this.ServerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.ServerStatusLabel.Location = new System.Drawing.Point(146, 17);
+            this.ServerStatusLabel.Name = "ServerStatusLabel";
+            this.ServerStatusLabel.Size = new System.Drawing.Size(82, 18);
+            this.ServerStatusLabel.TabIndex = 9;
+            this.ServerStatusLabel.Text = "Unknown";
+            this.ServerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ServerStatusTitle
+            // 
+            this.ServerStatusTitle.AutoSize = true;
+            this.ServerStatusTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.ServerStatusTitle.Location = new System.Drawing.Point(15, 17);
+            this.ServerStatusTitle.Name = "ServerStatusTitle";
+            this.ServerStatusTitle.Size = new System.Drawing.Size(125, 18);
+            this.ServerStatusTitle.TabIndex = 8;
+            this.ServerStatusTitle.Text = "Server Status:";
+            this.ServerStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // tabPage3
             // 
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -571,57 +624,6 @@
             // BYONDTimer
             // 
             this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
-            // 
-            // ServerStatusTitle
-            // 
-            this.ServerStatusTitle.AutoSize = true;
-            this.ServerStatusTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerStatusTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.ServerStatusTitle.Location = new System.Drawing.Point(15, 17);
-            this.ServerStatusTitle.Name = "ServerStatusTitle";
-            this.ServerStatusTitle.Size = new System.Drawing.Size(125, 18);
-            this.ServerStatusTitle.TabIndex = 8;
-            this.ServerStatusTitle.Text = "Server Status:";
-            this.ServerStatusTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ServerStatusLabel
-            // 
-            this.ServerStatusLabel.AutoSize = true;
-            this.ServerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.ServerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.ServerStatusLabel.Location = new System.Drawing.Point(146, 17);
-            this.ServerStatusLabel.Name = "ServerStatusLabel";
-            this.ServerStatusLabel.Size = new System.Drawing.Size(82, 18);
-            this.ServerStatusLabel.TabIndex = 9;
-            this.ServerStatusLabel.Text = "Unknown";
-            this.ServerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // compilerProgressBar
-            // 
-            this.compilerProgressBar.Location = new System.Drawing.Point(110, 302);
-            this.compilerProgressBar.MarqueeAnimationSpeed = 50;
-            this.compilerProgressBar.Name = "compilerProgressBar";
-            this.compilerProgressBar.Size = new System.Drawing.Size(650, 31);
-            this.compilerProgressBar.TabIndex = 10;
-            // 
-            // initializeButton
-            // 
-            this.initializeButton.Enabled = false;
-            this.initializeButton.Location = new System.Drawing.Point(263, 237);
-            this.initializeButton.Name = "initializeButton";
-            this.initializeButton.Size = new System.Drawing.Size(118, 28);
-            this.initializeButton.TabIndex = 11;
-            this.initializeButton.Text = "Initialize";
-            this.initializeButton.UseVisualStyleBackColor = true;
-            // 
-            // compileButton
-            // 
-            this.compileButton.Location = new System.Drawing.Point(469, 237);
-            this.compileButton.Name = "compileButton";
-            this.compileButton.Size = new System.Drawing.Size(118, 28);
-            this.compileButton.TabIndex = 12;
-            this.compileButton.Text = "Compile";
-            this.compileButton.UseVisualStyleBackColor = true;
             // 
             // Main
             // 

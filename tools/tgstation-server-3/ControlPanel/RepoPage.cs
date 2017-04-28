@@ -83,6 +83,7 @@ namespace TGControlPanel
 				UpdateRepoButton.Visible = true;
 				HardReset.Visible = true;
 				RepoApplyButton.Visible = true;
+				TestmergeSelector.Visible = true;
 
 				CurrentRevisionLabel.Text = Repo.GetHead(out string error) ?? "Unknown";
 				RepoRemoteTextBox.Text = Repo.GetRemote(out error) ?? "Unknown";
@@ -196,6 +197,7 @@ namespace TGControlPanel
 			RepoProgressBar.Visible = true;
 			HardReset.Visible = false;
 			IdentityLabel.Visible = false;
+			TestmergeSelector.Visible = false;
 
 			RepoPanel.UseWaitCursor = true;
 
