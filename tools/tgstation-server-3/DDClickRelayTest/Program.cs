@@ -90,7 +90,7 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
-					switch (param)
+					switch (param.ToLower())
 					{
 						case "hard":
 							Console.WriteLine(Repo.Update(true) ?? "Success");

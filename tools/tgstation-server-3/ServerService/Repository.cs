@@ -274,7 +274,7 @@ namespace TGServerService
 					SendMessage("REPO: Merge already up to date!");
 					return "Already up to date.";
 			}
-			SendMessage(String.Format("REPO: Branch {0} successfully merged!", branchname));
+			SendMessage(String.Format("REPO: Branch {0} successfully {1}!", branchname, Result.Status == MergeStatus.FastForward ? "fast-forwarded" : "merged"));
 			return null;
 		}
 		public string Update(bool reset)
