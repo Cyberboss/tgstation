@@ -99,6 +99,8 @@ namespace TGServerService
 
 		public string Restart()
 		{
+			if (DaemonStatus() == TGDreamDaemonStatus.Offline)
+				return Start();
 			if (!Monitor.TryEnter(restartLock))
 				return "Restart already in progress";
 			SendMessage("DD: Hard restart triggered");

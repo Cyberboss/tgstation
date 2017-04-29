@@ -63,6 +63,26 @@ namespace TGServerService
 			return result + ".txt";
 		}
 
+		string WriteMins(IDictionary<string, string> current_mins)
+		{ 
+			string outText = "";
+			foreach (var I in current_mins)
+				outText += I.Key + " = " + I.Value + "\r\n";
+
+			try
+			{
+				lock (configLock)
+				{
+					File.WriteAllText(AdminConfig, outText);
+				}
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
+		}
+
 		public string Addmin(string ckey, string rank)
 		{
 			var Aranks = AdminRanks(out string error);
@@ -74,23 +94,7 @@ namespace TGServerService
 					if (current_mins != null)
 					{
 						current_mins[ckey] = rank;
-
-						string outText = "";
-						foreach(var I in current_mins)
-							outText += I.Key + " = " + I.Value + "\r\n";
-
-						try
-						{
-							lock (configLock)
-							{
-								File.WriteAllText(AdminConfig, outText);
-							}
-							return null;
-						}
-						catch (Exception e)
-						{
-							return e.ToString();
-						}
+						return WriteMins(current_mins);
 					}
 					return error;
 				}
@@ -256,12 +260,52 @@ namespace TGServerService
 
 		public IDictionary<string, string> Admins(out string error)
 		{
-			throw new NotImplementedException();
+
+			List<string> fileLines;
+			lock (configLock)
+			{
+				try
+				{
+					fileLines = new List<string>(File.ReadAllLines(AdminConfig));
+				}
+				catch (Exception e)
+				{
+					error = e.ToString();
+					return null;
+				}
+			}
+
+			var mins = new Dictionary<string, string>();
+			foreach(var L in fileLines)
+			{
+				var trimmed = L.Trim();
+				if (L.Length == 0 || L[0] == '#')
+					continue;
+
+				var splits = L.Split('=');
+
+				if (splits.Length != 2)
+					continue;
+
+				mins.Add(splits[0].Trim(), splits[1].Trim());
+			}
+			error = null;
+			return mins;
 		}
 
 		public string Deadmin(string admin)
 		{
-			throw new NotImplementedException();
+			var current_mins = Admins(out string error);
+			if (current_mins != null)
+			{
+				if (current_mins.ContainsKey(admin))
+				{
+					current_mins.Remove(admin);
+					return WriteMins(current_mins);
+				}
+				return null;
+			}
+			return error;
 		}
 
 		public IList<string> GetEntries(TGStringConfig type, out string error)
