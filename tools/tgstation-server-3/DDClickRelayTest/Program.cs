@@ -96,7 +96,7 @@ namespace TGCommandLine
 							Console.WriteLine(Repo.Update(true) ?? "Success");
 							break;
 						case "merge":
-							Console.WriteLine(Repo.Update(true) ?? "Success");
+							Console.WriteLine(Repo.Update(false) ?? "Success");
 							break;
 						default:
 							Console.WriteLine("Invalid parameter: " + param);
