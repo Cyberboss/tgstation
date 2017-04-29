@@ -52,7 +52,7 @@ namespace TGServiceInterface
 		DEBUG,
 		VAREDIT,
 		RIGHTS,
-		EVERYTHING,
+		SOUND,
 	}
 
 	/// <summary>

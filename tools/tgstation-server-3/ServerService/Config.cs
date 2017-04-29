@@ -26,7 +26,8 @@ namespace TGServerService
 			lock (configLock) {
 				try
 				{
-					using (var f = File.AppendText(StringConfigToPath(type)){
+					using (var f = File.AppendText(StringConfigToPath(type)))
+					{
 						f.WriteLine(entry);
 					}
 					return null;
@@ -116,6 +117,7 @@ namespace TGServerService
 			}
 
 			var result = new Dictionary<string, IList<TGPermissions>>();
+			IList<TGPermissions> previousPermissions = new List<TGPermissions>();
 			foreach (var L in fileLines)
 			{
 				if (L.Length > 0 && L[0] == '#')
@@ -131,11 +133,125 @@ namespace TGServerService
 				var asList = new List<string>(splits);
 				asList.RemoveAt(0);
 
-				var perms = ProcessPermissions(asList);
+				var perms = ProcessPermissions(asList, previousPermissions);
 				result.Add(rank, perms);
+				previousPermissions = perms;
 			}
 			error = null;
 			return result;
+		}
+
+		IList<TGPermissions> ProcessPermissions(IList<string> text, IList<TGPermissions> previousPermissions)
+		{
+			IList<TGPermissions> permissions = new List<TGPermissions>();
+			foreach(var E in text)
+			{
+				var trimmed = E.Trim();
+				bool removing;
+				switch (trimmed[0])
+				{
+					case '-':
+						removing = true;
+						break;
+					case '+':
+					default:
+						removing = false;
+						break;
+				}
+				trimmed = trimmed.Substring(1).ToLower();
+
+				if (trimmed.Length == 0)
+					continue;
+
+				var perms = StringToPermission(trimmed, previousPermissions);
+
+				if(perms != null)
+					foreach(var perm in perms)
+					{
+						if (removing)
+							permissions.Remove(perm);
+						else if (!permissions.Contains(perm))
+							permissions.Add(perm);
+					}
+
+			}
+			return permissions;
+		}
+
+		IList<TGPermissions> StringToPermission(string permstring, IList<TGPermissions> oldpermissions)
+		{
+			TGPermissions perm;
+			switch (permstring)
+			{
+				case "@":
+				case "prev":
+					return oldpermissions;
+				case "buildmode":
+				case "build":
+					perm = TGPermissions.BUILD;
+					break;
+				case "admin":
+					perm = TGPermissions.ADMIN;
+					break;
+				case "ban":
+					perm = TGPermissions.BAN;
+					break;
+				case "fun":
+					perm = TGPermissions.FUN;
+					break;
+				case "server":
+					perm = TGPermissions.SERVER;
+					break;
+				case "debug":
+					perm = TGPermissions.DEBUG;
+					break;
+				case "permissions":
+				case "rights":
+					perm = TGPermissions.RIGHTS;
+					break;
+				case "possess":
+					perm = TGPermissions.POSSESS;
+					break;
+				case "stealth":
+					perm = TGPermissions.STEALTH;
+					break;
+				case "rejuv":
+				case "rejuvinate":
+					perm = TGPermissions.REJUV;
+					break;
+				case "varedit":
+					perm = TGPermissions.VAREDIT;
+					break;
+				case "everything":
+				case "host":
+				case "all":
+					return new List<TGPermissions> {
+						TGPermissions.ADMIN,
+						TGPermissions.SPAWN,
+						TGPermissions.FUN,
+						TGPermissions.BAN,
+						TGPermissions.STEALTH,
+						TGPermissions.POSSESS,
+						TGPermissions.REJUV,
+						TGPermissions.BUILD,
+						TGPermissions.SERVER,
+						TGPermissions.DEBUG,
+						TGPermissions.VAREDIT,
+						TGPermissions.RIGHTS,
+						TGPermissions.SOUND,
+					};
+				case "sound":
+				case "sounds":
+					perm = TGPermissions.SOUND;
+					break;
+				case "spawn":
+				case "create":
+					perm = TGPermissions.SPAWN;
+					break;
+				default:
+					return null;
+			}
+			return new List<TGPermissions> { perm };
 		}
 
 		public IDictionary<string, string> Admins(out string error)
