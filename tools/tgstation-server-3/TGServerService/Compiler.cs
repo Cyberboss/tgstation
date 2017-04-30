@@ -359,7 +359,7 @@ namespace TGServerService
 							Directory.Delete(GameDirLive);
 						CreateSymlink(GameDirLive, resurrectee);
 
-						SendMessage("DM: Compile complete, server will update next round!");
+						SendMessage(String.Format("DM: Compile complete!{0}", DaemonStatus() == TGDreamDaemonStatus.Offline ? "" : " Server will update next round."));
 						lock (CompilerLock)
 						{
 							lastCompilerError = null;
