@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TGServiceInterface;
+using System.Threading;
 
 namespace TGServerService
 {
@@ -10,6 +11,7 @@ namespace TGServerService
 	{
 		const string AdminRanksConfig = StaticConfigDir + "/admin_ranks.txt";
 		const string AdminConfig = StaticConfigDir + "/admins.txt";
+		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
 
 
 		object configLock = new object();
@@ -52,9 +54,6 @@ namespace TGServerService
 					break;
 				case TGStringConfig.SillyTips:
 					result += "SillyTips";
-					break;
-				case TGStringConfig.Tips:
-					result += "Tips";
 					break;
 				case TGStringConfig.Whitelist:
 					result += "Whitelist";
@@ -310,7 +309,23 @@ namespace TGServerService
 
 		public IList<string> GetEntries(TGStringConfig type, out string error)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				IList<string> result;
+				lock (configLock)
+				{
+					result = new List<string>(File.ReadAllLines(StringConfigToPath(type)));
+				}
+				result = result.Select(x => x.Trim()).ToList();
+				result.Remove(result.Single(x => x.Length == 0 || x[0] == '#'));
+				error = null;
+				return result;
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
 		}
 
 		public IList<JobSetting> Jobs(out string error)
@@ -325,7 +340,64 @@ namespace TGServerService
 
 		public string MoveServer(string new_location)
 		{
-			throw new NotImplementedException();
+			if (!Monitor.TryEnter(RepoLock))
+				return "Repo locked!";
+			try
+			{
+				if (RepoBusy)
+					return "Repo busy!";
+				if (!Monitor.TryEnter(ByondLock))
+					return "BYOND locked";
+				try
+				{
+					if (updateStat != TGByondStatus.Idle)
+						return "BYOND busy!";
+					if (!Monitor.TryEnter(CompilerLock))
+						return "Compiler locked!";
+
+					try
+					{
+						if (compilerCurrentStatus != TGCompilerStatus.Uninitialized || compilerCurrentStatus != TGCompilerStatus.Initialized)
+							return "Compiler busy!";
+						if (!Monitor.TryEnter(watchdogLock))
+							return "Watchdog locked!";
+						try
+						{
+							if (currentStatus != TGDreamDaemonStatus.Offline)
+								return "Watchdog running!";
+							var Config = Properties.Settings.Default;
+							lock (configLock)
+							{
+								Directory.CreateDirectory(new_location);
+								Environment.CurrentDirectory = new_location;
+								Directory.Move(Config.ServerDirectory, new_location);
+								Config.ServerDirectory = new_location;
+								return null;
+							}
+						}
+						finally
+						{
+							Monitor.Enter(watchdogLock);
+						}
+					}
+					finally
+					{
+						Monitor.Exit(CompilerLock);
+					}
+				}
+				finally
+				{
+					Monitor.Exit(ByondLock);
+				}
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
+			finally
+			{
+				Monitor.Exit(RepoLock);
+			}
 		}
 
 		public ushort NudgePort(out string error)
@@ -343,9 +415,9 @@ namespace TGServerService
 			throw new NotImplementedException();
 		}
 
-		public string ServerDirectory(out string error)
+		public string ServerDirectory()
 		{
-			throw new NotImplementedException();
+			return Environment.CurrentDirectory;
 		}
 
 		public string SetItem(TGConfigType type, string newValue)
@@ -365,7 +437,16 @@ namespace TGServerService
 
 		public string SetNudgePort(ushort port)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				lock (configLock) {
+					File.WriteAllText(NudgeConfig, port.ToString());
+				}
+				return null;
+			}catch(Exception e)
+			{
+				return e.ToString();
+			}
 		}
 	}
 }

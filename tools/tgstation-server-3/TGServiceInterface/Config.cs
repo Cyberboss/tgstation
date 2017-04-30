@@ -31,7 +31,6 @@ namespace TGServiceInterface
 		Admin_NickNames,
 		Silicon_Laws,
 		SillyTips,
-		Tips,
 		Whitelist,
 	}
 
@@ -295,10 +294,9 @@ namespace TGServiceInterface
 		/// <summary>
 		/// Return the directory of the server on the host machine
 		/// </summary>
-		/// <param name="error">null on success, error message on failure</param>
 		/// <returns>The path to the directory on success, null on failure</returns>
 		[OperationContract]
-		string ServerDirectory(out string error);
+		string ServerDirectory();
 
 		/// <summary>
 		/// Moves the entire server installation, requires no operations to be running
