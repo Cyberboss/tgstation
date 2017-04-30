@@ -114,7 +114,7 @@ namespace TGControlPanel
 		{
 			if (Server.GetComponent<ITGRepository>().OperationInProgress())
 			{
-				DoAsyncOp(RepoAction.Wait, "Waiting for repository to finish another action");
+				DoAsyncOp(RepoAction.Wait, "Waiting for repository to finish another action...");
 				return true;
 			}
 			return false;
