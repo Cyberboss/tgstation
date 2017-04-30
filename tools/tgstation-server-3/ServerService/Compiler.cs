@@ -88,11 +88,15 @@ namespace TGServerService
 				throw new Exception(String.Format("Failed to create symlink from {0} to {1}!", target, link));
 		}
 
+		bool CompilerIdleNoLock()
+		{
+			return compilerCurrentStatus == TGCompilerStatus.Uninitialized || compilerCurrentStatus == TGCompilerStatus.Initialized;
+		}
 		public bool Initialize()
 		{
 			lock (CompilerLock)
 			{
-				if (compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
+				if (!CompilerIdleNoLock())
 					return false;
 				lastCompilerError = null;
 				compilerCurrentStatus = TGCompilerStatus.Initializing;
@@ -108,7 +112,29 @@ namespace TGServerService
 				return TGCompilerStatus.Initialized;
 			return TGCompilerStatus.Uninitialized;
 		}
+		void CleanGameFolder()
+		{
+			if (Directory.Exists(GameDirB + LibMySQLFile))
+				Directory.Delete(GameDirB + LibMySQLFile);
 
+			if (Directory.Exists(GameDirLive))
+				Directory.Delete(GameDirLive);
+
+			if (Directory.Exists(GameDirA + "/data"))
+				Directory.Delete(GameDirA + "/data");
+
+			if (Directory.Exists(GameDirA + "/config"))
+				Directory.Delete(GameDirA + "/config");
+
+			if (Directory.Exists(GameDirA + LibMySQLFile))
+				Directory.Delete(GameDirA + LibMySQLFile);
+
+			if (Directory.Exists(GameDirB + "/data"))
+				Directory.Delete(GameDirB + "/data");
+
+			if (Directory.Exists(GameDirB + "/config"))
+				Directory.Delete(GameDirB + "/config");
+		}
 		public void InitializeImpl()
 		{
 			try
@@ -135,33 +161,21 @@ namespace TGServerService
 				try
 				{
 					SendMessage("DM: Setting up symlinks...");
-
-					if (Directory.Exists(GameDirB + LibMySQLFile))
-						Directory.Delete(GameDirB + LibMySQLFile);
-
-					if (Directory.Exists(GameDirLive))
-						Directory.Delete(GameDirLive);
-
-					if (Directory.Exists(GameDirA + "/data"))
-						Directory.Delete(GameDirA + "/data");
-
-					if (Directory.Exists(GameDirA + "/config"))
-						Directory.Delete(GameDirA + "/config");
-
-					if (Directory.Exists(GameDirA + LibMySQLFile))
-						Directory.Delete(GameDirA + LibMySQLFile);
-
-					if (Directory.Exists(GameDirB + "/data"))
-						Directory.Delete(GameDirB + "/data");
-
-					if (Directory.Exists(GameDirB + "/config"))
-						Directory.Delete(GameDirB + "/config");
-
+					CleanGameFolder();
 					Program.DeleteDirectory(GameDir);
 
 					Directory.CreateDirectory(GameDirA + "/.git/logs");
 
+					bool repobusy_check = false;
 					if (!Monitor.TryEnter(RepoLock))
+						repobusy_check = true;
+
+					if (!repobusy_check && RepoBusy)
+					{
+						repobusy_check = true;
+						Monitor.Exit(RepoLock);
+					}
+					if (repobusy_check)
 						lock (CompilerLock)
 						{
 							lastCompilerError = "Unable to lock repository!";
@@ -297,7 +311,16 @@ namespace TGServerService
 				CreateSymlink(resurrectee + "/config", StaticConfigDir);
 				CreateSymlink(resurrectee + LibMySQLFile, StaticDirs + LibMySQLFile);
 
+				bool repobusy_check = false;
 				if (!Monitor.TryEnter(RepoLock))
+					repobusy_check = true;
+
+				if (!repobusy_check && RepoBusy)
+				{
+					repobusy_check = true;
+					Monitor.Exit(RepoLock);
+				}
+				if (repobusy_check)
 				{
 					SendMessage("DM: Copy aborted, repo locked!");
 					lock (CompilerLock)
@@ -375,7 +398,7 @@ namespace TGServerService
 		{
 			lock (CompilerLock)
 			{
-				if (GetVersion(false) == null || compilerCurrentStatus == TGCompilerStatus.Initializing || compilerCurrentStatus == TGCompilerStatus.Compiling)
+				if (GetVersion(false) == null || compilerCurrentStatus != TGCompilerStatus.Initialized)
 					return false;
 				lastCompilerError = null;
 				compilerCurrentStatus = TGCompilerStatus.Compiling;

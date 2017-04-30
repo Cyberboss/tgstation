@@ -340,63 +340,90 @@ namespace TGServerService
 
 		public string MoveServer(string new_location)
 		{
-			if (!Monitor.TryEnter(RepoLock))
-				return "Repo locked!";
 			try
 			{
-				if (RepoBusy)
-					return "Repo busy!";
-				if (!Monitor.TryEnter(ByondLock))
-					return "BYOND locked";
+				Directory.CreateDirectory(new_location);
+				var di1 = new DirectoryInfo(Environment.CurrentDirectory);
+				var di2 = new DirectoryInfo(new_location);
+
+				var copy = di1.Root != di2.Root;
+
+				new_location = di2.FullName;
+
+				while (di2.Parent != null)
+				{
+					if (di2.Parent.FullName == di1.FullName)
+					{
+						return "Cannot move to child of current directory!";
+					}
+					else di2 = di2.Parent;
+				}
+
+
+				if (!Monitor.TryEnter(RepoLock))
+					return "Repo locked!";
 				try
 				{
-					if (updateStat != TGByondStatus.Idle)
-						return "BYOND busy!";
-					if (!Monitor.TryEnter(CompilerLock))
-						return "Compiler locked!";
-
+					if (RepoBusy)
+						return "Repo busy!";
+					if (!Monitor.TryEnter(ByondLock))
+						return "BYOND locked";
 					try
 					{
-						if (compilerCurrentStatus != TGCompilerStatus.Uninitialized || compilerCurrentStatus != TGCompilerStatus.Initialized)
-							return "Compiler busy!";
-						if (!Monitor.TryEnter(watchdogLock))
-							return "Watchdog locked!";
+						if (updateStat != TGByondStatus.Idle)
+							return "BYOND busy!";
+						if (!Monitor.TryEnter(CompilerLock))
+							return "Compiler locked!";
+
 						try
 						{
-							if (currentStatus != TGDreamDaemonStatus.Offline)
-								return "Watchdog running!";
-							var Config = Properties.Settings.Default;
-							lock (configLock)
+							if (compilerCurrentStatus != TGCompilerStatus.Uninitialized && compilerCurrentStatus != TGCompilerStatus.Initialized)
+								return "Compiler busy!";
+							if (!Monitor.TryEnter(watchdogLock))
+								return "Watchdog locked!";
+							try
 							{
-								Directory.CreateDirectory(new_location);
-								Environment.CurrentDirectory = new_location;
-								Directory.Move(Config.ServerDirectory, new_location);
-								Config.ServerDirectory = new_location;
-								return null;
+								if (currentStatus != TGDreamDaemonStatus.Offline)
+									return "Watchdog running!";
+								var Config = Properties.Settings.Default;
+								lock (configLock)
+								{
+									Environment.CurrentDirectory = new_location;
+									if (copy)
+									{
+										Program.CopyDirectory(Config.ServerDirectory, new_location);
+										CleanGameFolder();
+										Program.DeleteDirectory(Config.ServerDirectory);
+									}
+									else
+										Directory.Move(Config.ServerDirectory, new_location);
+									Config.ServerDirectory = new_location;
+									return null;
+								}
+							}
+							finally
+							{
+								Monitor.Exit(watchdogLock);
 							}
 						}
 						finally
 						{
-							Monitor.Enter(watchdogLock);
+							Monitor.Exit(CompilerLock);
 						}
 					}
 					finally
 					{
-						Monitor.Exit(CompilerLock);
+						Monitor.Exit(ByondLock);
 					}
 				}
 				finally
 				{
-					Monitor.Exit(ByondLock);
+					Monitor.Exit(RepoLock);
 				}
 			}
 			catch (Exception e)
 			{
 				return e.ToString();
-			}
-			finally
-			{
-				Monitor.Exit(RepoLock);
 			}
 		}
 

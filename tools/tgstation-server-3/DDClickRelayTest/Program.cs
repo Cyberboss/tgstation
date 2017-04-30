@@ -48,6 +48,8 @@ namespace TGCommandLine
 						return DDCommand(param1, param2);
 					case "repo":
 						return RepoCommand(param1, param2);
+					case "config":
+						return ConfigCommand(param1, param2);
 					case "?":
 					case "help":
 						ConsoleHelp();
@@ -112,7 +114,33 @@ namespace TGCommandLine
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);
-					Console.WriteLine("Type 'dd help' for available commands.");
+					Console.WriteLine("Type 'repo help' for available commands.");
+					return ExitCode.BadCommand;
+			}
+			return ExitCode.Normal;
+		}
+		static ExitCode ConfigCommand(string command, string param)
+		{
+			var Config = Server.GetComponent<ITGConfig>();
+			switch (command)
+			{
+				case "move-server":
+					if(param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					Console.WriteLine(Config.MoveServer(param) ?? "Success!");
+					break;
+				case "?":
+				case "help":
+					Console.WriteLine("Config commands:");
+					Console.WriteLine();
+					Console.WriteLine("move-server <new-path>\t-\tMove the server installation (BYOND, Repo, Game) to a new location. Nothing else may be running for this task to complete.");
+					break;
+				default:
+					Console.WriteLine("Invalid command: " + command);
+					Console.WriteLine("Type 'config help' for available commands.");
 					return ExitCode.BadCommand;
 			}
 			return ExitCode.Normal;
@@ -451,6 +479,7 @@ namespace TGCommandLine
 			Console.WriteLine("byond\t-\tManage BYOND installation");
 			Console.WriteLine("dm\t-\tManage compiling the server");
 			Console.WriteLine("dd\t-\tManage DreamDaemon");
+			Console.WriteLine("config\t-\tManage settings");
 		}
 
 		static int Main(string[] args)

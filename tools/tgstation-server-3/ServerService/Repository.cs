@@ -94,47 +94,44 @@ namespace TGServerService
 			//busy flag set by caller
 			try
 			{
-				if (!Monitor.TryEnter(CompilerLock))
-					return;
+				var ts = (TwoStrings)twostrings;
+				var RepoURL = ts.a;
+				var BranchName = ts.b;
+				SendMessage(String.Format("REPO: Full reset started! Cloning {0} branch of {1} ...", BranchName, RepoURL));
 				try
 				{
-					var ts = (TwoStrings)twostrings;
-					var RepoURL = ts.a;
-					var BranchName = ts.b;
-					SendMessage(String.Format("REPO: Full reset started! Cloning {0} branch of {1} ...", BranchName, RepoURL));
-					try
+					DisposeRepo();
+					Program.DeleteDirectory(RepoPath);
+					Program.DeleteDirectory(StaticBackupDir);
+					DeletePRList();
+					lock (configLock)
 					{
-						DisposeRepo();
-						Program.DeleteDirectory(RepoPath);
-						Program.DeleteDirectory(StaticBackupDir);
-						DeletePRList();
 						if (Directory.Exists(StaticDirs))
 							Program.CopyDirectory(StaticDirs, StaticBackupDir);
 						Program.DeleteDirectory(StaticDirs);
+					}
 
-						var Opts = new CloneOptions()
-						{
-							BranchName = BranchName,
-							RecurseSubmodules = true,
-							OnTransferProgress = HandleTransferProgress,
-							OnCheckoutProgress = HandleCheckoutProgress
-						};
-						Repository.Clone(RepoURL, RepoPath, Opts);
-						LoadRepo();
-						Directory.CreateDirectory(StaticLogDir);
-						Program.CopyDirectory(RepoConfig, StaticConfigDir);
-						Program.CopyDirectory(RepoData, StaticDataDir);
-						File.Copy(RepoPath + LibMySQLFile, StaticDirs + LibMySQLFile, true);
-						SendMessage("REPO: Clone complete!");
-					}
-					finally
+					var Opts = new CloneOptions()
 					{
-						currentProgress = -1;
+						BranchName = BranchName,
+						RecurseSubmodules = true,
+						OnTransferProgress = HandleTransferProgress,
+						OnCheckoutProgress = HandleCheckoutProgress
+					};
+					Repository.Clone(RepoURL, RepoPath, Opts);
+					LoadRepo();
+					Directory.CreateDirectory(StaticLogDir);
+					lock (configLock)
+					{
+						Program.CopyDirectory(RepoConfig, StaticConfigDir);
 					}
+					Program.CopyDirectory(RepoData, StaticDataDir);
+					File.Copy(RepoPath + LibMySQLFile, StaticDirs + LibMySQLFile, true);
+					SendMessage("REPO: Clone complete!");
 				}
 				finally
 				{
-					Monitor.Exit(CompilerLock);
+					currentProgress = -1;
 				}
 			}
 			catch
@@ -156,7 +153,7 @@ namespace TGServerService
 			{
 				if (RepoBusy)
 					return false;
-				if (compilerCurrentStatus != TGCompilerStatus.Initialized && compilerCurrentStatus != TGCompilerStatus.Uninitialized)
+				if (!CompilerIdleNoLock())
 					return false;
 				RepoBusy = true;
 				new Thread(new ParameterizedThreadStart(Clone))

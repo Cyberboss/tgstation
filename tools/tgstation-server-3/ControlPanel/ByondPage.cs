@@ -47,7 +47,6 @@ namespace TGControlPanel
 
 			StagedVersionTitle.Visible = false;
 			StagedVersionLabel.Visible = false;
-			UpdateProgressBar.Style = ProgressBarStyle.Blocks;
 			switch (BYOND.CurrentStatus())
 			{
 				case TGByondStatus.Idle:
@@ -55,23 +54,29 @@ namespace TGControlPanel
 					UpdateProgressBar.Value = 0;
 					StatusLabel.Text = "Idle";
 					UpdateButton.Enabled = true;
+					UpdateProgressBar.Style = ProgressBarStyle.Blocks;
 					break;
 				case TGByondStatus.Downloading:
 					UpdateProgressBar.Value = 50;
 					StatusLabel.Text = "Downloading...";
 					UpdateButton.Enabled = false;
+					UpdateProgressBar.Style = ProgressBarStyle.Blocks;
 					break;
 				case TGByondStatus.Staging:
 					UpdateProgressBar.Value = 100;
 					StatusLabel.Text = "Staging...";
 					UpdateButton.Enabled = false;
+					UpdateProgressBar.Style = ProgressBarStyle.Blocks;
 					break;
 				case TGByondStatus.Staged:
 					StagedVersionTitle.Visible = true;
 					StagedVersionLabel.Visible = true;
 					StagedVersionLabel.Text = BYOND.GetVersion(true) ?? "Unknown";
-					UpdateProgressBar.Style = ProgressBarStyle.Marquee;
-					UpdateProgressBar.MarqueeAnimationSpeed = 50;
+					if (UpdateProgressBar.Style != ProgressBarStyle.Marquee || UpdateProgressBar.MarqueeAnimationSpeed != 50)						
+					{
+						UpdateProgressBar.Style = ProgressBarStyle.Marquee;
+						UpdateProgressBar.MarqueeAnimationSpeed = 50;
+					}
 					StatusLabel.Text = "Staged and waiting for BYOND to shutdown...";
 					UpdateButton.Enabled = true;
 					break;
