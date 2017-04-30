@@ -117,9 +117,6 @@ namespace TGServerService
 			if (Directory.Exists(GameDirB + LibMySQLFile))
 				Directory.Delete(GameDirB + LibMySQLFile);
 
-			if (Directory.Exists(GameDirLive))
-				Directory.Delete(GameDirLive);
-
 			if (Directory.Exists(GameDirA + "/data"))
 				Directory.Delete(GameDirA + "/data");
 
@@ -134,6 +131,10 @@ namespace TGServerService
 
 			if (Directory.Exists(GameDirB + "/config"))
 				Directory.Delete(GameDirB + "/config");
+
+			if (Directory.Exists(GameDirLive))
+				Directory.Delete(GameDirLive);
+
 		}
 		public void InitializeImpl()
 		{
@@ -204,9 +205,6 @@ namespace TGServerService
 
 					CreateSymlink(GameDirA + LibMySQLFile, StaticDirs + LibMySQLFile);
 					CreateSymlink(GameDirB + LibMySQLFile, StaticDirs + LibMySQLFile);
-
-					Program.Shell("pip install PyYaml");
-					Program.Shell("pip install beautifulsoup4");
 
 					SendMessage("DM: Symlinks set up!");
 					lock (CompilerLock)

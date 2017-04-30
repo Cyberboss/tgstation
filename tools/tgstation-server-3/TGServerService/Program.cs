@@ -68,10 +68,5 @@ namespace TGServerService
 				CopyDirectory(subdir.FullName, temppath, ignore);
 			}
 		}
-		//DiIIRrty
-		public static void Shell(string command)
-		{
-			Process.Start("CMD.exe", command);
-		}
 	}
 }

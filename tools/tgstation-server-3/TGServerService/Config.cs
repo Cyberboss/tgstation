@@ -388,11 +388,13 @@ namespace TGServerService
 								var Config = Properties.Settings.Default;
 								lock (configLock)
 								{
-									Environment.CurrentDirectory = new_location;
 									if (copy)
 									{
 										Program.CopyDirectory(Config.ServerDirectory, new_location);
 										CleanGameFolder();
+										Environment.CurrentDirectory = new_location;
+										//Sleep so windows doesn't cock block us here
+										Thread.Sleep(5000);
 										Program.DeleteDirectory(Config.ServerDirectory);
 									}
 									else
