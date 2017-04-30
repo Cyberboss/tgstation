@@ -429,7 +429,16 @@ namespace TGServerService
 
 		public ushort NudgePort(out string error)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				error = null;
+				return Convert.ToUInt16(File.ReadAllText(NudgeConfig));
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return 0;
+			}
 		}
 
 		public string RemoveEntry(TGStringConfig type, string entry)

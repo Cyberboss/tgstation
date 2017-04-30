@@ -252,7 +252,7 @@ namespace TGServiceInterface
 		/// Gets the port DD uses to talk to the service
 		/// </summary>
 		/// <param name="error">null on success, error message on failure</param>
-		/// <returns>The port DD uses to talk to the service</returns>
+		/// <returns>The port DD uses to talk to the service or 0 on failure</returns>
 		[OperationContract]
 		ushort NudgePort(out string error);
 
