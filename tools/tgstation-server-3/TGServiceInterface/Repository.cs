@@ -95,9 +95,10 @@ namespace TGServiceInterface
 		/// <summary>
 		/// Updates the html changelog
 		/// </summary>
-		/// <returns>null on success, error message on failure</returns>
+		/// <param name="error">null on success, error on failure</param>
+		/// <returns>The output of the python script</returns>
 		[OperationContract]
-		string GenerateChangelog();
+		string GenerateChangelog(out string error);
 
 		//Equivalent to running git commit -a -m '<message>' with the set git identity
 		//returns null on success, error on failure

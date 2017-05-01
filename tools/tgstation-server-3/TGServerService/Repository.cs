@@ -548,28 +548,44 @@ namespace TGServerService
 			}
 		}
 
-		public string GenerateChangelog()
+		public string GenerateChangelog(out string error)
 		{
-			return GenerateChangelogImpl();
+			return GenerateChangelogImpl(out error);
 		}
 
-		public string GenerateChangelogImpl(bool recurse = false)
+		public string GenerateChangelogImpl(out string error, bool recurse = false)
 		{
 			const string ChangelogPy = RepoPath + "/tools/ss13_genchangelog.py";
 			const string ChangelogHtml = RepoPath + "/html/changelog.html";
 			const string ChangelogDir = RepoPath + "/html/changelogs";
 			if (!Exists())
-				return "Repo does not exist!";
+			{
+				error = "Repo does not exist!";
+				return null;
+			}
+
 			lock (RepoLock)
 			{
 				if (RepoBusy)
-					return "Repo is busy!";
+				{
+					error = "Repo is busy!";
+					return null;
+				}
 				if (!File.Exists(ChangelogPy))
-					return "Missing changelog generation script!";
+				{
+					error = "Missing changelog generation script!";
+					return null;
+				}
 				if (!File.Exists(ChangelogHtml))
-					return "Missing changelog html!";
+				{
+					error = "Missing changelog html!";
+					return null;
+				}
 				if (!Directory.Exists(ChangelogDir))
-					return "Missing auto changelog directory!";
+				{
+					error = "Missing auto changelog directory!";
+					return null;
+				}
 
 				var Config = Properties.Settings.Default;
 
@@ -596,7 +612,10 @@ namespace TGServerService
 					if (exitCode != 0)
 					{
 						if (recurse)
-							return "Script failed! " + result;
+						{
+							error = "Script failed!";
+							return result;
+						}
 						//update pip deps and try again
 
 						string PipFile = Config.PythonPath + "/scripts/pip.exe";
@@ -605,17 +624,20 @@ namespace TGServerService
 							using (var pip = new Process())
 							{
 								pip.StartInfo.FileName = PipFile;
-								pip.StartInfo.Arguments = runningBSoup ? "install PyYaml" : "install beautifulsoup4";
+								pip.StartInfo.Arguments = !runningBSoup ? "install PyYaml" : "install beautifulsoup4";
 								pip.StartInfo.UseShellExecute = false;
 								pip.StartInfo.RedirectStandardOutput = true;
 								pip.Start();
 								using (StreamReader reader = pip.StandardOutput)
 								{
-									result = reader.ReadToEnd();
+									result += "\r\n---BEGIN-PIP-OUTPUT---\r\n" + reader.ReadToEnd();
 								}
 								pip.WaitForExit();
 								if (pip.ExitCode != 0)
-									return "Script and pip failed! " + result;
+								{
+									error = "Script and pip failed!";
+									return result;
+								}
 
 								if (runningBSoup)
 									break;
@@ -623,13 +645,15 @@ namespace TGServerService
 									runningBSoup = true;
 							}
 						//and recurse
-						return GenerateChangelogImpl(true);
+						return GenerateChangelogImpl(out error, true);
 					}
-					return null;
+					error = null;
+					return result;
 				}
 				catch (Exception e)
 				{
-					return e.ToString();
+					error = e.ToString();
+					return null;
 				}
 			}
 		}

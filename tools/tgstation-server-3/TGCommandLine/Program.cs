@@ -106,7 +106,10 @@ namespace TGCommandLine
 					}
 					break;
 				case "gen-changelog":
-					Console.WriteLine(Repo.GenerateChangelog() ?? "Success!");
+					var result = Repo.GenerateChangelog(out string error);
+					Console.WriteLine(error ?? "Success!");
+					if (result != null)
+						Console.WriteLine(result);
 					break;
 				case "?":
 				case "help":
