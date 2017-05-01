@@ -195,9 +195,6 @@ CHECK_RANDOMIZER
 ## Remove the # to allow special 'Easter-egg' events on special holidays such as seasonal holidays and stuff like 'Talk Like a Pirate Day' :3 YAARRR
 ALLOW_HOLIDAYS
 
-##Remove the # mark if you are going to use the SVN irc bot to relay adminhelps
-#USEIRCBOT
-
 ##Uncomment to show the names of the admin sending a pm from IRC instead of showing as a stealthmin.
 #SHOW_IRC_NAME
 
