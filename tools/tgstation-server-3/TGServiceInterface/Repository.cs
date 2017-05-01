@@ -92,6 +92,13 @@ namespace TGServiceInterface
 		[OperationContract]
 		void SetCredentials(string username, string password);
 
+		/// <summary>
+		/// Updates the html changelog
+		/// </summary>
+		/// <returns>null on success, error message on failure</returns>
+		[OperationContract]
+		string GenerateChangelog();
+
 		//Equivalent to running git commit -a -m '<message>' with the set git identity
 		//returns null on success, error on failure
 		[OperationContract]
