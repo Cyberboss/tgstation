@@ -6,11 +6,14 @@ using TGServiceInterface;
 
 namespace TGServerService
 {
-	//manages clicking the hidden DD window
+	//manages the dd window.
+	//It's not possible to actually click it while starting it in CL mode, so in order to change visibility etc. It restarts the process when the round ends
 	partial class TGStationServer : ITGDreamDaemon
 	{
 
-		const string HardRebootRequestFile = "/HardReboot.lk";
+		const int DDHangStartTime = 30;
+		const int DDBadStartTime = 10;
+		const int DDRestartMaxRetries = 5;
 
 		Process Proc;
 
@@ -19,34 +22,35 @@ namespace TGServerService
 		TGDreamDaemonStatus currentStatus;
 		ushort currentPort = 0;
 
-		const int DDHangStartTime = 30;
-		const int DDBadStartTime = 10;
-		const int DDRestartMaxRetries = 5;
-
 		object restartLock = new object();
 		bool RestartInProgress = false;
 
+		//Only need 1 proc instance
 		void InitDreamDaemon()
 		{
 			Proc = new Process();
 			Proc.StartInfo.FileName = ByondDirectory + "/bin/dreamdaemon.exe";
 			Proc.StartInfo.UseShellExecute = false;
 
+			//autostart the server
 			if (Properties.Settings.Default.DDAutoStart)
 				//break this off so we don't hold up starting the service
 				new Thread(new ThreadStart(InitStart));
 		}
 
+		//void wrapper for Start
 		void InitStart()
 		{
 			Start();
 		}
 
+		//die now k thx
 		void DisposeDreamDaemon()
 		{
 			Stop();
 		}
 
+		//public api
 		public TGDreamDaemonStatus DaemonStatus()
 		{
 			lock (watchdogLock)
@@ -55,16 +59,19 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public void RequestRestart()
 		{
 			SendCommand("hard_reboot");
 		}
 
+		//public api
 		public void RequestStop()
 		{
 			SendCommand("graceful_shutdown");
 		}
 
+		//public api
 		public string Stop()
 		{
 			Thread t;
@@ -83,6 +90,7 @@ namespace TGServerService
 				return "Server not running";
 		}
 
+		//public api
 		public void SetPort(ushort new_port)
 		{
 			lock (watchdogLock)
@@ -92,6 +100,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Restart()
 		{
 			if (DaemonStatus() == TGDreamDaemonStatus.Offline)
@@ -114,6 +123,7 @@ namespace TGServerService
 			}
 		}
 
+		//loop that keeps the server running
 		void Watchdog()
 		{
 			try
@@ -190,6 +200,8 @@ namespace TGServerService
 				}
 			}
 		}
+
+		//public api
 		public string CanStart()
 		{
 			lock (watchdogLock)
@@ -203,12 +215,15 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Start()
 		{
 			if (CurrentStatus() == TGByondStatus.Staged)
+			{
 				//IMPORTANT: SLEEP FOR A MOMENT OR WONDOWS WON'T RELEASE THE FUCKING BYOND DLL HANDLES!!!! REEEEEEE
 				Thread.Sleep(3000);
-			ApplyStagedUpdate();
+				ApplyStagedUpdate();
+			}
 			lock (watchdogLock)
 			{
 				if (currentStatus != TGDreamDaemonStatus.Offline)
@@ -221,6 +236,8 @@ namespace TGServerService
 				return res;
 			return StartImpl(false);
 		}
+
+		//translate the configured security level into a byond param
 		string SecurityWord()
 		{
 			var level = Properties.Settings.Default.ServerSecurity;
@@ -237,6 +254,7 @@ namespace TGServerService
 			}
 		}
 
+		//same thing with visibility
 		string VisibilityWord()
 		{
 			var level = Properties.Settings.Default.ServerVisiblity;
@@ -253,6 +271,7 @@ namespace TGServerService
 			}
 		}
 
+		//used by Start and Watchdog to start a DD instance
 		string StartImpl(bool watchdog)
 		{
 			try
@@ -295,23 +314,27 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public void SetVisibility(TGDreamDaemonVisibility NewVis)
 		{
 			Properties.Settings.Default.ServerVisiblity = (int)NewVis;
 			RequestRestart();
 		}
 
+		//public api
 		public void SetSecurityLevel(TGDreamDaemonSecurity level)
 		{
 			Properties.Settings.Default.ServerSecurity = (int)level;
 			RequestRestart();
 		}
 
+		//public api
 		public bool Autostart()
 		{
 			return Properties.Settings.Default.DDAutoStart;
 		}
 
+		//public api
 		public void SetAutostart(bool on)
 		{
 			Properties.Settings.Default.DDAutoStart = on;

@@ -27,6 +27,7 @@ namespace TGServerService
 
 		Thread RevisionStaging;
 
+		//Just cleanup
 		void InitByond()
 		{
 			//linger not
@@ -35,6 +36,7 @@ namespace TGServerService
 			Program.DeleteDirectory(StagingDirectory);
 		}
 
+		//Kill the thread and cleanup again
 		void DisposeByond()
 		{
 			lock (ByondLock)
@@ -45,6 +47,7 @@ namespace TGServerService
 			}
 		}
 
+		//requires ByondLock to be locked
 		bool BusyCheckNoLock()
 		{
 			switch (updateStat)
@@ -61,6 +64,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public TGByondStatus CurrentStatus()
 		{
 			lock (ByondLock)
@@ -69,6 +73,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GetError()
 		{
 			lock (ByondLock)
@@ -79,6 +84,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GetVersion(bool staged)
 		{
 			lock (ByondLock)
@@ -93,11 +99,14 @@ namespace TGServerService
 			}
 		}
 
+		//literally just for passing 2 ints to the thread function
 		class VersionInfo
 		{
 			public int major, minor;
 		}
 
+		//does the downloading and unzipping
+		//calls ApplyStagedUpdate() after if the server isn't running
 		public void UpdateToVersionImpl(object param)
 		{
 			lock (ByondLock) { 
@@ -105,7 +114,6 @@ namespace TGServerService
 					return;
 				updateStat = TGByondStatus.Downloading;
 			}
-
 
 			try
 			{
@@ -118,6 +126,8 @@ namespace TGServerService
 				var vi = (VersionInfo)param;
 				SendMessage(String.Format("BYOND: Updating to version {0}.{1}...", vi.major, vi.minor));
 
+				//DOWNLOADING
+
 				try
 				{
 					client.DownloadFile(String.Format(ByondRevisionsURL, vi.major, vi.minor), RevisionDownloadPath);
@@ -126,6 +136,7 @@ namespace TGServerService
 				{
 					SendMessage("BYOND: Update download failed. Does the specified version exist?");
 					lastError = String.Format("Download of BYOND version {0}.{1} failed! Does it exist?", vi.major, vi.minor);
+					TGServerService.ActiveService.EventLog.WriteEntry(String.Format("Failed to update BYOND to version {0}.{1}!", vi.major, vi.minor), EventLogEntryType.Warning);
 					lock (ByondLock)
 					{
 						updateStat = TGByondStatus.Idle;
@@ -138,6 +149,8 @@ namespace TGServerService
 					updateStat = TGByondStatus.Staging;
 				}
 
+				//STAGING
+				
 				ZipFile.ExtractToDirectory(RevisionDownloadPath, StagingDirectory);
 				lock (ByondLock)
 				{
@@ -162,6 +175,7 @@ namespace TGServerService
 						RequestRestart();
 						lastError = "Update staged. Awaiting server restart...";
 						SendMessage(String.Format("BYOND: Staging complete. Awaiting server restart...", vi.major, vi.minor));
+						TGServerService.ActiveService.EventLog.WriteEntry(String.Format("BYOND update {0}.{1} staged", vi.major, vi.minor));
 						break;
 				}
 			}
@@ -180,6 +194,7 @@ namespace TGServerService
 				}
 			}
 		}
+		//public api for kicking off the update thread
 		public bool UpdateToVersion(int ma, int mi)
 		{
 			lock (ByondLock)
@@ -197,7 +212,7 @@ namespace TGServerService
 				return false; 
 			}
 		}
-
+		//tries to apply the staged update
 		public bool ApplyStagedUpdate()
 		{
 			lock (CompilerLock)

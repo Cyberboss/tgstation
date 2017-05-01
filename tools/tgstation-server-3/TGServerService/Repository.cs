@@ -27,6 +27,7 @@ namespace TGServerService
 		Repository Repo;
 		int currentProgress = -1;
 
+		//public api
 		public bool OperationInProgress()
 		{
 			lock(RepoLock)
@@ -35,13 +36,14 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public int CheckoutProgress()
 		{
 			return currentProgress;
 		}
 
 		//Sets up the repo object
-		public string LoadRepo()
+		string LoadRepo()
 		{
 			if (Repo != null)
 				return null;
@@ -68,6 +70,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public bool Exists()
 		{
 			lock (RepoLock)
@@ -76,21 +79,28 @@ namespace TGServerService
 			}
 		}
 
+		//Updates the currentProgress var
+		//no locks required because who gives a shit, it's a fucking 32-bit integer
 		bool HandleTransferProgress(TransferProgress progress)
 		{
 			currentProgress = (int)(((float)progress.ReceivedObjects / progress.TotalObjects) * 100);
 			return true;
 		}
+
+		//see above
 		void HandleCheckoutProgress(string path, int completedSteps, int totalSteps)
 		{
 			currentProgress = (int)(((float)completedSteps / totalSteps) * 100);
 		}
 
+		//For the thread parameter
 		private class TwoStrings
 		{
 			public string a, b;
 		}
 
+		//This is the thread that resets za warldo
+		//clones, checksout, sets up static dir
 		void Clone(object twostrings)
 		{
 			//busy flag set by caller
@@ -104,7 +114,7 @@ namespace TGServerService
 				{
 					DisposeRepo();
 					Program.DeleteDirectory(RepoPath);
-					Program.DeleteDirectory(StaticBackupDir);
+					Program.DeleteDirectory(StaticBackupDir);	//you had your chance
 					DeletePRList();
 					lock (configLock)
 					{
@@ -136,11 +146,12 @@ namespace TGServerService
 					currentProgress = -1;
 				}
 			}
-			catch
+			catch(Exception e)
 
 			{
 				SendMessage("REPO: Setup failed!");
-			} //don't crash the service
+				TGServerService.ActiveService.EventLog.WriteEntry("Clone error: " + e.ToString(), EventLogEntryType.Error);
+			}
 			finally
 			{
 				lock (RepoLock)
@@ -149,6 +160,9 @@ namespace TGServerService
 				}
 			}
 		}
+
+		//kicks off the cloning thread
+		//public api
 		public bool Setup(string RepoURL, string BranchName)
 		{
 			lock (RepoLock)
@@ -166,6 +180,7 @@ namespace TGServerService
 			}
 		}
 
+		//Gets what HEAD is pointing to
 		string GetShaOrBranch(out string error, bool branch)
 		{
 			lock (RepoLock)
@@ -190,14 +205,20 @@ namespace TGServerService
 			}
 		}
 
+		//moist shleppy noises
+		//public api
 		public string GetHead(out string error)
 		{
 			return GetShaOrBranch(out error, true);
 		}
+
+		//public api
 		public string GetBranch(out string error)
 		{
 			return GetShaOrBranch(out error, true);
 		}
+
+		//public api
 		public string GetRemote(out string error)
 		{
 			try
@@ -217,6 +238,9 @@ namespace TGServerService
 				return null;
 			}
 		}
+
+		//calls git reset --hard on HEAD
+		//requires RepoLock
 		string ResetNoLock()
 		{
 			try
@@ -233,6 +257,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Checkout(string sha)
 		{
 			lock (RepoLock)
@@ -260,6 +285,8 @@ namespace TGServerService
 				}
 			}
 		}
+
+		//Merges a thing into HEAD, not even necessarily a branch
 		string MergeBranch(string branchname)
 		{
 			var Result = Repo.Merge(branchname, MakeSig());
@@ -276,6 +303,8 @@ namespace TGServerService
 			SendMessage(String.Format("REPO: Branch {0} successfully {1}!", branchname, Result.Status == MergeStatus.FastForward ? "fast-forwarded" : "merged"));
 			return null;
 		}
+
+		//public api
 		public string Update(bool reset)
 		{
 			lock (RepoLock)
@@ -319,6 +348,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Reset()
 		{
 			lock (RepoLock)
@@ -326,17 +356,22 @@ namespace TGServerService
 				return ResetNoLock();
 			}
 		}
+
+		//Makes the LibGit2Sharp sig we'll use for committing based on the configured stuff
 		Signature MakeSig()
 		{
 			var Config = Properties.Settings.Default;
 			return new Signature(new Identity(Config.CommitterName, Config.CommitterEmail), DateTimeOffset.Now);
 		}
 
+		//I wonder...
 		void DeletePRList()
 		{
 			if (File.Exists(PRJobFile))
 				File.Delete(PRJobFile);
 		}
+
+		//json_decode(file2text())
 		IDictionary<string, string> GetCurrentPRList()
 		{
 			if (!File.Exists(PRJobFile))
@@ -345,12 +380,16 @@ namespace TGServerService
 			var Deserializer = new JavaScriptSerializer();
 			return Deserializer.Deserialize<Dictionary<string, string>>(rawdata);
 		}
+
+		//text2file(json_encode())
 		void SetCurrentPRList(IDictionary<string, string> list)
 		{
 			var Serializer = new JavaScriptSerializer();
 			var rawdata = Serializer.Serialize(list);
 			File.WriteAllText(PRJobFile, rawdata);
 		}
+
+		//public api
 		public string MergePullRequest(int PRNumber)
 		{
 			lock (RepoLock)
@@ -403,6 +442,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public IDictionary<string, string> MergedPullRequests(out string error)
 		{
 			lock (RepoLock)
@@ -426,6 +466,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GetCommitterName()
 		{
 			lock (RepoLock)
@@ -434,6 +475,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public void SetCommitterName(string newName)
 		{
 			lock (RepoLock)
@@ -442,6 +484,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GetCommitterEmail()
 		{
 			lock (RepoLock)
@@ -450,6 +493,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public void SetCommitterEmail(string newEmail)
 		{
 			lock (RepoLock)
@@ -458,6 +502,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GetCredentialUsername()
 		{
 			lock (RepoLock)
@@ -466,6 +511,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public void SetCredentials(string username, string password)
 		{
 			lock (RepoLock)
@@ -488,6 +534,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Commit(string message)
 		{
 			lock (RepoLock)
@@ -515,6 +562,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Push()
 		{
 			lock (RepoLock)
@@ -549,11 +597,13 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string GenerateChangelog(out string error)
 		{
 			return GenerateChangelogImpl(out error);
 		}
 
+		//impl proc just for single level recursion
 		public string GenerateChangelogImpl(out string error, bool recurse = false)
 		{
 			const string ChangelogPy = RepoPath + "/tools/ss13_genchangelog.py";
@@ -659,6 +709,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public bool SetPythonPath(string path)
 		{
 			if (!Directory.Exists(path))

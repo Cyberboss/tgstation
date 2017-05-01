@@ -7,15 +7,16 @@ using System.Threading;
 
 namespace TGServerService
 {
+	//knobs and such
 	partial class TGStationServer : ITGConfig
 	{
 		const string AdminRanksConfig = StaticConfigDir + "/admin_ranks.txt";
 		const string AdminConfig = StaticConfigDir + "/admins.txt";
 		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
 
+		object configLock = new object();	//for atomic reads/writes
 
-		object configLock = new object();
-
+		//public api
 		public string AddEntry(TGStringConfig type, string entry)
 		{
 			var currentEntries = GetEntries(type, out string error);
@@ -41,6 +42,7 @@ namespace TGServerService
 			}
 		}
 
+		//Enum to string file
 		string StringConfigToPath(TGStringConfig type)
 		{
 			var result = StaticConfigDir + "/";
@@ -62,6 +64,7 @@ namespace TGServerService
 			return result + ".txt";
 		}
 
+		//Write out the admin assoiciations to admins.txt
 		string WriteMins(IDictionary<string, string> current_mins)
 		{ 
 			string outText = "";
@@ -82,6 +85,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string Addmin(string ckey, string rank)
 		{
 			var Aranks = AdminRanks(out string error);
@@ -102,6 +106,7 @@ namespace TGServerService
 			return error;
 		}
 
+		//public api
 		public IDictionary<string, IList<TGPermissions>> AdminRanks(out string error)
 		{
 
@@ -144,6 +149,7 @@ namespace TGServerService
 			return result;
 		}
 
+		//same thing the proc in admin_ranks.dm does, properly calculates string permission sets and returns them as an enum
 		IList<TGPermissions> ProcessPermissions(IList<string> text, IList<TGPermissions> previousPermissions)
 		{
 			IList<TGPermissions> permissions = new List<TGPermissions>();
@@ -181,6 +187,7 @@ namespace TGServerService
 			return permissions;
 		}
 
+		//basic conversion
 		IList<TGPermissions> StringToPermission(string permstring, IList<TGPermissions> oldpermissions)
 		{
 			TGPermissions perm;
@@ -257,6 +264,7 @@ namespace TGServerService
 			return new List<TGPermissions> { perm };
 		}
 
+		//public api
 		public IDictionary<string, string> Admins(out string error)
 		{
 
@@ -292,6 +300,7 @@ namespace TGServerService
 			return mins;
 		}
 
+		//public api
 		public string Deadmin(string admin)
 		{
 			var current_mins = Admins(out string error);
@@ -307,6 +316,7 @@ namespace TGServerService
 			return error;
 		}
 
+		//public api
 		public IList<string> GetEntries(TGStringConfig type, out string error)
 		{
 			try
@@ -328,16 +338,19 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public IList<JobSetting> Jobs(out string error)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public IList<MapEnabled> Maps(TGMapListType type, out string error)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public string MoveServer(string new_location)
 		{
 			try
@@ -448,6 +461,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public ushort NudgePort(out string error)
 		{
 			try
@@ -462,36 +476,43 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string RemoveEntry(TGStringConfig type, string entry)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public IList<ConfigSetting> Retrieve(TGConfigType type, out string error)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public string ServerDirectory()
 		{
 			return Environment.CurrentDirectory;
 		}
 
+		//public api
 		public string SetItem(TGConfigType type, string newValue)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public string SetJob(JobSetting job)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public string SetMap(TGMapListType type, MapEnabled mapfile)
 		{
 			throw new NotImplementedException();
 		}
 
+		//public api
 		public string SetNudgePort(ushort port)
 		{
 			try
@@ -499,6 +520,7 @@ namespace TGServerService
 				lock (configLock) {
 					File.WriteAllText(NudgeConfig, port.ToString());
 				}
+				InitInterop();
 				return null;
 			}catch(Exception e)
 			{

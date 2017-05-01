@@ -8,11 +8,13 @@ using Meebey.SmartIrc4net;
 
 namespace TGServerService
 {
-
+	//hunter2
 	partial class TGStationServer : ITGIRC
 	{
 		public static IrcClient irc;
 		int reconnectAttempt = 0;
+
+		//Setup the object and autoconnect if necessary
 		void InitIRC()
 		{
 			irc = new IrcClient() { SupportNonRfc = true };
@@ -20,8 +22,7 @@ namespace TGServerService
 			Connect();
 		}
 
-
-
+		//For IRC server commands: <nick> <command>
 		private void Irc_OnChannelMessage(object sender, IrcEventArgs e)
 		{
 			var speaker = e.Data.Nick;
@@ -41,14 +42,15 @@ namespace TGServerService
 			asList.RemoveAt(0);
 
 			SendMessage(IrcCommand(command, speaker, asList));
-
 		}
 
+		//TODO!!!
 		bool HasIRCAdmin(string speaker)
 		{
-			return speaker.ToLower() == "Cyberboss";	//TODO
+			return speaker.ToLower() == "cyberboss";	//BIG TODO
 		}
 
+		//Do stuff with words that were spoken to us
 		string IrcCommand(string command, string speaker, IList<string> parameters)
 		{
 			TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Command from {0}: {1} {2}", speaker, command, String.Join(" ", parameters)));
@@ -73,6 +75,7 @@ namespace TGServerService
 			return "Unknown command: " + command;
 		}
 
+		//public api
 		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, TGIRCEnableType enabled)
 		{
 			var Config = Properties.Settings.Default;
@@ -133,20 +136,24 @@ namespace TGServerService
 					}
 				}
 		}
+		//public api
 		public string[] Channels()
 		{
 			return CollectionToArray(Properties.Settings.Default.IRCChannels);
 		}
+		//public api
 		public string[] CollectionToArray(StringCollection sc)
 		{
 			string[] strArray = new string[sc.Count];
 			sc.CopyTo(strArray, 0);
 			return strArray;
 		}
+		//public api
 		public string AdminChannel()
 		{
 			return Properties.Settings.Default.IRCAdminChannel;
 		}
+		//public api
 		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
 		{
 			var Config = Properties.Settings.Default;
@@ -158,17 +165,20 @@ namespace TGServerService
 			if (Connected())
 				Login();
 		}
+		//Joins configured channels
 		void JoinChannels()
 		{
 			foreach (var I in Properties.Settings.Default.IRCChannels)
 				irc.RfcJoin(I);
 		}
+		//runs the login command
 		void Login()
 		{
 			var Config = Properties.Settings.Default;
 			if (Config.IRCIdentifyRequired)
 				irc.SendMessage(SendType.Message, Config.IRCIdentifyTarget, Config.IRCIdentifyCommand);
 		}
+		//public api
 		public string Connect()
 		{
 			if (Connected())
@@ -178,7 +188,6 @@ namespace TGServerService
 				return "IRC disabled by config.";
 			try
 			{
-				//irc.OnChannelMessage += new IrcEventHandler(OnChannelMessage); TODO
 				try
 				{
 					irc.Connect(Config.IRCServer, Config.IRCPort);
@@ -216,7 +225,7 @@ namespace TGServerService
 				return e.ToString();
 			}
 		}
-
+		
 		void IRCListen()
 		{
 			try
@@ -226,12 +235,14 @@ namespace TGServerService
 			catch { }
 		}
 
+		//public api
 		public string Reconnect()
 		{
 			Disconnect();
 			return Connect();
 		}
 
+		//public api
 		public void Disconnect()
 		{ 
 			try
@@ -243,10 +254,12 @@ namespace TGServerService
 			catch
 			{ }
 		}
+		//public api
 		public bool Connected()
 		{
 			return irc.IsConnected;
 		}
+		//public api
 		public string SendMessage(string message, bool adminOnly = false)
 		{
 			try

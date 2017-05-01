@@ -38,7 +38,6 @@ namespace TGServerService
 		const string BDirTest = GameDirB + LiveFile;
 		const string LiveDirTest = GameDirLive + LiveFile;
 
-
 		List<string> copyExcludeList = new List<string> { ".git", "data", "config", "libmysql.dll" };   //shit we handle
 
 		object CompilerLock = new object();
@@ -47,6 +46,7 @@ namespace TGServerService
 		
 		Thread CompilerThread;
 	
+		//deletes leftovers and checks current status
 		void InitCompiler()
 		{
 			if(File.Exists(LiveDirTest))
@@ -54,6 +54,7 @@ namespace TGServerService
 			compilerCurrentStatus = IsInitialized();
 		}
 
+		//public api
 		public TGCompilerStatus GetStatus()
 		{
 			lock (CompilerLock)
@@ -62,6 +63,7 @@ namespace TGServerService
 			}
 		}
 
+		//public api
 		public string CompileError()
 		{
 			lock (CompilerLock)
@@ -72,6 +74,7 @@ namespace TGServerService
 			}
 		}
 
+		//kills the compiler if its running
 		void DisposeCompiler()
 		{
 			lock (CompilerLock)
@@ -79,19 +82,24 @@ namespace TGServerService
 				if (CompilerThread == null || !CompilerThread.IsAlive)
 					return;
 				CompilerThread.Abort(); //this will safely kill dm
+				InitCompiler();	//also cleanup
 			}
 		}
 
+		//translates the win32 api call into an exception if it fails
 		void CreateSymlink(string link, string target)
 		{
 			if (!CreateSymbolicLink(new DirectoryInfo(link).FullName, new DirectoryInfo(target).FullName, File.Exists(target) ? SymbolicLink.File : SymbolicLink.Directory))
 				throw new Exception(String.Format("Failed to create symlink from {0} to {1}!", target, link));
 		}
 
+		//requires CompilerLock to be locked
 		bool CompilerIdleNoLock()
 		{
 			return compilerCurrentStatus == TGCompilerStatus.Uninitialized || compilerCurrentStatus == TGCompilerStatus.Initialized;
 		}
+		
+		//public api
 		public bool Initialize()
 		{
 			lock (CompilerLock)
@@ -106,12 +114,15 @@ namespace TGServerService
 			}
 		}
 
+		//what is says on the tin
 		TGCompilerStatus IsInitialized()
 		{
 			if (File.Exists(GameDirB + LibMySQLFile))	//its a good tell, jim
 				return TGCompilerStatus.Initialized;
 			return TGCompilerStatus.Uninitialized;
 		}
+
+		//we need to remove symlinks before we can recursively delete
 		void CleanGameFolder()
 		{
 			if (Directory.Exists(GameDirB + LibMySQLFile))
@@ -134,8 +145,9 @@ namespace TGServerService
 
 			if (Directory.Exists(GameDirLive))
 				Directory.Delete(GameDirLive);
-
 		}
+
+		//Initializing thread
 		public void InitializeImpl()
 		{
 			try
@@ -233,6 +245,7 @@ namespace TGServerService
 			}
 		}		
 
+		//Returns the A or B dir in which the game is NOT running
 		string GetStagingDir()
 		{
 			string TheDir;
@@ -276,6 +289,8 @@ namespace TGServerService
 			}
 			return TheDir;
 		}
+
+		//I hope you can read this
 		string InvertDirectory(string gameDirectory)
 		{
 			if (gameDirectory == GameDirA)
@@ -284,6 +299,7 @@ namespace TGServerService
 				return GameDirA;
 		}
 
+		//Compiler thread
 		void CompileImpl()
 		{
 			try
@@ -391,7 +407,8 @@ namespace TGServerService
 				}
 			}
 		}
-
+		//kicks off the compiler thread
+		//public api
 		public bool Compile()
 		{
 			lock (CompilerLock)

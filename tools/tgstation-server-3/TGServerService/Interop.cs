@@ -10,13 +10,18 @@ using System.Web.Security;
 
 namespace TGServerService
 {
+	//handles talking between the world and us
 	partial class TGStationServer
 	{
 		QueuedLock topicLock = new QueuedLock();
 		Socket topicSender = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { SendTimeout = 5000, ReceiveTimeout = 5000 };
 
 		const int CommsKeyLen = 64;
-		string serviceCommsKey;	//regenerated every DD restart
+		string serviceCommsKey; //regenerated every DD restart
+
+		Thread NudgeThread;
+		object NudgeLock = new object();
+
 		//raw command string sent here via world.ExportService
 		void HandleCommand(string cmd)
 		{
@@ -34,6 +39,7 @@ namespace TGServerService
 			}
 		}
 
+		//See code/modules/server_tools/server_tools.dm for command switch
 		string SendCommand(string cmd)
 		{
 			lock (watchdogLock)
@@ -42,6 +48,7 @@ namespace TGServerService
 			}
 		}
 
+		//Fuckery to diddle byond with the right packet to accept us
 		string SendTopic(string topicdata, ushort port, bool retry = false)
 		{
 			if (!retry)
@@ -51,11 +58,8 @@ namespace TGServerService
 				if (!topicSender.Connected)
 					topicSender.Connect(IPAddress.Loopback, port);
 
-				//magic numbers everywhere
-				var bytes = new List<byte> { 0x83 };
-
 				StringBuilder stringPacket = new StringBuilder();
-				stringPacket.Append((char)'\x00', 8); //packet[1] is 0x83, packet[3] contain length
+				stringPacket.Append((char)'\x00', 8);
 				stringPacket.Append('?' + topicdata);
 				stringPacket.Append((char)'\x00');
 				string fullString = stringPacket.ToString();
@@ -98,6 +102,8 @@ namespace TGServerService
 			}
 		}
 
+		//Every time we make a new DD process we generate a new comms key for security
+		//It's in world.params['server_service']
 		void GenCommsKey()
 		{
 			var charsToRemove = new string[] { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "[", "{", "]", "}", ";", ":", "<", ">", "|", ".", "/", "?" };
@@ -112,26 +118,32 @@ namespace TGServerService
 			TGServerService.ActiveService.EventLog.WriteEntry("Service Comms Key set to: " + serviceCommsKey);
 		}
 
+		//Start listening for nudges on the configured port
 		void InitInterop()
 		{
-			new Thread(new ThreadStart(NudgeHandler)) { IsBackground = true }.Start();
+			lock (NudgeLock)
+			{
+				if(NudgeThread != null)
+				{
+					NudgeThread.Abort();
+					NudgeThread.Join();
+				}
+				NudgeThread = new Thread(new ThreadStart(NudgeHandler)) { IsBackground = true };
+				NudgeThread.Start();
+			}
 		}
 
 		void NudgeHandler()
 		{
 			try
 			{
-				const string nudgePort = StaticConfigDir + "/nudge_port.txt";
-				while (!File.Exists(nudgePort))
-					Thread.Sleep(10000);
+				var np = NudgePort(out string error);
+				if (error != null)
+					//I guess we'll come back some other time
+					return;
 
-				var str = File.ReadAllText(nudgePort);
-
-				var port = Convert.ToUInt16(str);
-
-				Socket listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
-				listener.Bind(new IPEndPoint(IPAddress.Any, 45678));
+				var listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+				listener.Bind(new IPEndPoint(IPAddress.Any, np));
 				listener.Listen(5);
 
 				// Start listening for connections.  
@@ -149,6 +161,10 @@ namespace TGServerService
 					handler.Close();
 				}
 
+			}
+			catch (ThreadAbortException)
+			{
+				return;
 			}
 			catch (Exception e)
 			{

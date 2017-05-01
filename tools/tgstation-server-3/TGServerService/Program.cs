@@ -11,6 +11,8 @@ namespace TGServerService
 		{
 			ServiceBase.Run(new TGServerService());	//wondows
 		}
+		//Everything in this file is just generic helpers
+
 		//http://stackoverflow.com/questions/1701457/directory-delete-doesnt-work-access-denied-error-but-under-windows-explorer-it
 		public static void DeleteDirectory(string path)
 		{

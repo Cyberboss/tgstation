@@ -5,6 +5,9 @@ using TGServiceInterface;
 
 namespace TGServerService
 {
+	//I know the fact that this is one massive partial class is gonna trigger everyone
+	//There really was no other succinct way to do it
+
 	//this line basically says make one instance of the service, use it multithreaded for requests, and never delete it
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
 	partial class TGStationServer : IDisposable, ITGStatusCheck, ITGServerUpdater
@@ -13,7 +16,7 @@ namespace TGServerService
 		//called when the service is started
 		public TGStationServer()
 		{
-			InitIRC(); //IRC
+			InitIRC();
 			InitByond();
 			InitCompiler();
 			InitInterop();
@@ -29,6 +32,7 @@ namespace TGServerService
 			DisposeRepo();
 		}
 
+		//one stop update
 		public string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog, ushort testmerge_pr)
 		{
 			string res;
@@ -80,6 +84,8 @@ namespace TGServerService
 		public void VerifyConnection()
 		{}
 
+		//mostly generated code with a call to RunDisposals()
+		//you don't need to open this
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls
 
