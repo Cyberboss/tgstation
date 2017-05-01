@@ -191,7 +191,7 @@ namespace TGCommandLine
 						return ExitCode.ServerError;
 					break;
 				case "commit":
-					if(param == null || param.Trim() == "")
+					if(param == null)
 					{
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
@@ -208,7 +208,7 @@ namespace TGCommandLine
 						return ExitCode.ServerError;
 					break;
 				case "set-email":
-					if (param == null || param.Trim() == "")
+					if (param == null)
 					{
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
@@ -216,7 +216,7 @@ namespace TGCommandLine
 					Repo.SetCommitterEmail(param);
 					break;
 				case "set-name":
-					if (param == null || param.Trim() == "")
+					if (param == null)
 					{
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
@@ -229,6 +229,17 @@ namespace TGCommandLine
 					Console.WriteLine("Enter password:");
 					var pass = ReadLineSecure();
 					Repo.SetCredentials(user, pass);
+					break;
+				case "python-path":
+					if (param == null)
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					var found = Repo.SetPythonPath(param);
+					Console.WriteLine(found ? "Success!" : "Error: Directory does not exist!");
+					if (!found)
+						return ExitCode.ServerError;
 					break;
 				case "?":
 				case "help":

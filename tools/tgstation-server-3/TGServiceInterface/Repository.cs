@@ -109,5 +109,13 @@ namespace TGServiceInterface
 		//returns null on success, error on failure
 		[OperationContract]
 		string Push();
+
+		/// <summary>
+		/// Sets the path to the python 2.7 installation
+		/// </summary>
+		/// <param name="path">The new path</param>
+		/// <returns>true if the path exists, false otherwise</returns>
+		[OperationContract]
+		bool SetPythonPath(string path);
 	}
 }

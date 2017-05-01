@@ -658,5 +658,13 @@ namespace TGServerService
 				}
 			}
 		}
+
+		public bool SetPythonPath(string path)
+		{
+			if (!Directory.Exists(path))
+				return false;
+			Properties.Settings.Default.PythonPath = Path.GetFullPath(path);
+			return true;
+		}
 	}
 }
