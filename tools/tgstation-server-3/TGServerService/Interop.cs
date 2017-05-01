@@ -38,7 +38,7 @@ namespace TGServerService
 					break;
 				case "send2irc":
 					splits.RemoveAt(0);
-					SendMessage(String.Join(" ", splits), true);
+					SendMessage("RELAY: " + String.Join(" ", splits), true);
 					break;
 			}
 		}
