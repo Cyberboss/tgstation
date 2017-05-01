@@ -17,6 +17,7 @@ namespace TGServerService
 		const string RepoPath = "Repository";
 		const string RepoConfig = RepoPath + "/config";
 		const string RepoData = RepoPath + "/data";
+		const string RepoErrorUpToDate = "Already up to date.";
 
 		const string PRJobFile = "prtestjob.json";
 
@@ -270,7 +271,7 @@ namespace TGServerService
 					return "Merge conflict occurred.";
 				case MergeStatus.UpToDate:
 					SendMessage("REPO: Merge already up to date!");
-					return "Already up to date.";
+					return RepoErrorUpToDate;
 			}
 			SendMessage(String.Format("REPO: Branch {0} successfully {1}!", branchname, Result.Status == MergeStatus.FastForward ? "fast-forwarded" : "merged"));
 			return null;

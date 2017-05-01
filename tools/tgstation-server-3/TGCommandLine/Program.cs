@@ -50,6 +50,53 @@ namespace TGCommandLine
 						return RepoCommand(param1, param2);
 					case "config":
 						return ConfigCommand(param1, param2);
+					case "update":
+						if(param1 == null)
+						{
+							Console.WriteLine("Missing parameter!");
+							return ExitCode.BadCommand;
+						}
+						var gen_cl = param2 != null && param2.ToLower() == "--cl";
+						TGRepoUpdateMethod method;
+						switch (param1.ToLower())
+						{
+							case "hard":
+								method = TGRepoUpdateMethod.Hard;
+								break;
+							case "merge":
+								method = TGRepoUpdateMethod.Merge;
+								break;
+							default:
+								Console.WriteLine("Please specify hard or merge");
+								return ExitCode.BadCommand;
+						}
+						var result = Server.GetComponent<ITGServerUpdater>().UpdateServer(method, gen_cl);
+						Console.WriteLine(result ?? "Success!");
+						if (result != null)
+							return ExitCode.ServerError;
+						break;
+					case "testmerge":
+						if (param1 == null)
+						{
+							Console.WriteLine("Missing parameter!");
+							return ExitCode.BadCommand;
+						}
+						ushort tm;
+						try {
+							tm = Convert.ToUInt16(param1);
+							if (tm == 0)
+								throw new Exception();
+						}
+						catch
+						{
+							Console.WriteLine("Invalid tesmerge #: " + param1);
+							return ExitCode.BadCommand;
+						}
+						result = Server.GetComponent<ITGServerUpdater>().UpdateServer(TGRepoUpdateMethod.None, false, tm);
+						Console.WriteLine(result ?? "Success!");
+						if(result != null)
+							return ExitCode.ServerError;
+						break;
 					case "?":
 					case "help":
 						ConsoleHelp();
@@ -66,6 +113,32 @@ namespace TGCommandLine
 				return ExitCode.ConnectionError;
 			}
 			return ExitCode.Normal;
+		}
+		static string ReadLineSecure()
+		{
+			string result = "";
+			while (true)
+			{
+				ConsoleKeyInfo i = Console.ReadKey(true);
+				if (i.Key == ConsoleKey.Enter)
+				{
+					break;
+				}
+				else if (i.Key == ConsoleKey.Backspace)
+				{
+					if (result.Length > 0)
+					{
+						result = result.Substring(0, result.Length - 1);
+						Console.Write("\b \b");
+					}
+				}
+				else
+				{
+					result += i.KeyChar;
+					Console.Write("*");
+				}
+			}
+			return result;
 		}
 		static ExitCode RepoCommand(string command, string param)
 		{
@@ -92,24 +165,70 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
+					string res;
 					switch (param.ToLower())
 					{
 						case "hard":
-							Console.WriteLine(Repo.Update(true) ?? "Success");
+							res = Repo.Update(true);
 							break;
 						case "merge":
-							Console.WriteLine(Repo.Update(false) ?? "Success");
+							res = Repo.Update(false);
 							break;
 						default:
 							Console.WriteLine("Invalid parameter: " + param);
 							return ExitCode.BadCommand;
 					}
+					Console.WriteLine(res ?? "Success");
+					if (res != null)
+						return ExitCode.ServerError;
 					break;
 				case "gen-changelog":
 					var result = Repo.GenerateChangelog(out string error);
 					Console.WriteLine(error ?? "Success!");
 					if (result != null)
 						Console.WriteLine(result);
+					if (error != null)
+						return ExitCode.ServerError;
+					break;
+				case "commit":
+					if(param == null || param.Trim() == "")
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					res = Repo.Commit(param);
+					Console.WriteLine(res ?? "Success!");
+					if (res != null)
+						return ExitCode.ServerError;
+					break;
+				case "push":
+					res = Repo.Push();
+					Console.WriteLine(res ?? "Success!");
+					if (res != null)
+						return ExitCode.ServerError;
+					break;
+				case "set-email":
+					if (param == null || param.Trim() == "")
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					Repo.SetCommitterEmail(param);
+					break;
+				case "set-name":
+					if (param == null || param.Trim() == "")
+					{
+						Console.WriteLine("Missing parameter!");
+						return ExitCode.BadCommand;
+					}
+					Repo.SetCommitterName(param);
+					break;
+				case "set-credentials":
+					Console.WriteLine("Enter username:");
+					var user = Console.ReadLine();
+					Console.WriteLine("Enter password:");
+					var pass = ReadLineSecure();
+					Repo.SetCredentials(user, pass);
 					break;
 				case "?":
 				case "help":
@@ -118,6 +237,11 @@ namespace TGCommandLine
 					Console.WriteLine("setup <git-url>[;branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
 					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
 					Console.WriteLine("gen-changelog\t-\tCompiles the game changelog");
+					Console.WriteLine("commit <message>\t-\tCommits all current changes to the repository using the configured identity");
+					Console.WriteLine("push\t-\tPushes commits to the origin branch using the configured credentials");
+					Console.WriteLine("set-email <e-mail>\t-\tSet the e-mail used for commits");
+					Console.WriteLine("set-name <name>\t-\tSet the name used for commits");
+					Console.WriteLine("set-credentials\t-\tSet the credentials used for pushing commits");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);
@@ -137,7 +261,10 @@ namespace TGCommandLine
 						Console.WriteLine("Missing parameter!");
 						return ExitCode.BadCommand;
 					}
-					Console.WriteLine(Config.MoveServer(param) ?? "Success!");
+					var res = Config.MoveServer(param);
+					Console.WriteLine(res ?? "Success!");
+					if (res != null)
+						return ExitCode.ServerError;
 					break;
 				case "server-dir":
 					Console.WriteLine(Config.ServerDirectory());
@@ -322,7 +449,10 @@ namespace TGCommandLine
 						{
 							Thread.Sleep(1000);
 						} while (DM.GetStatus() == TGCompilerStatus.Compiling);
-						Console.WriteLine(DM.CompileError() ?? "Compilation successful");
+						var res = DM.CompileError();
+						Console.WriteLine(res ?? "Compilation successful");
+						if (res != null)
+							return ExitCode.ServerError;
 					}
 					break;
 				case "initialize":
@@ -348,7 +478,10 @@ namespace TGCommandLine
 						{
 							Thread.Sleep(1000);
 						} while (DM.GetStatus() == TGCompilerStatus.Initializing);
-						Console.WriteLine(DM.CompileError() ?? "Initialization successful");
+						var res = DM.CompileError();
+						Console.WriteLine(res ?? "Initialization successful");
+						if (res != null)
+							return ExitCode.ServerError;
 					}
 					break;
 				case "?":
@@ -491,6 +624,8 @@ namespace TGCommandLine
 			Console.WriteLine("dm\t-\tManage compiling the server");
 			Console.WriteLine("dd\t-\tManage DreamDaemon");
 			Console.WriteLine("config\t-\tManage settings");
+			Console.WriteLine("update <merge|hard> [--cl]\t-\tUpdates the server fully, optionally generating and pushing a changelog");
+			Console.WriteLine("testmerge <pull request #>\t-\tMerges the specified pull request and updates the server");
 		}
 
 		static int Main(string[] args)

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.ServiceModel;
+using System.Threading;
 using TGServiceInterface;
 
 namespace TGServerService
 {
 	//this line basically says make one instance of the service, use it multithreaded for requests, and never delete it
 	[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Multiple, InstanceContextMode = InstanceContextMode.Single)]
-	partial class TGStationServer : IDisposable, ITGStatusCheck
+	partial class TGStationServer : IDisposable, ITGStatusCheck, ITGServerUpdater
 	{
 		//call partial constructors/destructors from here
 		//called when the service is started
@@ -26,6 +27,53 @@ namespace TGServerService
 			DisposeCompiler();
 			DisposeByond();
 			DisposeRepo();
+		}
+
+		public string UpdateServer(TGRepoUpdateMethod updateType, bool push_changelog, ushort testmerge_pr)
+		{
+			string res;
+			if (updateType != TGRepoUpdateMethod.None)
+			{
+				res = Update(updateType == TGRepoUpdateMethod.Hard);
+				if (res != null)
+					return res;
+			}
+			if (testmerge_pr != 0)
+			{
+				res = MergePullRequest(testmerge_pr);
+				if (res != null && res != RepoErrorUpToDate)
+					return res;
+			}
+
+			GenerateChangelog(out res);
+			if (res != null)
+				return res;
+
+			if (push_changelog)
+			{
+				res = Commit("Automatic changelog compile, [ci skip]");
+				if (res != null)
+					return res;
+				res = Push();
+				if (res != null)
+					return res;
+			}
+
+			if (!Compile())
+				return "Compilation could not be started";
+
+			do
+			{
+				Thread.Sleep(100);
+				lock (CompilerLock)
+				{
+					if (CompilerIdleNoLock())
+						break;
+				}
+			}
+			while (true);
+
+			return CompileError();
 		}
 
 		//just here to test the WCF connection

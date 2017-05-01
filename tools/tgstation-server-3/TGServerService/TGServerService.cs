@@ -47,6 +47,7 @@ namespace TGServerService
 				AddEndpoint<ITGStatusCheck>();
 				AddEndpoint<ITGIRC>();
 				AddEndpoint<ITGConfig>();
+				AddEndpoint<ITGServerUpdater>();
 
 				host.Open();
 			}
