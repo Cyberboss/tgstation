@@ -4,19 +4,26 @@ namespace TGServiceInterface
 {
 	public class Server
 	{
-		//Internal
+		//Base name of the communication pipe
+		//the are formatted as MasterPipeName/ComponentName
 		public static string MasterPipeName = "TGStationServerService";
 
-		//Returns the requested server component interface
+		/// <summary>
+		/// Returns the requested server component interface. This does not guarantee a successful connection
+		/// </summary>
+		/// <typeparam name="T"></typeparam>
+		/// <returns></returns>
 		public static T GetComponent<T>()
 		{
 			return new ChannelFactory<T>(new NetNamedPipeBinding { SendTimeout = new TimeSpan(0, 5, 0) }, new EndpointAddress(String.Format("net.pipe://localhost/{0}/{1}", MasterPipeName, typeof(T).Name))).CreateChannel();
 		}
-
-		//Used to test if the service is avaiable on the machine
-		//Note that state can technically change at any time
-		//and any call may throw an exception
-		//returns null on success, error message on failure
+		
+		/// <summary>
+		/// Used to test if the service is avaiable on the machine
+		/// Note that state can technically change at any time
+		/// and any call to the service may throw an exception because it failed
+		/// </summary>
+		/// <returns>null on successful connection, error message on failure</returns>
 		public static string VerifyConnection()
 		{
 			try
@@ -30,10 +37,16 @@ namespace TGServiceInterface
 			}
 		}
 	}
+
 	//Internal
 	[ServiceContract]
 	public interface ITGStatusCheck
 	{
+		/// <summary>
+		/// Literally does nothing on the server end
+		/// But if the call completes, you can be sure you are connected
+		/// Here because WCF won't throw until you try until you actually use the API
+		/// </summary>
 		[OperationContract]
 		void VerifyConnection();
 	}

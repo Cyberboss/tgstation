@@ -5,7 +5,9 @@ using TGServiceInterface;
 
 namespace TGCommandLine
 {
-
+	//if i was a smart man i would've made this modular before it got out of hand
+	//but i didn't
+	//help i cant stop
 	class Program
 	{
 		enum ExitCode

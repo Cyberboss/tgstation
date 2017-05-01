@@ -26,58 +26,92 @@ namespace TGServiceInterface
 	[ServiceContract]
 	public interface ITGDreamDaemon
 	{
-		//Returns the status of the server
+		/// <summary>
+		/// Gets the status of DD
+		/// </summary>
+		/// <returns>The appropriate TGDreamDaemonStatus</returns>
 		[OperationContract]
 		TGDreamDaemonStatus DaemonStatus();
 
-		//Check if a call to Start will fail
-		//returns the error that would occur
-		//null otherwise
+		/// <summary>
+		/// Check if a call to Start will fail
+		/// Of course, be aware of race conditions with other control panels
+		/// </summary>
+		/// <returns>returns the error that would occur, null otherwise</returns>
 		[OperationContract]
 		string CanStart();
-
-		//starts the server
-		//returns null on success or error on failure
+		
+		/// <summary>
+		/// Starts the server if it isn't running
+		/// </summary>
+		/// <returns>null on success or error message on failure</returns>
 		[OperationContract]
 		string Start();
 
-		//kills the server
-		//this will DC everyone in the world unless immediately rebooted
-		//returns null on success or error on failure
+		/// <summary>
+		/// Immediately kills the server
+		/// </summary>
+		/// <returns>null on success or error message on failure</returns>
 		[OperationContract]
 		string Stop();
-
-		//Kills and restarts the server
-		//returns null on success or error on failure
+		
+		/// <summary>
+		/// Immediately kills and restarts the server
+		/// </summary>
+		/// <returns>null on success or error message on failure</returns>
 		[OperationContract]
 		string Restart();
 
-		//Restarts the server after the currently running round ends
+		/// <summary>
+		/// Restart the server after the currently running round ends
+		/// Has no effect if the server isn't running
+		/// </summary>
 		[OperationContract]
 		void RequestRestart();
 
-		//Stops the server after the currently running round ends
+		/// <summary>
+		/// Stop the server after the currently running round ends
+		/// Has no effect if the server isn't running
+		/// </summary>
 		[OperationContract]
 		void RequestStop();
 
-		//Sets the security level of the server. Requires reboot to apply
-		//note that anything higher than Trusted will disable server commands
+		/// <summary>
+		/// Sets the security level of the server. Requires reboot to apply
+		/// Implies a call to RequestRestart()
+		/// note that anything higher than Trusted will disable interop from DD
+		/// </summary>
+		/// <param name="level">The new security level</param>
 		[OperationContract]
 		void SetSecurityLevel(TGDreamDaemonSecurity level);
 
-		//Sets the visiblity level of the server. Requires reboot to apply
+		/// <summary>
+		/// Sets the visiblity level of the server. Requires reboot to apply
+		/// Implies a call to RequestRestart()
+		/// </summary>
+		/// <param name="vis">The new visibility level</param>
 		[OperationContract]
 		void SetVisibility(TGDreamDaemonVisibility vis);
 
-		//Sets the port to use. Requires reboot to apply
+		/// <summary>
+		/// Set the port to host DD on. Requires reboot to apply
+		/// Implies a call to RequestRestart()
+		/// </summary>
+		/// <param name="new_port">The new port</param>
 		[OperationContract]
 		void SetPort(ushort new_port);
 
-		//returns true if Start() is called when the service starts, false otherwise
+		/// <summary>
+		/// Check if the watchdog will start when the service starts
+		/// </summary>
+		/// <returns>true if autostart is enabled, false otherwise</returns>
 		[OperationContract]
 		bool Autostart();
 
-		//Set whether or not DD starts with the service
+		/// <summary>
+		/// Set the autostart config
+		/// </summary>
+		/// <param name="on">true to start the watchdog with the service, false otherwise</param>
 		[OperationContract]
 		void SetAutostart(bool on);
 	}
