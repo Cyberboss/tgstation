@@ -342,11 +342,10 @@ namespace TGServerService
 		{
 			try
 			{
-				Directory.CreateDirectory(new_location);
 				var di1 = new DirectoryInfo(Environment.CurrentDirectory);
 				var di2 = new DirectoryInfo(new_location);
 
-				var copy = di1.Root != di2.Root;
+				var copy = di1.Root.FullName != di2.Root.FullName;
 
 				new_location = di2.FullName;
 
@@ -388,17 +387,36 @@ namespace TGServerService
 								var Config = Properties.Settings.Default;
 								lock (configLock)
 								{
+									CleanGameFolder();
+									Program.DeleteDirectory(GameDir);
+									string error = null;
 									if (copy)
 									{
 										Program.CopyDirectory(Config.ServerDirectory, new_location);
-										CleanGameFolder();
 										Environment.CurrentDirectory = new_location;
-										//Sleep so windows doesn't cock block us here
-										Thread.Sleep(5000);
-										Program.DeleteDirectory(Config.ServerDirectory);
+										try
+										{
+											Program.DeleteDirectory(Config.ServerDirectory);
+										}
+										catch
+										{
+											error = "The move was successful, but the path " + Config.ServerDirectory + " was unable to be deleted fully!";
+										}
 									}
 									else
-										Directory.Move(Config.ServerDirectory, new_location);
+									{
+										try
+										{
+											Environment.CurrentDirectory = di2.Root.FullName;
+											Directory.Move(Config.ServerDirectory, new_location);
+											Environment.CurrentDirectory = new_location;
+										}
+										catch
+										{
+											Environment.CurrentDirectory = Config.ServerDirectory;
+											throw;
+										}
+									}
 									Config.ServerDirectory = new_location;
 									return null;
 								}
