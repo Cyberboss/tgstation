@@ -193,20 +193,6 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
-            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
-            "tring>#botbus</string>\r\n</ArrayOfString>")]
-        public global::System.Collections.Specialized.StringCollection IRCChannels {
-            get {
-                return ((global::System.Collections.Specialized.StringCollection)(this["IRCChannels"]));
-            }
-            set {
-                this["IRCChannels"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("irc.rizon.net")]
         public string IRCServer {
             get {
@@ -286,6 +272,32 @@ namespace TGServerService.Properties {
             }
             set {
                 this["DDAutoStart"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("<?xml version=\"1.0\" encoding=\"utf-16\"?>\r\n<ArrayOfString xmlns:xsi=\"http://www.w3." +
+            "org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\r\n  <s" +
+            "tring>#botbus</string>\r\n</ArrayOfString>")]
+        public global::System.Collections.Specialized.StringCollection IRCChannels {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["IRCChannels"]));
+            }
+            set {
+                this["IRCChannels"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("C:\\Python27")]
+        public string PythonPath {
+            get {
+                return ((string)(this["PythonPath"]));
+            }
+            set {
+                this["PythonPath"] = value;
             }
         }
     }

@@ -105,12 +105,16 @@ namespace TGCommandLine
 							return ExitCode.BadCommand;
 					}
 					break;
+				case "gen-changelog":
+					Console.WriteLine(Repo.GenerateChangelog() ?? "Success!");
+					break;
 				case "?":
 				case "help":
 					Console.WriteLine("Repo commands:");
 					Console.WriteLine();
 					Console.WriteLine("setup <git-url>[;branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
 					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
+					Console.WriteLine("gen-changelog\t-\tCompiles the game changelog");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);

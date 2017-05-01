@@ -1,13 +1,14 @@
 ﻿using LibGit2Sharp;
-using System.IO;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Text;
-using TGServiceInterface;
+using System.Threading;
 using System.Security.Cryptography;
 using System.Web.Script.Serialization;
+using TGServiceInterface;
 
 namespace TGServerService
 {
@@ -544,6 +545,75 @@ namespace TGServerService
 				{
 					return e.ToString();
 				}
+			}
+		}
+
+		public string GenerateChangelog()
+		{
+			return GenerateChangelogImpl();
+		}
+
+		public string GenerateChangelogImpl(bool recurse = false)
+		{
+			var Config = Properties.Settings.Default;
+
+			var PythonFile = Config.PythonPath + "/python.exe";
+			try
+			{
+				string result;
+				int exitCode;
+				using (var python = new Process())
+				{
+					python.StartInfo.FileName = PythonFile;
+					python.StartInfo.Arguments = "tools/ss13_genchangelog.py html/changelog.html html/changelogs";
+					python.StartInfo.UseShellExecute = false;
+					python.StartInfo.RedirectStandardOutput = true;
+					python.Start();
+					using (StreamReader reader = python.StandardOutput)
+					{
+						result = reader.ReadToEnd();
+
+					}
+					python.WaitForExit();
+					exitCode = python.ExitCode;
+				}
+				if (exitCode != 0)
+				{
+					if (recurse)
+						return "Script failed! " + result;
+					//update pip deps and try again
+
+					string PipFile = Config.PythonPath + "/scripts/pip.exe";
+					bool runningBSoup = false;
+					while(true)
+						using (var pip = new Process())
+						{
+							pip.StartInfo.FileName = PipFile;
+							pip.StartInfo.Arguments = runningBSoup ? "install PyYaml" : "install beautifulsoup4";
+							pip.StartInfo.UseShellExecute = false;
+							pip.StartInfo.RedirectStandardOutput = true;
+							pip.Start();
+							using (StreamReader reader = pip.StandardOutput)
+							{
+								result = reader.ReadToEnd();
+							}
+							pip.WaitForExit();
+							if(pip.ExitCode != 0)
+								return "Script and pip failed! " + result;
+
+							if (runningBSoup)
+								break;
+							else
+								runningBSoup = true;
+						}
+					//and recurse
+					return GenerateChangelogImpl(true);
+				}
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
 			}
 		}
 	}
