@@ -555,65 +555,82 @@ namespace TGServerService
 
 		public string GenerateChangelogImpl(bool recurse = false)
 		{
-			var Config = Properties.Settings.Default;
-
-			var PythonFile = Config.PythonPath + "/python.exe";
-			try
+			const string ChangelogPy = RepoPath + "/tools/ss13_genchangelog.py";
+			const string ChangelogHtml = RepoPath + "/html/changelog.html";
+			const string ChangelogDir = RepoPath + "/html/changelogs";
+			if (!Exists())
+				return "Repo does not exist!";
+			lock (RepoLock)
 			{
-				string result;
-				int exitCode;
-				using (var python = new Process())
+				if (RepoBusy)
+					return "Repo is busy!";
+				if (!File.Exists(ChangelogPy))
+					return "Missing changelog generation script!";
+				if (!File.Exists(ChangelogHtml))
+					return "Missing changelog html!";
+				if (!Directory.Exists(ChangelogDir))
+					return "Missing auto changelog directory!";
+
+				var Config = Properties.Settings.Default;
+
+				var PythonFile = Config.PythonPath + "/python.exe";
+				try
 				{
-					python.StartInfo.FileName = PythonFile;
-					python.StartInfo.Arguments = "tools/ss13_genchangelog.py html/changelog.html html/changelogs";
-					python.StartInfo.UseShellExecute = false;
-					python.StartInfo.RedirectStandardOutput = true;
-					python.Start();
-					using (StreamReader reader = python.StandardOutput)
+					string result;
+					int exitCode;
+					using (var python = new Process())
 					{
-						result = reader.ReadToEnd();
-
-					}
-					python.WaitForExit();
-					exitCode = python.ExitCode;
-				}
-				if (exitCode != 0)
-				{
-					if (recurse)
-						return "Script failed! " + result;
-					//update pip deps and try again
-
-					string PipFile = Config.PythonPath + "/scripts/pip.exe";
-					bool runningBSoup = false;
-					while(true)
-						using (var pip = new Process())
+						python.StartInfo.FileName = PythonFile;
+						python.StartInfo.Arguments = String.Format("{0} {1} {2}", ChangelogPy, ChangelogHtml, ChangelogDir);
+						python.StartInfo.UseShellExecute = false;
+						python.StartInfo.RedirectStandardOutput = true;
+						python.Start();
+						using (StreamReader reader = python.StandardOutput)
 						{
-							pip.StartInfo.FileName = PipFile;
-							pip.StartInfo.Arguments = runningBSoup ? "install PyYaml" : "install beautifulsoup4";
-							pip.StartInfo.UseShellExecute = false;
-							pip.StartInfo.RedirectStandardOutput = true;
-							pip.Start();
-							using (StreamReader reader = pip.StandardOutput)
-							{
-								result = reader.ReadToEnd();
-							}
-							pip.WaitForExit();
-							if(pip.ExitCode != 0)
-								return "Script and pip failed! " + result;
+							result = reader.ReadToEnd();
 
-							if (runningBSoup)
-								break;
-							else
-								runningBSoup = true;
 						}
-					//and recurse
-					return GenerateChangelogImpl(true);
+						python.WaitForExit();
+						exitCode = python.ExitCode;
+					}
+					if (exitCode != 0)
+					{
+						if (recurse)
+							return "Script failed! " + result;
+						//update pip deps and try again
+
+						string PipFile = Config.PythonPath + "/scripts/pip.exe";
+						bool runningBSoup = false;
+						while (true)
+							using (var pip = new Process())
+							{
+								pip.StartInfo.FileName = PipFile;
+								pip.StartInfo.Arguments = runningBSoup ? "install PyYaml" : "install beautifulsoup4";
+								pip.StartInfo.UseShellExecute = false;
+								pip.StartInfo.RedirectStandardOutput = true;
+								pip.Start();
+								using (StreamReader reader = pip.StandardOutput)
+								{
+									result = reader.ReadToEnd();
+								}
+								pip.WaitForExit();
+								if (pip.ExitCode != 0)
+									return "Script and pip failed! " + result;
+
+								if (runningBSoup)
+									break;
+								else
+									runningBSoup = true;
+							}
+						//and recurse
+						return GenerateChangelogImpl(true);
+					}
+					return null;
 				}
-				return null;
-			}
-			catch (Exception e)
-			{
-				return e.ToString();
+				catch (Exception e)
+				{
+					return e.ToString();
+				}
 			}
 		}
 	}

@@ -393,6 +393,7 @@ namespace TGServerService
 									if (copy)
 									{
 										Program.CopyDirectory(Config.ServerDirectory, new_location);
+										Directory.CreateDirectory(new_location);
 										Environment.CurrentDirectory = new_location;
 										try
 										{

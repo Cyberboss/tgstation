@@ -136,11 +136,15 @@ namespace TGCommandLine
 					}
 					Console.WriteLine(Config.MoveServer(param) ?? "Success!");
 					break;
+				case "server-dir":
+					Console.WriteLine(Config.ServerDirectory());
+					break;
 				case "?":
 				case "help":
 					Console.WriteLine("Config commands:");
 					Console.WriteLine();
-					Console.WriteLine("move-server <new-path>\t-\tMove the server installation (BYOND, Repo, Game) to a new location. Nothing else may be running for this task to complete.");
+					Console.WriteLine("move-server <new-path>\t-\tMove the server installation (BYOND, Repo, Game) to a new location. Nothing else may be running for this task to complete");
+					Console.WriteLine("server-dir\t-\tPrint the directory the server is installed in");
 					break;
 				default:
 					Console.WriteLine("Invalid command: " + command);
