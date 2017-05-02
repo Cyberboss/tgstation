@@ -9,36 +9,33 @@ namespace TGServerService
 {
 	public partial class TGServerService : ServiceBase
 	{
-		public static TGServerService ActiveService;
+		public static TGServerService ActiveService;	//So everyone else can write to our eventlog
 
-		ServiceHost host;
+		ServiceHost host;	//the WCF host
 		
+		//I'm entirely not sure what this is for
+		//but you should seriously not add anything here
+		//Use OnStart instead
 		public TGServerService()
 		{
 			InitializeComponent();
 		}
 
+		//when babby is formed
 		protected override void OnStart(string[] args)
 		{
 			ActiveService = this;
 			try
 			{
 				var Config = Properties.Settings.Default;
-
-				if (args.Length >= 2 && args[0].ToLower() == "--directory")
-				{
-					EventLog.WriteEntry("Commandline setting directory to: " + args[1]);
-					Config.ServerDirectory = args[1];
-				}
-
 				if (!Directory.Exists(Config.ServerDirectory))
 				{
 					EventLog.WriteEntry("Creating server directory: " + Config.ServerDirectory);
 					Directory.CreateDirectory(Config.ServerDirectory);
 				}
-				Directory.SetCurrentDirectory(Config.ServerDirectory);
+				Environment.CurrentDirectory = Config.ServerDirectory;
 				
-				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") });
+				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") });	//construction runs here
 
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
@@ -49,7 +46,7 @@ namespace TGServerService
 				AddEndpoint<ITGConfig>();
 				AddEndpoint<ITGServerUpdater>();
 
-				host.Open();
+				host.Open();	//...or maybe here, doesn't really matter
 			}
 			catch
 			{
@@ -58,20 +55,20 @@ namespace TGServerService
 			}
 		}
 
+		//shorthand for adding the WCF endpoint
 		void AddEndpoint<T>()
 		{
 			var typetype = typeof(T);
 			host.AddServiceEndpoint(typetype, new NetNamedPipeBinding(), Server.MasterPipeName + "/" + typetype.Name);
 		}
 
+		//when we is kill
 		protected override void OnStop()
 		{
 			try
 			{
-				host.Close();
+				host.Close();	//I believe this is where TGStationServer.Dispose() is called?
 				host = null;
-
-
 			}
 			finally
 			{

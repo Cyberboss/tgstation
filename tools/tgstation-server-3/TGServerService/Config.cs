@@ -437,6 +437,7 @@ namespace TGServerService
 										}
 									}
 									Config.ServerDirectory = new_location;
+									TGServerService.ActiveService.EventLog.WriteEntry("Server moved to: " + new_location);
 									return null;
 								}
 							}
@@ -504,6 +505,7 @@ namespace TGServerService
 			}
 		}
 
+		//TGConfigType to the right path, Repo or static
 		string ConfigTypeToPath(TGConfigType type, bool repo)
 		{
 			var path = repo ? RepoConfig : StaticConfigDir;
@@ -810,7 +812,7 @@ namespace TGServerService
 							if (currentMap != null)
 								try
 								{
-									currentMap.VoteWeight = Convert.ToInt32(splits[1]);
+									currentMap.VoteWeight = float.Parse(splits[1]);
 								}
 								catch
 								{
@@ -843,7 +845,42 @@ namespace TGServerService
 
 		public string SetMapSettings(MapSetting newSetting)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var entries = MapSettings(out string error);
+				if (entries == null)
+					return error;
+
+				IList<string> asStrings = new List<string>();
+				foreach (var I in entries)
+				{
+					var entryToUse = I.Name == newSetting.Name ? newSetting : I;
+
+					asStrings.Add("map " + entryToUse.Name + "\r\n");
+					if (!entryToUse.Enabled)
+						asStrings.Add("\tdisabled\r\n");
+					if (entryToUse.MinPlayers > 0)
+						asStrings.Add(String.Format("\tminplayers {0}\r\n", entryToUse.MinPlayers));
+					if (entryToUse.MaxPlayers > 0)
+						asStrings.Add(String.Format("\tmaxplayers {0}\r\n", entryToUse.MaxPlayers));
+					if (entryToUse.VoteWeight != 1)
+						asStrings.Add(String.Format("\tvoteweight {0}\r\n", entryToUse.VoteWeight));
+					if (entryToUse.Default)
+						asStrings.Add("\tdefault\r\n");
+					asStrings.Add("endmap\r\n\r\n");
+				}
+
+				lock (configLock)
+				{
+					File.WriteAllLines(MapConfig, asStrings);
+				}
+
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
 		}
 	}
 }
