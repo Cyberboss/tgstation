@@ -213,8 +213,8 @@ CHANGELING_SCALING_COEFF 6
 ## Set to 0 to disable scaling and use default numbers instead.
 SECURITY_SCALING_COEFF 8
 
-# The number of objectives traitors get.
-# Not including escaping/hijacking.
+## The number of objectives traitors get.
+## Not including escaping/hijacking.
 TRAITOR_OBJECTIVES_AMOUNT 2
 
 ## Uncomment to prohibit jobs that start with loyalty
