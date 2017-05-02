@@ -21,9 +21,19 @@ namespace TGCommandLine
 		{
 			//Use this proc for one off testing
 			//return false;
+#pragma warning disable CS0162 // Unreachable code detected
+
+
+
 
 			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Game, out string error);
 			return true;
+
+
+
+
+
+#pragma warning restore CS0162 // Unreachable code detected
 		}
 		static ExitCode RunCommandLine(string[] args)
 		{
