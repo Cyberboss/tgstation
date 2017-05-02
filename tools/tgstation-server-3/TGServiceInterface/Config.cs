@@ -122,6 +122,11 @@ namespace TGServiceInterface
 		[DataMember]
 		public string Comment { get; set; }
 		/// <summary>
+		/// True if this setting exists in the current configuration
+		/// </summary>
+		[DataMember]
+		public bool ExistsInStatic { get; set; }
+		/// <summary>
 		/// True if this setting exists in the repo's config
 		/// </summary>
 		[DataMember]
@@ -132,6 +137,13 @@ namespace TGServiceInterface
 		/// </summary>
 		[DataMember]
 		public string Value { get; set; }
+
+		/// <summary>
+		/// Value of the setting in the repo
+		/// null means unset, empty string means flag
+		/// </summary>
+		[DataMember]
+		public string DefaultValue { get; set; }
 	}
 	/// <summary>
 	/// Setting for job populations

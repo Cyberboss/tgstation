@@ -16,8 +16,6 @@
 /world/New()
 	log_world("World loaded at [time_stamp()]")
 
-	IRCBroadcast("New round starting on [SSmapping.config.map_name]!");
-
 #if (PRELOAD_RSC == 0)
 	external_rsc_urls = world.file2list("config/external_rsc_urls.txt","\n")
 	var/i=1
@@ -59,6 +57,9 @@
 	GLOB.data_core = new /datum/datacore()
 
 	Master.Initialize(10, FALSE)
+
+	if(config.irc_announce_new_game)
+		IRCBroadcast("New round starting on [SSmapping.config.map_name]!")
 
 #define IRC_STATUS_THROTTLE 50
 /world/Topic(T, addr, master, key)

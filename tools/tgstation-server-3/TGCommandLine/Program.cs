@@ -17,8 +17,19 @@ namespace TGCommandLine
 			BadCommand = 2,
 			ServerError = 3,
 		}
+		static bool SpecialTactics()
+		{
+			//Use this proc for one off testing
+			//return false;
+
+			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Database, out string error);
+			return true;
+		}
 		static ExitCode RunCommandLine(string[] args)
 		{
+			if (SpecialTactics())
+				return ExitCode.Normal;
+
 			string command = null, param1 = null, param2 = null;
 			if(args.Length > 0)
 				command = args[0].Trim().ToLower();

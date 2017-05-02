@@ -10,6 +10,10 @@ namespace TGServerService
 	//knobs and such
 	partial class TGStationServer : ITGConfig
 	{
+		const string ConfigPostfix = "/config.txt";
+		const string DBConfigPostfix = "/dbconfig.txt";
+		const string GameConfigPostfix = "/game_options.txt";
+
 		const string AdminRanksConfig = StaticConfigDir + "/admin_ranks.txt";
 		const string AdminConfig = StaticConfigDir + "/admins.txt";
 		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
@@ -499,10 +503,130 @@ namespace TGServerService
 			}
 		}
 
+		string ConfigTypeToPath(TGConfigType type, bool repo)
+		{
+			var path = repo ? RepoConfig : StaticConfigDir;
+			switch (type)
+			{
+				case TGConfigType.Database:
+					return path + DBConfigPostfix;
+				case TGConfigType.Game:
+					return path + GameConfigPostfix;
+				case TGConfigType.General:
+					return path + ConfigPostfix;
+				default:
+					throw new Exception("Bad TGConfigType: " + type);
+			}
+		}
+
 		//public api
 		public IList<ConfigSetting> Retrieve(TGConfigType type, out string error)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				IList<string> RepoConfigData, StaticConfigData;
+				var repolocked = false;
+				if (!Monitor.TryEnter(RepoLock))
+					repolocked = true;
+				try
+				{
+					if (!repolocked && RepoBusy)
+						repolocked = true;
+					if (repolocked)
+					{
+						error = "Repo locked!";
+						return null;
+					}
+
+					lock (configLock)
+					{
+						RepoConfigData = new List<string>(File.ReadAllLines(ConfigTypeToPath(type, true)));
+						StaticConfigData = new List<string>(File.ReadAllLines(ConfigTypeToPath(type, false)));
+					}
+				}
+				finally
+				{
+					Monitor.Exit(RepoLock);
+				}
+
+				//## designates an option comment
+				//# designates a commented out option
+
+				IDictionary<string, ConfigSetting> repoConfig = new Dictionary<string, ConfigSetting>();
+				IList<ConfigSetting> results = new List<ConfigSetting>();
+
+				ConfigSetting currentSetting = new ConfigSetting();
+
+				foreach (var I in RepoConfigData)
+				{
+					var trimmed = I.Trim();
+					if (trimmed.Length == 0)
+						continue;
+					var commented = trimmed[0] == '#';
+					if (commented)
+					{
+						if (trimmed.Length == 1)
+							continue;
+
+						if (trimmed[1] == '#')
+						{
+							//comment line
+							if (currentSetting.Comment == null)
+								currentSetting.Comment = trimmed.Substring(2).Trim();
+							else
+								currentSetting.Comment += "\r\n" + trimmed.Substring(2).Trim();
+							continue;
+						}
+						if (trimmed.Length == 2)
+							continue;
+						trimmed = trimmed.Substring(1).Trim();
+					}
+					var splits = new List<string>(trimmed.Split(' '));
+					currentSetting.Name = splits.First();
+					splits.RemoveAt(0);
+					currentSetting.DefaultValue = commented ? null : String.Join(" ", splits);
+					currentSetting.ExistsInRepo = true;
+					repoConfig.Add(currentSetting.Name, currentSetting);
+					results.Add(currentSetting);
+					currentSetting = new ConfigSetting();
+				}
+				//gather the stuff from our config
+				foreach (var I in StaticConfigData)
+				{
+
+					var trimmed = I.Trim();
+					if (trimmed.Length == 0)
+						continue;
+					var commented = trimmed[0] == '#';
+					if (trimmed.Length < 3 || trimmed[1] == '#')
+						continue;
+					if (commented)
+						trimmed = trimmed.Substring(1).Trim();
+					var splits = new List<string>(trimmed.Split(' '));
+					var name = splits[0];
+					if (!repoConfig.Keys.Contains(name))
+					{
+						currentSetting = new ConfigSetting()
+						{
+							Comment = "SETTING DOES NOT EXIST IN REPOSITORY",
+							Name = name
+						};
+						results.Add(currentSetting);
+					}
+					else
+						currentSetting = repoConfig[name];
+					currentSetting.ExistsInStatic = true;
+					splits.RemoveAt(0);
+					currentSetting.Value = commented ? null : String.Join(" ", splits);
+				}
+				error = null;
+				return results;
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
 		}
 
 		//public api

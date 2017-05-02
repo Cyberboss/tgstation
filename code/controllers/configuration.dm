@@ -261,6 +261,8 @@
 
 	var/mice_roundstart = 10 // how many wire chewing rodents spawn at roundstart.
 
+	var/irc_announce_new_game = FALSE
+
 /datum/configuration/New()
 	gamemode_cache = typecacheof(/datum/game_mode,TRUE)
 	for(var/T in gamemode_cache)
@@ -540,6 +542,8 @@
 					error_silence_time = text2num(value)
 				if("error_msg_delay")
 					error_msg_delay = text2num(value)
+				if("irc_announce_new_game")
+					irc_announce_new_game = TRUE
 				else
 					GLOB.diary << "Unknown setting in configuration: '[name]'"
 
