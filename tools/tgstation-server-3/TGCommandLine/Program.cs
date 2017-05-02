@@ -20,11 +20,11 @@ namespace TGCommandLine
 		}
 		static bool SpecialTactics()
 		{
-			//Use this proc for one off testing
-			//return false;
+			return false;
 #pragma warning disable CS0162 // Unreachable code detected
 
 
+			//Use this proc for one off testing
 
 
 			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Game, out string error);
