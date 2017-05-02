@@ -132,18 +132,34 @@ namespace TGServiceInterface
 		[DataMember]
 		public bool ExistsInRepo { get; set; }
 		/// <summary>
+		/// True if this value appears more than once in either config
+		/// </summary>
+		[DataMember]
+		public bool IsMultiKey { get; set; }
+		/// <summary>
 		/// Value of the setting
 		/// null means unset, empty string means flag
 		/// </summary>
 		[DataMember]
 		public string Value { get; set; }
-
+		/// <summary>
+		/// For when the first word of the config setting can be repeated many times
+		/// Usually null
+		/// </summary>
+		[DataMember]
+		public List<string> Values { get; set; }
 		/// <summary>
 		/// Value of the setting in the repo
 		/// null means unset, empty string means flag
 		/// </summary>
 		[DataMember]
 		public string DefaultValue { get; set; }
+		/// <summary>
+		/// For when the first word of the config setting can be repeated many times
+		/// Usually null
+		/// </summary>
+		[DataMember]
+		public List<string> DefaultValues { get; set; }
 	}
 	/// <summary>
 	/// Setting for job populations

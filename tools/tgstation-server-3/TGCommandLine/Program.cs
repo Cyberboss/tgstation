@@ -22,7 +22,7 @@ namespace TGCommandLine
 			//Use this proc for one off testing
 			//return false;
 
-			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Database, out string error);
+			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Game, out string error);
 			return true;
 		}
 		static ExitCode RunCommandLine(string[] args)

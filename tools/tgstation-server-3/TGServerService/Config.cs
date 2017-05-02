@@ -584,10 +584,28 @@ namespace TGServerService
 					var splits = new List<string>(trimmed.Split(' '));
 					currentSetting.Name = splits.First();
 					splits.RemoveAt(0);
-					currentSetting.DefaultValue = commented ? null : String.Join(" ", splits);
+					var value = commented ? null : String.Join(" ", splits);
 					currentSetting.ExistsInRepo = true;
-					repoConfig.Add(currentSetting.Name, currentSetting);
-					results.Add(currentSetting);
+
+					//multi-keying
+					if (repoConfig.Keys.Contains(currentSetting.Name))
+					{
+						currentSetting = repoConfig[currentSetting.Name];
+						if (!currentSetting.IsMultiKey)
+						{
+							currentSetting.IsMultiKey = true;
+							currentSetting.DefaultValues = new List<string> { currentSetting.DefaultValue, value };
+							currentSetting.DefaultValue = null;
+						}
+						else
+							currentSetting.DefaultValues.Add(value);
+					}
+					else
+					{
+						currentSetting.DefaultValue = value;
+						repoConfig.Add(currentSetting.Name, currentSetting);
+						results.Add(currentSetting);
+					}
 					currentSetting = new ConfigSetting();
 				}
 				//gather the stuff from our config
@@ -611,13 +629,23 @@ namespace TGServerService
 							Comment = "SETTING DOES NOT EXIST IN REPOSITORY",
 							Name = name
 						};
+						//don't support multikeying here
 						results.Add(currentSetting);
 					}
 					else
 						currentSetting = repoConfig[name];
 					currentSetting.ExistsInStatic = true;
 					splits.RemoveAt(0);
-					currentSetting.Value = commented ? null : String.Join(" ", splits);
+					var value = commented ? null : String.Join(" ", splits);
+					if (currentSetting.IsMultiKey)
+					{
+						if (currentSetting.Values == null)
+							currentSetting.Values = new List<string> { value };
+						else
+							currentSetting.Values.Add(value);
+					}
+					else
+						currentSetting.Value = value;
 				}
 				error = null;
 				return results;
