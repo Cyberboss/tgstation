@@ -831,6 +831,8 @@
 			if ("endmap")
 				maplist[currentmap.map_name] = currentmap
 				currentmap = null
+			if ("disabled")
+				currentmap = null
 			else
 				GLOB.diary << "Unknown command in map vote config: '[command]'"
 
