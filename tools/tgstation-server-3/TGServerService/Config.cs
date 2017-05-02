@@ -582,9 +582,11 @@ namespace TGServerService
 						trimmed = trimmed.Substring(1).Trim();
 					}
 					var splits = new List<string>(trimmed.Split(' '));
-					currentSetting.Name = splits.First();
+					currentSetting.Name = splits.First().ToUpper();
 					splits.RemoveAt(0);
-					var value = commented ? null : String.Join(" ", splits);
+					var value = String.Join(" ", splits);
+					if (commented && value == "")
+						value = null;
 					currentSetting.ExistsInRepo = true;
 
 					//multi-keying
@@ -621,7 +623,7 @@ namespace TGServerService
 					if (commented)
 						trimmed = trimmed.Substring(1).Trim();
 					var splits = new List<string>(trimmed.Split(' '));
-					var name = splits[0];
+					var name = splits[0].ToUpper();
 					if (!repoConfig.Keys.Contains(name))
 					{
 						currentSetting = new ConfigSetting()
@@ -636,7 +638,9 @@ namespace TGServerService
 						currentSetting = repoConfig[name];
 					currentSetting.ExistsInStatic = true;
 					splits.RemoveAt(0);
-					var value = commented ? null : String.Join(" ", splits);
+					var value = String.Join(" ", splits);
+					if (commented && value == "")
+						value = null;
 					if (currentSetting.IsMultiKey)
 					{
 						if (currentSetting.Values == null)

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using TGServiceInterface;
 
@@ -41,7 +42,7 @@ namespace TGCommandLine
 				return ExitCode.Normal;
 
 			string command = null, param1 = null, param2 = null;
-			if(args.Length > 0)
+			if (args.Length > 0)
 				command = args[0].Trim().ToLower();
 
 			if (args.Length > 1)
@@ -664,7 +665,37 @@ namespace TGCommandLine
 
 		static int Main(string[] args)
 		{
-			return (int)RunCommandLine(args);
+			if(args.Length != 0)
+				return (int)RunCommandLine(args);
+
+			//interactive mode
+			do
+			{
+				try
+				{
+					Console.Write("Enter command:\t");
+					var NextCommand = Console.ReadLine();
+					switch (NextCommand.ToLower())
+					{
+						case "quit":
+						case "exit":
+							return (int)ExitCode.Normal;
+						default:
+							var formattedCommand = new List<string>(NextCommand.Split(' '));
+							formattedCommand = formattedCommand.Select(x => x.Trim()).ToList();
+							formattedCommand.Remove("");
+							RunCommandLine(formattedCommand.ToArray());
+							break;
+					}
+				}
+				catch
+				{
+					break;
+				}
+			}
+			while (Server.VerifyConnection() == null);
+			Console.WriteLine("Connection to service interrupted!");
+			return (int)ExitCode.ConnectionError;
 		}
 	}
 }
