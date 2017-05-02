@@ -22,6 +22,12 @@ namespace TGServerService
 		Thread NudgeThread;
 		object NudgeLock = new object();
 
+		//See code/modules/server_tools/server_tools.dm for command switch
+		const string SCHardReboot = "hard_reboot";  //requests that dreamdaemon restarts when the round ends
+		const string SCGracefulShutdown = "graceful_shutdown";  //requests that dreamdaemon stops when the round ends
+		const string SCWorldAnnounce = "world_announce";	//sends param 'message' to the world
+		const string SCIRCCheck = "irc_check";	//returns game stats
+
 		//raw command string sent here via world.ExportService
 		void HandleCommand(string cmd)
 		{
@@ -42,8 +48,7 @@ namespace TGServerService
 					break;
 			}
 		}
-
-		//See code/modules/server_tools/server_tools.dm for command switch
+		
 		string SendCommand(string cmd)
 		{
 			lock (watchdogLock)

@@ -62,13 +62,13 @@ namespace TGServerService
 		//public api
 		public void RequestRestart()
 		{
-			SendCommand("hard_reboot");
+			SendCommand(SCHardReboot);
 		}
 
 		//public api
 		public void RequestStop()
 		{
-			SendCommand("graceful_shutdown");
+			SendCommand(SCGracefulShutdown);
 		}
 
 		//public api

@@ -64,7 +64,7 @@ namespace TGServerService
 						case TGDreamDaemonStatus.HardRebooting:
 							return "REBOOTING";
 						case TGDreamDaemonStatus.Online:
-							return SendCommand("irc_check");
+							return SendCommand(SCIRCCheck);
 					}
 					break;
 				case "byond":
