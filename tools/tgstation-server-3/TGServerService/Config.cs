@@ -19,6 +19,8 @@ namespace TGServerService
 		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
 		const string MapConfig = StaticConfigDir + "/maps.txt";
 
+		const string TitleImagesConfig = StaticConfigDir + "/title_screens/images";
+
 		object configLock = new object();	//for atomic reads/writes
 
 		//public api
@@ -64,6 +66,21 @@ namespace TGServerService
 					break;
 				case TGStringConfig.Whitelist:
 					result += "Whitelist";
+					break;
+				case TGStringConfig.AwayMissions:
+					result += "awaymissionconfig";
+					break;
+				case TGStringConfig.LavaRuinBlacklist:
+					result += "LavaRuinBlacklist";
+					break;
+				case TGStringConfig.SpaceRuinBlacklist:
+					result += "SpaceRuinBlacklist";
+					break;
+				case TGStringConfig.ShuttleBlacklist:
+					result += "unbuyableshuttles";
+					break;
+				case TGStringConfig.ExternalRSCURLs:
+					result += "external_rsc_urls";
 					break;
 			}
 			return result + ".txt";
@@ -345,12 +362,6 @@ namespace TGServerService
 
 		//public api
 		public IList<JobSetting> Jobs(out string error)
-		{
-			throw new NotImplementedException();
-		}
-
-		//public api
-		public IList<MapEnabled> Maps(TGMapListType type, out string error)
 		{
 			throw new NotImplementedException();
 		}
@@ -722,12 +733,6 @@ namespace TGServerService
 		}
 
 		//public api
-		public string SetMap(TGMapListType type, MapEnabled mapfile)
-		{
-			throw new NotImplementedException();
-		}
-
-		//public api
 		public string SetNudgePort(ushort port)
 		{
 			try
@@ -876,6 +881,57 @@ namespace TGServerService
 				}
 
 				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
+		}
+
+		public string ReadRaw(string configRelativePath, bool repo, out string error)
+		{
+			try
+			{
+				lock (configLock) {
+					error = null;
+					var path = (repo ? RepoConfig : StaticConfigDir) + "/" + configRelativePath;
+					return File.ReadAllText(path);
+				}
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
+		}
+
+		public string WriteRaw(string configRelativePath, string data)
+		{
+			try
+			{
+				lock (configLock)
+				{
+					var path = StaticConfigDir + "/" + configRelativePath;
+					File.WriteAllText(path, data);
+					return null;
+				}
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
+		}
+
+		public string SetTitleImage(string filename, byte[] data)
+		{
+			try
+			{
+				lock (configLock)
+				{
+					var path = StaticConfigDir + TitleImagesConfig + "/" + filename;
+					File.WriteAllBytes(path, data);
+					return null;
+				}
 			}
 			catch (Exception e)
 			{

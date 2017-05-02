@@ -13,16 +13,6 @@ namespace TGServiceInterface
 		Game,
 		General,
 	}
-	/// <summary>
-	/// The type of map list being modified
-	/// </summary>
-	public enum TGMapListType
-	{
-		AwayMissions,
-		LavaRuinBlacklist,
-		SpaceRuinBlacklist,
-		ShuttleBlacklist,
-	}
 
 	/// <summary>
 	/// Single line string configuration to edit
@@ -32,6 +22,11 @@ namespace TGServiceInterface
 		Silicon_Laws,
 		SillyTips,
 		Whitelist,
+		AwayMissions,
+		LavaRuinBlacklist,
+		SpaceRuinBlacklist,
+		ShuttleBlacklist,
+		ExternalRSCURLs,
 	}
 
 	/// <summary>
@@ -280,24 +275,6 @@ namespace TGServiceInterface
 		string SetMapSettings(MapSetting newSetting);
 
 		/// <summary>
-		/// List the maps listed in a config file
-		/// </summary>
-		/// <param name="type">The type of the map list</param>
-		/// <param name="error">null on success, error message on failure</param>
-		/// <returns>A list of MapEnabled on success, null on failure</returns>
-		[OperationContract]
-		IList<MapEnabled> Maps(TGMapListType type, out string error);
-
-		/// <summary>
-		/// Enable or disable a mapfile
-		/// </summary>
-		/// <param name="type">The type of the map list</param>
-		/// <param name="mapfile">The new setting for the file</param>
-		/// <returns>null on success, error message on failure</returns>
-		[OperationContract]
-		string SetMap(TGMapListType type, MapEnabled mapfile);
-
-		/// <summary>
 		/// Gets the port DD uses to talk to the service
 		/// </summary>
 		/// <param name="error">null on success, error message on failure</param>
@@ -354,5 +331,33 @@ namespace TGServiceInterface
 		/// <returns>null on success, error message on failure</returns>
 		[OperationContract]
 		string MoveServer(string new_location);
+
+		/// <summary>
+		/// Upload a titlescreen image
+		/// </summary>
+		/// <param name="filename">The name of the file saved in config/title_screens/images</param>
+		/// <param name="data">The bytes of the file, null will delete the file</param>
+		/// <returns>null on success, error message on failure</returns>
+		[OperationContract]
+		string SetTitleImage(string filename, byte[] data);
+
+		/// <summary>
+		/// For when you really just need to see the raw data of the config
+		/// </summary>
+		/// <param name="configRelativePath">The path from the configDir. E.g. config.txt</param>
+		/// <param name="repo">if true, the file will be read </param>
+		/// <param name="error">null on success, error message on failure</param>
+		/// <returns>The full text of the file on success, null on failure</returns>
+		[OperationContract]
+		string ReadRaw(string configRelativePath, bool repo, out string error);
+
+		/// <summary>
+		/// For when you really just need to set the raw data of the config
+		/// </summary>
+		/// <param name="configRelativePath">The path from the configDir. E.g. config.txt</param>
+		/// <param name="data">The full text of the config file</param>
+		/// <returns>null on success, error message on failure</returns>
+		[OperationContract]
+		string WriteRaw(string configRelativePath, string data);
 	}
 }
