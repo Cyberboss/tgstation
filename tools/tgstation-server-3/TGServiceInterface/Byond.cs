@@ -2,6 +2,9 @@
 
 namespace TGServiceInterface
 {
+	/// <summary>
+	/// The status of a BYOND update job
+	/// </summary>
 	public enum TGByondStatus
 	{
 		Idle,	//no byond update in progress
@@ -11,6 +14,10 @@ namespace TGServiceInterface
 		Staged,	//byond ready, waiting for dream daemon reboot
 		Updating,	//applying update
 	}
+
+	/// <summary>
+	/// For managing the BYOND installation the server runs
+	/// </summary>
 	[ServiceContract]
 	public interface ITGByond
 	{

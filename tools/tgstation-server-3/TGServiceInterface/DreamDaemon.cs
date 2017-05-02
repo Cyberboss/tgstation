@@ -2,6 +2,9 @@
 
 namespace TGServiceInterface
 {
+	/// <summary>
+	/// The status of the DD instance
+	/// </summary>
 	public enum TGDreamDaemonStatus
 	{
 		Offline,
@@ -9,6 +12,9 @@ namespace TGServiceInterface
 		Online,
 	}
 
+	/// <summary>
+	/// DD's security level
+	/// </summary>
 	public enum TGDreamDaemonSecurity
 	{
 		Trusted = 0,    //default config
@@ -16,6 +22,9 @@ namespace TGServiceInterface
 		Ultrasafe
 	}
 
+	/// <summary>
+	/// DD's visibility
+	/// </summary>
 	public enum TGDreamDaemonVisibility
 	{
 		Public,

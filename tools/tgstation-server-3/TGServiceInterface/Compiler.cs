@@ -2,6 +2,9 @@
 
 namespace TGServiceInterface
 {
+	/// <summary>
+	/// The status of the compiler
+	/// </summary>
 	public enum TGCompilerStatus
 	{
 		Uninitialized,
@@ -9,6 +12,10 @@ namespace TGServiceInterface
 		Initialized,
 		Compiling,
 	}
+
+	/// <summary>
+	/// For managing the Game A/B/Live folders, compiling, and hotswapping them
+	/// </summary>
 	[ServiceContract]
 	public interface ITGCompiler
 	{

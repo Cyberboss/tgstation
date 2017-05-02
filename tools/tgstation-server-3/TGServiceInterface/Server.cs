@@ -4,8 +4,10 @@ namespace TGServiceInterface
 {
 	public class Server
 	{
-		//Base name of the communication pipe
-		//the are formatted as MasterPipeName/ComponentName
+		/// <summary>
+		/// Base name of the communication pipe
+		/// they are formatted as MasterPipeName/ComponentName
+		/// </summary>
 		public static string MasterPipeName = "TGStationServerService";
 
 		/// <summary>
@@ -51,12 +53,28 @@ namespace TGServiceInterface
 		void VerifyConnection();
 	}
 
+	/// <summary>
+	/// How to modify the repo during the UpdateServer operation
+	/// </summary>
 	public enum TGRepoUpdateMethod
 	{
-		None,	//Do not update the repo
-		Merge,	//Update the repo by merging the origin branch
-		Hard,	//Update the repo by resetting to the origin branch
+		/// <summary>
+		/// Do not update the repo
+		/// </summary>
+		None,
+		/// <summary>
+		/// Update the repo by merging the origin branch
+		/// </summary>
+		Merge,
+		/// <summary>
+		/// Update the repo by hard resetting to the origin branch
+		/// </summary>
+		Hard,
 	}
+
+	/// <summary>
+	/// One stop shop for server updates
+	/// </summary>
 	[ServiceContract]
 	public interface ITGServerUpdater
 	{
