@@ -20,14 +20,14 @@ namespace TGCommandLine
 		}
 		static bool SpecialTactics()
 		{
-			return false;
+			//return false;
 #pragma warning disable CS0162 // Unreachable code detected
 
 
 			//Use this proc for one off testing
 
 
-			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Game, out string error);
+			var result = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.Database, out string error);
 			return true;
 
 
@@ -673,7 +673,7 @@ namespace TGCommandLine
 			{
 				try
 				{
-					Console.Write("Enter command:\t");
+					Console.Write("Enter command: ");
 					var NextCommand = Console.ReadLine();
 					switch (NextCommand.ToLower())
 					{

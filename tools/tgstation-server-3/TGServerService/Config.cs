@@ -668,9 +668,48 @@ namespace TGServerService
 		}
 
 		//public api
-		public string SetItem(TGConfigType type, string newValue)
+		public string SetItem(TGConfigType type, ConfigSetting newSetting)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var entries = Retrieve(type, out string error);
+				if (entries == null)
+					return error;
+
+				//serialize it
+				var asStrings = new List<string>();
+				bool somethingChanged = false;
+				foreach (var I in entries)
+				{
+					if (newSetting.Name == I.Name)
+					{
+						I.Value = newSetting.Value;
+						I.Values = newSetting.Values;
+						I.IsMultiKey = newSetting.IsMultiKey;
+						somethingChanged = true;
+					}
+					if (I.IsMultiKey)
+						foreach (var J in I.Values)
+							asStrings.Add((I.Name + " " + J).Trim());
+					else
+						asStrings.Add((I.Name + " " + I.Value).Trim());
+				}
+
+				if (!somethingChanged)
+					return null;
+
+				//write it out
+				lock (configLock)
+				{
+					File.WriteAllLines(ConfigTypeToPath(type, false), asStrings);
+				}
+
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
 		}
 
 		//public api

@@ -204,10 +204,10 @@ namespace TGServiceInterface
 		/// Sets a config setting of some config
 		/// </summary>
 		/// <param name="type">The type of config to retrieve</param>
-		/// <param name="newValue">The new value of the config, null unsets it</param>
+		/// <param name="newSetting">The updated config setting, only name and value fields are read</param>
 		/// <returns>null on success, error message on failure</returns>
 		[OperationContract]
-		string SetItem(TGConfigType type, string newValue);
+		string SetItem(TGConfigType type, ConfigSetting newSetting);
 
 		/// <summary>
 		/// Get the configured admin ranks
