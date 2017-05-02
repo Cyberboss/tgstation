@@ -69,7 +69,7 @@ namespace TGServiceInterface
 		/// If this is the default voted map
 		/// </summary>
 		[DataMember]
-		public bool IsDefault { get; set; }
+		public bool Default { get; set; }
 		/// <summary>
 		/// The voteweight of the map
 		/// </summary>
@@ -85,6 +85,11 @@ namespace TGServiceInterface
 		/// </summary>
 		[DataMember]
 		public int MaxPlayers { get; set; }
+		/// <summary>
+		/// If the map is enabled
+		/// </summary>
+		[DataMember]
+		public bool Enabled { get; set; }
 	}
 
 	/// <summary>
@@ -257,6 +262,22 @@ namespace TGServiceInterface
 		/// <returns>null on success, error on failure</returns>
 		[OperationContract]
 		string SetJob(JobSetting job);
+
+		/// <summary>
+		/// Lists game map settings
+		/// </summary>
+		/// <param name="error">null on success, error on failure</param>
+		/// <returns>The list of MapSettings</returns>
+		[OperationContract]
+		IList<MapSetting> MapSettings(out string error);
+
+		/// <summary>
+		/// Sets a game map's settings
+		/// </summary>
+		/// <param name="newSetting">The new setting for the map</param>
+		/// <returns>null on success, error on failure</returns>
+		[OperationContract]
+		string SetMapSettings(MapSetting newSetting);
 
 		/// <summary>
 		/// List the maps listed in a config file

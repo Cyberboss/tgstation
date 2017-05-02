@@ -17,6 +17,7 @@ namespace TGServerService
 		const string AdminRanksConfig = StaticConfigDir + "/admin_ranks.txt";
 		const string AdminConfig = StaticConfigDir + "/admins.txt";
 		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
+		const string MapConfig = StaticConfigDir + "/maps.txt";
 
 		object configLock = new object();	//for atomic reads/writes
 
@@ -738,6 +739,111 @@ namespace TGServerService
 			{
 				return e.ToString();
 			}
+		}
+
+		public IList<MapSetting> MapSettings(out string error)
+		{
+			try
+			{
+				IList<string> lines;
+				lock (configLock)
+				{
+					lines = File.ReadAllLines(MapConfig);
+				}
+
+				MapSetting currentMap = null, lastDefaultMap = null;
+				IList<MapSetting> results = new List<MapSetting>();
+				foreach(var L in lines)
+				{
+					var trimmed = L.Trim();
+					if (trimmed.Length == 0 || trimmed[0] == '#')
+						continue;
+					var splits = trimmed.Split(' ');
+					switch (splits[0].ToLower())
+					{
+						case "map":
+							if (splits.Length < 2)
+								continue;
+							currentMap = new MapSetting()
+							{
+								Name = splits[1],	//defaults in game
+								Enabled = true,
+								VoteWeight = 1,
+							};
+							break;
+						case "endmap":
+							if (currentMap != null)
+								results.Add(currentMap);
+							currentMap = null;
+							break;
+						case "minplayer":
+						case "minplayers":
+							if (splits.Length < 2)
+								continue;
+							if (currentMap != null)
+								try
+								{
+									currentMap.MinPlayers = Convert.ToInt32(splits[1]);
+								}
+								catch {
+									continue;
+								}
+							break;
+						case "maxplayer":
+						case "maxplayers":
+							if (splits.Length < 2)
+								continue;
+							if (currentMap != null)
+								try
+								{
+									currentMap.MaxPlayers = Convert.ToInt32(splits[1]);
+								}
+								catch
+								{
+									continue;
+								}
+							break;
+						case "weight":
+						case "voteweight":
+							if (splits.Length < 2)
+								continue;
+							if (currentMap != null)
+								try
+								{
+									currentMap.VoteWeight = Convert.ToInt32(splits[1]);
+								}
+								catch
+								{
+									continue;
+								}
+							break;
+						case "default":
+						case "defaultmap":
+							if (currentMap == null)
+								continue;
+							if (lastDefaultMap != null)
+								lastDefaultMap.Default = false;
+							currentMap.Default = true;
+							lastDefaultMap = currentMap;
+							break;
+						case "disabled":
+							currentMap = null;
+							break;
+					}
+				}
+				error = null;
+				return results;
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
+		}
+
+		public string SetMapSettings(MapSetting newSetting)
+		{
+			throw new NotImplementedException();
 		}
 	}
 }
