@@ -479,7 +479,24 @@ namespace TGServerService
 		//public api
 		public string RemoveEntry(TGStringConfig type, string entry)
 		{
-			throw new NotImplementedException();
+			var entries = GetEntries(type, out string error);
+			if (entries == null)
+				return error;
+			if (!entries.Remove(entry))
+				return null;
+
+			lock (configLock)
+			{
+				try
+				{
+					File.WriteAllLines(StringConfigToPath(type), entries.ToArray());
+					return null;
+				}
+				catch (Exception e)
+				{
+					return e.ToString();
+				}
+			}
 		}
 
 		//public api

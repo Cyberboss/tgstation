@@ -13,7 +13,7 @@ namespace TGServiceInterface
 		/// <summary>
 		/// Returns the requested server component interface. This does not guarantee a successful connection
 		/// </summary>
-		/// <typeparam name="T"></typeparam>
+		/// <typeparam name="T">The type of the component to retrieve</typeparam>
 		/// <returns></returns>
 		public static T GetComponent<T>()
 		{
