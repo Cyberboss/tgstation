@@ -14,7 +14,7 @@ namespace TGCommandLine
 		public RootCommand()
 		{
 			if (IsRealRoot())	//stack overflows
-				Children = new Command[] { new UpdateCommand(), new TestmergeCommand(), new IRCCommand(), new RepoCommand() };
+				Children = new Command[] { new UpdateCommand(), new TestmergeCommand(), new IRCCommand(), new RepoCommand(), new BYONDCommand(), new DMCommand(), new DDCommand(), new ConfigCommand() };
 		}
 		public override ExitCode Run(IList<string> parameters)
 		{
@@ -37,8 +37,15 @@ namespace TGCommandLine
 						return ExitCode.Normal;
 					default:
 						foreach (var c in Children)
-							if (c.Keyword == LocalKeyword && parameters.Count >= c.RequiredParameters)
+							if (c.Keyword == LocalKeyword)
+							{
+								if (parameters.Count < c.RequiredParameters)
+								{
+									Console.WriteLine("Not enough parameters!");
+									return ExitCode.BadCommand;
+								}
 								return c.Run(parameters);
+							}
 						parameters.Insert(0, LocalKeyword);
 						break;
 				}
