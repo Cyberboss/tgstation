@@ -18,6 +18,7 @@ namespace TGServerService
 		const string AdminConfig = StaticConfigDir + "/admins.txt";
 		const string NudgeConfig = StaticConfigDir + "/nudge_port.txt";
 		const string MapConfig = StaticConfigDir + "/maps.txt";
+		const string JobsConfig = StaticConfigDir + "/jobs.txt";
 
 		const string TitleImagesConfig = StaticConfigDir + "/title_screens/images";
 
@@ -363,7 +364,60 @@ namespace TGServerService
 		//public api
 		public IList<JobSetting> Jobs(out string error)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				IList<string> lines;
+				lock (configLock)
+				{
+					lines = File.ReadAllLines(JobsConfig);
+				}
+				
+				IList<JobSetting> results = new List<JobSetting>();
+
+				//TODO
+
+				foreach (var L in lines)
+				{
+					var trimmed = L.Trim();
+					if (trimmed.Length == 0 || trimmed[0] == '#')
+						continue;
+
+					var splits = trimmed.Split('=');
+
+					if (splits.Length < 2)
+						continue;
+
+					var countSplits = splits[1].Split(',');
+					if (countSplits.Length < 2)
+						continue;
+
+					int total, spawn;
+					try
+					{
+						total = Convert.ToInt32(countSplits[0]);
+						spawn = Convert.ToInt32(countSplits[1]);
+					}
+					catch
+					{
+						continue;
+					}
+
+					results.Add(new JobSetting()
+					{
+						Name = splits[0],
+						TotalPositions = total,
+						SpawnPositions = spawn,
+					});
+				}
+
+				error = null;
+				return results;
+			}
+			catch (Exception e)
+			{
+				error = e.ToString();
+				return null;
+			}
 		}
 
 		//public api
@@ -729,7 +783,29 @@ namespace TGServerService
 		//public api
 		public string SetJob(JobSetting job)
 		{
-			throw new NotImplementedException();
+			try
+			{
+				var entries = Jobs(out string error);
+				if (entries == null)
+					return error;
+
+				var lines = new List<string>();
+				foreach (var J in entries)
+				{
+					var thingToUse = J.Name == job.Name ? job : J;
+					lines.Add(String.Format("{0}={1},{2}", thingToUse.Name, thingToUse.TotalPositions, thingToUse.SpawnPositions));
+				}
+
+				lock (configLock)
+				{
+					File.WriteAllLines(JobsConfig, lines);
+				}
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
 		}
 
 		//public api

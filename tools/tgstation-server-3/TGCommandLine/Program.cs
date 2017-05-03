@@ -18,16 +18,16 @@ namespace TGCommandLine
 			BadCommand = 2,
 			ServerError = 3,
 		}
+
+
+		//Use this proc for one off testing
 		static bool SpecialTactics()
 		{
 			return false;
 #pragma warning disable CS0162 // Unreachable code detected
 
 
-			//Use this proc for one off testing
-
-
-			var result = Server.GetComponent<ITGConfig>().MapSettings(out string error);
+			var result = Server.GetComponent<ITGConfig>().Jobs(out string error);
 			return true;
 
 
