@@ -31,6 +31,7 @@ namespace TGCommandLine
 							PrintHelp();
 						else {
 							Console.WriteLine(Keyword + " commands:");
+							Console.WriteLine();
 							foreach (var c in Children)
 								c.PrintHelp();
 						}

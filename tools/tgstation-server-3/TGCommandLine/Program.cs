@@ -72,39 +72,6 @@ namespace TGCommandLine
 			}
 			return result;
 		}
-		static ExitCode ConfigCommand(string command, string param)
-		{
-			var Config = Server.GetComponent<ITGConfig>();
-			switch (command)
-			{
-				case "move-server":
-					if(param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					var res = Config.MoveServer(param);
-					Console.WriteLine(res ?? "Success!");
-					if (res != null)
-						return ExitCode.ServerError;
-					break;
-				case "server-dir":
-					Console.WriteLine(Config.ServerDirectory());
-					break;
-				case "?":
-				case "help":
-					Console.WriteLine("Config commands:");
-					Console.WriteLine();
-					Console.WriteLine("move-server <new-path>\t-\tMove the server installation (BYOND, Repo, Game) to a new location. Nothing else may be running for this task to complete");
-					Console.WriteLine("server-dir\t-\tPrint the directory the server is installed in");
-					break;
-				default:
-					Console.WriteLine("Invalid command: " + command);
-					Console.WriteLine("Type 'config help' for available commands.");
-					return ExitCode.BadCommand;
-			}
-			return ExitCode.Normal;
-		}
 		static ExitCode DDCommand(string command, string param)
 		{
 			var DD = Server.GetComponent<ITGDreamDaemon>();
