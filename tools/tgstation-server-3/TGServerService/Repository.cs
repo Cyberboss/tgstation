@@ -407,17 +407,23 @@ namespace TGServerService
 
 					var Refspec = new List<string>();
 					var PRBranchName = String.Format("pr-{0}", PRNumber);
+					var LocalBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
 					Refspec.Add(String.Format("pull/{0}/head:{1}", PRNumber, PRBranchName));
 					var logMessage = "";
-					var fo = new FetchOptions() { OnTransferProgress = HandleTransferProgress };
+					var fo = new FetchOptions() { OnTransferProgress = HandleTransferProgress, Prune = true };
+
+					var branch = Repo.Branches[LocalBranchName];
+					if(branch != null)
+						//Need to delete the branch first in case of rebase
+						Repo.Branches.Remove(branch);
+
 
 					Commands.Fetch(Repo, "origin", Refspec, fo, logMessage);  //shitty api has no failure state for this
 
 					var Config = Properties.Settings.Default;
 
-					PRBranchName = String.Format("pull/{0}/headrefs/heads/{1}", PRNumber, PRBranchName);
 
-					var branch = Repo.Branches[PRBranchName];
+					branch = Repo.Branches[LocalBranchName];
 					if (branch == null)
 					{
 						SendMessage("REPO: PR could not be fetched. Does it exist?");
@@ -425,7 +431,7 @@ namespace TGServerService
 					}
 
 					//so we'll know if this fails
-					var Result = MergeBranch(PRBranchName);
+					var Result = MergeBranch(LocalBranchName);
 
 					if (Result == null)
 					{
