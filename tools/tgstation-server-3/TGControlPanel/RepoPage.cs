@@ -8,7 +8,6 @@ namespace TGControlPanel
 {
 	partial class Main
 	{
-
 		enum RepoAction {
 			Clone,
 			Checkout,
@@ -123,7 +122,10 @@ namespace TGControlPanel
 		{
 			var val = e.ProgressPercentage;
 			if (val < 0)
+			{
+				RepoProgressBar.Style = ProgressBarStyle.Marquee;
 				return;
+			}
 			RepoProgressBar.Style = ProgressBarStyle.Blocks;
 			RepoProgressBar.Value = val;
 		}

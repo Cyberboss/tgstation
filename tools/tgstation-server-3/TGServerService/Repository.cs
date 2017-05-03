@@ -289,7 +289,12 @@ namespace TGServerService
 		//Merges a thing into HEAD, not even necessarily a branch
 		string MergeBranch(string branchname)
 		{
+			var mo = new MergeOptions()
+			{
+				OnCheckoutProgress = HandleCheckoutProgress
+			};
 			var Result = Repo.Merge(branchname, MakeSig());
+			currentProgress = -1;
 			switch (Result.Status)
 			{
 				case MergeStatus.Conflicts:
@@ -419,6 +424,8 @@ namespace TGServerService
 
 
 					Commands.Fetch(Repo, "origin", Refspec, fo, logMessage);  //shitty api has no failure state for this
+
+					currentProgress = -1;
 
 					var Config = Properties.Settings.Default;
 
