@@ -278,6 +278,10 @@
 	if(!user.Adjacent(src)) //no TK museology
 		return
 
+	if(!(user.mind && user.mind.assigned_role == "Curator"))
+		to_chat(user, "<span class='danger'>You're not sure how to work this. Maybe you should ask the curator for help.</span>")
+		return
+
 	if(!added_roundstart)
 		to_chat(user, "You've already put something new in this case.")
 		return
@@ -316,6 +320,7 @@
 				to_chat(user, "You are too far to set the plaque's text.")
 
 		SSpersistence.SaveTrophy(src)
+		return TRUE
 
 	else
 		to_chat(user, "<span class='warning'>\The [W] is stuck to your hand, you can't put it in the [src.name]!</span>")
