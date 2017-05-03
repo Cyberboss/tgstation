@@ -9,136 +9,47 @@ namespace TGCommandLine
 	//if i was a smart man i would've made this modular before it got out of hand
 	//but i didn't
 	//help i cant stop
+	enum ExitCode
+	{
+		Normal = 0,
+		ConnectionError = 1,
+		BadCommand = 2,
+		ServerError = 3,
+	}
+
+	abstract class Command
+	{
+		public string Keyword { get; protected set; }
+		public Command[] Children { get; protected set; } = { };
+		public int RequiredParameters { get; protected set; }
+		public abstract ExitCode Run(IList<string> parameters);
+		public virtual void PrintHelp()
+		{
+			foreach (var c in Children)
+				c.PrintHelp();
+		}
+	}
+
 	class Program
 	{
-		enum ExitCode
+		static ExitCode RunCommandLine(IList<string> argsAsList)
 		{
-			Normal = 0,
-			ConnectionError = 1,
-			BadCommand = 2,
-			ServerError = 3,
-		}
-
-
-		//Use this proc for one off testing
-		static bool SpecialTactics()
-		{
-			return false;
-#pragma warning disable CS0162 // Unreachable code detected
-
-
-			var result = Server.GetComponent<ITGConfig>().Jobs(out string error);
-			return true;
-
-
-
-
-
-#pragma warning restore CS0162 // Unreachable code detected
-		}
-		static ExitCode RunCommandLine(string[] args)
-		{
-			if (SpecialTactics())
-				return ExitCode.Normal;
-
-			string command = null, param1 = null, param2 = null;
-			if (args.Length > 0)
-				command = args[0].Trim().ToLower();
-
-			if (args.Length > 1)
-				param1 = args[1].Trim().ToLower();
-
-			if (args.Length > 2)
-				param2 = args[2].Trim();
-
 			var res = Server.VerifyConnection();
 			if (res != null)
 			{
 				Console.WriteLine("Unable to connect to service!");
 				return ExitCode.ConnectionError;
 			}
-
-			try
-			{
-				switch (command)
-				{
-					case "irc":
-						return IRCCommand(param1, param2);
-					case "byond":
-						return BYONDCommand(param1, param2);
-					case "dm":
-						return DMCommand(param1, param2);
-					case "dd":
-						return DDCommand(param1, param2);
-					case "repo":
-						return RepoCommand(param1, param2);
-					case "config":
-						return ConfigCommand(param1, param2);
-					case "update":
-						if(param1 == null)
-						{
-							Console.WriteLine("Missing parameter!");
-							return ExitCode.BadCommand;
-						}
-						var gen_cl = param2 != null && param2.ToLower() == "--cl";
-						TGRepoUpdateMethod method;
-						switch (param1.ToLower())
-						{
-							case "hard":
-								method = TGRepoUpdateMethod.Hard;
-								break;
-							case "merge":
-								method = TGRepoUpdateMethod.Merge;
-								break;
-							default:
-								Console.WriteLine("Please specify hard or merge");
-								return ExitCode.BadCommand;
-						}
-						var result = Server.GetComponent<ITGServerUpdater>().UpdateServer(method, gen_cl);
-						Console.WriteLine(result ?? "Success!");
-						if (result != null)
-							return ExitCode.ServerError;
-						break;
-					case "testmerge":
-						if (param1 == null)
-						{
-							Console.WriteLine("Missing parameter!");
-							return ExitCode.BadCommand;
-						}
-						ushort tm;
-						try {
-							tm = Convert.ToUInt16(param1);
-							if (tm == 0)
-								throw new Exception();
-						}
-						catch
-						{
-							Console.WriteLine("Invalid tesmerge #: " + param1);
-							return ExitCode.BadCommand;
-						}
-						result = Server.GetComponent<ITGServerUpdater>().UpdateServer(TGRepoUpdateMethod.None, false, tm);
-						Console.WriteLine(result ?? "Success!");
-						if(result != null)
-							return ExitCode.ServerError;
-						break;
-					case "?":
-					case "help":
-						ConsoleHelp();
-						break;
-					default:
-						Console.WriteLine("Invalid command: " + command);
-						Console.WriteLine("Type '?' or 'help' for available commands.");
-						return ExitCode.BadCommand;
-				}
+			try {
+				return new RootCommand().Run(argsAsList);
 			}
 			catch
 			{
-				Console.WriteLine("Connection interrupted!");
+				Console.WriteLine("Service connection interrupted!");
 				return ExitCode.ConnectionError;
-			}
-			return ExitCode.Normal;
+			};
 		}
-		static string ReadLineSecure()
+		public static string ReadLineSecure()
 		{
 			string result = "";
 			while (true)
@@ -163,127 +74,6 @@ namespace TGCommandLine
 				}
 			}
 			return result;
-		}
-		static ExitCode RepoCommand(string command, string param)
-		{
-			var Repo = Server.GetComponent<ITGRepository>();
-			switch (command)
-			{
-				case "setup":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					var splits = param.Split(';');
-					if (!Repo.Setup(splits[0], splits.Length > 1 ? splits[1] : "master"))
-					{
-						Console.WriteLine("Error: Repo is busy!");
-						return ExitCode.ServerError;
-					}
-					Console.Write("Setting up repo. This will take a while...");
-					break;
-				case "update":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					string res;
-					switch (param.ToLower())
-					{
-						case "hard":
-							res = Repo.Update(true);
-							break;
-						case "merge":
-							res = Repo.Update(false);
-							break;
-						default:
-							Console.WriteLine("Invalid parameter: " + param);
-							return ExitCode.BadCommand;
-					}
-					Console.WriteLine(res ?? "Success");
-					if (res != null)
-						return ExitCode.ServerError;
-					break;
-				case "gen-changelog":
-					var result = Repo.GenerateChangelog(out string error);
-					Console.WriteLine(error ?? "Success!");
-					if (result != null)
-						Console.WriteLine(result);
-					if (error != null)
-						return ExitCode.ServerError;
-					break;
-				case "commit":
-					if(param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					res = Repo.Commit(param);
-					Console.WriteLine(res ?? "Success!");
-					if (res != null)
-						return ExitCode.ServerError;
-					break;
-				case "push":
-					res = Repo.Push();
-					Console.WriteLine(res ?? "Success!");
-					if (res != null)
-						return ExitCode.ServerError;
-					break;
-				case "set-email":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					Repo.SetCommitterEmail(param);
-					break;
-				case "set-name":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					Repo.SetCommitterName(param);
-					break;
-				case "set-credentials":
-					Console.WriteLine("Enter username:");
-					var user = Console.ReadLine();
-					Console.WriteLine("Enter password:");
-					var pass = ReadLineSecure();
-					Repo.SetCredentials(user, pass);
-					break;
-				case "python-path":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					var found = Repo.SetPythonPath(param);
-					Console.WriteLine(found ? "Success!" : "Error: Directory does not exist!");
-					if (!found)
-						return ExitCode.ServerError;
-					break;
-				case "?":
-				case "help":
-					Console.WriteLine("Repo commands:");
-					Console.WriteLine();
-					Console.WriteLine("setup <git-url>[;branchname]\t-\tClean up everything and clones the repo at git-url with optional branch name");
-					Console.WriteLine("update <hard|merge>\t-\tUpdates the current branch the repo is on either via a merge or hard reset");
-					Console.WriteLine("gen-changelog\t-\tCompiles the game changelog");
-					Console.WriteLine("commit <message>\t-\tCommits all current changes to the repository using the configured identity");
-					Console.WriteLine("push\t-\tPushes commits to the origin branch using the configured credentials");
-					Console.WriteLine("set-email <e-mail>\t-\tSet the e-mail used for commits");
-					Console.WriteLine("set-name <name>\t-\tSet the name used for commits");
-					Console.WriteLine("set-credentials\t-\tSet the credentials used for pushing commits");
-					break;
-				default:
-					Console.WriteLine("Invalid command: " + command);
-					Console.WriteLine("Type 'repo help' for available commands.");
-					return ExitCode.BadCommand;
-			}
-			return ExitCode.Normal;
 		}
 		static ExitCode ConfigCommand(string command, string param)
 		{
@@ -647,55 +437,30 @@ namespace TGCommandLine
 			}
 			return ExitCode.Normal;
 		}
-
-		static void ConsoleHelp()
-		{
-			Console.WriteLine("/tg/station 13 Server Control Panel:");
-			Console.WriteLine("Avaiable commands (type 'help' after command for more info):");
-			Console.WriteLine();
-			Console.WriteLine("irc\t-\tManage the IRC user");
-			Console.WriteLine("repo\t-\tManage the git repository"); ;
-			Console.WriteLine("byond\t-\tManage BYOND installation");
-			Console.WriteLine("dm\t-\tManage compiling the server");
-			Console.WriteLine("dd\t-\tManage DreamDaemon");
-			Console.WriteLine("config\t-\tManage settings");
-			Console.WriteLine("update <merge|hard> [--cl]\t-\tUpdates the server fully, optionally generating and pushing a changelog");
-			Console.WriteLine("testmerge <pull request #>\t-\tMerges the specified pull request and updates the server");
-		}
-
+		
 		static int Main(string[] args)
 		{
-			if(args.Length != 0)
-				return (int)RunCommandLine(args);
+			if (args.Length != 0)
+				return (int)RunCommandLine(new List<string>(args));
 
 			//interactive mode
-			do
+			while (true)
 			{
-				try
+				Console.Write("Enter command: ");
+				var NextCommand = Console.ReadLine();
+				switch (NextCommand.ToLower())
 				{
-					Console.Write("Enter command: ");
-					var NextCommand = Console.ReadLine();
-					switch (NextCommand.ToLower())
-					{
-						case "quit":
-						case "exit":
-							return (int)ExitCode.Normal;
-						default:
-							var formattedCommand = new List<string>(NextCommand.Split(' '));
-							formattedCommand = formattedCommand.Select(x => x.Trim()).ToList();
-							formattedCommand.Remove("");
-							RunCommandLine(formattedCommand.ToArray());
-							break;
-					}
-				}
-				catch
-				{
-					break;
+					case "quit":
+					case "exit":
+						return (int)ExitCode.Normal;
+					default:
+						var formattedCommand = new List<string>(NextCommand.Split(' '));
+						formattedCommand = formattedCommand.Select(x => x.Trim()).ToList();
+						formattedCommand.Remove("");
+						RunCommandLine(formattedCommand);
+						break;
 				}
 			}
-			while (Server.VerifyConnection() == null);
-			Console.WriteLine("Connection to service interrupted!");
-			return (int)ExitCode.ConnectionError;
 		}
 	}
 }
