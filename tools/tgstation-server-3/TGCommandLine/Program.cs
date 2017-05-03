@@ -72,67 +72,6 @@ namespace TGCommandLine
 			}
 			return result;
 		}
-		static ExitCode DDCommand(string command, string param)
-		{
-			var DD = Server.GetComponent<ITGDreamDaemon>();
-
-			switch (command)
-			{
-				case "start":
-					var res = DD.Start();
-					if (res != null)
-					{
-						Console.WriteLine("Failed to start: " + res);
-						return ExitCode.ServerError;
-					}
-					break;
-				case "stop":
-					DD.Stop();
-					break;
-				case "restart":
-					res = DD.Restart();
-					if (res != null)
-					{
-						Console.WriteLine("Failed to restart: " + res);
-						return ExitCode.ServerError;
-					}
-					break;
-				case "autostart":
-					if (param == null)
-					{
-						Console.WriteLine("Missing parameter!");
-						return ExitCode.BadCommand;
-					}
-					switch (param.ToLower()) {
-						case "on":
-							DD.SetAutostart(true);
-							break;
-						case "off":
-							DD.SetAutostart(false);
-							break;
-						case "check":
-							Console.WriteLine(DD.Autostart() ? "Autostart is on" : "Autostart is off");
-							break;
-						default:
-							Console.WriteLine("Please enter on, off, or check");
-							return ExitCode.BadCommand;
-					}
-					break;
-				case "?":
-				case "help":
-					Console.WriteLine("DD commands:");
-					Console.WriteLine();
-					Console.WriteLine("start\t-\tStarts the server and watchdog");
-					Console.WriteLine("restart\t-\tRestarts the server and watchdog");
-					Console.WriteLine("autostart <on|off|check>\t-\tChange or check autostarting of the game server");
-					break;
-				default:
-					Console.WriteLine("Invalid command: " + command);
-					Console.WriteLine("Type 'dd help' for available commands.");
-					return ExitCode.BadCommand;
-			}
-			return ExitCode.Normal;
-		}
 
 		static ExitCode IRCCommand(string command, string param)
 		{
