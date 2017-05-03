@@ -409,8 +409,9 @@ namespace TGServerService
 					var PRBranchName = String.Format("pr-{0}", PRNumber);
 					Refspec.Add(String.Format("pull/{0}/head:{1}", PRNumber, PRBranchName));
 					var logMessage = "";
+					var fo = new FetchOptions() { OnTransferProgress = HandleTransferProgress };
 
-					Commands.Fetch(Repo, "origin", Refspec, null, logMessage);  //shitty api has no failure state for this
+					Commands.Fetch(Repo, "origin", Refspec, fo, logMessage);  //shitty api has no failure state for this
 
 					var Config = Properties.Settings.Default;
 
