@@ -123,7 +123,6 @@ namespace TGCommandLine
 					Console.WriteLine("DD commands:");
 					Console.WriteLine();
 					Console.WriteLine("start\t-\tStarts the server and watchdog");
-					Console.WriteLine("stop\t-\tStops the server and watchdog");
 					Console.WriteLine("restart\t-\tRestarts the server and watchdog");
 					Console.WriteLine("autostart <on|off|check>\t-\tChange or check autostarting of the game server");
 					break;

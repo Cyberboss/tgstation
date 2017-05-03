@@ -95,7 +95,7 @@ namespace TGCommandLine
 					break;
 				default:
 					Console.WriteLine("Seizing the means of production (This is an error).");
-					break;
+					return ExitCode.ServerError;
 			}		
 			return ExitCode.Normal;
 		}
