@@ -72,7 +72,6 @@
 	if(config.irc_announce_new_game)
 		IRCBroadcast("New round starting on [SSmapping.config.map_name]!")
 
-#define IRC_STATUS_THROTTLE 50
 /world/Topic(T, addr, master, key)
 	if(config && config.log_world_topic)
 		GLOB.world_game_log << "TOPIC: \"[T]\", from:[addr], master:[master], key:[key]"

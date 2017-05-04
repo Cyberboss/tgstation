@@ -64,7 +64,7 @@ GLOBAL_PROTECT(reboot_mode)
 			var/list/adm = get_admin_counts()
 			var/list/allmins = adm["total"]
 			var/status = "Admins: [allmins.len] (Active: [english_list(adm["present"])] AFK: [english_list(adm["afk"])] Stealth: [english_list(adm["stealth"])] Skipped: [english_list(adm["noflags"])]). "
-			status += "Players: [GLOB.clients.len] (Active: [get_active_player_count(0,1,0)]). Mode: [SSticker.mode.name]."
+			status += "Players: [GLOB.clients.len] (Active: [get_active_player_count(0,1,0)]). Mode: [SSticker.mode ? SSticker.mode.name : "Not started"]."
 			return status
 		else
 			return "Unknown command: [command]"

@@ -61,7 +61,7 @@ namespace TGServerService
 			switch (command)
 			{
 				case "check":
-					return StatusString();
+					return HasIRCAdmin(speaker, channel) ?? StatusString();
 				case "byond":
 					if (parameters.Count > 0 && parameters[0].ToLower() == "--staged")
 						return GetVersion(true) ?? "None";
