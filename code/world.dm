@@ -153,24 +153,6 @@
 			if(input["crossmessage"] == "News_Report")
 				minor_announce(input["message"], "Breaking Update From [input["message_sender"]]")
 
-	else if("adminmsg" in input)
-		if(!key_valid)
-			return "Bad Key"
-		else
-			return IrcPm(input["adminmsg"],input["msg"],input["sender"])
-
-	else if("namecheck" in input)
-		if(!key_valid)
-			return "Bad Key"
-		else
-			log_admin("IRC Name Check: [input["sender"]] on [input["namecheck"]]")
-			message_admins("IRC name checking on [input["namecheck"]] from [input["sender"]]")
-			return keywords_lookup(input["namecheck"],1)
-	else if("adminwho" in input)
-		if(!key_valid)
-			return "Bad Key"
-		else
-			return ircadminwho()
 	else if("server_hop" in input)
 		show_server_hop_transfer_screen(input["server_hop"])
 

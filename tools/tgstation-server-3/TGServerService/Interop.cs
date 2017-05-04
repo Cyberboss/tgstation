@@ -27,7 +27,10 @@ namespace TGServerService
 		const string SCGracefulShutdown = "graceful_shutdown";  //requests that dreamdaemon stops when the round ends
 		const string SCWorldAnnounce = "world_announce";	//sends param 'message' to the world
 		const string SCIRCCheck = "irc_check";  //returns game stats
-		const string SCIRCStatus = "irc_status";
+		const string SCIRCStatus = "irc_status";	//returns admin stats
+		const string SCNameCheck = "namecheck";	//returns keywords lookup
+		const string SCAdminPM = "adminmsg";	//pms a target ckey
+		const string SCAdminWho = "adminwho";	//lists admins
 
 		//raw command string sent here via world.ExportService
 		void HandleCommand(string cmd)
@@ -58,6 +61,16 @@ namespace TGServerService
 					return "Error: Server Offline!";
 				return SendTopic(String.Format("serviceCommsKey={0};command={1}", serviceCommsKey, cmd), currentPort);
 			}
+		}
+
+		string SendPM(string targetCkey, string sender, string message)
+		{
+			return SendCommand(String.Format("{2};target={0};sender={1};message={2}", targetCkey, sender, message, SCAdminPM));
+		}
+
+		string NameCheck(string targetCkey, string sender)
+		{
+			return SendCommand(String.Format("{2};target={0};sender={1}", targetCkey, sender, SCNameCheck));
 		}
 
 		//Fuckery to diddle byond with the right packet to accept us

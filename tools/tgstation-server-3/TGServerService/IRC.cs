@@ -73,6 +73,18 @@ namespace TGServerService
 					return GetVersion(false) ?? "Uninstalled";
 				case "status":
 					return HasIRCAdmin(speaker, channel) ?? SendCommand(SCIRCStatus);
+				case "adminwho":
+					return HasIRCAdmin(speaker, channel) ?? SendCommand(SCAdminWho);
+				case "pm":
+					if (parameters.Count < 2)
+						return "Usage: pm <ckey> <message>";
+					var ckey = parameters[0];
+					parameters.RemoveAt(0);
+					return SendPM(ckey, speaker, String.Join(" ", parameters));
+				case "namecheck":
+					if (parameters.Count < 1)
+						return "Usage: namecheck <target>";
+					return NameCheck(parameters[0], speaker);
 			}
 			return "Unknown command: " + command;
 		}
@@ -248,16 +260,16 @@ namespace TGServerService
 				}
 			}
 		}
-		
+
 		//This is the thread that listens for irc messages
 		void IRCListen()
 		{
-			try
-			{
-				while(Connected())
+			while (Connected())
+				try
+				{
 					irc.Listen();
-			}
-			catch { }
+				}
+				catch { }
 		}
 
 		//public api

@@ -242,20 +242,20 @@
 		else
 			unhandled = TRUE
 	if(!unhandled)
-		return "Ticket could not be found"
+		return "Error: Ticket could not be found"
 
 	var/static/stealthkey
 	var/adminname = config.showircname ? irc_tagged : "Administrator"
 
 	if(!C)
-		return "No client"
+		return "Error: No client"
 
 	if(!stealthkey)
 		stealthkey = GenIrcStealthKey()
 
 	msg = sanitize(copytext(msg,1,MAX_MESSAGE_LEN))
 	if(!msg)
-		return "No message"
+		return "Error: No message"
 
 	message_admins("IRC message from [sender] to [key_name_admin(C)] : [msg]")
 	log_admin_private("IRC PM: [sender] -> [key_name(C)] : [msg]")

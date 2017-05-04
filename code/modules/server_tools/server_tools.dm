@@ -66,6 +66,17 @@ GLOBAL_PROTECT(reboot_mode)
 			var/status = "Admins: [allmins.len] (Active: [english_list(adm["present"])] AFK: [english_list(adm["afk"])] Stealth: [english_list(adm["stealth"])] Skipped: [english_list(adm["noflags"])]). "
 			status += "Players: [GLOB.clients.len] (Active: [get_active_player_count(0,1,0)]). Mode: [SSticker.mode ? SSticker.mode.name : "Not started"]."
 			return status
+
+		if("adminmsg")
+			return IrcPm(params["target"], params["message"], params["sender"])
+
+		if("namecheck")
+			//TODO
+			log_admin("IRC Name Check: [params["sender"]] on [params["target"]]")
+			message_admins("IRC name checking on [params["target"]] from [params["sender"]]")
+			return keywords_lookup(params["target"], 1)
+		if("adminwho")
+			return ircadminwho()
 		else
 			return "Unknown command: [command]"
 
