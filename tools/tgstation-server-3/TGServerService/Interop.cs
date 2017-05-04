@@ -26,7 +26,8 @@ namespace TGServerService
 		const string SCHardReboot = "hard_reboot";  //requests that dreamdaemon restarts when the round ends
 		const string SCGracefulShutdown = "graceful_shutdown";  //requests that dreamdaemon stops when the round ends
 		const string SCWorldAnnounce = "world_announce";	//sends param 'message' to the world
-		const string SCIRCCheck = "irc_check";	//returns game stats
+		const string SCIRCCheck = "irc_check";  //returns game stats
+		const string SCIRCStatus = "irc_status";
 
 		//raw command string sent here via world.ExportService
 		void HandleCommand(string cmd)

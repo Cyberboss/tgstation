@@ -96,16 +96,6 @@
 				n++
 		return n
 
-	else if("ircstatus" in input)
-		if(world.time - last_irc_status < IRC_STATUS_THROTTLE)
-			return
-		var/list/adm = get_admin_counts()
-		var/list/allmins = adm["total"]
-		var/status = "Admins: [allmins.len] (Active: [english_list(adm["present"])] AFK: [english_list(adm["afk"])] Stealth: [english_list(adm["stealth"])] Skipped: [english_list(adm["noflags"])]). "
-		status += "Players: [GLOB.clients.len] (Active: [get_active_player_count(0,1,0)]). Mode: [SSticker.mode.name]."
-		send2irc("Status", status)
-		last_irc_status = world.time
-
 	else if("status" in input)
 		var/list/s = list()
 		s["version"] = GLOB.game_version

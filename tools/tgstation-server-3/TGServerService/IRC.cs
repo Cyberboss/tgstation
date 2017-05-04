@@ -27,6 +27,7 @@ namespace TGServerService
 		{
 			var speaker = e.Data.Nick;
 			var message = e.Data.Message.Trim();
+			var channel = e.Data.Channel;
 			var splits = message.Split(' ');
 			if (splits[0].ToLower() != irc.Nickname.ToLower())
 				return;
@@ -41,17 +42,20 @@ namespace TGServerService
 			var command = asList[0].ToLower();
 			asList.RemoveAt(0);
 
-			SendMessage(IrcCommand(command, speaker, asList));
+			SendMessageDirect(IrcCommand(command, speaker, channel, asList), channel);
 		}
-
-		//TODO!!!
-		bool HasIRCAdmin(string speaker)
+		
+		string HasIRCAdmin(string speaker, string channel)
 		{
-			return speaker.ToLower() == "cyberboss";	//BIG TODO
+			if (speaker.ToLower() != "cyberboss")   //BIG TODO
+				return "You are not authorized to use that command!";
+			if (channel.ToLower() != Properties.Settings.Default.IRCAdminChannel.ToLower())
+				return "Use this command in the admin channel!";
+			return null;
 		}
 
 		//Do stuff with words that were spoken to us
-		string IrcCommand(string command, string speaker, IList<string> parameters)
+		string IrcCommand(string command, string speaker, string channel, IList<string> parameters)
 		{
 			TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Command from {0}: {1} {2}", speaker, command, String.Join(" ", parameters)));
 			switch (command)
@@ -62,6 +66,8 @@ namespace TGServerService
 					if (parameters.Count > 0 && parameters[0].ToLower() == "--staged")
 						return GetVersion(true) ?? "None";
 					return GetVersion(false) ?? "Uninstalled";
+				case "status":
+					return HasIRCAdmin(speaker, channel) ?? SendCommand(SCIRCStatus);
 			}
 			return "Unknown command: " + command;
 		}
@@ -265,6 +271,22 @@ namespace TGServerService
 					foreach(var I in Config.IRCChannels)
 						irc.SendMessage(SendType.Message, I, message);
 				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send{0}: {1}", adminOnly ? " (ADMIN)" : "", message));
+				return null;
+			}
+			catch (Exception e)
+			{
+				return e.ToString();
+			}
+		}
+
+		string SendMessageDirect(string message, string channel)
+		{
+			try
+			{
+				if (!Connected())
+					return "Disconnected.";
+				irc.SendMessage(SendType.Message, channel, message);
+				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send ({0}): {1}", channel, message));
 				return null;
 			}
 			catch (Exception e)
