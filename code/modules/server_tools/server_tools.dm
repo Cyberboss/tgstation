@@ -58,13 +58,13 @@ GLOBAL_PROTECT(reboot_mode)
 			last_irc_status = time
 			return "[GLOB.clients.len] players on [SSmapping.config.map_name], Mode: [GLOB.master_mode]; Round [SSticker.HasRoundStarted() ? (SSticker.IsRoundInProgress() ? "Active" : "Finishing") : "Starting"] -- [config.server ? config.server : "byond://[address]:[port]"]" 
 		if("irc_status")
+			last_irc_status = time
 			if(time - last_irc_status < IRC_STATUS_THROTTLE)
 				return
 			var/list/adm = get_admin_counts()
 			var/list/allmins = adm["total"]
 			var/status = "Admins: [allmins.len] (Active: [english_list(adm["present"])] AFK: [english_list(adm["afk"])] Stealth: [english_list(adm["stealth"])] Skipped: [english_list(adm["noflags"])]). "
 			status += "Players: [GLOB.clients.len] (Active: [get_active_player_count(0,1,0)]). Mode: [SSticker.mode.name]."
-			last_irc_status = time
 			return status
 		else
 			return "Unknown command: [command]"

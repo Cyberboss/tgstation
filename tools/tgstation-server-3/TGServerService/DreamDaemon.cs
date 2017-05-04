@@ -24,6 +24,7 @@ namespace TGServerService
 
 		object restartLock = new object();
 		bool RestartInProgress = false;
+		bool AwaitingShutdown = false;
 
 		//Only need 1 proc instance
 		void InitDreamDaemon()
@@ -68,6 +69,10 @@ namespace TGServerService
 		//public api
 		public void RequestStop()
 		{
+			lock (watchdogLock)
+			{
+				AwaitingShutdown = true;
+			}
 			SendCommand(SCGracefulShutdown);
 		}
 
@@ -147,6 +152,9 @@ namespace TGServerService
 						currentPort = 0;
 						Proc.Close();
 
+						if (AwaitingShutdown)
+							return;
+
 						if ((DateTime.Now - starttime).Seconds < DDBadStartTime)
 						{
 							if (retries == 0)
@@ -174,8 +182,6 @@ namespace TGServerService
 			}
 			catch(ThreadAbortException)
 			{
-				if(!RestartInProgress)
-					SendMessage("DD: Watchdog exiting...");
 				//No Mr bond, I expect you to die
 				try
 				{
@@ -184,7 +190,6 @@ namespace TGServerService
 				}
 				catch
 				{ }
-				return;
 			}
 			catch (Exception e)
 			{
@@ -197,8 +202,11 @@ namespace TGServerService
 				{
 					currentStatus = TGDreamDaemonStatus.Offline;
 					currentPort = 0;
+					AwaitingShutdown = false;
 				}
 			}
+			if (!RestartInProgress)
+				SendMessage("DD: Watchdog exiting...");
 		}
 
 		//public api
