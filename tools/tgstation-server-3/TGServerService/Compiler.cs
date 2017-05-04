@@ -304,6 +304,12 @@ namespace TGServerService
 		{
 			try
 			{
+				if (GetVersion(false) == null)
+				{
+					lastCompilerError = "BYOND not installed!";
+					compilerCurrentStatus = TGCompilerStatus.Initialized;
+					return;
+				}
 				SendMessage("DM: Updating from repository...");
 				var resurrectee = GetStagingDir();
 
@@ -413,7 +419,7 @@ namespace TGServerService
 		{
 			lock (CompilerLock)
 			{
-				if (GetVersion(false) == null || compilerCurrentStatus != TGCompilerStatus.Initialized)
+				if (compilerCurrentStatus != TGCompilerStatus.Initialized)
 					return false;
 				lastCompilerError = null;
 				compilerCurrentStatus = TGCompilerStatus.Compiling;

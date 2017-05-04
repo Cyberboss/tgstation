@@ -66,6 +66,14 @@
             this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.ServerPanel = new System.Windows.Forms.TabPage();
+            this.ServerGRestartButton = new System.Windows.Forms.Button();
+            this.ServerGStopButton = new System.Windows.Forms.Button();
+            this.ServerRestartButton = new System.Windows.Forms.Button();
+            this.ServerStopButton = new System.Windows.Forms.Button();
+            this.ServerStartButton = new System.Windows.Forms.Button();
+            this.AutostartCheckbox = new System.Windows.Forms.CheckBox();
+            this.CompilerStatusLabel = new System.Windows.Forms.Label();
+            this.CompilerLabel = new System.Windows.Forms.Label();
             this.compileButton = new System.Windows.Forms.Button();
             this.initializeButton = new System.Windows.Forms.Button();
             this.compilerProgressBar = new System.Windows.Forms.ProgressBar();
@@ -76,6 +84,9 @@
             this.ConfigPanel = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
+            this.ServerTimer = new System.Windows.Forms.Timer(this.components);
+            this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
+            this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -524,6 +535,14 @@
             // ServerPanel
             // 
             this.ServerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ServerPanel.Controls.Add(this.ServerGRestartButton);
+            this.ServerPanel.Controls.Add(this.ServerGStopButton);
+            this.ServerPanel.Controls.Add(this.ServerRestartButton);
+            this.ServerPanel.Controls.Add(this.ServerStopButton);
+            this.ServerPanel.Controls.Add(this.ServerStartButton);
+            this.ServerPanel.Controls.Add(this.AutostartCheckbox);
+            this.ServerPanel.Controls.Add(this.CompilerStatusLabel);
+            this.ServerPanel.Controls.Add(this.CompilerLabel);
             this.ServerPanel.Controls.Add(this.compileButton);
             this.ServerPanel.Controls.Add(this.initializeButton);
             this.ServerPanel.Controls.Add(this.compilerProgressBar);
@@ -536,24 +555,113 @@
             this.ServerPanel.TabIndex = 2;
             this.ServerPanel.Text = "Server";
             // 
+            // ServerGRestartButton
+            // 
+            this.ServerGRestartButton.Location = new System.Drawing.Point(513, 54);
+            this.ServerGRestartButton.Name = "ServerGRestartButton";
+            this.ServerGRestartButton.Size = new System.Drawing.Size(118, 28);
+            this.ServerGRestartButton.TabIndex = 20;
+            this.ServerGRestartButton.Text = "Graceful Restart";
+            this.ServerGRestartButton.UseVisualStyleBackColor = true;
+            this.ServerGRestartButton.Click += new System.EventHandler(this.ServerGRestartButton_Click);
+            // 
+            // ServerGStopButton
+            // 
+            this.ServerGStopButton.Location = new System.Drawing.Point(389, 54);
+            this.ServerGStopButton.Name = "ServerGStopButton";
+            this.ServerGStopButton.Size = new System.Drawing.Size(118, 28);
+            this.ServerGStopButton.TabIndex = 19;
+            this.ServerGStopButton.Text = "Graceful Stop";
+            this.ServerGStopButton.UseVisualStyleBackColor = true;
+            this.ServerGStopButton.Click += new System.EventHandler(this.ServerGStopButton_Click);
+            // 
+            // ServerRestartButton
+            // 
+            this.ServerRestartButton.Location = new System.Drawing.Point(265, 54);
+            this.ServerRestartButton.Name = "ServerRestartButton";
+            this.ServerRestartButton.Size = new System.Drawing.Size(118, 28);
+            this.ServerRestartButton.TabIndex = 18;
+            this.ServerRestartButton.Text = "Restart";
+            this.ServerRestartButton.UseVisualStyleBackColor = true;
+            this.ServerRestartButton.Click += new System.EventHandler(this.ServerRestartButton_Click);
+            // 
+            // ServerStopButton
+            // 
+            this.ServerStopButton.Location = new System.Drawing.Point(142, 54);
+            this.ServerStopButton.Name = "ServerStopButton";
+            this.ServerStopButton.Size = new System.Drawing.Size(118, 28);
+            this.ServerStopButton.TabIndex = 17;
+            this.ServerStopButton.Text = "Stop";
+            this.ServerStopButton.UseVisualStyleBackColor = true;
+            this.ServerStopButton.Click += new System.EventHandler(this.ServerStopButton_Click);
+            // 
+            // ServerStartButton
+            // 
+            this.ServerStartButton.Location = new System.Drawing.Point(18, 54);
+            this.ServerStartButton.Name = "ServerStartButton";
+            this.ServerStartButton.Size = new System.Drawing.Size(118, 28);
+            this.ServerStartButton.TabIndex = 16;
+            this.ServerStartButton.Text = "Start";
+            this.ServerStartButton.UseVisualStyleBackColor = true;
+            this.ServerStartButton.Click += new System.EventHandler(this.ServerStartButton_Click);
+            // 
+            // AutostartCheckbox
+            // 
+            this.AutostartCheckbox.AutoSize = true;
+            this.AutostartCheckbox.Font = new System.Drawing.Font("Verdana", 12F);
+            this.AutostartCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.AutostartCheckbox.Location = new System.Drawing.Point(18, 101);
+            this.AutostartCheckbox.Name = "AutostartCheckbox";
+            this.AutostartCheckbox.Size = new System.Drawing.Size(104, 22);
+            this.AutostartCheckbox.TabIndex = 15;
+            this.AutostartCheckbox.Text = "Autostart";
+            this.AutostartCheckbox.UseVisualStyleBackColor = true;
+            this.AutostartCheckbox.CheckedChanged += new System.EventHandler(this.AutostartCheckbox_CheckedChanged);
+            // 
+            // CompilerStatusLabel
+            // 
+            this.CompilerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CompilerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CompilerStatusLabel.Location = new System.Drawing.Point(360, 271);
+            this.CompilerStatusLabel.Name = "CompilerStatusLabel";
+            this.CompilerStatusLabel.Size = new System.Drawing.Size(122, 28);
+            this.CompilerStatusLabel.TabIndex = 14;
+            this.CompilerStatusLabel.Text = "Idle";
+            this.CompilerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CompilerLabel
+            // 
+            this.CompilerLabel.AutoSize = true;
+            this.CompilerLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CompilerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CompilerLabel.Location = new System.Drawing.Point(379, 203);
+            this.CompilerLabel.Name = "CompilerLabel";
+            this.CompilerLabel.Size = new System.Drawing.Size(80, 18);
+            this.CompilerLabel.TabIndex = 13;
+            this.CompilerLabel.Text = "Compiler";
+            this.CompilerLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // compileButton
             // 
-            this.compileButton.Location = new System.Drawing.Point(469, 237);
+            this.compileButton.Enabled = false;
+            this.compileButton.Location = new System.Drawing.Point(456, 240);
             this.compileButton.Name = "compileButton";
             this.compileButton.Size = new System.Drawing.Size(118, 28);
             this.compileButton.TabIndex = 12;
             this.compileButton.Text = "Compile";
             this.compileButton.UseVisualStyleBackColor = true;
+            this.compileButton.Click += new System.EventHandler(this.CompileButton_Click);
             // 
             // initializeButton
             // 
             this.initializeButton.Enabled = false;
-            this.initializeButton.Location = new System.Drawing.Point(263, 237);
+            this.initializeButton.Location = new System.Drawing.Point(265, 240);
             this.initializeButton.Name = "initializeButton";
             this.initializeButton.Size = new System.Drawing.Size(118, 28);
             this.initializeButton.TabIndex = 11;
             this.initializeButton.Text = "Initialize";
             this.initializeButton.UseVisualStyleBackColor = true;
+            this.initializeButton.Click += new System.EventHandler(this.InitializeButton_Click);
             // 
             // compilerProgressBar
             // 
@@ -566,11 +674,11 @@
             // ServerStatusLabel
             // 
             this.ServerStatusLabel.AutoSize = true;
-            this.ServerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ServerStatusLabel.Font = new System.Drawing.Font("Verdana", 10F);
             this.ServerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.ServerStatusLabel.Location = new System.Drawing.Point(146, 17);
+            this.ServerStatusLabel.Location = new System.Drawing.Point(136, 19);
             this.ServerStatusLabel.Name = "ServerStatusLabel";
-            this.ServerStatusLabel.Size = new System.Drawing.Size(82, 18);
+            this.ServerStatusLabel.Size = new System.Drawing.Size(73, 17);
             this.ServerStatusLabel.TabIndex = 9;
             this.ServerStatusLabel.Text = "Unknown";
             this.ServerStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -624,7 +732,23 @@
             // 
             // BYONDTimer
             // 
+            this.BYONDTimer.Interval = 1000;
             this.BYONDTimer.Tick += new System.EventHandler(this.BYONDTimer_Tick);
+            // 
+            // ServerTimer
+            // 
+            this.ServerTimer.Tick += new System.EventHandler(this.ServerTimer_Tick);
+            // 
+            // WorldStatusChecker
+            // 
+            this.WorldStatusChecker.WorkerReportsProgress = true;
+            this.WorldStatusChecker.WorkerSupportsCancellation = true;
+            this.WorldStatusChecker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.WorldStatusChecker_DoWork);
+            // 
+            // WorldStatusTimer
+            // 
+            this.WorldStatusTimer.Interval = 5000;
+            this.WorldStatusTimer.Tick += new System.EventHandler(this.WorldStatusTimer_Tick);
             // 
             // Main
             // 
@@ -700,6 +824,17 @@
 		private System.Windows.Forms.Button initializeButton;
 		private System.Windows.Forms.ProgressBar compilerProgressBar;
 		private System.Windows.Forms.Label ServerStatusLabel;
+		private System.Windows.Forms.Timer ServerTimer;
+		private System.Windows.Forms.Label CompilerLabel;
+		private System.Windows.Forms.Label CompilerStatusLabel;
+		private System.ComponentModel.BackgroundWorker WorldStatusChecker;
+		private System.Windows.Forms.Timer WorldStatusTimer;
+		private System.Windows.Forms.CheckBox AutostartCheckbox;
+		private System.Windows.Forms.Button ServerGRestartButton;
+		private System.Windows.Forms.Button ServerGStopButton;
+		private System.Windows.Forms.Button ServerRestartButton;
+		private System.Windows.Forms.Button ServerStopButton;
+		private System.Windows.Forms.Button ServerStartButton;
 	}
 }
 

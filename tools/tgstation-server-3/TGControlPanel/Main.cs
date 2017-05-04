@@ -11,6 +11,7 @@ namespace TGControlPanel
 			Panels.SelectedIndex += Properties.Settings.Default.LastPageIndex;
 			InitRepoPage();
 			InitBYONDPage();
+			InitServerPage();
 		}
 
 		private void Panels_SelectedIndexChanged(object sender, System.EventArgs e)

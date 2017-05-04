@@ -107,10 +107,10 @@ namespace TGServerService
 				return Start();
 			if (!Monitor.TryEnter(restartLock))
 				return "Restart already in progress";
-			SendMessage("DD: Hard restart triggered");
-			RestartInProgress = true;
 			try
 			{
+				SendMessage("DD: Hard restart triggered");
+				RestartInProgress = true;
 				Stop();
 				var res = Start();
 				if(res != null)
@@ -338,6 +338,21 @@ namespace TGServerService
 		public void SetAutostart(bool on)
 		{
 			Properties.Settings.Default.DDAutoStart = on;
+		}
+
+		public string StatusString()
+		{
+			switch (DaemonStatus())
+			{
+				case TGDreamDaemonStatus.Offline:
+					return "OFFLINE";
+				case TGDreamDaemonStatus.HardRebooting:
+					return "REBOOTING";
+				case TGDreamDaemonStatus.Online:
+					return SendCommand(SCIRCCheck);
+				default:
+					return "NULL AND ERRORS";
+			}
 		}
 	}
 }

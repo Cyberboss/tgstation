@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Web.Security;
+using TGServiceInterface;
 
 namespace TGServerService
 {
@@ -53,6 +53,8 @@ namespace TGServerService
 		{
 			lock (watchdogLock)
 			{
+				if (currentStatus != TGDreamDaemonStatus.Online)
+					return "Error: Server Offline!";
 				return SendTopic(String.Format("serviceCommsKey={0};command={1}", serviceCommsKey, cmd), currentPort);
 			}
 		}

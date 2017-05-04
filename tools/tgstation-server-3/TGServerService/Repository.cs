@@ -171,6 +171,8 @@ namespace TGServerService
 					return false;
 				if (!CompilerIdleNoLock())
 					return false;
+				if (DaemonStatus() != TGDreamDaemonStatus.Offline)
+					return false;
 				RepoBusy = true;
 				new Thread(new ParameterizedThreadStart(Clone))
 				{

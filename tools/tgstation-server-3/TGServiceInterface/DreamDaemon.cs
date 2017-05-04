@@ -43,6 +43,13 @@ namespace TGServiceInterface
 		TGDreamDaemonStatus DaemonStatus();
 
 		/// <summary>
+		/// Returns a human readable string of the current server status
+		/// </summary>
+		/// <returns>A human readable string of the current server status</returns>
+		[OperationContract]
+		string StatusString();
+
+		/// <summary>
 		/// Check if a call to Start will fail
 		/// Of course, be aware of race conditions with other control panels
 		/// </summary>

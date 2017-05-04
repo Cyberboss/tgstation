@@ -57,16 +57,7 @@ namespace TGServerService
 			switch (command)
 			{
 				case "check":
-					switch (DaemonStatus())
-					{
-						case TGDreamDaemonStatus.Offline:
-							return "OFFLINE";
-						case TGDreamDaemonStatus.HardRebooting:
-							return "REBOOTING";
-						case TGDreamDaemonStatus.Online:
-							return SendCommand(SCIRCCheck);
-					}
-					break;
+					return StatusString();
 				case "byond":
 					if (parameters.Count > 0 && parameters[0].ToLower() == "--staged")
 						return GetVersion(true) ?? "None";
