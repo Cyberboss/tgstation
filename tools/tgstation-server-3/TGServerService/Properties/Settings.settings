@@ -74,5 +74,8 @@
     <Setting Name="PythonPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:\Python27</Value>
     </Setting>
+    <Setting Name="IRCAdmins" Type="System.Collections.Specialized.StringCollection" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -47,7 +47,7 @@ namespace TGServerService
 		
 		string HasIRCAdmin(string speaker, string channel)
 		{
-			if (speaker.ToLower() != "cyberboss")   //BIG TODO
+			if (!Properties.Settings.Default.IRCAdmins.Contains(speaker.ToLower()))
 				return "You are not authorized to use that command!";
 			if (channel.ToLower() != Properties.Settings.Default.IRCAdminChannel.ToLower())
 				return "Use this command in the admin channel!";
@@ -228,7 +228,8 @@ namespace TGServerService
 		{
 			try
 			{
-				irc.Listen();
+				while(Connected())
+					irc.Listen();
 			}
 			catch { }
 		}
@@ -279,6 +280,12 @@ namespace TGServerService
 			}
 		}
 
+		/// <summary>
+		/// Send a message to a channel
+		/// </summary>
+		/// <param name="message">The message to send</param>
+		/// <param name="channel">The channel to send to</param>
+		/// <returns></returns>
 		string SendMessageDirect(string message, string channel)
 		{
 			try
@@ -299,6 +306,21 @@ namespace TGServerService
 		public bool Enabled()
 		{
 			return Properties.Settings.Default.IRCEnabled;
+		}
+
+		//public api
+		public string[] ListAdmins()
+		{
+			return CollectionToArray(Properties.Settings.Default.IRCAdmins);
+		}
+
+		//public api
+		public void SetAdmins(string[] admins)
+		{
+			var Config = Properties.Settings.Default;
+			var si = new StringCollection();
+			si.AddRange(admins);
+			Config.IRCAdmins = si;
 		}
 	}
 }

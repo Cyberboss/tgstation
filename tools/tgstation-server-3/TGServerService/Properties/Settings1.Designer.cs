@@ -300,5 +300,16 @@ namespace TGServerService.Properties {
                 this["PythonPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection IRCAdmins {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["IRCAdmins"]));
+            }
+            set {
+                this["IRCAdmins"] = value;
+            }
+        }
     }
 }

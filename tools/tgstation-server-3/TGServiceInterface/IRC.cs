@@ -55,5 +55,19 @@ namespace TGServiceInterface
 		/// <returns>true if the bot is enabled, false otherwise</returns>
 		[OperationContract]
 		bool Enabled();
+
+		/// <summary>
+		/// Print out the users who can use admin restricted commands over IRC from the admin channel
+		/// </summary>
+		/// <returns>A list of irc nicknames</returns>
+		[OperationContract]
+		string[] ListAdmins();
+
+		/// <summary>
+		/// Set the users who can use admin restricted commands over IRC from the admin channel
+		/// </summary>
+		/// <param name="nicknames">The list of irc admin nicknames</param>
+		[OperationContract]
+		void SetAdmins(string[] nicknames);
 	}
 }
