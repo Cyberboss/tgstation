@@ -65,7 +65,7 @@ namespace TGServerService
 
 		string SendPM(string targetCkey, string sender, string message)
 		{
-			return SendCommand(String.Format("{2};target={0};sender={1};message={2}", targetCkey, sender, message, SCAdminPM));
+			return SendCommand(String.Format("{3};target={0};sender={1};message={2}", targetCkey, sender, message, SCAdminPM));
 		}
 
 		string NameCheck(string targetCkey, string sender)
@@ -73,7 +73,7 @@ namespace TGServerService
 			return SendCommand(String.Format("{2};target={0};sender={1}", targetCkey, sender, SCNameCheck));
 		}
 
-		//Fuckery to diddle byond with the right packet to accept us
+		//Fuckery to diddle byond with the right packet to accept our girth
 		string SendTopic(string topicdata, ushort port, bool retry = false)
 		{
 			if (!retry)

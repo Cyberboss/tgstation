@@ -143,9 +143,9 @@
 
 	if(irc)
 		to_chat(src, "<font color='blue'>PM to-<b>Admins</b>: [rawmsg]</font>")
-		admin_ticket_log(src, "<font color='red'>Reply PM from-<b>[key_name(src, TRUE, TRUE)] to <i>IRC</i>: [keywordparsedmsg]</font>")
+		var/datum/ahelp_ticket/AH = admin_ticket_log(src, "<font color='red'>Reply PM from-<b>[key_name(src, TRUE, TRUE)] to <i>IRC</i>: [keywordparsedmsg]</font>")
 		ircreplyamount--
-		send2irc("Reply: [ckey]",rawmsg)
+		send2irc("[AH ? "#[AH.id] " : ""]Reply: [ckey]",rawmsg)
 	else
 		if(recipient.holder)
 			if(holder)	//both are admins
@@ -220,28 +220,30 @@
 
 	var/datum/admin_help/ticket = C ? C.current_ticket : GLOB.ahelp_tickets.CKey2ActiveTicket(target)
 	var/compliant_msg = trim(lowertext(msg))
-	var/unhandled = FALSE
 	var/irc_tagged = "[sender](IRC)"
-	switch(compliant_msg)
-		if("ticket close")
-			if(ticket)
-				ticket.Close(irc_tagged)
-				return "Ticket #[ticket.id] successfully closed"
-		if("ticket resolve")
-			if(ticket)
-				ticket.Resolve(irc_tagged)
-				return "Ticket #[ticket.id] successfully resolved"
-		if("ticket ic")
-			if(ticket)
-				ticket.ICIssue(irc_tagged)
-				return "Ticket #[ticket.id] successfully marked as IC issue"
-		if("ticket reject")
-			if(ticket)
-				ticket.Reject(irc_tagged)
-				return "Ticket #[ticket.id] successfully rejected"
-		else
-			unhandled = TRUE
-	if(!unhandled)
+	var/list/splits = splittext(compliant_msg, " ")
+	if(splits.len && splits[1] == "ticket")
+		if(splits.len < 2)
+			return "Usage: ticket <close|resolve|icissue|reject>"
+		switch(splits[2])
+			if("close")
+				if(ticket)
+					ticket.Close(irc_tagged)
+					return "Ticket #[ticket.id] successfully closed"
+			if("resolve")
+				if(ticket)
+					ticket.Resolve(irc_tagged)
+					return "Ticket #[ticket.id] successfully resolved"
+			if("icissue")
+				if(ticket)
+					ticket.ICIssue(irc_tagged)
+					return "Ticket #[ticket.id] successfully marked as IC issue"
+			if("reject")
+				if(ticket)
+					ticket.Reject(irc_tagged)
+					return "Ticket #[ticket.id] successfully rejected"
+			else
+				return "Usage: ticket <close|resolve|icissue|reject>"
 		return "Error: Ticket could not be found"
 
 	var/static/stealthkey
@@ -272,10 +274,6 @@
 	C << 'sound/effects/adminhelp.ogg'
 
 	C.ircreplyamount = IRCREPLYCOUNT
-
-	return "Message Successful"
-
-
 
 /proc/GenIrcStealthKey()
 	var/num = (rand(0,1000))

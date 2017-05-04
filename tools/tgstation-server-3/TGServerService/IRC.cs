@@ -30,8 +30,19 @@ namespace TGServerService
 			var speaker = e.Data.Nick;
 			var message = e.Data.Message.Trim();
 			var channel = e.Data.Channel;
+
 			var splits = message.Split(' ');
-			if (splits[0].ToLower() != irc.Nickname.ToLower())
+
+			var s0l = splits[0].ToLower();
+
+			if (s0l == "@check")
+				lock (IRCLock)
+				{
+					SendMessageDirect(StatusString(), channel);
+					return;
+				}
+
+			if (s0l != irc.Nickname.ToLower())
 				return;
 			if (splits.Length == 1)
 			{
@@ -66,7 +77,7 @@ namespace TGServerService
 			switch (command)
 			{
 				case "check":
-					return HasIRCAdmin(speaker, channel) ?? StatusString();
+					return StatusString();
 				case "byond":
 					if (parameters.Count > 0 && parameters[0].ToLower() == "--staged")
 						return GetVersion(true) ?? "None";
@@ -75,13 +86,19 @@ namespace TGServerService
 					return HasIRCAdmin(speaker, channel) ?? SendCommand(SCIRCStatus);
 				case "adminwho":
 					return HasIRCAdmin(speaker, channel) ?? SendCommand(SCAdminWho);
-				case "pm":
+				case "ahelp":
+					var res = HasIRCAdmin(speaker, channel);
+					if (res != null)
+						return res;
 					if (parameters.Count < 2)
 						return "Usage: pm <ckey> <message>";
 					var ckey = parameters[0];
 					parameters.RemoveAt(0);
 					return SendPM(ckey, speaker, String.Join(" ", parameters));
 				case "namecheck":
+					res = HasIRCAdmin(speaker, channel);
+					if (res != null)
+						return res;
 					if (parameters.Count < 1)
 						return "Usage: namecheck <target>";
 					return NameCheck(parameters[0], speaker);
@@ -374,7 +391,8 @@ namespace TGServerService
 		public void SetAdmins(string[] admins)
 		{
 			var si = new StringCollection();
-			si.AddRange(admins);
+			foreach (var I in admins)
+				si.Add(I.ToLower().Trim());
 			lock (IRCLock)
 			{
 				Properties.Settings.Default.IRCAdmins = si;
