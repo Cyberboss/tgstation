@@ -76,7 +76,7 @@ namespace TGControlPanel
 				CommitterEmailTitle.Visible = true;
 				RepoCommitterNameTextBox.Visible = true;
 				RepoEmailTextBox.Visible = true;
-				TestMergeButton.Visible = true;
+				MergePRButton.Visible = true;
 				TestMergeListLabel.Visible = true;
 				TestMergeListTitle.Visible = true;
 				UpdateRepoButton.Visible = true;
@@ -190,7 +190,7 @@ namespace TGControlPanel
 			TestMergeListTitle.Visible = false;
 			RepoApplyButton.Visible = false;
 			UpdateRepoButton.Visible = false;
-			TestMergeButton.Visible = false;
+			MergePRButton.Visible = false;
 			CloneRepositoryButton.Visible = false;
 			RemoteNameTitle.Visible = false;
 			RepoRemoteTextBox.Visible = false;

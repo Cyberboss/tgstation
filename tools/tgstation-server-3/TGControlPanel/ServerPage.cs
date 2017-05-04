@@ -1,10 +1,22 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 using TGServiceInterface;
 
 namespace TGControlPanel
 {
 	partial class Main
 	{
+		enum FullUpdateAction
+		{
+			UpdateHard,
+			UpdateMerge,
+			UpdateHardTestmerge,
+			Testmerge,
+		}
+
+		FullUpdateAction fuAction;
+		int testmergePR;
+
 		string DDStatusString = null;
 		void InitServerPage()
 		{
@@ -12,6 +24,17 @@ namespace TGControlPanel
 			ServerTimer.Start();
 			WorldStatusChecker.RunWorkerAsync();
 			WorldStatusChecker.RunWorkerCompleted += WorldStatusChecker_RunWorkerCompleted;
+			FullUpdateWorker.RunWorkerCompleted += FullUpdateWorker_RunWorkerCompleted;
+		}
+
+		private void FullUpdateWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
+		{
+			UpdateHardButton.Enabled = true;
+			UpdateMergeButton.Enabled = true;
+			TestmergeButton.Enabled = true;
+			UpdateTestmergeButton.Enabled = true;
+			LoadServerPage();
+			ServerTimer.Start();
 		}
 
 		private void WorldStatusChecker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
@@ -69,6 +92,38 @@ namespace TGControlPanel
 		private void ServerTimer_Tick(object sender, System.EventArgs e)
 		{
 			LoadServerPage();
+		}
+
+		private void RunServerUpdate(FullUpdateAction fua, int tm = 0)
+		{
+			if (FullUpdateWorker.IsBusy)
+				return;
+			testmergePR = tm;
+			fuAction = fua;
+			initializeButton.Enabled = false;
+			compileButton.Enabled = false;
+			UpdateHardButton.Enabled = false;
+			UpdateMergeButton.Enabled = false;
+			TestmergeButton.Enabled = false;
+			UpdateTestmergeButton.Enabled = false;
+			compilerProgressBar.Style = ProgressBarStyle.Marquee;
+			switch (fuAction)
+			{
+				case FullUpdateAction.Testmerge:
+					CompilerStatusLabel.Text = String.Format("Testmerging pull request #{0}...", testmergePR);
+					break;
+				case FullUpdateAction.UpdateHard:
+					CompilerStatusLabel.Text = String.Format("Updating Server (RESET)...");
+					break;
+				case FullUpdateAction.UpdateMerge:
+					CompilerStatusLabel.Text = String.Format("Updating Server (MERGE)...");
+					break;
+				case FullUpdateAction.UpdateHardTestmerge:
+					CompilerStatusLabel.Text = String.Format("Updating and testmerging pull request #{0}...", testmergePR);
+					break;
+			}
+			ServerTimer.Stop();
+			FullUpdateWorker.RunWorkerAsync();
 		}
 
 		private void InitializeButton_Click(object sender, System.EventArgs e)
@@ -140,6 +195,43 @@ namespace TGControlPanel
 			if (DialogResult == DialogResult.No)
 				return;
 			Server.GetComponent<ITGDreamDaemon>().RequestRestart();
+		}
+		private void FullUpdateWorker_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)
+		{
+			var Updater = Server.GetComponent<ITGServerUpdater>();
+			switch (fuAction)
+			{
+				case FullUpdateAction.Testmerge:
+					Updater.UpdateServer(TGRepoUpdateMethod.None, false, (ushort)ServerTestmergeInput.Value);
+					break;
+				case FullUpdateAction.UpdateHard:
+					Updater.UpdateServer(TGRepoUpdateMethod.Hard, true);
+					break;
+				case FullUpdateAction.UpdateHardTestmerge:
+					Updater.UpdateServer(TGRepoUpdateMethod.None, true, (ushort)ServerTestmergeInput.Value);
+					break;
+				case FullUpdateAction.Testmerge:
+					Updater.UpdateServer(TGRepoUpdateMethod.None, false, (ushort)ServerTestmergeInput.Value);
+					break;
+			}
+		}
+		private void UpdateHardButton_Click(object sender, System.EventArgs e)
+		{
+
+		}
+
+		private void UpdateTestmergeButton_Click(object sender, System.EventArgs e)
+		{
+
+		}
+
+		private void UpdateMergeButton_Click(object sender, System.EventArgs e)
+		{
+
+		}
+		private void TestmergeButton_Click(object sender, System.EventArgs e)
+		{
+
 		}
 	}
 }

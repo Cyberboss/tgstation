@@ -42,7 +42,7 @@
             this.RepoRemoteTextBox = new System.Windows.Forms.TextBox();
             this.HardReset = new System.Windows.Forms.Button();
             this.UpdateRepoButton = new System.Windows.Forms.Button();
-            this.TestMergeButton = new System.Windows.Forms.Button();
+            this.MergePRButton = new System.Windows.Forms.Button();
             this.CommitterEmailTitle = new System.Windows.Forms.Label();
             this.CommiterNameTitle = new System.Windows.Forms.Label();
             this.IdentityLabel = new System.Windows.Forms.Label();
@@ -66,6 +66,12 @@
             this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.ServerPanel = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.ServerTestmergeInput = new System.Windows.Forms.NumericUpDown();
+            this.TestmergeButton = new System.Windows.Forms.Button();
+            this.UpdateTestmergeButton = new System.Windows.Forms.Button();
+            this.UpdateMergeButton = new System.Windows.Forms.Button();
+            this.UpdateHardButton = new System.Windows.Forms.Button();
             this.ServerGRestartButton = new System.Windows.Forms.Button();
             this.ServerGStopButton = new System.Windows.Forms.Button();
             this.ServerRestartButton = new System.Windows.Forms.Button();
@@ -87,6 +93,7 @@
             this.ServerTimer = new System.Windows.Forms.Timer(this.components);
             this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
             this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
+            this.FullUpdateWorker = new System.ComponentModel.BackgroundWorker();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -94,6 +101,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).BeginInit();
             this.ServerPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).BeginInit();
             this.SuspendLayout();
             // 
             // Panels
@@ -123,7 +131,7 @@
             this.RepoPanel.Controls.Add(this.RepoRemoteTextBox);
             this.RepoPanel.Controls.Add(this.HardReset);
             this.RepoPanel.Controls.Add(this.UpdateRepoButton);
-            this.RepoPanel.Controls.Add(this.TestMergeButton);
+            this.RepoPanel.Controls.Add(this.MergePRButton);
             this.RepoPanel.Controls.Add(this.CommitterEmailTitle);
             this.RepoPanel.Controls.Add(this.CommiterNameTitle);
             this.RepoPanel.Controls.Add(this.IdentityLabel);
@@ -243,16 +251,16 @@
             this.UpdateRepoButton.Visible = false;
             this.UpdateRepoButton.Click += new System.EventHandler(this.UpdateRepoButton_Click);
             // 
-            // TestMergeButton
+            // MergePRButton
             // 
-            this.TestMergeButton.Location = new System.Drawing.Point(722, 81);
-            this.TestMergeButton.Name = "TestMergeButton";
-            this.TestMergeButton.Size = new System.Drawing.Size(140, 29);
-            this.TestMergeButton.TabIndex = 11;
-            this.TestMergeButton.Text = "Test Merge PR";
-            this.TestMergeButton.UseVisualStyleBackColor = true;
-            this.TestMergeButton.Visible = false;
-            this.TestMergeButton.Click += new System.EventHandler(this.TestMergeButton_Click);
+            this.MergePRButton.Location = new System.Drawing.Point(722, 81);
+            this.MergePRButton.Name = "MergePRButton";
+            this.MergePRButton.Size = new System.Drawing.Size(140, 29);
+            this.MergePRButton.TabIndex = 11;
+            this.MergePRButton.Text = "Merge Pull Request";
+            this.MergePRButton.UseVisualStyleBackColor = true;
+            this.MergePRButton.Visible = false;
+            this.MergePRButton.Click += new System.EventHandler(this.TestMergeButton_Click);
             // 
             // CommitterEmailTitle
             // 
@@ -535,6 +543,12 @@
             // ServerPanel
             // 
             this.ServerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ServerPanel.Controls.Add(this.label1);
+            this.ServerPanel.Controls.Add(this.ServerTestmergeInput);
+            this.ServerPanel.Controls.Add(this.TestmergeButton);
+            this.ServerPanel.Controls.Add(this.UpdateTestmergeButton);
+            this.ServerPanel.Controls.Add(this.UpdateMergeButton);
+            this.ServerPanel.Controls.Add(this.UpdateHardButton);
             this.ServerPanel.Controls.Add(this.ServerGRestartButton);
             this.ServerPanel.Controls.Add(this.ServerGStopButton);
             this.ServerPanel.Controls.Add(this.ServerRestartButton);
@@ -555,9 +569,74 @@
             this.ServerPanel.TabIndex = 2;
             this.ServerPanel.Text = "Server";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.label1.Location = new System.Drawing.Point(734, 102);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(49, 18);
+            this.label1.TabIndex = 26;
+            this.label1.Text = "PR#:";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ServerTestmergeInput
+            // 
+            this.ServerTestmergeInput.Location = new System.Drawing.Point(782, 101);
+            this.ServerTestmergeInput.Maximum = new decimal(new int[] {
+            1000000,
+            0,
+            0,
+            0});
+            this.ServerTestmergeInput.Name = "ServerTestmergeInput";
+            this.ServerTestmergeInput.Size = new System.Drawing.Size(80, 20);
+            this.ServerTestmergeInput.TabIndex = 25;
+            this.ServerTestmergeInput.Visible = false;
+            // 
+            // TestmergeButton
+            // 
+            this.TestmergeButton.Location = new System.Drawing.Point(586, 95);
+            this.TestmergeButton.Name = "TestmergeButton";
+            this.TestmergeButton.Size = new System.Drawing.Size(142, 28);
+            this.TestmergeButton.TabIndex = 24;
+            this.TestmergeButton.Text = "Testmerge";
+            this.TestmergeButton.UseVisualStyleBackColor = true;
+            this.TestmergeButton.Click += new System.EventHandler(this.TestmergeButton_Click);
+            // 
+            // UpdateTestmergeButton
+            // 
+            this.UpdateTestmergeButton.Location = new System.Drawing.Point(438, 95);
+            this.UpdateTestmergeButton.Name = "UpdateTestmergeButton";
+            this.UpdateTestmergeButton.Size = new System.Drawing.Size(142, 28);
+            this.UpdateTestmergeButton.TabIndex = 23;
+            this.UpdateTestmergeButton.Text = "Update and Testmerge";
+            this.UpdateTestmergeButton.UseVisualStyleBackColor = true;
+            this.UpdateTestmergeButton.Click += new System.EventHandler(this.UpdateTestmergeButton_Click);
+            // 
+            // UpdateMergeButton
+            // 
+            this.UpdateMergeButton.Location = new System.Drawing.Point(290, 95);
+            this.UpdateMergeButton.Name = "UpdateMergeButton";
+            this.UpdateMergeButton.Size = new System.Drawing.Size(142, 28);
+            this.UpdateMergeButton.TabIndex = 22;
+            this.UpdateMergeButton.Text = "Update (KeepTestmerge)";
+            this.UpdateMergeButton.UseVisualStyleBackColor = true;
+            this.UpdateMergeButton.Click += new System.EventHandler(this.UpdateMergeButton_Click);
+            // 
+            // UpdateHardButton
+            // 
+            this.UpdateHardButton.Location = new System.Drawing.Point(142, 95);
+            this.UpdateHardButton.Name = "UpdateHardButton";
+            this.UpdateHardButton.Size = new System.Drawing.Size(142, 28);
+            this.UpdateHardButton.TabIndex = 21;
+            this.UpdateHardButton.Text = "Update (Reset Testmerge)";
+            this.UpdateHardButton.UseVisualStyleBackColor = true;
+            this.UpdateHardButton.Click += new System.EventHandler(this.UpdateHardButton_Click);
+            // 
             // ServerGRestartButton
             // 
-            this.ServerGRestartButton.Location = new System.Drawing.Point(513, 54);
+            this.ServerGRestartButton.Location = new System.Drawing.Point(621, 54);
             this.ServerGRestartButton.Name = "ServerGRestartButton";
             this.ServerGRestartButton.Size = new System.Drawing.Size(118, 28);
             this.ServerGRestartButton.TabIndex = 20;
@@ -567,7 +646,7 @@
             // 
             // ServerGStopButton
             // 
-            this.ServerGStopButton.Location = new System.Drawing.Point(389, 54);
+            this.ServerGStopButton.Location = new System.Drawing.Point(497, 54);
             this.ServerGStopButton.Name = "ServerGStopButton";
             this.ServerGStopButton.Size = new System.Drawing.Size(118, 28);
             this.ServerGStopButton.TabIndex = 19;
@@ -577,7 +656,7 @@
             // 
             // ServerRestartButton
             // 
-            this.ServerRestartButton.Location = new System.Drawing.Point(265, 54);
+            this.ServerRestartButton.Location = new System.Drawing.Point(373, 54);
             this.ServerRestartButton.Name = "ServerRestartButton";
             this.ServerRestartButton.Size = new System.Drawing.Size(118, 28);
             this.ServerRestartButton.TabIndex = 18;
@@ -587,7 +666,7 @@
             // 
             // ServerStopButton
             // 
-            this.ServerStopButton.Location = new System.Drawing.Point(142, 54);
+            this.ServerStopButton.Location = new System.Drawing.Point(249, 54);
             this.ServerStopButton.Name = "ServerStopButton";
             this.ServerStopButton.Size = new System.Drawing.Size(118, 28);
             this.ServerStopButton.TabIndex = 17;
@@ -597,7 +676,7 @@
             // 
             // ServerStartButton
             // 
-            this.ServerStartButton.Location = new System.Drawing.Point(18, 54);
+            this.ServerStartButton.Location = new System.Drawing.Point(125, 54);
             this.ServerStartButton.Name = "ServerStartButton";
             this.ServerStartButton.Size = new System.Drawing.Size(118, 28);
             this.ServerStartButton.TabIndex = 16;
@@ -750,6 +829,10 @@
             this.WorldStatusTimer.Interval = 5000;
             this.WorldStatusTimer.Tick += new System.EventHandler(this.WorldStatusTimer_Tick);
             // 
+            // FullUpdateWorker
+            // 
+            this.FullUpdateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.FullUpdateWorker_DoWork);
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -773,6 +856,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).EndInit();
             this.ServerPanel.ResumeLayout(false);
             this.ServerPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -792,7 +876,7 @@
 		private System.Windows.Forms.TextBox RepoRemoteTextBox;
 		private System.Windows.Forms.Button HardReset;
 		private System.Windows.Forms.Button UpdateRepoButton;
-		private System.Windows.Forms.Button TestMergeButton;
+		private System.Windows.Forms.Button MergePRButton;
 		private System.Windows.Forms.Label CommitterEmailTitle;
 		private System.Windows.Forms.Label CommiterNameTitle;
 		private System.Windows.Forms.Label IdentityLabel;
@@ -835,6 +919,13 @@
 		private System.Windows.Forms.Button ServerRestartButton;
 		private System.Windows.Forms.Button ServerStopButton;
 		private System.Windows.Forms.Button ServerStartButton;
+		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.NumericUpDown ServerTestmergeInput;
+		private System.Windows.Forms.Button TestmergeButton;
+		private System.Windows.Forms.Button UpdateTestmergeButton;
+		private System.Windows.Forms.Button UpdateMergeButton;
+		private System.Windows.Forms.Button UpdateHardButton;
+		private System.ComponentModel.BackgroundWorker FullUpdateWorker;
 	}
 }
 
