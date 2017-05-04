@@ -31,7 +31,7 @@ namespace TGCommandLine
 				Console.WriteLine("Error: Repo is busy!");
 				return ExitCode.ServerError;
 			}
-			Console.Write("Setting up repo. This will take a while...");
+			Console.WriteLine("Setting up repo. This will take a while...");
 			return ExitCode.Normal;
 		}
 		public override void PrintHelp()
