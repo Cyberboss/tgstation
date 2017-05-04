@@ -11,8 +11,10 @@ namespace TGServerService
 	//hunter2
 	partial class TGStationServer : ITGIRC
 	{
-		public static IrcClient irc;
+		IrcClient irc;
 		int reconnectAttempt = 0;
+
+		object IRCLock = new object();
 
 		//Setup the object and autoconnect if necessary
 		void InitIRC()
@@ -42,7 +44,10 @@ namespace TGServerService
 			var command = asList[0].ToLower();
 			asList.RemoveAt(0);
 
-			SendMessageDirect(IrcCommand(command, speaker, channel, asList), channel);
+			lock (IRCLock)
+			{
+				SendMessageDirect(IrcCommand(command, speaker, channel, asList), channel);
+			}
 		}
 		
 		string HasIRCAdmin(string speaker, string channel)
@@ -75,60 +80,66 @@ namespace TGServerService
 		//public api
 		public void Setup(string url, ushort port, string username, string[] channels, string adminChannel, TGIRCEnableType enabled)
 		{
-			var Config = Properties.Settings.Default;
 			var ServerChange = false;
-			if (url != null)
+			var Config = Properties.Settings.Default;
+			StringCollection oldchannels;
+			lock (IRCLock)
 			{
-				Config.IRCServer = url;
-				ServerChange = true;
+				if (url != null)
+				{
+					Config.IRCServer = url;
+					ServerChange = true;
+				}
+				if (port != 0)
+				{
+					Config.IRCPort = port;
+					ServerChange = true;
+				}
+				if (username != null)
+					Config.IRCNick = username;
+				if (adminChannel != null)
+					Config.IRCAdminChannel = adminChannel;
+				oldchannels = Properties.Settings.Default.IRCChannels;
+				if (channels != null)
+				{
+					var si = new StringCollection();
+					si.AddRange(channels);
+					if (!si.Contains(Config.IRCAdminChannel))
+						si.Add(Config.IRCAdminChannel);
+					Config.IRCChannels = si;
+				}
+				switch (enabled)
+				{
+					case TGIRCEnableType.Enable:
+						Config.IRCEnabled = true;
+						break;
+					case TGIRCEnableType.Disable:
+						Config.IRCEnabled = false;
+						break;
+					default:
+						break;
+				}
 			}
-			if (port != 0)
-			{
-				Config.IRCPort = port;
-				ServerChange = true;
-			}
-			if (username != null)
-				Config.IRCNick = username;
-			if (adminChannel != null)
-				Config.IRCAdminChannel = adminChannel;
-			var oldchannels = Properties.Settings.Default.IRCChannels;
-			if (channels != null)
-			{
-				var si = new StringCollection();
-				si.AddRange(channels);
-				if(!si.Contains(Config.IRCAdminChannel))
-					si.Add(Config.IRCAdminChannel);
-				Config.IRCChannels = si;
-			}
-			switch (enabled)
-			{
-				case TGIRCEnableType.Enable:
-					Config.IRCEnabled = true;
-					break;
-				case TGIRCEnableType.Disable:
-					Config.IRCEnabled = false;
-					break;
-				default:
-					break;
-			}
-
 			if (Connected())
 				if (ServerChange)
 					Reconnect();
 				else
 				{
-					irc.RfcNick(Config.IRCNick);
-					if (channels != null)
+					lock (IRCLock)
 					{
-						foreach (var I in channels)
+						irc.RfcNick(Config.IRCNick);
+						if (channels != null)
 						{
-							if (!oldchannels.Contains(I))
-								irc.RfcJoin(I);
-						}
-						foreach (var I in oldchannels)
-						{
-							if (!Config.IRCChannels.Contains(I))
-								irc.RfcPart(I);
+							foreach (var I in channels)
+							{
+								if (!oldchannels.Contains(I))
+									irc.RfcJoin(I);
+							}
+							foreach (var I in oldchannels)
+							{
+								if (!Config.IRCChannels.Contains(I))
+									irc.RfcPart(I);
+							}
 						}
 					}
 				}
@@ -136,7 +147,10 @@ namespace TGServerService
 		//public api
 		public string[] Channels()
 		{
-			return CollectionToArray(Properties.Settings.Default.IRCChannels);
+			lock (IRCLock)
+			{
+				return CollectionToArray(Properties.Settings.Default.IRCChannels);
+			}
 		}
 		//public api
 		public string[] CollectionToArray(StringCollection sc)
@@ -148,17 +162,23 @@ namespace TGServerService
 		//public api
 		public string AdminChannel()
 		{
-			return Properties.Settings.Default.IRCAdminChannel;
+			lock (IRCLock)
+			{
+				return Properties.Settings.Default.IRCAdminChannel;
+			}
 		}
 		//public api
 		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
 		{
-			var Config = Properties.Settings.Default;
-			if (identifyTarget != null)
-				Config.IRCIdentifyTarget = identifyTarget;
-			if (identifyCommand != null)
-				Config.IRCIdentifyCommand = identifyCommand;
-			Config.IRCIdentifyRequired = required;
+			lock (IRCLock)
+			{
+				var Config = Properties.Settings.Default;
+				if (identifyTarget != null)
+					Config.IRCIdentifyTarget = identifyTarget;
+				if (identifyCommand != null)
+					Config.IRCIdentifyCommand = identifyCommand;
+				Config.IRCIdentifyRequired = required;
+			}
 			if (Connected())
 				Login();
 		}
@@ -171,55 +191,61 @@ namespace TGServerService
 		//runs the login command
 		void Login()
 		{
-			var Config = Properties.Settings.Default;
-			if (Config.IRCIdentifyRequired)
-				irc.SendMessage(SendType.Message, Config.IRCIdentifyTarget, Config.IRCIdentifyCommand);
+			lock (IRCLock)
+			{
+				var Config = Properties.Settings.Default;
+				if (Config.IRCIdentifyRequired)
+					irc.SendMessage(SendType.Message, Config.IRCIdentifyTarget, Config.IRCIdentifyCommand);
+			}
 		}
 		//public api
 		public string Connect()
 		{
 			if (Connected())
 				return null;
-			var Config = Properties.Settings.Default;
-			if (!Config.IRCEnabled)
-				return "IRC disabled by config.";
-			try
+			lock (IRCLock)
 			{
+				var Config = Properties.Settings.Default;
+				if (!Config.IRCEnabled)
+					return "IRC disabled by config.";
 				try
 				{
-					irc.Connect(Config.IRCServer, Config.IRCPort);
-					reconnectAttempt = 0;
-				}
-				catch (Exception e)
-				{
-					reconnectAttempt++;
-					if (reconnectAttempt <= 5)
+					try
 					{
-						Thread.Sleep(5000); //Reconnecting after 5 seconds.
-						return Connect();
+						irc.Connect(Config.IRCServer, Config.IRCPort);
+						reconnectAttempt = 0;
 					}
-					else
+					catch (Exception e)
 					{
-						return "IRC server unreachable: " + e.ToString();
+						reconnectAttempt++;
+						if (reconnectAttempt <= 5)
+						{
+							Thread.Sleep(5000); //Reconnecting after 5 seconds.
+							return Connect();
+						}
+						else
+						{
+							return "IRC server unreachable: " + e.ToString();
+						}
 					}
-				}
 
-				try
-				{
-					irc.Login(Config.IRCNick, Config.IRCNick);
+					try
+					{
+						irc.Login(Config.IRCNick, Config.IRCNick);
+					}
+					catch (Exception e)
+					{
+						return "Bot name is already taken: " + e.ToString();
+					}
+					Login();
+					JoinChannels();
+					new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();
+					return null;
 				}
 				catch (Exception e)
 				{
-					return "Bot name is already taken: " + e.ToString();
+					return e.ToString();
 				}
-				Login();
-				JoinChannels();
-				new Thread(new ThreadStart(IRCListen)) { IsBackground = true }.Start();
-				return null;
-			}
-			catch (Exception e)
-			{
-				return e.ToString();
 			}
 		}
 		
@@ -246,9 +272,12 @@ namespace TGServerService
 		{ 
 			try
 			{
-				//because of a bug in smart irc this takes forever and there's nothing we can really do about it 
-				//If you want it fixed, get this damn pull request through https://github.com/meebey/SmartIrc4net/pull/31
-				irc.Disconnect();
+				lock (IRCLock)
+				{
+					//because of a bug in smart irc this takes forever and there's nothing we can really do about it 
+					//If you want it fixed, get this damn pull request through https://github.com/meebey/SmartIrc4net/pull/31
+					irc.Disconnect();
+				}
 			}
 			catch
 			{ }
@@ -256,7 +285,10 @@ namespace TGServerService
 		//public api
 		public bool Connected()
 		{
-			return irc.IsConnected;
+			lock (IRCLock)
+			{
+				return irc.IsConnected;
+			}
 		}
 		//public api
 		public string SendMessage(string message, bool adminOnly = false)
@@ -265,12 +297,15 @@ namespace TGServerService
 			{
 				if (!Connected())
 					return "Disconnected.";
-				var Config = Properties.Settings.Default;
-				if (adminOnly)
-					irc.SendMessage(SendType.Message, Config.IRCAdminChannel, message);
-				else
-					foreach(var I in Config.IRCChannels)
-						irc.SendMessage(SendType.Message, I, message);
+				lock (IRCLock)
+				{
+					var Config = Properties.Settings.Default;
+					if (adminOnly)
+						irc.SendMessage(SendType.Message, Config.IRCAdminChannel, message);
+					else
+						foreach (var I in Config.IRCChannels)
+							irc.SendMessage(SendType.Message, I, message);
+				}
 				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send{0}: {1}", adminOnly ? " (ADMIN)" : "", message));
 				return null;
 			}
@@ -292,7 +327,10 @@ namespace TGServerService
 			{
 				if (!Connected())
 					return "Disconnected.";
-				irc.SendMessage(SendType.Message, channel, message);
+				lock (IRCLock)
+				{
+					irc.SendMessage(SendType.Message, channel, message);
+				}
 				TGServerService.ActiveService.EventLog.WriteEntry(String.Format("IRC Send ({0}): {1}", channel, message));
 				return null;
 			}
@@ -305,22 +343,30 @@ namespace TGServerService
 		//public api
 		public bool Enabled()
 		{
-			return Properties.Settings.Default.IRCEnabled;
+			lock (IRCLock)
+			{
+				return Properties.Settings.Default.IRCEnabled;
+			}
 		}
 
 		//public api
 		public string[] ListAdmins()
 		{
-			return CollectionToArray(Properties.Settings.Default.IRCAdmins);
+			lock (IRCLock)
+			{
+				return CollectionToArray(Properties.Settings.Default.IRCAdmins);
+			}
 		}
 
 		//public api
 		public void SetAdmins(string[] admins)
 		{
-			var Config = Properties.Settings.Default;
 			var si = new StringCollection();
 			si.AddRange(admins);
-			Config.IRCAdmins = si;
+			lock (IRCLock)
+			{
+				Properties.Settings.Default.IRCAdmins = si;
+			}
 		}
 	}
 }
