@@ -31,6 +31,7 @@ GLOBAL_PROTECT(reboot_mode)
 	if(!command)
 		return "No command!"
 	
+	var/static/last_irc_status = 0
 	switch(command)
 		if("hard_reboot")
 			if(GLOB.reboot_mode != REBOOT_MODE_HARD)
@@ -50,12 +51,12 @@ GLOBAL_PROTECT(reboot_mode)
 				return "No message set!"
 			to_chat(src, "<span class='boldannounce'>[html_encode(msg)]</span>")
 		if("irc_check")
-			if(world.time - last_irc_status < IRC_STATUS_THROTTLE)
+			if(time - last_irc_status < IRC_STATUS_THROTTLE)
 				return
 			last_irc_status = world.time
 			return "[GLOB.clients.len] players on [SSmapping.config.map_name], Mode: [GLOB.master_mode]; Round [SSticker.HasRoundStarted() ? (SSticker.IsRoundInProgress() ? "Active" : "Finishing") : "Starting"] -- [config.server ? config.server : "byond://[address]:[port]"]" 
 		if("irc_status")
-			if(world.time - last_irc_status < IRC_STATUS_THROTTLE)
+			if(time - last_irc_status < IRC_STATUS_THROTTLE)
 				return
 			var/list/adm = get_admin_counts()
 			var/list/allmins = adm["total"]

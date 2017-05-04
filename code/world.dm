@@ -81,7 +81,6 @@
 	if(input["serviceCommsKey"])
 		return ServiceCommand(input)
 	var/key_valid = (global.comms_allowed && input["key"] == global.comms_key)
-	var/static/last_irc_status = 0
 
 	if("ping" in input)
 		var/x = 1
