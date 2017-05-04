@@ -23,7 +23,6 @@ namespace TGServerService
 		const string StaticDirs = "Static";
 		const string StaticDataDir = StaticDirs + "/data";
 		const string StaticConfigDir = StaticDirs + "/config";
-		const string StaticLogDir = StaticDirs + "/logs";
 		const string StaticBackupDir = "Static_BACKUP";
 
 		const string LibMySQLFile = "/libmysql.dll";

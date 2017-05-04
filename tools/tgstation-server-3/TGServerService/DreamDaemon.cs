@@ -11,7 +11,7 @@ namespace TGServerService
 	partial class TGStationServer : ITGDreamDaemon
 	{
 
-		const int DDHangStartTime = 30;
+		const int DDHangStartTime = 60;
 		const int DDBadStartTime = 10;
 		const int DDRestartMaxRetries = 5;
 
@@ -295,7 +295,7 @@ namespace TGServerService
 						Proc.Close();
 						currentStatus = TGDreamDaemonStatus.Offline;
 						currentPort = 0;
-						return String.Format("Server start is taking more that {0}s! Aborting!", DDHangStartTime);
+						return String.Format("Server start is taking more than {0}s! Aborting!", DDHangStartTime);
 					}
 					currentPort = Config.ServerPort;
 					currentStatus = TGDreamDaemonStatus.Online;

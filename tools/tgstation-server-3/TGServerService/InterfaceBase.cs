@@ -39,7 +39,7 @@ namespace TGServerService
 			if (updateType != TGRepoUpdateMethod.None)
 			{
 				res = Update(updateType == TGRepoUpdateMethod.Hard);
-				if (res != null)
+				if (res != null && res != RepoErrorUpToDate)
 					return res;
 			}
 			if (testmerge_pr != 0)

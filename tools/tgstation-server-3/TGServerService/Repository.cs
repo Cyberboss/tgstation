@@ -17,7 +17,7 @@ namespace TGServerService
 		const string RepoPath = "Repository";
 		const string RepoConfig = RepoPath + "/config";
 		const string RepoData = RepoPath + "/data";
-		const string RepoErrorUpToDate = "Already up to date.";
+		const string RepoErrorUpToDate = "Already up to date!";
 
 		const string PRJobFile = "prtestjob.json";
 
@@ -132,7 +132,6 @@ namespace TGServerService
 					};
 					Repository.Clone(RepoURL, RepoPath, Opts);
 					LoadRepo();
-					Directory.CreateDirectory(StaticLogDir);
 					lock (configLock)
 					{
 						Program.CopyDirectory(RepoConfig, StaticConfigDir);
