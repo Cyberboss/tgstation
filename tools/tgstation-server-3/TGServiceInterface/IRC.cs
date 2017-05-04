@@ -48,5 +48,12 @@ namespace TGServiceInterface
 		//Get the admin channel
 		[OperationContract]
 		string AdminChannel();
+
+		/// <summary>
+		/// Check if the configuration allows the IRC bot
+		/// </summary>
+		/// <returns>true if the bot is enabled, false otherwise</returns>
+		[OperationContract]
+		bool Enabled();
 	}
 }

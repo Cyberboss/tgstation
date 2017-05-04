@@ -226,6 +226,7 @@ namespace TGServerService
 			}
 		}
 		
+		//This is the thread that listens for irc messages
 		void IRCListen()
 		{
 			try
@@ -279,6 +280,12 @@ namespace TGServerService
 			{
 				return e.ToString();
 			}
+		}
+
+		//public api
+		public bool Enabled()
+		{
+			return Properties.Settings.Default.IRCEnabled;
 		}
 	}
 }
