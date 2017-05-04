@@ -14,11 +14,13 @@ GLOBAL_PROTECT(reboot_mode)
 	switch(GLOB.reboot_mode)
 		if(REBOOT_MODE_HARD)
 			to_chat(src, "<span class='boldannounce'>Hard reboot triggered, you will automatically reconnect...</span>")
+			log_world("Sending shutdown request!");
+			sleep(1)	//flush the buffers
+			ExportService("killme")
 		if(REBOOT_MODE_SHUTDOWN)
 			to_chat(src, "<span class='boldannounce'>The server is shutting down...</span>")
-	log_world("Sending shutdown request!");\
-	sleep(1)	//flush the buffers
-	ExportService("killme")	//should not return, EVAH
+			log_world("Deleting world")
+			qdel(src)
 
 /world/proc/ServiceCommand(list/params)
 	var/sCK = RunningService()
