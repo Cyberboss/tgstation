@@ -164,7 +164,7 @@ namespace TGControlPanel
 			
 			var IsSwitch = setting.DefaultValue == "" || setting.DefaultValue == null;
 
-			if (!IsSwitch)
+			if (!IsSwitch || !setting.ExistsInRepo)
 				flow.Controls.Add(new ConfigAddRemoveButton(setting, this, type));			
 
 			if(IsSwitch || setting.ExistsInStatic)

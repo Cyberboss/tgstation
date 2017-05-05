@@ -385,8 +385,7 @@
 				if("serversqlname")
 					server_sql_name = value
 				if("stationname")
-					if(value)
-						station_name = value
+					station_name = value
 				if("hostedby")
 					hostedby = value
 				if("server")
