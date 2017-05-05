@@ -11,6 +11,8 @@
       <ComponentGroupRef Id="Gitx86Components" />
       <ComponentGroupRef Id="Gitx64Components" />
     </Feature>
+		<Icon Id="tgs.ico" SourceFile="..\tgs.ico"/>
+		<Property Id="ARPPRODUCTICON" Value="tgs.ico" />
   </Product>
 
   <Fragment>
@@ -33,10 +35,16 @@
 
   <Fragment>
     <ComponentGroup Id="ProductComponents" Directory="INSTALLFOLDER">
-      <!-- TODO: Remove the comments around this Component element and the ComponentRef below in order to add resources to this installer. -->
       <Component Id="TGCommandLine">
         <File Source="$(var.TGCommandLine.TargetPath)" />
         <Environment Id="PATH" Name="PATH" Value="[INSTALLFOLDER]" Permanent="no" Part="last" Action="set" System="yes" />
+          <Shortcut
+            Id="CLDesktopShortcut"
+            Directory="DesktopFolder"
+            Name="TG Command Line"
+            WorkingDirectory="INSTALLFOLDER" 
+            Advertise="yes"
+						Icon="tgs.ico"/>
       </Component>
       <Component Id="TGServerService">
         <File Source="$(var.TGServerService.TargetPath)" />
@@ -65,11 +73,12 @@
       <Component Id="TGControlPanel">
         <File Source="$(var.TGControlPanel.TargetPath)" KeyPath="yes">
           <Shortcut
-            Id="DesktopShortcut"
+            Id="CPDesktopShortcut"
             Directory="DesktopFolder"
             Name="TG Control Panel"
             WorkingDirectory="INSTALLFOLDER" 
-            Advertise="yes"/>
+            Advertise="yes"
+						Icon="tgs.ico"/>
         </File>
       </Component>
       <Component Id="TGServiceInterface">
