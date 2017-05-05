@@ -686,7 +686,7 @@ namespace TGServerService
 					if (trimmed.Length == 0)
 						continue;
 					var commented = trimmed[0] == '#';
-					if (trimmed.Length < 3 || trimmed[1] == '#')
+					if (trimmed.Length < 3 || trimmed[1] == '#' || commented)
 						continue;
 					if (commented)
 						trimmed = trimmed.Substring(1).Trim();
@@ -702,13 +702,13 @@ namespace TGServerService
 						//don't support multikeying here
 						results.Add(currentSetting);
 					}
+					else if (commented)
+						continue;
 					else
 						currentSetting = repoConfig[name];
 					currentSetting.ExistsInStatic = true;
 					splits.RemoveAt(0);
 					var value = String.Join(" ", splits);
-					if (commented && value == "")
-						value = null;
 					if (currentSetting.IsMultiKey)
 					{
 						if (currentSetting.Values == null)
