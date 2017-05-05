@@ -444,7 +444,9 @@ namespace TGServerService
 					if (Result == null)
 					{
 						var CurrentPRs = GetCurrentPRList();
-						CurrentPRs.Add(PRNumber.ToString(), branch.Tip.Sha);
+						var PRNumberString = PRNumber.ToString();
+						CurrentPRs.Remove(PRNumberString);
+						CurrentPRs.Add(PRNumberString, branch.Tip.Sha);
 						SetCurrentPRList(CurrentPRs);
 					}
 					return Result;
