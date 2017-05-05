@@ -17,8 +17,8 @@ namespace TGControlPanel
 			ChangeList = cl;
 			Text = Setting.Value;
 			Multiline = true;
-			Width = 300;
-			Height *= 2;
+			Width = 560;
+			Height *= 3;
 			ScrollBars = ScrollBars.Both;
 		}
 

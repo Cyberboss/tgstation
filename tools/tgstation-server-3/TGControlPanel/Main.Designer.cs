@@ -120,6 +120,9 @@
             // 
             // Panels
             // 
+            this.Panels.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.Panels.Controls.Add(this.RepoPanel);
             this.Panels.Controls.Add(this.BYONDPanel);
             this.Panels.Controls.Add(this.ServerPanel);
@@ -172,6 +175,7 @@
             // 
             // RepoPushButton
             // 
+            this.RepoPushButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoPushButton.Location = new System.Drawing.Point(722, 212);
             this.RepoPushButton.Name = "RepoPushButton";
             this.RepoPushButton.Size = new System.Drawing.Size(140, 29);
@@ -183,6 +187,7 @@
             // 
             // RepoCommitButton
             // 
+            this.RepoCommitButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoCommitButton.Location = new System.Drawing.Point(722, 177);
             this.RepoCommitButton.Name = "RepoCommitButton";
             this.RepoCommitButton.Size = new System.Drawing.Size(140, 29);
@@ -194,6 +199,7 @@
             // 
             // RepoGenChangelogButton
             // 
+            this.RepoGenChangelogButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoGenChangelogButton.Location = new System.Drawing.Point(722, 142);
             this.RepoGenChangelogButton.Name = "RepoGenChangelogButton";
             this.RepoGenChangelogButton.Size = new System.Drawing.Size(140, 29);
@@ -205,6 +211,7 @@
             // 
             // CommitterPasswordTextBox
             // 
+            this.CommitterPasswordTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommitterPasswordTextBox.Location = new System.Drawing.Point(104, 256);
             this.CommitterPasswordTextBox.Name = "CommitterPasswordTextBox";
             this.CommitterPasswordTextBox.Size = new System.Drawing.Size(535, 20);
@@ -215,6 +222,7 @@
             // 
             // CommitterLoginTextBox
             // 
+            this.CommitterLoginTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommitterLoginTextBox.Location = new System.Drawing.Point(104, 227);
             this.CommitterLoginTextBox.Name = "CommitterLoginTextBox";
             this.CommitterLoginTextBox.Size = new System.Drawing.Size(535, 20);
@@ -223,6 +231,7 @@
             // 
             // CommitterPasswordTitle
             // 
+            this.CommitterPasswordTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommitterPasswordTitle.AutoSize = true;
             this.CommitterPasswordTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommitterPasswordTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -236,6 +245,7 @@
             // 
             // CommiterLoginTitle
             // 
+            this.CommiterLoginTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommiterLoginTitle.AutoSize = true;
             this.CommiterLoginTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommiterLoginTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -249,6 +259,7 @@
             // 
             // TestmergeSelector
             // 
+            this.TestmergeSelector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.TestmergeSelector.Location = new System.Drawing.Point(722, 116);
             this.TestmergeSelector.Maximum = new decimal(new int[] {
             1000000,
@@ -262,6 +273,7 @@
             // 
             // TestMergeListLabel
             // 
+            this.TestMergeListLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TestMergeListLabel.Location = new System.Drawing.Point(184, 286);
             this.TestMergeListLabel.Multiline = true;
             this.TestMergeListLabel.Name = "TestMergeListLabel";
@@ -286,6 +298,7 @@
             // 
             // RepoEmailTextBox
             // 
+            this.RepoEmailTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.RepoEmailTextBox.Location = new System.Drawing.Point(104, 197);
             this.RepoEmailTextBox.Name = "RepoEmailTextBox";
             this.RepoEmailTextBox.Size = new System.Drawing.Size(535, 20);
@@ -294,6 +307,7 @@
             // 
             // RepoCommitterNameTextBox
             // 
+            this.RepoCommitterNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(104, 168);
             this.RepoCommitterNameTextBox.Name = "RepoCommitterNameTextBox";
             this.RepoCommitterNameTextBox.Size = new System.Drawing.Size(535, 20);
@@ -302,6 +316,7 @@
             // 
             // RepoApplyButton
             // 
+            this.RepoApplyButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoApplyButton.Location = new System.Drawing.Point(722, 331);
             this.RepoApplyButton.Name = "RepoApplyButton";
             this.RepoApplyButton.Size = new System.Drawing.Size(140, 29);
@@ -329,6 +344,7 @@
             // 
             // HardReset
             // 
+            this.HardReset.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.HardReset.Location = new System.Drawing.Point(722, 46);
             this.HardReset.Name = "HardReset";
             this.HardReset.Size = new System.Drawing.Size(140, 29);
@@ -340,6 +356,7 @@
             // 
             // UpdateRepoButton
             // 
+            this.UpdateRepoButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.UpdateRepoButton.Location = new System.Drawing.Point(722, 11);
             this.UpdateRepoButton.Name = "UpdateRepoButton";
             this.UpdateRepoButton.Size = new System.Drawing.Size(140, 29);
@@ -351,6 +368,7 @@
             // 
             // MergePRButton
             // 
+            this.MergePRButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.MergePRButton.Location = new System.Drawing.Point(722, 81);
             this.MergePRButton.Name = "MergePRButton";
             this.MergePRButton.Size = new System.Drawing.Size(140, 29);
@@ -362,6 +380,7 @@
             // 
             // CommitterEmailTitle
             // 
+            this.CommitterEmailTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommitterEmailTitle.AutoSize = true;
             this.CommitterEmailTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommitterEmailTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -375,6 +394,7 @@
             // 
             // CommiterNameTitle
             // 
+            this.CommiterNameTitle.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.CommiterNameTitle.AutoSize = true;
             this.CommiterNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommiterNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -388,6 +408,7 @@
             // 
             // IdentityLabel
             // 
+            this.IdentityLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.IdentityLabel.AutoSize = true;
             this.IdentityLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.IdentityLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -401,6 +422,7 @@
             // 
             // TestMergeListTitle
             // 
+            this.TestMergeListTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.TestMergeListTitle.AutoSize = true;
             this.TestMergeListTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TestMergeListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -453,6 +475,9 @@
             // 
             // CloneRepositoryButton
             // 
+            this.CloneRepositoryButton.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CloneRepositoryButton.Location = new System.Drawing.Point(311, 191);
             this.CloneRepositoryButton.Name = "CloneRepositoryButton";
             this.CloneRepositoryButton.Size = new System.Drawing.Size(229, 34);
@@ -464,6 +489,9 @@
             // 
             // RepoProgressBarLabel
             // 
+            this.RepoProgressBarLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoProgressBarLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.RepoProgressBarLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
             this.RepoProgressBarLabel.Location = new System.Drawing.Point(184, 142);
@@ -475,6 +503,9 @@
             // 
             // RepoProgressBar
             // 
+            this.RepoProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.RepoProgressBar.Location = new System.Drawing.Point(184, 191);
             this.RepoProgressBar.Name = "RepoProgressBar";
             this.RepoProgressBar.Size = new System.Drawing.Size(499, 23);
@@ -669,6 +700,7 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -681,6 +713,7 @@
             // 
             // ServerTestmergeInput
             // 
+            this.ServerTestmergeInput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.ServerTestmergeInput.Location = new System.Drawing.Point(782, 101);
             this.ServerTestmergeInput.Maximum = new decimal(new int[] {
             1000000,
@@ -693,6 +726,7 @@
             // 
             // TestmergeButton
             // 
+            this.TestmergeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.TestmergeButton.Location = new System.Drawing.Point(586, 95);
             this.TestmergeButton.Name = "TestmergeButton";
             this.TestmergeButton.Size = new System.Drawing.Size(142, 28);
@@ -703,6 +737,7 @@
             // 
             // UpdateTestmergeButton
             // 
+            this.UpdateTestmergeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.UpdateTestmergeButton.Location = new System.Drawing.Point(438, 95);
             this.UpdateTestmergeButton.Name = "UpdateTestmergeButton";
             this.UpdateTestmergeButton.Size = new System.Drawing.Size(142, 28);
@@ -713,6 +748,7 @@
             // 
             // UpdateMergeButton
             // 
+            this.UpdateMergeButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.UpdateMergeButton.Location = new System.Drawing.Point(290, 95);
             this.UpdateMergeButton.Name = "UpdateMergeButton";
             this.UpdateMergeButton.Size = new System.Drawing.Size(142, 28);
@@ -723,6 +759,7 @@
             // 
             // UpdateHardButton
             // 
+            this.UpdateHardButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.UpdateHardButton.Location = new System.Drawing.Point(142, 95);
             this.UpdateHardButton.Name = "UpdateHardButton";
             this.UpdateHardButton.Size = new System.Drawing.Size(142, 28);
@@ -733,6 +770,7 @@
             // 
             // ServerGRestartButton
             // 
+            this.ServerGRestartButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerGRestartButton.Location = new System.Drawing.Point(621, 54);
             this.ServerGRestartButton.Name = "ServerGRestartButton";
             this.ServerGRestartButton.Size = new System.Drawing.Size(118, 28);
@@ -743,6 +781,7 @@
             // 
             // ServerGStopButton
             // 
+            this.ServerGStopButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerGStopButton.Location = new System.Drawing.Point(497, 54);
             this.ServerGStopButton.Name = "ServerGStopButton";
             this.ServerGStopButton.Size = new System.Drawing.Size(118, 28);
@@ -753,6 +792,7 @@
             // 
             // ServerRestartButton
             // 
+            this.ServerRestartButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerRestartButton.Location = new System.Drawing.Point(373, 54);
             this.ServerRestartButton.Name = "ServerRestartButton";
             this.ServerRestartButton.Size = new System.Drawing.Size(118, 28);
@@ -763,6 +803,7 @@
             // 
             // ServerStopButton
             // 
+            this.ServerStopButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerStopButton.Location = new System.Drawing.Point(249, 54);
             this.ServerStopButton.Name = "ServerStopButton";
             this.ServerStopButton.Size = new System.Drawing.Size(118, 28);
@@ -773,6 +814,7 @@
             // 
             // ServerStartButton
             // 
+            this.ServerStartButton.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.ServerStartButton.Location = new System.Drawing.Point(125, 54);
             this.ServerStartButton.Name = "ServerStartButton";
             this.ServerStartButton.Size = new System.Drawing.Size(118, 28);
@@ -796,6 +838,8 @@
             // 
             // CompilerStatusLabel
             // 
+            this.CompilerStatusLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CompilerStatusLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CompilerStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
             this.CompilerStatusLabel.Location = new System.Drawing.Point(360, 271);
@@ -807,6 +851,8 @@
             // 
             // CompilerLabel
             // 
+            this.CompilerLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CompilerLabel.AutoSize = true;
             this.CompilerLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CompilerLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
@@ -819,6 +865,7 @@
             // 
             // compileButton
             // 
+            this.compileButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.compileButton.Enabled = false;
             this.compileButton.Location = new System.Drawing.Point(456, 240);
             this.compileButton.Name = "compileButton";
@@ -830,6 +877,7 @@
             // 
             // initializeButton
             // 
+            this.initializeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.initializeButton.Enabled = false;
             this.initializeButton.Location = new System.Drawing.Point(265, 240);
             this.initializeButton.Name = "initializeButton";
@@ -841,6 +889,8 @@
             // 
             // compilerProgressBar
             // 
+            this.compilerProgressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.compilerProgressBar.Location = new System.Drawing.Point(110, 302);
             this.compilerProgressBar.MarqueeAnimationSpeed = 50;
             this.compilerProgressBar.Name = "compilerProgressBar";
@@ -904,11 +954,14 @@
             // 
             // ConfigPanels
             // 
+            this.ConfigPanels.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ConfigPanels.Controls.Add(this.ConfigConfigPanel);
             this.ConfigPanels.Location = new System.Drawing.Point(-4, 0);
             this.ConfigPanels.Name = "ConfigPanels";
             this.ConfigPanels.SelectedIndex = 0;
-            this.ConfigPanels.Size = new System.Drawing.Size(872, 366);
+            this.ConfigPanels.Size = new System.Drawing.Size(876, 370);
             this.ConfigPanels.TabIndex = 0;
             // 
             // ConfigConfigPanel
@@ -920,15 +973,16 @@
             this.ConfigConfigPanel.Location = new System.Drawing.Point(4, 22);
             this.ConfigConfigPanel.Name = "ConfigConfigPanel";
             this.ConfigConfigPanel.Padding = new System.Windows.Forms.Padding(3);
-            this.ConfigConfigPanel.Size = new System.Drawing.Size(864, 340);
+            this.ConfigConfigPanel.Size = new System.Drawing.Size(868, 344);
             this.ConfigConfigPanel.TabIndex = 0;
             this.ConfigConfigPanel.Text = "General";
             // 
             // ConfigConfigRefresh
             // 
-            this.ConfigConfigRefresh.Location = new System.Drawing.Point(728, 40);
+            this.ConfigConfigRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigConfigRefresh.Location = new System.Drawing.Point(809, 34);
             this.ConfigConfigRefresh.Name = "ConfigConfigRefresh";
-            this.ConfigConfigRefresh.Size = new System.Drawing.Size(118, 28);
+            this.ConfigConfigRefresh.Size = new System.Drawing.Size(53, 22);
             this.ConfigConfigRefresh.TabIndex = 5;
             this.ConfigConfigRefresh.Text = "Refresh";
             this.ConfigConfigRefresh.UseVisualStyleBackColor = true;
@@ -936,9 +990,10 @@
             // 
             // ConfigConfigApply
             // 
-            this.ConfigConfigApply.Location = new System.Drawing.Point(728, 6);
+            this.ConfigConfigApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigConfigApply.Location = new System.Drawing.Point(809, 6);
             this.ConfigConfigApply.Name = "ConfigConfigApply";
-            this.ConfigConfigApply.Size = new System.Drawing.Size(118, 28);
+            this.ConfigConfigApply.Size = new System.Drawing.Size(53, 22);
             this.ConfigConfigApply.TabIndex = 4;
             this.ConfigConfigApply.Text = "Apply";
             this.ConfigConfigApply.UseVisualStyleBackColor = true;
@@ -980,9 +1035,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
             this.ClientSize = new System.Drawing.Size(900, 415);
             this.Controls.Add(this.Panels);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.Name = "Main";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "/tg/station 13 Server Control Panel";
