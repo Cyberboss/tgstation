@@ -550,7 +550,7 @@ namespace TGServerService
 		}
 
 		//public api
-		public string Commit(string message)
+		public string Commit(string message = "Automatic changelog compile, [ci skip]")
 		{
 			lock (RepoLock)
 			{
@@ -589,7 +589,15 @@ namespace TGServerService
 				var Config = Properties.Settings.Default;
 				try
 				{
-					byte[] plaintext = ProtectedData.Unprotect(Convert.FromBase64String(Config.CredentialCyphertext), Convert.FromBase64String(Config.CredentialEntropy), DataProtectionScope.CurrentUser);
+					byte[] plaintext;
+					try
+					{
+						plaintext = ProtectedData.Unprotect(Convert.FromBase64String(Config.CredentialCyphertext), Convert.FromBase64String(Config.CredentialEntropy), DataProtectionScope.CurrentUser);
+					}
+					catch 
+					{
+						return "Git password decryption failed! Did you set one?";
+					}
 
 					var options = new PushOptions()
 					{
@@ -656,6 +664,11 @@ namespace TGServerService
 				var Config = Properties.Settings.Default;
 
 				var PythonFile = Config.PythonPath + "/python.exe";
+				if (!File.Exists(PythonFile))
+				{
+					error = "Cannot locate python 2.7!";
+					return null;
+				}
 				try
 				{
 					string result;

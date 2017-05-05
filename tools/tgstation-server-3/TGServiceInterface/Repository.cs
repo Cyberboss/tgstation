@@ -103,7 +103,7 @@ namespace TGServiceInterface
 		//Equivalent to running git commit -a -m '<message>' with the set git identity
 		//returns null on success, error on failure
 		[OperationContract]
-		string Commit(string message);
+		string Commit(string message = "Automatic changelog compile, [ci skip]");
 
 		//pushes the current branch to origin with the set git credentials
 		//returns null on success, error on failure

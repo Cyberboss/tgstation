@@ -94,6 +94,10 @@
             this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
             this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.FullUpdateWorker = new System.ComponentModel.BackgroundWorker();
+            this.CommiterLoginTitle = new System.Windows.Forms.Label();
+            this.CommitterPasswordTitle = new System.Windows.Forms.Label();
+            this.CommitterLoginTextBox = new System.Windows.Forms.TextBox();
+            this.CommitterPasswordTextBox = new System.Windows.Forms.TextBox();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -121,6 +125,10 @@
             // RepoPanel
             // 
             this.RepoPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.RepoPanel.Controls.Add(this.CommitterPasswordTextBox);
+            this.RepoPanel.Controls.Add(this.CommitterLoginTextBox);
+            this.RepoPanel.Controls.Add(this.CommitterPasswordTitle);
+            this.RepoPanel.Controls.Add(this.CommiterLoginTitle);
             this.RepoPanel.Controls.Add(this.TestmergeSelector);
             this.RepoPanel.Controls.Add(this.TestMergeListLabel);
             this.RepoPanel.Controls.Add(this.CurrentRevisionLabel);
@@ -164,12 +172,12 @@
             // 
             // TestMergeListLabel
             // 
-            this.TestMergeListLabel.Location = new System.Drawing.Point(184, 264);
+            this.TestMergeListLabel.Location = new System.Drawing.Point(184, 286);
             this.TestMergeListLabel.Multiline = true;
             this.TestMergeListLabel.Name = "TestMergeListLabel";
             this.TestMergeListLabel.ReadOnly = true;
             this.TestMergeListLabel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TestMergeListLabel.Size = new System.Drawing.Size(499, 96);
+            this.TestMergeListLabel.Size = new System.Drawing.Size(499, 74);
             this.TestMergeListLabel.TabIndex = 21;
             this.TestMergeListLabel.Visible = false;
             // 
@@ -188,7 +196,7 @@
             // 
             // RepoEmailTextBox
             // 
-            this.RepoEmailTextBox.Location = new System.Drawing.Point(90, 217);
+            this.RepoEmailTextBox.Location = new System.Drawing.Point(104, 197);
             this.RepoEmailTextBox.Name = "RepoEmailTextBox";
             this.RepoEmailTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoEmailTextBox.TabIndex = 19;
@@ -196,7 +204,7 @@
             // 
             // RepoCommitterNameTextBox
             // 
-            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(90, 191);
+            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(104, 168);
             this.RepoCommitterNameTextBox.Name = "RepoCommitterNameTextBox";
             this.RepoCommitterNameTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoCommitterNameTextBox.TabIndex = 18;
@@ -267,7 +275,7 @@
             this.CommitterEmailTitle.AutoSize = true;
             this.CommitterEmailTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommitterEmailTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommitterEmailTitle.Location = new System.Drawing.Point(6, 217);
+            this.CommitterEmailTitle.Location = new System.Drawing.Point(6, 199);
             this.CommitterEmailTitle.Name = "CommitterEmailTitle";
             this.CommitterEmailTitle.Size = new System.Drawing.Size(67, 18);
             this.CommitterEmailTitle.TabIndex = 10;
@@ -280,7 +288,7 @@
             this.CommiterNameTitle.AutoSize = true;
             this.CommiterNameTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.CommiterNameTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommiterNameTitle.Location = new System.Drawing.Point(6, 191);
+            this.CommiterNameTitle.Location = new System.Drawing.Point(6, 170);
             this.CommiterNameTitle.Name = "CommiterNameTitle";
             this.CommiterNameTitle.Size = new System.Drawing.Size(62, 18);
             this.CommiterNameTitle.TabIndex = 9;
@@ -306,7 +314,7 @@
             this.TestMergeListTitle.AutoSize = true;
             this.TestMergeListTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TestMergeListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.TestMergeListTitle.Location = new System.Drawing.Point(6, 266);
+            this.TestMergeListTitle.Location = new System.Drawing.Point(6, 286);
             this.TestMergeListTitle.Name = "TestMergeListTitle";
             this.TestMergeListTitle.Size = new System.Drawing.Size(169, 18);
             this.TestMergeListTitle.TabIndex = 6;
@@ -592,7 +600,6 @@
             this.ServerTestmergeInput.Name = "ServerTestmergeInput";
             this.ServerTestmergeInput.Size = new System.Drawing.Size(80, 20);
             this.ServerTestmergeInput.TabIndex = 25;
-            this.ServerTestmergeInput.Visible = false;
             // 
             // TestmergeButton
             // 
@@ -833,6 +840,50 @@
             // 
             this.FullUpdateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.FullUpdateWorker_DoWork);
             // 
+            // CommiterLoginTitle
+            // 
+            this.CommiterLoginTitle.AutoSize = true;
+            this.CommiterLoginTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommiterLoginTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommiterLoginTitle.Location = new System.Drawing.Point(6, 227);
+            this.CommiterLoginTitle.Name = "CommiterLoginTitle";
+            this.CommiterLoginTitle.Size = new System.Drawing.Size(59, 18);
+            this.CommiterLoginTitle.TabIndex = 23;
+            this.CommiterLoginTitle.Text = "Login:";
+            this.CommiterLoginTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommiterLoginTitle.Visible = false;
+            // 
+            // CommitterPasswordTitle
+            // 
+            this.CommitterPasswordTitle.AutoSize = true;
+            this.CommitterPasswordTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommitterPasswordTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommitterPasswordTitle.Location = new System.Drawing.Point(6, 258);
+            this.CommitterPasswordTitle.Name = "CommitterPasswordTitle";
+            this.CommitterPasswordTitle.Size = new System.Drawing.Size(92, 18);
+            this.CommitterPasswordTitle.TabIndex = 24;
+            this.CommitterPasswordTitle.Text = "Password:";
+            this.CommitterPasswordTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommitterPasswordTitle.Visible = false;
+            // 
+            // CommitterLoginTextBox
+            // 
+            this.CommitterLoginTextBox.Location = new System.Drawing.Point(104, 227);
+            this.CommitterLoginTextBox.Name = "CommitterLoginTextBox";
+            this.CommitterLoginTextBox.Size = new System.Drawing.Size(535, 20);
+            this.CommitterLoginTextBox.TabIndex = 25;
+            this.CommitterLoginTextBox.Visible = false;
+            // 
+            // CommitterPasswordTextBox
+            // 
+            this.CommitterPasswordTextBox.Location = new System.Drawing.Point(104, 256);
+            this.CommitterPasswordTextBox.Name = "CommitterPasswordTextBox";
+            this.CommitterPasswordTextBox.Size = new System.Drawing.Size(535, 20);
+            this.CommitterPasswordTextBox.TabIndex = 26;
+            this.CommitterPasswordTextBox.Text = "hunter2butseriouslyyoubetterfuckingrenamethis";
+            this.CommitterPasswordTextBox.UseSystemPasswordChar = true;
+            this.CommitterPasswordTextBox.Visible = false;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -926,6 +977,10 @@
 		private System.Windows.Forms.Button UpdateMergeButton;
 		private System.Windows.Forms.Button UpdateHardButton;
 		private System.ComponentModel.BackgroundWorker FullUpdateWorker;
+		private System.Windows.Forms.TextBox CommitterPasswordTextBox;
+		private System.Windows.Forms.TextBox CommitterLoginTextBox;
+		private System.Windows.Forms.Label CommitterPasswordTitle;
+		private System.Windows.Forms.Label CommiterLoginTitle;
 	}
 }
 

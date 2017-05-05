@@ -16,6 +16,7 @@ namespace TGControlPanel
 
 		FullUpdateAction fuAction;
 		int testmergePR;
+		string updateError;
 
 		string DDStatusString = null;
 		void InitServerPage()
@@ -29,6 +30,8 @@ namespace TGControlPanel
 
 		private void FullUpdateWorker_RunWorkerCompleted(object sender, System.ComponentModel.RunWorkerCompletedEventArgs e)
 		{
+			if (updateError != null)
+				MessageBox.Show(updateError);
 			UpdateHardButton.Enabled = true;
 			UpdateMergeButton.Enabled = true;
 			TestmergeButton.Enabled = true;
@@ -202,36 +205,36 @@ namespace TGControlPanel
 			switch (fuAction)
 			{
 				case FullUpdateAction.Testmerge:
-					Updater.UpdateServer(TGRepoUpdateMethod.None, false, (ushort)ServerTestmergeInput.Value);
+					updateError = Updater.UpdateServer(TGRepoUpdateMethod.None, false, (ushort)testmergePR);
 					break;
 				case FullUpdateAction.UpdateHard:
-					Updater.UpdateServer(TGRepoUpdateMethod.Hard, true);
+					updateError = Updater.UpdateServer(TGRepoUpdateMethod.Hard, true);
 					break;
 				case FullUpdateAction.UpdateHardTestmerge:
-					Updater.UpdateServer(TGRepoUpdateMethod.None, true, (ushort)ServerTestmergeInput.Value);
+					updateError = Updater.UpdateServer(TGRepoUpdateMethod.Hard, true, (ushort)testmergePR);
 					break;
-				case FullUpdateAction.Testmerge:
-					Updater.UpdateServer(TGRepoUpdateMethod.None, false, (ushort)ServerTestmergeInput.Value);
+				case FullUpdateAction.UpdateMerge:
+					updateError = Updater.UpdateServer(TGRepoUpdateMethod.Merge, true, (ushort)testmergePR);
 					break;
 			}
 		}
 		private void UpdateHardButton_Click(object sender, System.EventArgs e)
 		{
-
+			RunServerUpdate(FullUpdateAction.UpdateHard);
 		}
 
 		private void UpdateTestmergeButton_Click(object sender, System.EventArgs e)
 		{
-
+			RunServerUpdate(FullUpdateAction.UpdateHardTestmerge, (int)TestmergeSelector.Value);
 		}
 
 		private void UpdateMergeButton_Click(object sender, System.EventArgs e)
 		{
-
+			RunServerUpdate(FullUpdateAction.UpdateMerge);
 		}
 		private void TestmergeButton_Click(object sender, System.EventArgs e)
 		{
-
+			RunServerUpdate(FullUpdateAction.Testmerge, (int)TestmergeSelector.Value);
 		}
 	}
 }

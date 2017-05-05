@@ -55,7 +55,7 @@ namespace TGServerService
 
 			if (push_changelog)
 			{
-				res = Commit("Automatic changelog compile, [ci skip]");
+				res = Commit();
 				if (res != null)
 					return res;
 				res = Push();
@@ -64,20 +64,8 @@ namespace TGServerService
 			}
 
 			if (!Compile())
-				return "Compilation could not be started";
-
-			do
-			{
-				Thread.Sleep(100);
-				lock (CompilerLock)
-				{
-					if (CompilerIdleNoLock())
-						break;
-				}
-			}
-			while (true);
-
-			return CompileError();
+				return "Compilation could not be started!";
+			return null;
 		}
 
 		//just here to test the WCF connection

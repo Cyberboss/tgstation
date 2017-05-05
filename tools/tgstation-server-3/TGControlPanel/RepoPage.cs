@@ -83,10 +83,15 @@ namespace TGControlPanel
 				HardReset.Visible = true;
 				RepoApplyButton.Visible = true;
 				TestmergeSelector.Visible = true;
+				CommiterLoginTitle.Visible = true;
+				CommitterPasswordTitle.Visible = true;
+				CommitterPasswordTextBox.Visible = true;
+				CommitterLoginTextBox.Visible = true;
 
 				CurrentRevisionLabel.Text = Repo.GetHead(out string error) ?? "Unknown";
 				RepoRemoteTextBox.Text = Repo.GetRemote(out error) ?? "Unknown";
 				RepoBranchTextBox.Text = Repo.GetBranch(out error) ?? "Unknown";
+				CommitterLoginTextBox.Text = Repo.GetCredentialUsername() ?? "Unknown";
 				RepoCommitterNameTextBox.Text = Repo.GetCommitterName() ?? "Unknown";
 				RepoEmailTextBox.Text = Repo.GetCommitterEmail() ?? "Unknown";
 
@@ -200,6 +205,10 @@ namespace TGControlPanel
 			HardReset.Visible = false;
 			IdentityLabel.Visible = false;
 			TestmergeSelector.Visible = false;
+			CommiterLoginTitle.Visible = false;
+			CommitterPasswordTitle.Visible = false;
+			CommitterPasswordTextBox.Visible = false;
+			CommitterLoginTextBox.Visible = false;
 
 			RepoPanel.UseWaitCursor = true;
 
@@ -245,10 +254,16 @@ namespace TGControlPanel
 				}
 				
 				CheckoutBranch = RepoBranchTextBox.Text;
-				DoAsyncOp(RepoAction.Checkout, String.Format("Checking out {0}...", CheckoutBranch));
+				if(branch != CheckoutBranch)
+					DoAsyncOp(RepoAction.Checkout, String.Format("Checking out {0}...", CheckoutBranch));
 
 				Repo.SetCommitterName(RepoCommitterNameTextBox.Text);
 				Repo.SetCommitterEmail(RepoEmailTextBox.Text);
+				if (CommitterPasswordTextBox.Text != "hunter2butseriouslyyoubetterfuckingrenamethis")
+				{
+					Repo.SetCredentials(CommitterLoginTextBox.Text, CommitterPasswordTextBox.Text);
+					CommitterPasswordTextBox.Text = "hunter2butseriouslyyoubetterfuckingrenamethis";
+				}
 			}
 			else
 				CloneRepositoryButton_Click(null, null);

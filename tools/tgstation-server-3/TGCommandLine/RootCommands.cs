@@ -89,7 +89,7 @@ namespace TGCommandLine
 					return ExitCode.BadCommand;
 			}
 			var result = Server.GetComponent<ITGServerUpdater>().UpdateServer(method, gen_cl);
-			Console.WriteLine(result ?? "Success!");
+			Console.WriteLine(result ?? "Compilation started!");
 			return result == null ? ExitCode.Normal : ExitCode.ServerError;
 		}
 		public override void PrintHelp()
@@ -119,12 +119,12 @@ namespace TGCommandLine
 				return ExitCode.BadCommand;
 			}
 			var result = Server.GetComponent<ITGServerUpdater>().UpdateServer(TGRepoUpdateMethod.None, false, tm);
-			Console.WriteLine(result ?? "Success!");
+			Console.WriteLine(result ?? "Compilation started!");
 			return result == null ? ExitCode.Normal : ExitCode.ServerError;
 		}
 		public override void PrintHelp()
 		{
-			Console.WriteLine("update <merge|hard> [--cl]\t-\tUpdates the server fully, optionally generating and pushing a changelog");
+			Console.WriteLine("update <merge|hard> [--cl]\t-\tUpdates the server fully, optionally generating and pushing a changelog. Runs asynchronously once compilation starts");
 		}
 	}
 }
