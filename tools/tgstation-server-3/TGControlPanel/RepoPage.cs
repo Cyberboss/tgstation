@@ -16,6 +16,9 @@ namespace TGControlPanel
 			Reset,
 			Test,
 			Wait,
+			GenCL,
+			Commit,
+			Push,
 		}
 
 		RepoAction action;
@@ -87,6 +90,9 @@ namespace TGControlPanel
 				CommitterPasswordTitle.Visible = true;
 				CommitterPasswordTextBox.Visible = true;
 				CommitterLoginTextBox.Visible = true;
+				RepoGenChangelogButton.Visible = true;
+				RepoCommitButton.Visible = true;
+				RepoPushButton.Visible = true;
 
 				CurrentRevisionLabel.Text = Repo.GetHead(out string error) ?? "Unknown";
 				RepoRemoteTextBox.Text = Repo.GetRemote(out error) ?? "Unknown";
@@ -161,6 +167,17 @@ namespace TGControlPanel
 					break;
 				case RepoAction.Wait:
 					break;
+				case RepoAction.GenCL:
+					var result = Repo.GenerateChangelog(out repoError);
+					if(repoError != null)
+						repoError += ": " + result;
+					break;
+				case RepoAction.Commit:
+					repoError = Repo.Commit();
+					break;
+				case RepoAction.Push:
+					repoError = Repo.Push();
+					break;
 				default:
 					//reeee
 					return;
@@ -209,6 +226,9 @@ namespace TGControlPanel
 			CommitterPasswordTitle.Visible = false;
 			CommitterPasswordTextBox.Visible = false;
 			CommitterLoginTextBox.Visible = false;
+			RepoGenChangelogButton.Visible = false;
+			RepoCommitButton.Visible = false;
+			RepoPushButton.Visible = false;
 
 			RepoPanel.UseWaitCursor = true;
 
@@ -279,9 +299,27 @@ namespace TGControlPanel
 		private void TestMergeButton_Click(object sender, EventArgs e)
 		{
 			if (TestmergeSelector.Value == 0)
+			{
+				MessageBox.Show("Invalid PR number!");
 				return;
+			}
 			TestPR = (int)TestmergeSelector.Value;
 			DoAsyncOp(RepoAction.Test, String.Format("Merging latest commit of PR #{0}...", TestPR));
+		}
+
+		private void RepoGenChangelogButton_Click(object sender, System.EventArgs e)
+		{
+			DoAsyncOp(RepoAction.GenCL, "Generating changelog...");
+		}
+
+		private void RepoCommitButton_Click(object sender, System.EventArgs e)
+		{
+			DoAsyncOp(RepoAction.Commit, "Committing changes...");
+		}
+
+		private void RepoPushButton_Click(object sender, System.EventArgs e)
+		{
+			DoAsyncOp(RepoAction.Push, "Pushing changes...");
 		}
 	}
 }

@@ -32,6 +32,13 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Main));
             this.Panels = new System.Windows.Forms.TabControl();
             this.RepoPanel = new System.Windows.Forms.TabPage();
+            this.RepoPushButton = new System.Windows.Forms.Button();
+            this.RepoCommitButton = new System.Windows.Forms.Button();
+            this.RepoGenChangelogButton = new System.Windows.Forms.Button();
+            this.CommitterPasswordTextBox = new System.Windows.Forms.TextBox();
+            this.CommitterLoginTextBox = new System.Windows.Forms.TextBox();
+            this.CommitterPasswordTitle = new System.Windows.Forms.Label();
+            this.CommiterLoginTitle = new System.Windows.Forms.Label();
             this.TestmergeSelector = new System.Windows.Forms.NumericUpDown();
             this.TestMergeListLabel = new System.Windows.Forms.TextBox();
             this.CurrentRevisionLabel = new System.Windows.Forms.Label();
@@ -94,10 +101,6 @@
             this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
             this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.FullUpdateWorker = new System.ComponentModel.BackgroundWorker();
-            this.CommiterLoginTitle = new System.Windows.Forms.Label();
-            this.CommitterPasswordTitle = new System.Windows.Forms.Label();
-            this.CommitterLoginTextBox = new System.Windows.Forms.TextBox();
-            this.CommitterPasswordTextBox = new System.Windows.Forms.TextBox();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -125,6 +128,9 @@
             // RepoPanel
             // 
             this.RepoPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.RepoPanel.Controls.Add(this.RepoPushButton);
+            this.RepoPanel.Controls.Add(this.RepoCommitButton);
+            this.RepoPanel.Controls.Add(this.RepoGenChangelogButton);
             this.RepoPanel.Controls.Add(this.CommitterPasswordTextBox);
             this.RepoPanel.Controls.Add(this.CommitterLoginTextBox);
             this.RepoPanel.Controls.Add(this.CommitterPasswordTitle);
@@ -156,6 +162,83 @@
             this.RepoPanel.Size = new System.Drawing.Size(868, 366);
             this.RepoPanel.TabIndex = 0;
             this.RepoPanel.Text = "Repository";
+            // 
+            // RepoPushButton
+            // 
+            this.RepoPushButton.Location = new System.Drawing.Point(722, 212);
+            this.RepoPushButton.Name = "RepoPushButton";
+            this.RepoPushButton.Size = new System.Drawing.Size(140, 29);
+            this.RepoPushButton.TabIndex = 29;
+            this.RepoPushButton.Text = "Push";
+            this.RepoPushButton.UseVisualStyleBackColor = true;
+            this.RepoPushButton.Visible = false;
+            this.RepoPushButton.Click += new System.EventHandler(this.RepoPushButton_Click);
+            // 
+            // RepoCommitButton
+            // 
+            this.RepoCommitButton.Location = new System.Drawing.Point(722, 177);
+            this.RepoCommitButton.Name = "RepoCommitButton";
+            this.RepoCommitButton.Size = new System.Drawing.Size(140, 29);
+            this.RepoCommitButton.TabIndex = 28;
+            this.RepoCommitButton.Text = "Commit";
+            this.RepoCommitButton.UseVisualStyleBackColor = true;
+            this.RepoCommitButton.Visible = false;
+            this.RepoCommitButton.Click += new System.EventHandler(this.RepoCommitButton_Click);
+            // 
+            // RepoGenChangelogButton
+            // 
+            this.RepoGenChangelogButton.Location = new System.Drawing.Point(722, 142);
+            this.RepoGenChangelogButton.Name = "RepoGenChangelogButton";
+            this.RepoGenChangelogButton.Size = new System.Drawing.Size(140, 29);
+            this.RepoGenChangelogButton.TabIndex = 27;
+            this.RepoGenChangelogButton.Text = "Generate Changelog";
+            this.RepoGenChangelogButton.UseVisualStyleBackColor = true;
+            this.RepoGenChangelogButton.Visible = false;
+            this.RepoGenChangelogButton.Click += new System.EventHandler(this.RepoGenChangelogButton_Click);
+            // 
+            // CommitterPasswordTextBox
+            // 
+            this.CommitterPasswordTextBox.Location = new System.Drawing.Point(104, 256);
+            this.CommitterPasswordTextBox.Name = "CommitterPasswordTextBox";
+            this.CommitterPasswordTextBox.Size = new System.Drawing.Size(535, 20);
+            this.CommitterPasswordTextBox.TabIndex = 26;
+            this.CommitterPasswordTextBox.Text = "hunter2butseriouslyyoubetterfuckingrenamethis";
+            this.CommitterPasswordTextBox.UseSystemPasswordChar = true;
+            this.CommitterPasswordTextBox.Visible = false;
+            // 
+            // CommitterLoginTextBox
+            // 
+            this.CommitterLoginTextBox.Location = new System.Drawing.Point(104, 227);
+            this.CommitterLoginTextBox.Name = "CommitterLoginTextBox";
+            this.CommitterLoginTextBox.Size = new System.Drawing.Size(535, 20);
+            this.CommitterLoginTextBox.TabIndex = 25;
+            this.CommitterLoginTextBox.Visible = false;
+            // 
+            // CommitterPasswordTitle
+            // 
+            this.CommitterPasswordTitle.AutoSize = true;
+            this.CommitterPasswordTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommitterPasswordTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommitterPasswordTitle.Location = new System.Drawing.Point(6, 258);
+            this.CommitterPasswordTitle.Name = "CommitterPasswordTitle";
+            this.CommitterPasswordTitle.Size = new System.Drawing.Size(92, 18);
+            this.CommitterPasswordTitle.TabIndex = 24;
+            this.CommitterPasswordTitle.Text = "Password:";
+            this.CommitterPasswordTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommitterPasswordTitle.Visible = false;
+            // 
+            // CommiterLoginTitle
+            // 
+            this.CommiterLoginTitle.AutoSize = true;
+            this.CommiterLoginTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.CommiterLoginTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.CommiterLoginTitle.Location = new System.Drawing.Point(6, 227);
+            this.CommiterLoginTitle.Name = "CommiterLoginTitle";
+            this.CommiterLoginTitle.Size = new System.Drawing.Size(59, 18);
+            this.CommiterLoginTitle.TabIndex = 23;
+            this.CommiterLoginTitle.Text = "Login:";
+            this.CommiterLoginTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            this.CommiterLoginTitle.Visible = false;
             // 
             // TestmergeSelector
             // 
@@ -840,50 +923,6 @@
             // 
             this.FullUpdateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.FullUpdateWorker_DoWork);
             // 
-            // CommiterLoginTitle
-            // 
-            this.CommiterLoginTitle.AutoSize = true;
-            this.CommiterLoginTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommiterLoginTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommiterLoginTitle.Location = new System.Drawing.Point(6, 227);
-            this.CommiterLoginTitle.Name = "CommiterLoginTitle";
-            this.CommiterLoginTitle.Size = new System.Drawing.Size(59, 18);
-            this.CommiterLoginTitle.TabIndex = 23;
-            this.CommiterLoginTitle.Text = "Login:";
-            this.CommiterLoginTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommiterLoginTitle.Visible = false;
-            // 
-            // CommitterPasswordTitle
-            // 
-            this.CommitterPasswordTitle.AutoSize = true;
-            this.CommitterPasswordTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.CommitterPasswordTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.CommitterPasswordTitle.Location = new System.Drawing.Point(6, 258);
-            this.CommitterPasswordTitle.Name = "CommitterPasswordTitle";
-            this.CommitterPasswordTitle.Size = new System.Drawing.Size(92, 18);
-            this.CommitterPasswordTitle.TabIndex = 24;
-            this.CommitterPasswordTitle.Text = "Password:";
-            this.CommitterPasswordTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.CommitterPasswordTitle.Visible = false;
-            // 
-            // CommitterLoginTextBox
-            // 
-            this.CommitterLoginTextBox.Location = new System.Drawing.Point(104, 227);
-            this.CommitterLoginTextBox.Name = "CommitterLoginTextBox";
-            this.CommitterLoginTextBox.Size = new System.Drawing.Size(535, 20);
-            this.CommitterLoginTextBox.TabIndex = 25;
-            this.CommitterLoginTextBox.Visible = false;
-            // 
-            // CommitterPasswordTextBox
-            // 
-            this.CommitterPasswordTextBox.Location = new System.Drawing.Point(104, 256);
-            this.CommitterPasswordTextBox.Name = "CommitterPasswordTextBox";
-            this.CommitterPasswordTextBox.Size = new System.Drawing.Size(535, 20);
-            this.CommitterPasswordTextBox.TabIndex = 26;
-            this.CommitterPasswordTextBox.Text = "hunter2butseriouslyyoubetterfuckingrenamethis";
-            this.CommitterPasswordTextBox.UseSystemPasswordChar = true;
-            this.CommitterPasswordTextBox.Visible = false;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -981,6 +1020,9 @@
 		private System.Windows.Forms.TextBox CommitterLoginTextBox;
 		private System.Windows.Forms.Label CommitterPasswordTitle;
 		private System.Windows.Forms.Label CommiterLoginTitle;
+		private System.Windows.Forms.Button RepoPushButton;
+		private System.Windows.Forms.Button RepoCommitButton;
+		private System.Windows.Forms.Button RepoGenChangelogButton;
 	}
 }
 
