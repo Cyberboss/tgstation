@@ -12,6 +12,7 @@ namespace TGControlPanel
 			InitRepoPage();
 			InitBYONDPage();
 			InitServerPage();
+			LoadConfig();
 		}
 
 		private void Panels_SelectedIndexChanged(object sender, System.EventArgs e)
