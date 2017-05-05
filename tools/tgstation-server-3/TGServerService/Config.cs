@@ -751,11 +751,15 @@ namespace TGServerService
 				{
 					if (newSetting.Name == I.Name)
 					{
+						somethingChanged = true;
+						if (newSetting.Value == null && newSetting.Values == null)  //unset
+							continue;
 						I.Value = newSetting.Value;
 						I.Values = newSetting.Values;
 						I.IsMultiKey = newSetting.IsMultiKey;
-						somethingChanged = true;
 					}
+					else if (!I.ExistsInStatic)
+						continue;
 					if (I.IsMultiKey)
 						foreach (var J in I.Values)
 							asStrings.Add((I.Name + " " + J).Trim());
