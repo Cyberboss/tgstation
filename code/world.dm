@@ -55,7 +55,6 @@
 		fcopy(GLOB.config_error_log, "[GLOB.log_directory]/config_error.log")
 		fdel(GLOB.config_error_log)
 
-	GLOB.revdata.DownloadPRDetails()
 	load_mode()
 	load_motd()
 	load_admins()
