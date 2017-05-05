@@ -40,7 +40,7 @@ namespace TGControlPanel
 			CheckStateChanged += ConfigCheckBox_CheckStateChanged;
 			ChangeList = cl;
 			Text = "Enabled";
-			Font = new Font("Verdana", 10.0f);
+			Font = new Font("Verdana", 8.0f);
 			ForeColor = Color.FromArgb(248, 248, 242);
 			Checked = Setting.Value != null;
 		}
@@ -56,29 +56,43 @@ namespace TGControlPanel
 	partial class Main
 	{
 		List<ConfigSetting> GeneralChangelist;
+		FlowLayoutPanel ConfigConfigFlow;
 		void LoadConfig()
 		{
-
-			GeneralChangelist = new List<ConfigSetting>();
-			var Config = Server.GetComponent<ITGConfig>();
-			ConfigConfigPanel.Controls.Clear();
-			var ConfigConfigFlow = new FlowLayoutPanel()
+			ConfigConfigFlow = new FlowLayoutPanel()
 			{
 				AutoSize = true,
-				MaximumSize = new Size(ConfigConfigPanel.Width, 9999999),
+				MaximumSize = new Size(ConfigConfigPanel.Width - 30, 9999999),
 				FlowDirection = FlowDirection.TopDown,
 			};
 			ConfigConfigPanel.Controls.Add(ConfigConfigFlow);
+			LoadConfigConfig();
+		}
+		void LoadConfigConfig()
+		{
 
-			var ConfigConfigEntries = Config.Retrieve(TGConfigType.General, out string error);
+			GeneralChangelist = new List<ConfigSetting>();
+			ConfigConfigFlow.Controls.Clear();
+			ConfigConfigFlow.SuspendLayout();
+
+			var ConfigConfigEntries = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.General, out string error);
 			if (ConfigConfigEntries != null)
-				foreach(var I in ConfigConfigEntries)
-				{
+				foreach (var I in ConfigConfigEntries)
 					HandleConfigEntry(I, ConfigConfigFlow, GeneralChangelist);
-				}
 			else
-				ConfigConfigPanel.Controls.Add(new Label() { Text = "Unable to load config.txt!" }); 
-			
+				ConfigConfigPanel.Controls.Add(new Label() { Text = "Unable to load config.txt!" });
+
+			ConfigConfigFlow.ResumeLayout();
+		}
+
+		private void ConfigConfigRefresh_Click(object sender, System.EventArgs e)
+		{
+			LoadConfigConfig();
+		}
+
+		private void ConfigConfigApply_Click(object sender, System.EventArgs e)
+		{
+
 		}
 
 		void HandleConfigEntry(ConfigSetting setting, FlowLayoutPanel flow, IList<ConfigSetting> changelist)
@@ -87,7 +101,7 @@ namespace TGControlPanel
 			{
 				Text = setting.Name + (setting.ExistsInRepo ? "" : " (Does not exist in repository!)"),
 				AutoSize = true,
-				Font = new Font("Verdana", 12.0f),
+				Font = new Font("Verdana", 10.0f),
 				ForeColor = Color.FromArgb(248, 248, 242)
 			});
 
@@ -95,7 +109,7 @@ namespace TGControlPanel
 				flow.Controls.Add(new Label()
 				{
 					AutoSize = true,
-					Font = new Font("Verdana", 10.0f),
+					Font = new Font("Verdana", 8.0f),
 					ForeColor = Color.FromArgb(248, 248, 242),
 					Text = setting.Comment
 				});

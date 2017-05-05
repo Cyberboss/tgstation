@@ -97,6 +97,8 @@
             this.ConfigPanel = new System.Windows.Forms.TabPage();
             this.ConfigPanels = new System.Windows.Forms.TabControl();
             this.ConfigConfigPanel = new System.Windows.Forms.TabPage();
+            this.ConfigConfigRefresh = new System.Windows.Forms.Button();
+            this.ConfigConfigApply = new System.Windows.Forms.Button();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
             this.ServerTimer = new System.Windows.Forms.Timer(this.components);
@@ -113,6 +115,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).BeginInit();
             this.ConfigPanel.SuspendLayout();
             this.ConfigPanels.SuspendLayout();
+            this.ConfigConfigPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panels
@@ -912,12 +915,34 @@
             // 
             this.ConfigConfigPanel.AutoScroll = true;
             this.ConfigConfigPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ConfigConfigPanel.Controls.Add(this.ConfigConfigRefresh);
+            this.ConfigConfigPanel.Controls.Add(this.ConfigConfigApply);
             this.ConfigConfigPanel.Location = new System.Drawing.Point(4, 22);
             this.ConfigConfigPanel.Name = "ConfigConfigPanel";
             this.ConfigConfigPanel.Padding = new System.Windows.Forms.Padding(3);
             this.ConfigConfigPanel.Size = new System.Drawing.Size(864, 340);
             this.ConfigConfigPanel.TabIndex = 0;
             this.ConfigConfigPanel.Text = "General";
+            // 
+            // ConfigConfigRefresh
+            // 
+            this.ConfigConfigRefresh.Location = new System.Drawing.Point(728, 40);
+            this.ConfigConfigRefresh.Name = "ConfigConfigRefresh";
+            this.ConfigConfigRefresh.Size = new System.Drawing.Size(118, 28);
+            this.ConfigConfigRefresh.TabIndex = 5;
+            this.ConfigConfigRefresh.Text = "Refresh";
+            this.ConfigConfigRefresh.UseVisualStyleBackColor = true;
+            this.ConfigConfigRefresh.Click += new System.EventHandler(this.ConfigConfigRefresh_Click);
+            // 
+            // ConfigConfigApply
+            // 
+            this.ConfigConfigApply.Location = new System.Drawing.Point(728, 6);
+            this.ConfigConfigApply.Name = "ConfigConfigApply";
+            this.ConfigConfigApply.Size = new System.Drawing.Size(118, 28);
+            this.ConfigConfigApply.TabIndex = 4;
+            this.ConfigConfigApply.Text = "Apply";
+            this.ConfigConfigApply.UseVisualStyleBackColor = true;
+            this.ConfigConfigApply.Click += new System.EventHandler(this.ConfigConfigApply_Click);
             // 
             // RepoBGW
             // 
@@ -974,6 +999,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).EndInit();
             this.ConfigPanel.ResumeLayout(false);
             this.ConfigPanels.ResumeLayout(false);
+            this.ConfigConfigPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
@@ -1052,6 +1078,8 @@
 		private System.Windows.Forms.Button RepoGenChangelogButton;
 		private System.Windows.Forms.TabControl ConfigPanels;
 		private System.Windows.Forms.TabPage ConfigConfigPanel;
+		private System.Windows.Forms.Button ConfigConfigRefresh;
+		private System.Windows.Forms.Button ConfigConfigApply;
 	}
 }
 
