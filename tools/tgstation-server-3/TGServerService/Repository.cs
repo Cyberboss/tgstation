@@ -83,7 +83,8 @@ namespace TGServerService
 		//no locks required because who gives a shit, it's a fucking 32-bit integer
 		bool HandleTransferProgress(TransferProgress progress)
 		{
-			currentProgress = (int)(((float)progress.ReceivedObjects / progress.TotalObjects) * 100);
+			currentProgress = (int)(((float)progress.ReceivedObjects / progress.TotalObjects) * 100) / 2;
+			currentProgress += (int)(((float)progress.IndexedObjects / progress.TotalObjects) * 100) / 2;
 			return true;
 		}
 
