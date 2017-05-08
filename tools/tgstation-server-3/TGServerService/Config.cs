@@ -972,9 +972,30 @@ namespace TGServerService
 		{
 			try
 			{
+				var configDir = repo ? RepoConfig : StaticConfigDir;
+				var path = configDir + "/" + configRelativePath;
 				lock (configLock) {
+					var di1 = new DirectoryInfo(configDir);
+					var di2 = new DirectoryInfo(new FileInfo(path).Directory.FullName);
+
+					var good = false;
+					while (di2 != null)
+					{
+						if (di2.FullName == di1.FullName)
+						{
+							good = true;
+							break;
+						}
+						else di2 = di2.Parent;
+					}
+
+					if (!good)
+					{
+						error = "Cannot read above config directory!";
+						return null;
+					}
+
 					error = null;
-					var path = (repo ? RepoConfig : StaticConfigDir) + "/" + configRelativePath;
 					return File.ReadAllText(path);
 				}
 			}
@@ -989,9 +1010,26 @@ namespace TGServerService
 		{
 			try
 			{
+				var path = StaticConfigDir + "/" + configRelativePath;
 				lock (configLock)
 				{
-					var path = StaticConfigDir + "/" + configRelativePath;
+					var di1 = new DirectoryInfo(StaticConfigDir);
+					var di2 = new DirectoryInfo(new FileInfo(path).Directory.FullName);
+
+					var good = false;
+					while (di2 != null)
+					{
+						if (di2.FullName == di1.FullName)
+						{
+							good = true;
+							break;
+						}
+						else di2 = di2.Parent;
+					}
+
+					if (!good)
+						return "Cannot write above config directory!";
+
 					File.WriteAllText(path, data);
 					return null;
 				}

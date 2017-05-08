@@ -22,7 +22,7 @@ namespace TGCommandLine
 		public RepoSetupCommand()
 		{
 			Keyword = "setup";
-			RequiredParameters = 2;
+			RequiredParameters = 1;
 		}
 		public override ExitCode Run(IList<string> parameters)
 		{
