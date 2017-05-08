@@ -132,6 +132,7 @@ namespace TGServerService
 						OnCheckoutProgress = HandleCheckoutProgress
 					};
 					Repository.Clone(RepoURL, RepoPath, Opts);
+					currentProgress = -1;
 					LoadRepo();
 					lock (configLock)
 					{
