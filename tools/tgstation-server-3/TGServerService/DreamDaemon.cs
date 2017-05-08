@@ -26,6 +26,9 @@ namespace TGServerService
 		bool RestartInProgress = false;
 		bool AwaitingShutdown = false;
 
+		TGDreamDaemonSecurity StartingSecurity;
+		TGDreamDaemonVisibility StartingVisiblity;
+
 		//Only need 1 proc instance
 		void InitDreamDaemon()
 		{
@@ -246,10 +249,10 @@ namespace TGServerService
 		}
 
 		//translate the configured security level into a byond param
-		string SecurityWord()
+		string SecurityWord(bool starting = false)
 		{
-			var level = Properties.Settings.Default.ServerSecurity;
-			switch ((TGDreamDaemonSecurity)level)
+			var level = starting ? StartingSecurity : (TGDreamDaemonSecurity)Properties.Settings.Default.ServerSecurity;
+			switch (level)
 			{
 				case TGDreamDaemonSecurity.Safe:
 					return "safe";
@@ -263,10 +266,10 @@ namespace TGServerService
 		}
 
 		//same thing with visibility
-		string VisibilityWord()
+		string VisibilityWord(bool starting = false)
 		{
-			var level = Properties.Settings.Default.ServerVisiblity;
-			switch ((TGDreamDaemonVisibility)level)
+			var level = starting ? StartingVisiblity : (TGDreamDaemonVisibility)Properties.Settings.Default.ServerVisiblity;
+			switch (level)
 			{
 				case TGDreamDaemonVisibility.Invisible:
 					return "invisible";
@@ -294,6 +297,8 @@ namespace TGServerService
 					var DMB = GameDirLive + "/" + Config.ProjectName + ".dmb";
 
 					GenCommsKey();
+					StartingVisiblity = (TGDreamDaemonVisibility)Config.ServerVisiblity;
+					StartingSecurity = (TGDreamDaemonSecurity)Config.ServerSecurity;
 					Proc.StartInfo.Arguments = String.Format("{0} -port {1} -close -verbose -params server_service={4} -{2} -{3}", DMB, Config.ServerPort, SecurityWord(), VisibilityWord(), serviceCommsKey);
 					Proc.Start();
 
@@ -350,16 +355,22 @@ namespace TGServerService
 
 		public string StatusString()
 		{
+			var portStr = String.Format(" (Port: {0}, ", Properties.Settings.Default.ServerPort);
+			var visSecStr = portStr + "Vis: {0}, Sec: {1})";
 			switch (DaemonStatus())
 			{
 				case TGDreamDaemonStatus.Offline:
-					return "OFFLINE";
+					return "OFFLINE" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
 				case TGDreamDaemonStatus.HardRebooting:
-					return "REBOOTING";
+					return "REBOOTING" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
 				case TGDreamDaemonStatus.Online:
-					return SendCommand(SCIRCCheck);
+					lock (watchdogLock)
+					{
+						visSecStr = String.Format(visSecStr, VisibilityWord(true), SecurityWord(true));
+					}
+					return SendCommand(SCIRCCheck) + visSecStr;
 				default:
-					return "NULL AND ERRORS";
+					return "NULL AND ERRORS" + portStr;
 			}
 		}
 	}

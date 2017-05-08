@@ -9,7 +9,7 @@ namespace TGCommandLine
 		public DDCommand()
 		{
 			Keyword = "dd";
-			Children = new Command[] { new DDStartCommand(), new DDStopCommand(), new DDRestartCommand(), new DDStatusCommand(), new DDAutostartCommand() };
+			Children = new Command[] { new DDStartCommand(), new DDStopCommand(), new DDRestartCommand(), new DDStatusCommand(), new DDAutostartCommand(), new DDPortCommand(), new DDVisibilityCommand(), new DDSecurityCommand() };
 		}
 		public override void PrintHelp()
 		{
@@ -111,21 +111,7 @@ namespace TGCommandLine
 
 		public override ExitCode Run(IList<string> parameters)
 		{
-			var DD = Server.GetComponent<ITGDreamDaemon>();
-			switch (DD.DaemonStatus()) {
-				case TGDreamDaemonStatus.HardRebooting:
-					Console.WriteLine("Rebooting");
-					break;
-				case TGDreamDaemonStatus.Offline:
-					Console.WriteLine("Offline");
-					break;
-				case TGDreamDaemonStatus.Online:
-					Console.WriteLine("Online");
-					break;
-				default:
-					Console.WriteLine("Null and errors!");
-					return ExitCode.ServerError;
-			}
+			Console.WriteLine(Server.GetComponent<ITGDreamDaemon>().StatusString());
 			return ExitCode.Normal;
 		}
 	}
@@ -162,6 +148,113 @@ namespace TGCommandLine
 		public override void PrintHelp()
 		{
 			Console.WriteLine("autostart <on|off|check>\t-\tChange or check autostarting of the game server");
+		}
+	}
+	class DDPortCommand : Command
+	{
+		public DDPortCommand()
+		{
+			Keyword = "set-port";
+			RequiredParameters = 1;
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			ushort port;
+			try
+			{
+				port = Convert.ToUInt16(parameters[0]);
+			}
+			catch
+			{
+				Console.WriteLine("Invalid port number!");
+				return ExitCode.BadCommand;
+			}
+
+			Server.GetComponent<ITGDreamDaemon>().SetPort(port);
+			return ExitCode.Normal;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("set-port <number>\t-\tSets the port DreamDaemon will open the server on. Requires a server restart to apply");
+		}
+	}
+
+	class DDVisibilityCommand : Command
+	{
+		public DDVisibilityCommand()
+		{
+			Keyword = "set-visibility";
+			RequiredParameters = 1;
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			TGDreamDaemonVisibility vis;
+			switch (parameters[0].ToLower())
+			{
+				case "invisible":
+				case "invis":
+					vis = TGDreamDaemonVisibility.Invisible;
+					break;
+				case "private":
+				case "priv":
+					vis = TGDreamDaemonVisibility.Private;
+					break;
+				case "public":
+				case "pub":
+					vis = TGDreamDaemonVisibility.Public;
+					break;
+				default:
+					Console.WriteLine("Invalid visiblity word!");
+					return ExitCode.BadCommand;
+			}
+			Server.GetComponent<ITGDreamDaemon>().SetVisibility(vis);
+			return ExitCode.Normal;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("set-visiblity <public|private|invisible>\t-\tSets the visibility option for the DreamDaemon world");
+		}
+	}
+
+	class DDSecurityCommand : Command
+	{
+		public DDSecurityCommand()
+		{
+			Keyword = "set-security";
+			RequiredParameters = 1;
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			TGDreamDaemonSecurity sec;
+			switch (parameters[0].ToLower())
+			{
+				case "safe":
+					sec = TGDreamDaemonSecurity.Safe;
+					break;
+				case "ultra":
+				case "ultrasafe":
+					sec = TGDreamDaemonSecurity.Ultrasafe;
+					break;
+				case "trust":
+				case "trusted":
+					sec = TGDreamDaemonSecurity.Trusted;
+					break;
+				default:
+					Console.WriteLine("Invalid security word!");
+					return ExitCode.BadCommand;
+			}
+			Server.GetComponent<ITGDreamDaemon>().SetSecurityLevel(sec);
+			return ExitCode.Normal;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("set-visiblity <public|private|invisible>\t-\tSets the visibility option for the DreamDaemon world");
 		}
 	}
 }

@@ -121,18 +121,6 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("8000")]
-        public ushort WCFPort {
-            get {
-                return ((ushort)(this["WCFPort"]));
-            }
-            set {
-                this["WCFPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("C:/tgstation-server-3")]
         public string ServerDirectory {
             get {

@@ -26,9 +26,6 @@
     <Setting Name="CredentialCyphertext" Type="System.String" Scope="User">
       <Value Profile="(Default)">correcthorsebatterystaple</Value>
     </Setting>
-    <Setting Name="WCFPort" Type="System.UInt16" Scope="User">
-      <Value Profile="(Default)">8000</Value>
-    </Setting>
     <Setting Name="ServerDirectory" Type="System.String" Scope="User">
       <Value Profile="(Default)">C:/tgstation-server-3</Value>
     </Setting>
