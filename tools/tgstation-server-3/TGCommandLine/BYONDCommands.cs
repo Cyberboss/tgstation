@@ -64,6 +64,9 @@ namespace TGCommandLine
 				case TGByondStatus.Updating:
 					Console.WriteLine("Applying update...");
 					break;
+				default:
+					Console.WriteLine("Limmexing (This is an error).");
+					return ExitCode.ServerError;
 			}
 			return ExitCode.Normal;
 		}

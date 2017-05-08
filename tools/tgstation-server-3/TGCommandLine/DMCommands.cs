@@ -76,6 +76,13 @@ namespace TGCommandLine
 			Keyword = "status";
 		}
 
+		void ShowError()
+		{
+			var error = Server.GetComponent<ITGCompiler>().CompileError();
+			if (error != null)
+				Console.WriteLine("Last error: " + error);
+		}
+
 		public override ExitCode Run(IList<string> parameters)
 		{
 			Console.Write("Compilier is currently: ");
@@ -86,12 +93,14 @@ namespace TGCommandLine
 					break;
 				case TGCompilerStatus.Initialized:
 					Console.WriteLine("Idle");
+					ShowError();
 					break;
 				case TGCompilerStatus.Initializing:
 					Console.WriteLine("Setting up...");
 					break;
 				case TGCompilerStatus.Uninitialized:
 					Console.WriteLine("Uninitialized");
+					ShowError();
 					break;
 				default:
 					Console.WriteLine("Seizing the means of production (This is an error).");
