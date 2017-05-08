@@ -10,7 +10,7 @@ namespace TGCommandLine
 		public BYONDCommand()
 		{
 			Keyword = "byond";
-			Children = new Command[] { new BYONDUpdateCommand(), new BYONDVersionCommand() };
+			Children = new Command[] { new BYONDUpdateCommand(), new BYONDVersionCommand(), new BYONDStatusCommand() };
 		}
 		public override void PrintHelp()
 		{
@@ -32,6 +32,44 @@ namespace TGCommandLine
 		public override void PrintHelp()
 		{
 			Console.WriteLine("version [--staged]\t-\tPrint the currently installed BYOND version");
+		}
+	}
+
+
+	class BYONDStatusCommand : Command
+	{
+		public BYONDStatusCommand()
+		{
+			Keyword = "status";
+		}
+		public override ExitCode Run(IList<string> parameters)
+		{
+			switch (Server.GetComponent<ITGByond>().CurrentStatus())
+			{
+				case TGByondStatus.Downloading:
+					Console.WriteLine("Downloading update...");
+					break;
+				case TGByondStatus.Idle:
+					Console.WriteLine("Updater Idle");
+					break;
+				case TGByondStatus.Staged:
+					Console.WriteLine("Update staged and awaiting server restart");
+					break;
+				case TGByondStatus.Staging:
+					Console.WriteLine("Staging update...");
+					break;
+				case TGByondStatus.Starting:
+					Console.WriteLine("Starting update...");
+					break;
+				case TGByondStatus.Updating:
+					Console.WriteLine("Applying update...");
+					break;
+			}
+			return ExitCode.Normal;
+		}
+		public override void PrintHelp()
+		{
+			Console.WriteLine("status\t-\tPrint the current status of the BYOND updater");
 		}
 	}
 
