@@ -51,6 +51,8 @@ namespace TGServerService
 		//die now k thx
 		void DisposeDreamDaemon()
 		{
+			SendCommand(SCWorldAnnounce + ";message=Server service stopped");
+			Thread.Sleep(1000);
 			Stop();
 		}
 
@@ -355,8 +357,7 @@ namespace TGServerService
 
 		public string StatusString()
 		{
-			var portStr = String.Format(" (Port: {0}, ", Properties.Settings.Default.ServerPort);
-			var visSecStr = portStr + "Vis: {0}, Sec: {1})";
+			var visSecStr = " (Vis: {0}, Sec: {1})";
 			switch (DaemonStatus())
 			{
 				case TGDreamDaemonStatus.Offline:
@@ -370,8 +371,13 @@ namespace TGServerService
 					}
 					return SendCommand(SCIRCCheck) + visSecStr;
 				default:
-					return "NULL AND ERRORS" + portStr;
+					return "NULL AND ERRORS" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
 			}
+		}
+
+		public ushort Port()
+		{
+			return Properties.Settings.Default.ServerPort;
 		}
 	}
 }

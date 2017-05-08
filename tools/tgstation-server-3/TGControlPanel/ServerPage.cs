@@ -17,6 +17,7 @@ namespace TGControlPanel
 		FullUpdateAction fuAction;
 		int testmergePR;
 		string updateError;
+		bool updatingPort = true;
 
 		string DDStatusString = null;
 		void InitServerPage()
@@ -53,6 +54,9 @@ namespace TGControlPanel
 			var DD = Server.GetComponent<ITGDreamDaemon>();
 
 			AutostartCheckbox.Checked = DD.Autostart();
+			updatingPort = true;
+			PortSelector.Value = DD.Port();
+			updatingPort = false;
 
 			switch (DM.GetStatus())
 			{
@@ -97,6 +101,12 @@ namespace TGControlPanel
 			LoadServerPage();
 		}
 
+		private void PortSelector_ValueChanged(object sender, EventArgs e)
+		{
+			if(!updatingPort)
+				Server.GetComponent<ITGDreamDaemon>().SetPort((ushort)PortSelector.Value);
+		}
+
 		private void RunServerUpdate(FullUpdateAction fua, int tm = 0)
 		{
 			if (FullUpdateWorker.IsBusy)
@@ -129,12 +139,12 @@ namespace TGControlPanel
 			FullUpdateWorker.RunWorkerAsync();
 		}
 
-		private void InitializeButton_Click(object sender, System.EventArgs e)
+		private void InitializeButton_Click(object sender, EventArgs e)
 		{
 			if (!Server.GetComponent<ITGCompiler>().Initialize())
 				MessageBox.Show("Unable to start initialization!");
 		}
-		private void CompileButton_Click(object sender, System.EventArgs e)
+		private void CompileButton_Click(object sender, EventArgs e)
 		{
 			if(!Server.GetComponent<ITGCompiler>().Compile())
 				MessageBox.Show("Unable to start compilation!");

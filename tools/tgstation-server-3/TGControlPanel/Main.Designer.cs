@@ -102,12 +102,16 @@
             this.ConfigApply = new System.Windows.Forms.Button();
             this.ConfigPanels = new System.Windows.Forms.TabControl();
             this.ConfigConfigPanel = new System.Windows.Forms.TabPage();
+            this.DatabaseConfigPanel = new System.Windows.Forms.TabPage();
+            this.GameConfigPanel = new System.Windows.Forms.TabPage();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
             this.ServerTimer = new System.Windows.Forms.Timer(this.components);
             this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
             this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.FullUpdateWorker = new System.ComponentModel.BackgroundWorker();
+            this.PortSelector = new System.Windows.Forms.NumericUpDown();
+            this.PortLabel = new System.Windows.Forms.Label();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -118,6 +122,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).BeginInit();
             this.ConfigPanel.SuspendLayout();
             this.ConfigPanels.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).BeginInit();
             this.SuspendLayout();
             // 
             // Panels
@@ -673,6 +678,8 @@
             // ServerPanel
             // 
             this.ServerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ServerPanel.Controls.Add(this.PortLabel);
+            this.ServerPanel.Controls.Add(this.PortSelector);
             this.ServerPanel.Controls.Add(this.label1);
             this.ServerPanel.Controls.Add(this.ServerTestmergeInput);
             this.ServerPanel.Controls.Add(this.TestmergeButton);
@@ -870,9 +877,9 @@
             this.compileButton.Enabled = false;
             this.compileButton.Location = new System.Drawing.Point(456, 240);
             this.compileButton.Name = "compileButton";
-            this.compileButton.Size = new System.Drawing.Size(118, 28);
+            this.compileButton.Size = new System.Drawing.Size(159, 28);
             this.compileButton.TabIndex = 12;
-            this.compileButton.Text = "Compile";
+            this.compileButton.Text = "Copy from Repo and Compile";
             this.compileButton.UseVisualStyleBackColor = true;
             this.compileButton.Click += new System.EventHandler(this.CompileButton_Click);
             // 
@@ -880,11 +887,11 @@
             // 
             this.initializeButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.initializeButton.Enabled = false;
-            this.initializeButton.Location = new System.Drawing.Point(265, 240);
+            this.initializeButton.Location = new System.Drawing.Point(219, 240);
             this.initializeButton.Name = "initializeButton";
-            this.initializeButton.Size = new System.Drawing.Size(118, 28);
+            this.initializeButton.Size = new System.Drawing.Size(159, 28);
             this.initializeButton.TabIndex = 11;
-            this.initializeButton.Text = "Initialize";
+            this.initializeButton.Text = "Initialize Game Folders";
             this.initializeButton.UseVisualStyleBackColor = true;
             this.initializeButton.Click += new System.EventHandler(this.InitializeButton_Click);
             // 
@@ -965,7 +972,7 @@
             this.ConfigDownloadRepo.Name = "ConfigDownloadRepo";
             this.ConfigDownloadRepo.Size = new System.Drawing.Size(63, 22);
             this.ConfigDownloadRepo.TabIndex = 8;
-            this.ConfigDownloadRepo.Text = "Repo";
+            this.ConfigDownloadRepo.Text = "DL Repo";
             this.ConfigDownloadRepo.UseVisualStyleBackColor = true;
             this.ConfigDownloadRepo.Click += new System.EventHandler(this.ConfigDownloadRepo_Click);
             // 
@@ -1019,6 +1026,8 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ConfigPanels.Controls.Add(this.ConfigConfigPanel);
+            this.ConfigPanels.Controls.Add(this.DatabaseConfigPanel);
+            this.ConfigPanels.Controls.Add(this.GameConfigPanel);
             this.ConfigPanels.Location = new System.Drawing.Point(-4, 0);
             this.ConfigPanels.Name = "ConfigPanels";
             this.ConfigPanels.SelectedIndex = 0;
@@ -1035,6 +1044,28 @@
             this.ConfigConfigPanel.Size = new System.Drawing.Size(868, 344);
             this.ConfigConfigPanel.TabIndex = 0;
             this.ConfigConfigPanel.Text = "General";
+            // 
+            // DatabaseConfigPanel
+            // 
+            this.DatabaseConfigPanel.AutoScroll = true;
+            this.DatabaseConfigPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.DatabaseConfigPanel.Location = new System.Drawing.Point(4, 22);
+            this.DatabaseConfigPanel.Name = "DatabaseConfigPanel";
+            this.DatabaseConfigPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.DatabaseConfigPanel.Size = new System.Drawing.Size(868, 344);
+            this.DatabaseConfigPanel.TabIndex = 1;
+            this.DatabaseConfigPanel.Text = "Database";
+            // 
+            // GameConfigPanel
+            // 
+            this.GameConfigPanel.AutoScroll = true;
+            this.GameConfigPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.GameConfigPanel.Location = new System.Drawing.Point(4, 22);
+            this.GameConfigPanel.Name = "GameConfigPanel";
+            this.GameConfigPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.GameConfigPanel.Size = new System.Drawing.Size(868, 344);
+            this.GameConfigPanel.TabIndex = 2;
+            this.GameConfigPanel.Text = "Game";
             // 
             // RepoBGW
             // 
@@ -1065,6 +1096,43 @@
             // 
             this.FullUpdateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.FullUpdateWorker_DoWork);
             // 
+            // PortSelector
+            // 
+            this.PortSelector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.PortSelector.Location = new System.Drawing.Point(59, 60);
+            this.PortSelector.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.PortSelector.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PortSelector.Name = "PortSelector";
+            this.PortSelector.Size = new System.Drawing.Size(60, 20);
+            this.PortSelector.TabIndex = 27;
+            this.PortSelector.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PortSelector.ValueChanged += new System.EventHandler(this.PortSelector_ValueChanged);
+            // 
+            // PortLabel
+            // 
+            this.PortLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.PortLabel.AutoSize = true;
+            this.PortLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PortLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.PortLabel.Location = new System.Drawing.Point(4, 60);
+            this.PortLabel.Name = "PortLabel";
+            this.PortLabel.Size = new System.Drawing.Size(48, 18);
+            this.PortLabel.TabIndex = 28;
+            this.PortLabel.Text = "Port:";
+            this.PortLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1089,6 +1157,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).EndInit();
             this.ConfigPanel.ResumeLayout(false);
             this.ConfigPanels.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).EndInit();
             this.ResumeLayout(false);
 
 		}
@@ -1172,6 +1241,10 @@
 		private System.Windows.Forms.Button ConfigDownload;
 		private System.Windows.Forms.Button ConfigUpload;
 		private System.Windows.Forms.Button ConfigDownloadRepo;
+		private System.Windows.Forms.TabPage DatabaseConfigPanel;
+		private System.Windows.Forms.TabPage GameConfigPanel;
+		private System.Windows.Forms.Label PortLabel;
+		private System.Windows.Forms.NumericUpDown PortSelector;
 	}
 }
 

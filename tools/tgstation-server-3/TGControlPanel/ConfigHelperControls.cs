@@ -87,17 +87,7 @@ namespace TGControlPanel
 			if (Result != null)
 				MessageBox.Show("Error: " + Result);
 
-			switch (type)
-			{
-				case TGConfigType.General:
-					main.LoadConfigConfig();
-					break;
-				case TGConfigType.Game:
-				case TGConfigType.Database:
-				default:
-					throw new NotImplementedException();
-			}
-
+			main.RefreshCurrentPage();
 		}
 	}
 }

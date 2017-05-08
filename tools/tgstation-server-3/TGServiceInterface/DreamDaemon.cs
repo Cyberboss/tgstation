@@ -110,6 +110,13 @@ namespace TGServiceInterface
 		void SetVisibility(TGDreamDaemonVisibility vis);
 
 		/// <summary>
+		/// Get the configured port. Not necessarily the running port if it has since changed
+		/// </summary>
+		/// <returns>The configured port</returns>
+		[OperationContract]
+		ushort Port();
+
+		/// <summary>
 		/// Set the port to host DD on. Requires reboot to apply
 		/// Implies a call to RequestRestart()
 		/// </summary>

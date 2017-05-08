@@ -106,13 +106,16 @@ namespace TGServerService
 				catch {
 					returnedString = "Topic recieve error!";
 				}
+				finally
+				{
+					topicSender.Disconnect(true);
+				}
 
 				TGServerService.ActiveService.EventLog.WriteEntry("Topic: \"" + topicdata + "\" Returned: " + returnedString);
 				return returnedString;
 			}
 			catch
 			{
-				topicSender.Disconnect(true);
 				if (!retry)
 					return SendTopic(topicdata, port, true);
 				else

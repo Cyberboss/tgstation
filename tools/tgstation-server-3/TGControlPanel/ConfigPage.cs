@@ -11,65 +11,109 @@ namespace TGControlPanel
 	partial class Main
 	{
 		const int ConfigConfig = 0;
+		const int DatabaseConfig = 1;
+		const int GameConfig = 2;
 
-		List<ConfigSetting> GeneralChangelist = new List<ConfigSetting>(),
-			DatabaseChangelist = new List<ConfigSetting>(),
-			GameChangelist = new List<ConfigSetting>();
+		List<ConfigSetting> GeneralChangelist, DatabaseChangelist, GameChangelist;
 
+		FlowLayoutPanel ConfigConfigFlow, DatabaseConfigFlow, GameConfigFlow;
 
-
-		FlowLayoutPanel ConfigConfigFlow;
-		void LoadConfig()
+		FlowLayoutPanel CreateFLP(Control parent)
 		{
-			ConfigConfigFlow = new FlowLayoutPanel()
+			var res = new FlowLayoutPanel()
 			{
 				AutoSize = true,
-				MaximumSize = new Size(ConfigConfigPanel.Width - 90, 9999999),
 				FlowDirection = FlowDirection.TopDown,
 			};
-			ConfigConfigPanel.Controls.Add(ConfigConfigFlow);
-			LoadConfigConfig();
+			AdjustFlow(res, parent);
+			parent.Controls.Add(res);
+			return res;
+		}
+		void AdjustFlow(FlowLayoutPanel flow, Control parent)
+		{
+			flow.MaximumSize = new Size(parent.Width - 90, 9999999);
+		}
+		void LoadConfig()
+		{
+			ConfigConfigFlow = CreateFLP(ConfigConfigPanel);
+			GeneralChangelist = new List<ConfigSetting>();
+			LoadGenericConfig(TGConfigType.General);
+
+			DatabaseConfigFlow = CreateFLP(DatabaseConfigPanel);
+			DatabaseChangelist = new List<ConfigSetting>();
+			LoadGenericConfig(TGConfigType.Database);
+
+			GameConfigFlow = CreateFLP(GameConfigPanel);
+			GameChangelist = new List<ConfigSetting>();
+			LoadGenericConfig(TGConfigType.Game);
+
 			Resize += ReadjustFlow;
 		}
 
-		private void ReadjustFlow(object sender, EventArgs e)
+		void ReadjustFlow(object sender, EventArgs e)
 		{
-			ConfigConfigFlow.MaximumSize = new Size(ConfigConfigPanel.Width - 90, 9999999);
+			AdjustFlow(ConfigConfigFlow, ConfigConfigPanel);
+			AdjustFlow(GameConfigFlow, GameConfigPanel);
+			AdjustFlow(DatabaseConfigFlow, DatabaseConfigPanel);
 		}
 
-		public void LoadConfigConfig()
+		void LoadGenericConfig(TGConfigType type)
 		{
+			FlowLayoutPanel flow;
+			List<ConfigSetting> changeList;
+			switch (type)
+			{
+				case TGConfigType.Database:
+					flow = DatabaseConfigFlow;
+					changeList = DatabaseChangelist;
+					break;
+				case TGConfigType.Game:
+					flow = GameConfigFlow;
+					changeList = GameChangelist;
+					break;
+				case TGConfigType.General:
+					flow = ConfigConfigFlow;
+					changeList = GeneralChangelist;
+					break;
+				default:
+					throw new Exception(String.Format("Invalid TGConfigType {0}", type));
+			}
+			changeList.Clear();
+			flow.Controls.Clear();
+			flow.SuspendLayout();
 
-			GeneralChangelist = new List<ConfigSetting>();
-			ConfigConfigFlow.Controls.Clear();
-			ConfigConfigFlow.SuspendLayout();
-
-			var ConfigConfigEntries = Server.GetComponent<ITGConfig>().Retrieve(TGConfigType.General, out string error);
-			if (ConfigConfigEntries != null)
-				foreach (var I in ConfigConfigEntries)
-					HandleConfigEntry(I, ConfigConfigFlow, GeneralChangelist, TGConfigType.General);
+			var Entries = Server.GetComponent<ITGConfig>().Retrieve(type, out string error);
+			if (Entries != null)
+				foreach (var I in Entries)
+					HandleConfigEntry(I, flow, changeList, type);
 			else
-				ConfigConfigPanel.Controls.Add(new Label() { Text = "Unable to load config.txt!" });
+				flow.Controls.Add(new Label() { Text = "Unable to load related config!" });
 
-			ConfigConfigFlow.ResumeLayout();
+			flow.ResumeLayout();
 		}
 
-		private void ConfigRefresh_Click(object sender, System.EventArgs e)
+		void ConfigRefresh_Click(object sender, System.EventArgs e)
 		{
 			RefreshCurrentPage();
 		}
 
-		private void RefreshCurrentPage()
+		public void RefreshCurrentPage()
 		{
 			switch (ConfigPanels.SelectedIndex)
 			{
 				case ConfigConfig:
-					LoadConfigConfig();
+					LoadGenericConfig(TGConfigType.General);
+					break;
+				case DatabaseConfig:
+					LoadGenericConfig(TGConfigType.Database);
+					break;
+				case GameConfig:
+					LoadGenericConfig(TGConfigType.Game);
 					break;
 			}
 		}
 
-		private void ConfigApply_Click(object sender, System.EventArgs e)
+		void ConfigApply_Click(object sender, System.EventArgs e)
 		{
 			var Config = Server.GetComponent<ITGConfig>();
 			switch (ConfigPanels.SelectedIndex)
@@ -84,13 +128,12 @@ namespace TGControlPanel
 							break;
 						}
 					}
-					GeneralChangelist.Clear();
 					RefreshCurrentPage();
 					break;
 			}
 		}
 
-		private void ConfigUpload_Click(object sender, EventArgs eva)
+		void ConfigUpload_Click(object sender, EventArgs eva)
 		{
 			var ofd = new OpenFileDialog()
 			{
@@ -128,7 +171,7 @@ namespace TGControlPanel
 				MessageBox.Show("An error occurred: " + error);
 		}
 
-		private void DownloadConfig(string remotePath, bool repo)
+		void DownloadConfig(string remotePath, bool repo)
 		{
 			if (remotePath == null)
 				return;
@@ -165,12 +208,12 @@ namespace TGControlPanel
 			MessageBox.Show("An error occurred: " + error);
 		}
 
-		private void ConfigDownload_Click(object sender, EventArgs eva)
+		void ConfigDownload_Click(object sender, EventArgs eva)
 		{
 			DownloadConfig(Program.TextPrompt("Config Download", "Enter the path of the source file in the config folder:"), false);
 		}
 
-		private void ConfigDownloadRepo_Click(object sender, EventArgs e)
+		void ConfigDownloadRepo_Click(object sender, EventArgs e)
 		{
 			DownloadConfig(Program.TextPrompt("Repo Config Download", "Enter the path of the source file in the repository's config folder:"), true);
 		}
