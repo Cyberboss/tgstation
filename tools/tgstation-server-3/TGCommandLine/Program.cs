@@ -88,7 +88,13 @@ namespace TGCommandLine
 					case "exit":
 						return (int)ExitCode.Normal;
 					default:
-						var formattedCommand = new List<string>(NextCommand.Split(' '));
+						//linq voodoo to get quoted strings
+						var formattedCommand = NextCommand.Split('"')
+										   .Select((element, index) => index % 2 == 0  // If even index
+										   ? element.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries)  // Split the item
+										   : new string[] { element })  // Keep the entire item
+										   .SelectMany(element => element).ToList();
+
 						formattedCommand = formattedCommand.Select(x => x.Trim()).ToList();
 						formattedCommand.Remove("");
 						RunCommandLine(formattedCommand);

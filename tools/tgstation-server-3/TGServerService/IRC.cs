@@ -150,7 +150,9 @@ namespace TGServerService
 				}
 			}
 			if (Connected())
-				if (ServerChange)
+				if (!Config.IRCEnabled)
+					Disconnect();
+				else if (ServerChange)
 					Reconnect();
 				else
 				{
@@ -172,6 +174,8 @@ namespace TGServerService
 						}
 					}
 				}
+			else if (Config.IRCEnabled)
+				Connect();
 		}
 		//public api
 		public string[] Channels()
@@ -197,16 +201,13 @@ namespace TGServerService
 			}
 		}
 		//public api
-		public void SetupAuth(string identifyTarget, string identifyCommand, bool required)
+		public void SetupAuth(string identifyTarget, string identifyCommand)
 		{
 			lock (IRCLock)
 			{
 				var Config = Properties.Settings.Default;
-				if (identifyTarget != null)
-					Config.IRCIdentifyTarget = identifyTarget;
-				if (identifyCommand != null)
-					Config.IRCIdentifyCommand = identifyCommand;
-				Config.IRCIdentifyRequired = required;
+				Config.IRCIdentifyTarget = identifyTarget;
+				Config.IRCIdentifyCommand = identifyCommand;
 			}
 			if (Connected())
 				Login();
@@ -223,7 +224,7 @@ namespace TGServerService
 			lock (IRCLock)
 			{
 				var Config = Properties.Settings.Default;
-				if (Config.IRCIdentifyRequired)
+				if (Config.IRCIdentifyTarget != null)
 					irc.SendMessage(SendType.Message, Config.IRCIdentifyTarget, Config.IRCIdentifyCommand);
 			}
 		}
@@ -392,7 +393,7 @@ namespace TGServerService
 		{
 			var si = new StringCollection();
 			foreach (var I in admins)
-				si.Add(I.ToLower().Trim());
+				si.Add(I.Trim());
 			lock (IRCLock)
 			{
 				Properties.Settings.Default.IRCAdmins = si;

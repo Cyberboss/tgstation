@@ -241,25 +241,13 @@ namespace TGServerService.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("hunter2")]
+        [global::System.Configuration.DefaultSettingValueAttribute("id hunter2")]
         public string IRCIdentifyCommand {
             get {
                 return ((string)(this["IRCIdentifyCommand"]));
             }
             set {
                 this["IRCIdentifyCommand"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IRCIdentifyRequired {
-            get {
-                return ((bool)(this["IRCIdentifyRequired"]));
-            }
-            set {
-                this["IRCIdentifyRequired"] = value;
             }
         }
         

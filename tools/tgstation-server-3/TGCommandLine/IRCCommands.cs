@@ -9,7 +9,7 @@ namespace TGCommandLine
 		public IRCCommand()
 		{
 			Keyword = "irc";
-			Children = new Command[] { new IRCNickCommand(), new IRCJoinCommand(), new IRCPartCommand(), new IRCAnnounceCommand(), new IRCStatusCommand(), new IRCAdminCommand(), new IRCEnableCommand(), new IRCDisableCommand() };
+			Children = new Command[] { new IRCNickCommand(), new IRCJoinCommand(), new IRCPartCommand(), new IRCAnnounceCommand(), new IRCStatusCommand(), new IRCAdminCommand(), new IRCEnableCommand(), new IRCDisableCommand(), new IRCReconnectCommand(), new IRCListAdminsCommand(), new IRCAddminCommand(), new IRCDeadminCommand(), new IRCAuthCommand(), new IRCDisableAuthCommand() };
 		}
 		public override void PrintHelp()
 		{
@@ -127,6 +127,151 @@ namespace TGCommandLine
 			return ExitCode.Normal;
 		}
 	}
+	class IRCListAdminsCommand : Command
+	{
+		public IRCListAdminsCommand()
+		{
+			Keyword = "list-admins";
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("list-admins\t-\tList users which can use restricted commands in the admin channel");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			var res = Server.GetComponent<ITGIRC>().ListAdmins();
+			foreach (var I in res)
+				Console.WriteLine(I);
+			return ExitCode.Normal;
+		}
+	}
+	class IRCReconnectCommand : Command
+	{
+		public IRCReconnectCommand()
+		{
+			Keyword = "reconnect";
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("reconnect\t-\tRestablish the IRC connection");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			var res = Server.GetComponent<ITGIRC>().Reconnect();
+			if (res != null)
+			{
+				Console.WriteLine("Error: " + res);
+				return ExitCode.ServerError;
+			}
+			return ExitCode.Normal;
+		}
+	}
+	class IRCAddminCommand : Command
+	{
+		public IRCAddminCommand()
+		{
+			Keyword = "addmin";
+			RequiredParameters = 1;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("addmin [nick]\t-\tAdd a user which can use restricted commands in the admin channel");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			var IRC = Server.GetComponent<ITGIRC>();
+			var mins = new List<string>(IRC.ListAdmins());
+			var newmin = parameters[0];
+
+			foreach (var I in mins)
+				if (I.ToLower() == newmin.ToLower())
+				{
+					Console.WriteLine(newmin + " is already an admin!");
+					return ExitCode.Normal;
+				}
+
+			mins.Add(newmin);
+			IRC.SetAdmins(mins.ToArray());
+			return ExitCode.Normal;
+		}
+	}
+	class IRCDeadminCommand : Command
+	{
+		public IRCDeadminCommand()
+		{
+			Keyword = "deadmin";
+			RequiredParameters = 1;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("deadmin [nick]\t-\tRemove a user which can use restricted commands in the admin channel");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			var IRC = Server.GetComponent<ITGIRC>();
+			var mins = new List<string>(IRC.ListAdmins());
+			var deadmin = parameters[0];
+
+			foreach (var I in mins)
+				if (I.ToLower() == deadmin.ToLower())
+				{
+					mins.Remove(I);
+					IRC.SetAdmins(mins.ToArray());
+					return ExitCode.Normal;
+				}
+
+			Console.WriteLine(deadmin + " is not an admin!");
+			return ExitCode.Normal;
+		}
+	}
+
+	class IRCAuthCommand : Command
+	{
+		public IRCAuthCommand()
+		{
+			Keyword = "setup-auth";
+			RequiredParameters = 2;
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("setup-auth <target> <message>\t-\tSet the authentication message to send to target for identification. e.g. <NickServ> <identify hunter2>");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			Server.GetComponent<ITGIRC>().SetupAuth(parameters[0], parameters[1]);
+			return ExitCode.Normal;
+		}
+	}
+
+	class IRCDisableAuthCommand : Command
+	{
+		public IRCDisableAuthCommand()
+		{
+			Keyword = "disable-auth";
+		}
+
+		public override void PrintHelp()
+		{
+			Console.WriteLine("disable-auth\t-\tTurns off IRC authentication");
+		}
+
+		public override ExitCode Run(IList<string> parameters)
+		{
+			Server.GetComponent<ITGIRC>().SetupAuth(null, null);
+			return ExitCode.Normal;
+		}
+	}
+
 	class IRCStatusCommand : Command
 	{
 		public IRCStatusCommand()
@@ -201,7 +346,7 @@ namespace TGCommandLine
 
 		public override ExitCode Run(IList<string> parameters)
 		{
-			Server.GetComponent<ITGIRC>().Setup(null, 0, null, null, null, TGIRCEnableType.Enable);
+			Server.GetComponent<ITGIRC>().Setup(null, 0, null, null, null, TGIRCEnableType.Disable);
 			return ExitCode.Normal;
 		}
 	}

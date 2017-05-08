@@ -17,7 +17,7 @@ namespace TGServiceInterface
 
 		//Sets up auth IRC info, null fields don't change the current value
 		[OperationContract]
-		void SetupAuth(string identifyTarget, string identifyCommand, bool required);
+		void SetupAuth(string identifyTarget, string identifyCommand);
 
 		//returns true if the irc bot is connected, false otherwise
 		[OperationContract]

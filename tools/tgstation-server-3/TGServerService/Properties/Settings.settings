@@ -57,10 +57,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="IRCIdentifyCommand" Type="System.String" Scope="User">
-      <Value Profile="(Default)">hunter2</Value>
-    </Setting>
-    <Setting Name="IRCIdentifyRequired" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
+      <Value Profile="(Default)">id hunter2</Value>
     </Setting>
     <Setting Name="DDAutoStart" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
