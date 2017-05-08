@@ -51,8 +51,11 @@ namespace TGServerService
 		//die now k thx
 		void DisposeDreamDaemon()
 		{
-			SendCommand(SCWorldAnnounce + ";message=Server service stopped");
-			Thread.Sleep(1000);
+			if (DaemonStatus() == TGDreamDaemonStatus.Online)
+			{
+				SendCommand(SCWorldAnnounce + ";message=Server service stopped");
+				Thread.Sleep(1000);
+			}
 			Stop();
 		}
 
@@ -355,24 +358,33 @@ namespace TGServerService
 			Properties.Settings.Default.DDAutoStart = on;
 		}
 
-		public string StatusString()
+		public string StatusString(bool includeMetaInfo = true)
 		{
 			var visSecStr = " (Vis: {0}, Sec: {1})";
-			switch (DaemonStatus())
+			string res;
+			var ds = DaemonStatus();
+			switch (ds)
 			{
 				case TGDreamDaemonStatus.Offline:
-					return "OFFLINE" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
+					res = "OFFLINE";
+					break;
 				case TGDreamDaemonStatus.HardRebooting:
-					return "REBOOTING" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
+					res = "REBOOTING";
+					break;
 				case TGDreamDaemonStatus.Online:
 					lock (watchdogLock)
 					{
 						visSecStr = String.Format(visSecStr, VisibilityWord(true), SecurityWord(true));
 					}
-					return SendCommand(SCIRCCheck) + visSecStr;
+					res = SendCommand(SCIRCCheck) + visSecStr;
+					break;
 				default:
-					return "NULL AND ERRORS" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
+					res = "NULL AND ERRORS" + String.Format(visSecStr, VisibilityWord(), SecurityWord());
+					break;
 			}
+			if (includeMetaInfo)
+				return res +String.Format(visSecStr, VisibilityWord(ds == TGDreamDaemonStatus.Online), SecurityWord(ds == TGDreamDaemonStatus.Online));
+			return res;
 		}
 
 		public ushort Port()

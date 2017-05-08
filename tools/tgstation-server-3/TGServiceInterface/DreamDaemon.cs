@@ -47,7 +47,7 @@ namespace TGServiceInterface
 		/// </summary>
 		/// <returns>A human readable string of the current server status</returns>
 		[OperationContract]
-		string StatusString();
+		string StatusString(bool includeMetaInfo = true);
 
 		/// <summary>
 		/// Check if a call to Start will fail
