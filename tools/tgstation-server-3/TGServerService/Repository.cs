@@ -109,7 +109,7 @@ namespace TGServerService
 				var ts = (TwoStrings)twostrings;
 				var RepoURL = ts.a;
 				var BranchName = ts.b;
-				SendMessage(String.Format("REPO: Full reset started! Cloning {0} branch of {1} ...", BranchName, RepoURL));
+				SendMessage(String.Format("REPO: {2} started: Cloning {0} branch of {1} ...", BranchName, RepoURL, Repository.IsValid(RepoPath) ? "Full reset" : "Setup"));
 				try
 				{
 					DisposeRepo();
