@@ -23,15 +23,6 @@ namespace TGServiceInterface
 		[OperationContract]
 		bool Connected();
 
-		//returns null if the irc bot successfully logged into its assigned channels
-		//returns error otherwise
-		[OperationContract]
-		string Connect();
-
-		//what is says on the tin
-		[OperationContract]
-		void Disconnect();
-
 		//what is says on the tin
 		[OperationContract]
 		string Reconnect();
