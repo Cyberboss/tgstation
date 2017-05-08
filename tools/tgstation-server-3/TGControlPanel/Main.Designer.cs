@@ -95,10 +95,13 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.IRCPanel = new System.Windows.Forms.TabPage();
             this.ConfigPanel = new System.Windows.Forms.TabPage();
+            this.ConfigDownloadRepo = new System.Windows.Forms.Button();
+            this.ConfigUpload = new System.Windows.Forms.Button();
+            this.ConfigDownload = new System.Windows.Forms.Button();
+            this.ConfigRefresh = new System.Windows.Forms.Button();
+            this.ConfigApply = new System.Windows.Forms.Button();
             this.ConfigPanels = new System.Windows.Forms.TabControl();
             this.ConfigConfigPanel = new System.Windows.Forms.TabPage();
-            this.ConfigConfigRefresh = new System.Windows.Forms.Button();
-            this.ConfigConfigApply = new System.Windows.Forms.Button();
             this.RepoBGW = new System.ComponentModel.BackgroundWorker();
             this.BYONDTimer = new System.Windows.Forms.Timer(this.components);
             this.ServerTimer = new System.Windows.Forms.Timer(this.components);
@@ -115,7 +118,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).BeginInit();
             this.ConfigPanel.SuspendLayout();
             this.ConfigPanels.SuspendLayout();
-            this.ConfigConfigPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // Panels
@@ -212,7 +214,7 @@
             // CommitterPasswordTextBox
             // 
             this.CommitterPasswordTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CommitterPasswordTextBox.Location = new System.Drawing.Point(104, 256);
+            this.CommitterPasswordTextBox.Location = new System.Drawing.Point(122, 256);
             this.CommitterPasswordTextBox.Name = "CommitterPasswordTextBox";
             this.CommitterPasswordTextBox.Size = new System.Drawing.Size(535, 20);
             this.CommitterPasswordTextBox.TabIndex = 26;
@@ -223,7 +225,7 @@
             // CommitterLoginTextBox
             // 
             this.CommitterLoginTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.CommitterLoginTextBox.Location = new System.Drawing.Point(104, 227);
+            this.CommitterLoginTextBox.Location = new System.Drawing.Point(122, 227);
             this.CommitterLoginTextBox.Name = "CommitterLoginTextBox";
             this.CommitterLoginTextBox.Size = new System.Drawing.Size(535, 20);
             this.CommitterLoginTextBox.TabIndex = 25;
@@ -274,12 +276,12 @@
             // TestMergeListLabel
             // 
             this.TestMergeListLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TestMergeListLabel.Location = new System.Drawing.Point(184, 286);
+            this.TestMergeListLabel.Location = new System.Drawing.Point(122, 286);
             this.TestMergeListLabel.Multiline = true;
             this.TestMergeListLabel.Name = "TestMergeListLabel";
             this.TestMergeListLabel.ReadOnly = true;
             this.TestMergeListLabel.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.TestMergeListLabel.Size = new System.Drawing.Size(499, 74);
+            this.TestMergeListLabel.Size = new System.Drawing.Size(535, 74);
             this.TestMergeListLabel.TabIndex = 21;
             this.TestMergeListLabel.Visible = false;
             // 
@@ -299,7 +301,7 @@
             // RepoEmailTextBox
             // 
             this.RepoEmailTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.RepoEmailTextBox.Location = new System.Drawing.Point(104, 197);
+            this.RepoEmailTextBox.Location = new System.Drawing.Point(122, 197);
             this.RepoEmailTextBox.Name = "RepoEmailTextBox";
             this.RepoEmailTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoEmailTextBox.TabIndex = 19;
@@ -308,7 +310,7 @@
             // RepoCommitterNameTextBox
             // 
             this.RepoCommitterNameTextBox.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(104, 168);
+            this.RepoCommitterNameTextBox.Location = new System.Drawing.Point(122, 168);
             this.RepoCommitterNameTextBox.Name = "RepoCommitterNameTextBox";
             this.RepoCommitterNameTextBox.Size = new System.Drawing.Size(535, 20);
             this.RepoCommitterNameTextBox.TabIndex = 18;
@@ -423,12 +425,11 @@
             // TestMergeListTitle
             // 
             this.TestMergeListTitle.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.TestMergeListTitle.AutoSize = true;
             this.TestMergeListTitle.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.TestMergeListTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
             this.TestMergeListTitle.Location = new System.Drawing.Point(6, 286);
             this.TestMergeListTitle.Name = "TestMergeListTitle";
-            this.TestMergeListTitle.Size = new System.Drawing.Size(169, 18);
+            this.TestMergeListTitle.Size = new System.Drawing.Size(110, 41);
             this.TestMergeListTitle.TabIndex = 6;
             this.TestMergeListTitle.Text = "Active Test Merges:";
             this.TestMergeListTitle.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
@@ -944,6 +945,11 @@
             // ConfigPanel
             // 
             this.ConfigPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
+            this.ConfigPanel.Controls.Add(this.ConfigDownloadRepo);
+            this.ConfigPanel.Controls.Add(this.ConfigUpload);
+            this.ConfigPanel.Controls.Add(this.ConfigDownload);
+            this.ConfigPanel.Controls.Add(this.ConfigRefresh);
+            this.ConfigPanel.Controls.Add(this.ConfigApply);
             this.ConfigPanel.Controls.Add(this.ConfigPanels);
             this.ConfigPanel.Location = new System.Drawing.Point(4, 22);
             this.ConfigPanel.Name = "ConfigPanel";
@@ -951,6 +957,61 @@
             this.ConfigPanel.Size = new System.Drawing.Size(868, 366);
             this.ConfigPanel.TabIndex = 5;
             this.ConfigPanel.Text = "Config";
+            // 
+            // ConfigDownloadRepo
+            // 
+            this.ConfigDownloadRepo.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigDownloadRepo.Location = new System.Drawing.Point(782, 110);
+            this.ConfigDownloadRepo.Name = "ConfigDownloadRepo";
+            this.ConfigDownloadRepo.Size = new System.Drawing.Size(63, 22);
+            this.ConfigDownloadRepo.TabIndex = 8;
+            this.ConfigDownloadRepo.Text = "Repo";
+            this.ConfigDownloadRepo.UseVisualStyleBackColor = true;
+            this.ConfigDownloadRepo.Click += new System.EventHandler(this.ConfigDownloadRepo_Click);
+            // 
+            // ConfigUpload
+            // 
+            this.ConfigUpload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigUpload.Location = new System.Drawing.Point(782, 138);
+            this.ConfigUpload.Name = "ConfigUpload";
+            this.ConfigUpload.Size = new System.Drawing.Size(63, 22);
+            this.ConfigUpload.TabIndex = 7;
+            this.ConfigUpload.Text = "Upload";
+            this.ConfigUpload.UseVisualStyleBackColor = true;
+            this.ConfigUpload.Click += new System.EventHandler(this.ConfigUpload_Click);
+            // 
+            // ConfigDownload
+            // 
+            this.ConfigDownload.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigDownload.Location = new System.Drawing.Point(782, 82);
+            this.ConfigDownload.Name = "ConfigDownload";
+            this.ConfigDownload.Size = new System.Drawing.Size(63, 22);
+            this.ConfigDownload.TabIndex = 6;
+            this.ConfigDownload.Text = "Download";
+            this.ConfigDownload.UseVisualStyleBackColor = true;
+            this.ConfigDownload.Click += new System.EventHandler(this.ConfigDownload_Click);
+            // 
+            // ConfigRefresh
+            // 
+            this.ConfigRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigRefresh.Location = new System.Drawing.Point(782, 54);
+            this.ConfigRefresh.Name = "ConfigRefresh";
+            this.ConfigRefresh.Size = new System.Drawing.Size(63, 22);
+            this.ConfigRefresh.TabIndex = 5;
+            this.ConfigRefresh.Text = "Refresh";
+            this.ConfigRefresh.UseVisualStyleBackColor = true;
+            this.ConfigRefresh.Click += new System.EventHandler(this.ConfigRefresh_Click);
+            // 
+            // ConfigApply
+            // 
+            this.ConfigApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ConfigApply.Location = new System.Drawing.Point(782, 26);
+            this.ConfigApply.Name = "ConfigApply";
+            this.ConfigApply.Size = new System.Drawing.Size(63, 22);
+            this.ConfigApply.TabIndex = 4;
+            this.ConfigApply.Text = "Apply";
+            this.ConfigApply.UseVisualStyleBackColor = true;
+            this.ConfigApply.Click += new System.EventHandler(this.ConfigApply_Click);
             // 
             // ConfigPanels
             // 
@@ -968,36 +1029,12 @@
             // 
             this.ConfigConfigPanel.AutoScroll = true;
             this.ConfigConfigPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(39)))), ((int)(((byte)(40)))), ((int)(((byte)(34)))));
-            this.ConfigConfigPanel.Controls.Add(this.ConfigConfigRefresh);
-            this.ConfigConfigPanel.Controls.Add(this.ConfigConfigApply);
             this.ConfigConfigPanel.Location = new System.Drawing.Point(4, 22);
             this.ConfigConfigPanel.Name = "ConfigConfigPanel";
             this.ConfigConfigPanel.Padding = new System.Windows.Forms.Padding(3);
             this.ConfigConfigPanel.Size = new System.Drawing.Size(868, 344);
             this.ConfigConfigPanel.TabIndex = 0;
             this.ConfigConfigPanel.Text = "General";
-            // 
-            // ConfigConfigRefresh
-            // 
-            this.ConfigConfigRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfigConfigRefresh.Location = new System.Drawing.Point(809, 34);
-            this.ConfigConfigRefresh.Name = "ConfigConfigRefresh";
-            this.ConfigConfigRefresh.Size = new System.Drawing.Size(53, 22);
-            this.ConfigConfigRefresh.TabIndex = 5;
-            this.ConfigConfigRefresh.Text = "Refresh";
-            this.ConfigConfigRefresh.UseVisualStyleBackColor = true;
-            this.ConfigConfigRefresh.Click += new System.EventHandler(this.ConfigConfigRefresh_Click);
-            // 
-            // ConfigConfigApply
-            // 
-            this.ConfigConfigApply.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.ConfigConfigApply.Location = new System.Drawing.Point(809, 6);
-            this.ConfigConfigApply.Name = "ConfigConfigApply";
-            this.ConfigConfigApply.Size = new System.Drawing.Size(53, 22);
-            this.ConfigConfigApply.TabIndex = 4;
-            this.ConfigConfigApply.Text = "Apply";
-            this.ConfigConfigApply.UseVisualStyleBackColor = true;
-            this.ConfigConfigApply.Click += new System.EventHandler(this.ConfigConfigApply_Click);
             // 
             // RepoBGW
             // 
@@ -1052,7 +1089,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).EndInit();
             this.ConfigPanel.ResumeLayout(false);
             this.ConfigPanels.ResumeLayout(false);
-            this.ConfigConfigPanel.ResumeLayout(false);
             this.ResumeLayout(false);
 
 		}
@@ -1131,8 +1167,11 @@
 		private System.Windows.Forms.Button RepoGenChangelogButton;
 		private System.Windows.Forms.TabControl ConfigPanels;
 		private System.Windows.Forms.TabPage ConfigConfigPanel;
-		private System.Windows.Forms.Button ConfigConfigRefresh;
-		private System.Windows.Forms.Button ConfigConfigApply;
+		private System.Windows.Forms.Button ConfigRefresh;
+		private System.Windows.Forms.Button ConfigApply;
+		private System.Windows.Forms.Button ConfigDownload;
+		private System.Windows.Forms.Button ConfigUpload;
+		private System.Windows.Forms.Button ConfigDownloadRepo;
 	}
 }
 

@@ -1014,7 +1014,8 @@ namespace TGServerService
 				lock (configLock)
 				{
 					var di1 = new DirectoryInfo(StaticConfigDir);
-					var di2 = new DirectoryInfo(new FileInfo(path).Directory.FullName);
+					var destdir = new FileInfo(path).Directory.FullName;
+					var di2 = new DirectoryInfo(destdir);
 
 					var good = false;
 					while (di2 != null)
@@ -1029,7 +1030,7 @@ namespace TGServerService
 
 					if (!good)
 						return "Cannot write above config directory!";
-
+					Directory.CreateDirectory(destdir);
 					File.WriteAllText(path, data);
 					return null;
 				}
