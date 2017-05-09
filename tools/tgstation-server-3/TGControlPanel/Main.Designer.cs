@@ -73,6 +73,8 @@
             this.MajorVersionNumeric = new System.Windows.Forms.NumericUpDown();
             this.UpdateProgressBar = new System.Windows.Forms.ProgressBar();
             this.ServerPanel = new System.Windows.Forms.TabPage();
+            this.PortLabel = new System.Windows.Forms.Label();
+            this.PortSelector = new System.Windows.Forms.NumericUpDown();
             this.label1 = new System.Windows.Forms.Label();
             this.ServerTestmergeInput = new System.Windows.Forms.NumericUpDown();
             this.TestmergeButton = new System.Windows.Forms.Button();
@@ -110,8 +112,6 @@
             this.WorldStatusChecker = new System.ComponentModel.BackgroundWorker();
             this.WorldStatusTimer = new System.Windows.Forms.Timer(this.components);
             this.FullUpdateWorker = new System.ComponentModel.BackgroundWorker();
-            this.PortSelector = new System.Windows.Forms.NumericUpDown();
-            this.PortLabel = new System.Windows.Forms.Label();
             this.Panels.SuspendLayout();
             this.RepoPanel.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TestmergeSelector)).BeginInit();
@@ -119,10 +119,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.MinorVersionNumeric)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).BeginInit();
             this.ServerPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).BeginInit();
             this.ConfigPanel.SuspendLayout();
             this.ConfigPanels.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).BeginInit();
             this.SuspendLayout();
             // 
             // Panels
@@ -706,6 +706,43 @@
             this.ServerPanel.TabIndex = 2;
             this.ServerPanel.Text = "Server";
             // 
+            // PortLabel
+            // 
+            this.PortLabel.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.PortLabel.AutoSize = true;
+            this.PortLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PortLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
+            this.PortLabel.Location = new System.Drawing.Point(4, 60);
+            this.PortLabel.Name = "PortLabel";
+            this.PortLabel.Size = new System.Drawing.Size(48, 18);
+            this.PortLabel.TabIndex = 28;
+            this.PortLabel.Text = "Port:";
+            this.PortLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // PortSelector
+            // 
+            this.PortSelector.Anchor = System.Windows.Forms.AnchorStyles.Left;
+            this.PortSelector.Location = new System.Drawing.Point(59, 60);
+            this.PortSelector.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.PortSelector.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PortSelector.Name = "PortSelector";
+            this.PortSelector.Size = new System.Drawing.Size(60, 20);
+            this.PortSelector.TabIndex = 27;
+            this.PortSelector.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.PortSelector.ValueChanged += new System.EventHandler(this.PortSelector_ValueChanged);
+            // 
             // label1
             // 
             this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
@@ -1096,43 +1133,6 @@
             // 
             this.FullUpdateWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.FullUpdateWorker_DoWork);
             // 
-            // PortSelector
-            // 
-            this.PortSelector.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PortSelector.Location = new System.Drawing.Point(59, 60);
-            this.PortSelector.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.PortSelector.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.PortSelector.Name = "PortSelector";
-            this.PortSelector.Size = new System.Drawing.Size(60, 20);
-            this.PortSelector.TabIndex = 27;
-            this.PortSelector.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.PortSelector.ValueChanged += new System.EventHandler(this.PortSelector_ValueChanged);
-            // 
-            // PortLabel
-            // 
-            this.PortLabel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.PortLabel.AutoSize = true;
-            this.PortLabel.Font = new System.Drawing.Font("Verdana", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.PortLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(248)))), ((int)(((byte)(242)))));
-            this.PortLabel.Location = new System.Drawing.Point(4, 60);
-            this.PortLabel.Name = "PortLabel";
-            this.PortLabel.Size = new System.Drawing.Size(48, 18);
-            this.PortLabel.TabIndex = 28;
-            this.PortLabel.Text = "Port:";
-            this.PortLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1154,10 +1154,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.MajorVersionNumeric)).EndInit();
             this.ServerPanel.ResumeLayout(false);
             this.ServerPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ServerTestmergeInput)).EndInit();
             this.ConfigPanel.ResumeLayout(false);
             this.ConfigPanels.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.PortSelector)).EndInit();
             this.ResumeLayout(false);
 
 		}

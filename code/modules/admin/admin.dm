@@ -430,13 +430,11 @@
 	set category = "Server"
 	set name = "Reboot DreamDaemon"
 
-#ifndef TESTING
+	if(!check_rights(R_SERVER, TRUE))
+		return
+
 	if(!world.RunningService())
 		to_chat(usr, "<span class='adminnotice'>The DreamDaemon instance isn't running through the server tools. Command unavailable.</span>")
-		return
-#endif
-
-	if(!check_rights(R_SERVER, TRUE))
 		return
 
 	if(alert(usr, "Warning: This will close DreamDaemon and rely on the server watchdog to reboot it. ARE YOU SURE?", "DreamDaemon Reboot", "Reboot", "Cancel") != "Reboot" || !usr)
