@@ -126,12 +126,11 @@ namespace TGServerService
 				RestartInProgress = true;
 				Stop();
 				var res = Start();
-				if(res != null)
-					RestartInProgress = false;
 				return res;
 			}
 			finally
 			{
+				RestartInProgress = false;
 				Monitor.Exit(restartLock);
 			}
 		}
@@ -211,10 +210,10 @@ namespace TGServerService
 					currentStatus = TGDreamDaemonStatus.Offline;
 					currentPort = 0;
 					AwaitingShutdown = false;
+					if (!RestartInProgress)
+						SendMessage("DD: Watchdog exiting...");
 				}
 			}
-			if (!RestartInProgress)
-				SendMessage("DD: Watchdog exiting...");
 		}
 
 		//public api

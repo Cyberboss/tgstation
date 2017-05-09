@@ -112,7 +112,8 @@ namespace TGServerService
 			}
 			catch
 			{
-				topicSender.Disconnect(true);
+				if (topicSender.Connected)
+					topicSender.Disconnect(true);
 				if (!retry)
 					return SendTopic(topicdata, port, true);
 				else
@@ -123,7 +124,8 @@ namespace TGServerService
 			}
 			finally
 			{
-				topicLock.Exit();
+				if(!retry)
+					topicLock.Exit();
 			}
 		}
 

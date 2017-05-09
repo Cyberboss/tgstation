@@ -101,9 +101,6 @@ GLOBAL_LIST_INIT(admin_verbs_server, world.AVerbsServer())
 	return list(
 	/datum/admins/proc/startnow,
 	/datum/admins/proc/restart,
-	#ifdef TESTING
-	/datum/admins/proc/reboot_dd,
-	#endif
 	/datum/admins/proc/end_round,
 	/datum/admins/proc/delay,
 	/datum/admins/proc/toggleaban,
