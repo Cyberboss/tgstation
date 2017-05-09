@@ -70,7 +70,7 @@ namespace TGServerService
 		{
 			try
 			{
-				host.Close();	//I believe this is where TGStationServer.Dispose() is called?
+				host.Close();	//where TGStationServer.Dispose() is called
 				host = null;
 			}
 			finally
