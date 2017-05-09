@@ -393,7 +393,7 @@ namespace TGServerService
 		{
 			var si = new StringCollection();
 			foreach (var I in admins)
-				si.Add(I.Trim());
+				si.Add(I.Trim().ToLower());
 			lock (IRCLock)
 			{
 				Properties.Settings.Default.IRCAdmins = si;
