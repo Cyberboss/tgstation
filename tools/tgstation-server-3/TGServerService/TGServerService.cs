@@ -34,8 +34,11 @@ namespace TGServerService
 					Directory.CreateDirectory(Config.ServerDirectory);
 				}
 				Environment.CurrentDirectory = Config.ServerDirectory;
-				
-				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") });	//construction runs here
+
+				host = new ServiceHost(typeof(TGStationServer), new Uri[] { new Uri("net.pipe://localhost") })
+				{
+					CloseTimeout = new TimeSpan(0, 0, 5)
+				}; //construction runs here
 
 				AddEndpoint<ITGRepository>();
 				AddEndpoint<ITGByond>();
