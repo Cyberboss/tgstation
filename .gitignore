@@ -192,6 +192,10 @@ Temporary Items
 
 #Visual studio stuff
 *.vscode/*
+tools/ByondNonBlockingSQL/.vs/*
+tools/ByondNonBlockingSQL/bin/*
+tools/ByondNonBlockingSQL/obj/*
+tools/ByondNonBlockingSQL/packages/*
 tools/MapAtmosFixer/MapAtmosFixer/obj/x86/Debug/MapAtmosFixer.csproj.CoreCompileInputs.cache
 
 #GitHub Atom
