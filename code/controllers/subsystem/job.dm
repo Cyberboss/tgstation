@@ -224,8 +224,8 @@ SUBSYSTEM_DEF(job)
 			A.spawn_positions = 3
 
 	//Get the players who are ready
-	for(var/mob/dead/new_player/player in GLOB.player_list)
-		if(player.ready == PLAYER_READY_TO_PLAY && player.mind && !player.mind.assigned_role)
+	for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
+		if(player.IsReady())
 			unassigned += player
 
 	initial_players_to_assign = unassigned.len
@@ -358,7 +358,7 @@ SUBSYSTEM_DEF(job)
 
 //Gives the player the stuff he should have with his rank
 /datum/controller/subsystem/job/proc/EquipRank(mob/M, rank, joined_late=0)
-	var/mob/dead/new_player/N
+	var/mob/living/carbon/human/lobby/N
 	var/mob/living/H
 	if(!joined_late)
 		N = M
@@ -458,8 +458,8 @@ SUBSYSTEM_DEF(job)
 		var/never = 0 //never
 		var/banned = 0 //banned
 		var/young = 0 //account too young
-		for(var/mob/dead/new_player/player in GLOB.player_list)
-			if(!(player.ready == PLAYER_READY_TO_PLAY && player.mind && !player.mind.assigned_role))
+		for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
+			if(!player.IsReady())
 				continue //This player is not ready
 			if(jobban_isbanned(player, job.title))
 				banned++
@@ -493,15 +493,14 @@ SUBSYSTEM_DEF(job)
 			return 1
 	return 0
 
-/datum/controller/subsystem/job/proc/RejectPlayer(mob/dead/new_player/player)
+/datum/controller/subsystem/job/proc/RejectPlayer(mob/living/carbon/human/lobby/player)
 	if(player.mind && player.mind.special_role)
 		return
 	if(PopcapReached())
 		Debug("Popcap overflow Check observer located, Player: [player]")
 	to_chat(player, "<b>You have failed to qualify for any job you desired.</b>")
 	unassigned -= player
-	player.ready = PLAYER_NOT_READY
-
+	player.MoveToStartArea()
 
 /datum/controller/subsystem/job/Recover()
 	set waitfor = FALSE

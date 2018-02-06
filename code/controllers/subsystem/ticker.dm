@@ -142,7 +142,7 @@ SUBSYSTEM_DEF(ticker)
 			//Everyone who wants to be an observer is now spawned
 			for(var/I in GLOB.lobby_players)
 				var/mob/living/carbon/human/lobby/player = I
-				I.OnInitializationsComplete()
+				player.OnInitializationsComplete()
 			fire()
 		if(GAME_STATE_PREGAME)
 				//lobby stats for statpanels
@@ -150,9 +150,9 @@ SUBSYSTEM_DEF(ticker)
 				timeLeft = max(0,start_at - world.time)
 			totalPlayers = 0
 			totalPlayersReady = 0
-			for(var/mob/dead/new_player/player in GLOB.player_list)
+			for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
 				++totalPlayers
-				if(player.ready == PLAYER_READY_TO_PLAY)
+				if(player.IsReady())
 					++totalPlayersReady
 
 			if(start_immediately)
@@ -268,12 +268,12 @@ SUBSYSTEM_DEF(ticker)
 
 	GLOB.data_core.manifest()
 
-	transfer_characters()	//transfer keys to the new mobs
-
 	for(var/I in round_start_events)
 		var/datum/callback/cb = I
 		cb.InvokeAsync()
 	LAZYCLEARLIST(round_start_events)
+
+	stoplag()	//because cpu is hot rn
 
 	log_world("Game start took [(world.timeofday - init_start)/10]s")
 	round_start_time = world.time
@@ -324,16 +324,14 @@ SUBSYSTEM_DEF(ticker)
 			explosion(epi, 0, 256, 512, 0, TRUE, TRUE, 0, TRUE)
 
 /datum/controller/subsystem/ticker/proc/create_characters()
-	for(var/mob/dead/new_player/player in GLOB.player_list)
-		if(player.ready == PLAYER_READY_TO_PLAY && player.mind)
+	for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
+		if(player.IsReady())
 			GLOB.joined_player_list += player.ckey
 			player.create_character(FALSE)
-		else
-			player.new_player_panel()
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()
-	for(var/mob/dead/new_player/P in GLOB.player_list)
+	for(var/mob/living/carbon/human/lobby/P in GLOB.player_list)
 		if(P.new_character && P.new_character.mind)
 			SSticker.minds += P.new_character.mind
 		CHECK_TICK
@@ -341,38 +339,19 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/equip_characters()
 	var/captainless=1
-	for(var/mob/dead/new_player/N in GLOB.player_list)
+	for(var/mob/living/carbon/human/lobby/N in GLOB.player_list)
 		var/mob/living/carbon/human/player = N.new_character
 		if(istype(player) && player.mind && player.mind.assigned_role)
 			if(player.mind.assigned_role == "Captain")
-				captainless=0
+				captainless = FALSE
 			if(player.mind.assigned_role != player.mind.special_role)
 				SSjob.EquipRank(N, player.mind.assigned_role, 0)
 		CHECK_TICK
 	if(captainless)
-		for(var/mob/dead/new_player/N in GLOB.player_list)
+		for(var/mob/living/carbon/human/lobby/N in GLOB.player_list)
 			if(N.new_character)
 				to_chat(N, "Captainship not forced on anyone.")
 			CHECK_TICK
-
-/datum/controller/subsystem/ticker/proc/transfer_characters()
-	var/list/livings = list()
-	for(var/mob/dead/new_player/player in GLOB.mob_list)
-		var/mob/living = player.transfer_character()
-		if(living)
-			qdel(player)
-			living.notransform = TRUE
-			if(living.client)
-				var/obj/screen/splash/S = new(living.client, TRUE)
-				S.Fade(TRUE)
-			livings += living
-	if(livings.len)
-		addtimer(CALLBACK(src, .proc/release_characters, livings), 30, TIMER_CLIENT_TIME)
-
-/datum/controller/subsystem/ticker/proc/release_characters(list/livings)
-	for(var/I in livings)
-		var/mob/living/L = I
-		L.notransform = FALSE
 
 /datum/controller/subsystem/ticker/proc/send_tip_of_the_round()
 	var/m
@@ -395,7 +374,7 @@ SUBSYSTEM_DEF(ticker)
 		return
 
 	queue_delay++
-	var/mob/dead/new_player/next_in_line = queued_players[1]
+	var/mob/living/carbon/human/lobby/next_in_line = queued_players[1]
 
 	switch(queue_delay)
 		if(5) //every 5 ticks check if there is a slot available
@@ -426,6 +405,9 @@ SUBSYSTEM_DEF(ticker)
 	if (!prob((world.time/600)*CONFIG_GET(number/maprotatechancedelta)))
 		return
 	INVOKE_ASYNC(SSmapping, /datum/controller/subsystem/mapping/.proc/maprotate)
+
+/datum/controller/subsystem/ticker/proc/IsPreGame()
+	return current_state == GAME_STATE_PREGAME
 
 /datum/controller/subsystem/ticker/proc/HasRoundStarted()
 	return current_state >= GAME_STATE_PLAYING
@@ -536,13 +518,6 @@ SUBSYSTEM_DEF(ticker)
 		start_at = world.time + newtime
 	else
 		timeLeft = newtime
-
-//Everyone who wanted to be an observer gets made one now
-/datum/controller/subsystem/ticker/proc/create_observers()
-	for(var/mob/dead/new_player/player in GLOB.player_list)
-		if(player.ready == PLAYER_READY_TO_OBSERVE && player.mind)
-			//Break chain since this has a sleep input in it
-			addtimer(CALLBACK(player, /mob/dead/new_player.proc/make_me_an_observer), 1)
 
 /datum/controller/subsystem/ticker/proc/load_mode()
 	var/mode = trim(file2text("data/mode.txt"))
