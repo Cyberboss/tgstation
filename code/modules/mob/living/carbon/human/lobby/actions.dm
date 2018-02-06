@@ -1,5 +1,5 @@
 /datum/action/lobby
-	icon_icon = 'icons/mob/actions/lobby_actions.dmi'
+	icon_icon = 'icons/mob/actions/actions_lobby.dmi'
 
 /datum/action/lobby/ApplyIcon(obj/screen/movable/action_button/current_button, force = FALSE)
 	. = ..()
