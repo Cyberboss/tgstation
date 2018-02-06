@@ -135,13 +135,14 @@ SUBSYSTEM_DEF(ticker)
 			if(Master.initializations_finished_with_no_players_logged_in)
 				start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
 			for(var/client/C in GLOB.clients)
-				window_flash(C, ignorepref = TRUE) //let them know lobby has opened up.
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
 			if(CONFIG_GET(flag/irc_announce_new_game))
 				SERVER_TOOLS_CHAT_BROADCAST("New round starting on [SSmapping.config.map_name]!")
 			current_state = GAME_STATE_PREGAME
 			//Everyone who wants to be an observer is now spawned
-			create_observers()
+			for(var/I in GLOB.lobby_players)
+				var/mob/living/carbon/human/lobby/player = I
+				I.OnInitializationsComplete()
 			fire()
 		if(GAME_STATE_PREGAME)
 				//lobby stats for statpanels
