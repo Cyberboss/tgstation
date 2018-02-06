@@ -33,8 +33,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	become_observer.Grant(src)
 	show_player_polls = new
 	show_player_polls.Grant(src)
-	if(SSticker.HasRoundStarted())
-		AddLateJoinAction()
 
 	verbs += /mob/dead/proc/server_hop
 
@@ -48,7 +46,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(roundstart_callback)
 	QDEL_NULL(new_character)
 	QDEL_NULL(splash_screen)
-	QDEL_NULL(late_join_action)
 	GLOB.lobby_players -= src
 	return ..()
 
@@ -57,10 +54,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 		RunSparks()
 	forceMove(pick(GLOB.newplayer_start))
 	RunSparks()
-
-/mob/living/carbon/human/lobby/proc/AddLateJoinAction()
-	late_join_action = new
-	late_join_action.Grant(src)
 
 /mob/living/carbon/human/lobby/proc/IsReady()
 	return (client || new_character) && istype(get_area(src), /area/shuttle/lobby/start_zone)
@@ -74,7 +67,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
-		AddLateJoinAction()
 		return
 	PhaseOutSplashScreen(new_character)
 	transfer_character()

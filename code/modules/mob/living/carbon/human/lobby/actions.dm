@@ -9,6 +9,7 @@
 /datum/action/lobby/setup_character
 	name = "Setup Character"
 	desc = "Create your character and change game preferences"
+	button_icon_state = "setup_character"
 
 /datum/action/lobby/setup_character/Trigger()
 	. = ..()
@@ -18,7 +19,7 @@
 /datum/action/lobby/become_observer
 	name = "Observe"
 	desc = "Become a ghost and watch the round"
-	button_icon_state = "observer_off"
+	button_icon_state = "observe"
 	var/on = FALSE
 
 /datum/action/lobby/become_observer/Trigger()
@@ -59,13 +60,3 @@
 		return
 	var/mob/living/carbon/human/lobby/player = owner
 	player.handle_player_polling()
-
-/datum/action/lobby/late_join
-	button_icon_state = "late_join"
-
-/datum/action/lobby/late_join/Trigger()
-	. = ..()
-	if(!.)
-		return
-	var/mob/living/carbon/human/lobby/player = owner
-	player.AttemptJoin()
