@@ -6,6 +6,11 @@
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/dummy)
 
+/mob/living/carbon/human/dummy/Initialize(mapload, for_lobby = FALSE)
+	. = ..()
+	if(for_lobby)
+		equipOutfit(/datum/outfit/vr_basic, FALSE)
+
 /mob/living/carbon/human/dummy/Destroy()
 	in_use = FALSE
 	return ..()
@@ -26,18 +31,16 @@ GLOBAL_LIST_EMPTY(human_dummy_list)
 	var/mob/living/carbon/human/dummy/D = GLOB.human_dummy_list[slotkey]
 	if(istype(D))
 		UNTIL(!D.in_use)
-	else
-		pass()
 	if(QDELETED(D))
 		D = new
 		GLOB.human_dummy_list[slotkey] = D
 	D.in_use = TRUE
 	return D
 
-/proc/unset_busy_human_dummy(slotnumber)
-	if(!slotnumber)
+/proc/unset_busy_human_dummy(slotkey)
+	if(!slotkey)
 		return
-	var/mob/living/carbon/human/dummy/D = GLOB.human_dummy_list[slotnumber]
+	var/mob/living/carbon/human/dummy/D = GLOB.human_dummy_list[slotkey]
 	if(istype(D))
 		D.wipe_state()
 		D.in_use = FALSE
