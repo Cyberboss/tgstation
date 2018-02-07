@@ -7,10 +7,6 @@
 	..()
 	LobbyStat()
 
-//K.I.S.S.
-/mob/living/carbon/human/lobby/forceMove(atom/destination)
-	loc = destination
-
 //OOC only
 /mob/living/carbon/human/lobby/say(message)
 	client.ooc(message)
