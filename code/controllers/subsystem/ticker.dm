@@ -243,7 +243,8 @@ SUBSYSTEM_DEF(ticker)
 	
 	for(var/I in GLOB.lobby_players)
 		var/mob/living/carbon/human/lobby/player = I
-		player.PhaseInSplashScreen()
+		if(player.IsReady())
+			player.PhaseInSplashScreen()
 		CHECK_TICK
 
 	var/dont_finish_until = REALTIMEOFDAY + 30
