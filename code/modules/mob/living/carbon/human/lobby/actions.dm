@@ -23,12 +23,6 @@
 	name = "Show Player Polls"
 	desc = "Show active playerbase polls. Not available to guests"
 	button_icon_state = "show_polls"
-	var/newpoll
-
-/datum/action/lobby/show_player_polls/IsAvailable()
-	if(!owner || IsGuestKey(owner.key) || !SSdbcore.Connect())
-		return FALSE
-	return ..()
 
 /datum/action/lobby/show_player_polls/Trigger()
 	. = ..()

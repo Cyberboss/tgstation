@@ -129,13 +129,15 @@ SUBSYSTEM_DEF(ticker)
 		GLOB.syndicate_code_response = generate_code_phrase()
 
 	..()
-	start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
+	var/lc = CONFIG_GET(number/lobby_countdown)
+	start_at = lc == -1 ? lc : world.time + (lc SECONDS)
 
 /datum/controller/subsystem/ticker/fire()
 	switch(current_state)
 		if(GAME_STATE_STARTUP)
 			if(Master.initializations_finished_with_no_players_logged_in)
-				start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
+				var/lc = CONFIG_GET(number/lobby_countdown)
+				start_at = lc == -1 ? lc : world.time + (lcSECONDS)
 			for(var/client/C in GLOB.clients)
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
 			if(CONFIG_GET(flag/irc_announce_new_game))
@@ -149,7 +151,7 @@ SUBSYSTEM_DEF(ticker)
 		if(GAME_STATE_PREGAME)
 				//lobby stats for statpanels
 			if(isnull(timeLeft))
-				timeLeft = max(0,start_at - world.time)
+				timeLeft = start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME, start_at - world.time)
 			totalPlayers = 0
 			totalPlayersReady = 0
 			for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
@@ -180,7 +182,8 @@ SUBSYSTEM_DEF(ticker)
 			if(!setup())
 				//setup failed
 				current_state = GAME_STATE_STARTUP
-				start_at = world.time + (CONFIG_GET(number/lobby_countdown) * 10)
+				var/lc = CONFIG_GET(number/lobby_countdown)
+				start_at = lc == -1 ? lc : world.time + (lcSECONDS)
 				timeLeft = null
 				Master.SetRunLevel(RUNLEVEL_LOBBY)
 
@@ -525,7 +528,7 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/GetTimeLeft()
 	if(isnull(SSticker.timeLeft))
-		return max(0, start_at - world.time)
+		return start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME, start_at - world.time)
 	return timeLeft
 
 /datum/controller/subsystem/ticker/proc/SetTimeLeft(newtime)

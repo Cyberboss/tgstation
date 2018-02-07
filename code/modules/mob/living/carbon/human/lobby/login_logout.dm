@@ -38,8 +38,11 @@
 
 	CheckPolls()
 
-	if(SSticker.IsPreGame() && !round_started) //post initializations
+	if(SSticker.current_state > GAME_STATE_STARTUP) //post initializations
 		OnInitializationsComplete(TRUE)
+	else if(!IsGuestKey(key) && SSdbcore.Connect())	//no poll button if can't use it
+		show_player_polls = new
+		show_player_polls.Grant(src)
 	SSticker.OnRoundstart(roundstart_callback)
 
 /mob/living/carbon/human/lobby/Logout()

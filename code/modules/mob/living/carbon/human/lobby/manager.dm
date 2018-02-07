@@ -17,65 +17,84 @@
 		return
 	process_started = TRUE
 
-	var/obj/docking_port/mobile/crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
-	if(!shuttle)
-		process_complete = TRUE
-		CRASH("Unable to find crew shuttle!")
+	var/obj/docking_port/mobile/crew/shuttle
+	var/you_had_your_chance = !SSticker.start_immediately	//if "Start Now" is clicked after this, you still gotta do wait for this sequence
+	if(you_had_your_chance)
+		shuttle = SSshuttle.getShuttle("crew_shuttle")
+		if(!shuttle)
+			process_complete = TRUE
+			CRASH("Unable to find crew shuttle!")
 
-	//dock crew shuttle
-	shuttle.StopFlying()
+		//dock crew shuttle
+		shuttle.StopFlying()
 
-	for(var/I in announcers)
-		var/obj/O = I
-		O.say("We have arrived at [station_name()]. Crew assigned to this outpost please report to the back area of the shuttle immediately.")
-	announcers.Cut()
+		for(var/I in announcers)
+			var/obj/O = I
+			O.say("We have arrived at [station_name()]. Crew assigned to this outpost please report to the back area of the shuttle immediately.")
 
-	UNTIL(SSticker.timeLeft < 150)
+		UNTIL(SSticker.GetTimeLeft() < 150)
 
-	for(var/I in lights)
-		var/turf/open/floor/light/lobby/L = I
-		L.WarningSequence()
+		for(var/I in lights)
+			var/turf/open/floor/light/lobby/L = I
+			L.WarningSequence()
 
-	UNTIL(SSticker.timeLeft< 50)
+		UNTIL(SSticker.GetTimeLeft() < 50)
 
-	for(var/I in 1 to shutters.len)
-		if(I == shutters.len)
-			var/obj/machinery/door/door = shutters[I]
-			door.close()    //wait on the last one
-		else
-			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/close)
+		for(var/I in 1 to shutters.len)
+			if(I == shutters.len)
+				var/obj/machinery/door/door = shutters[I]
+				door.close()    //wait on the last one
+			else
+				INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/close)
 	
 	process_complete = TRUE
 
-	for(var/I in lights)
-		var/turf/open/floor/light/lobby/L = I
-		L.Normalize()
-		CHECK_TICK
-	
-	sleep(30)
+	if(you_had_your_chance)
+		for(var/I in lights)
+			var/turf/open/floor/light/lobby/L = I
+			L.Normalize()
+			CHECK_TICK
+		
+		sleep(30)
 
+		for(var/I in announcers)
+			var/obj/O = I
+			O.say("Returning to CentCom.")
+	announcers.Cut()
 	lights.Cut()
 
-	shuttle.Launch()
+	if(you_had_your_chance)
+		shuttle.Launch()
 
-	sleep(60)
+		sleep(50)
+
+		for(var/I in announcers)
+			var/obj/O = I
+			O.say("Employees destined for space station 13 please take the teleporter to the next en-route shuttle in the back.")
+	announcers.Cut()
+
+	if(you_had_your_chance)
+		sleep(10)
 
 	for(var/I in hub_spawners)
 		new /obj/structure/lobby_teleporter(get_turf(I))
-		CHECK_TICK
+		if(you_had_your_chance)
+			CHECK_TICK
 	QDEL_LIST(hub_spawners)
 
 	for(var/I in wall_spawners)
 		var/turf/T = get_turf(I)
 		qdel(I)
-		T.PlaceOnTop(T)
-		CHECK_TICK
+		T.PlaceOnTop(/turf/closed/wall/mineral/titanium)
+		if(you_had_your_chance)
+			CHECK_TICK
 	QDEL_LIST(wall_spawners)
 
-	for(var/I in 1 to shutters.len)
-		if(I == shutters.len)
-			var/obj/machinery/door/door = shutters[I]
-			door.open()    //wait on the last one
-		else
-			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/open)
+	if(you_had_your_chance)
+		for(var/I in 1 to shutters.len)
+			if(I == shutters.len)
+				var/obj/machinery/door/door = shutters[I]
+				door.open()    //wait on the last one
+			else
+				INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/open)
 	shutters.Cut()

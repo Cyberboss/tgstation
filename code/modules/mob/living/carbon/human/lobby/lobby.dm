@@ -20,6 +20,9 @@
 	var/datum/action/lobby/setup_character/setup_character
 	var/datum/action/lobby/show_player_polls/show_player_polls
 
+	//"Start Now" memes
+	var/said_yes_to_the_dress = FALSE
+
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/Initialize()
@@ -34,8 +37,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	setup_character = new
 	setup_character.Grant(src)
-	show_player_polls = new
-	show_player_polls.Grant(src)
 
 	verbs += /mob/dead/proc/server_hop
 
@@ -51,6 +52,10 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	GLOB.lobby_players -= src
 	return ..()
 
+/mob/living/carbon/human/lobby/proc/PromptStartNow()
+	set waitfor = FALSE
+	said_yes_to_the_dress = alert(src, "An admin is starting the game. Do you want to join?", "Quick Start", "Yes", "No") == "Yes"
+
 /mob/living/carbon/human/lobby/proc/CheckPolls()
 	if(IsGuestKey(src.key) || !SSdbcore.Connect())
 		return
@@ -65,13 +70,13 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	RunSparks()
 
 /mob/living/carbon/human/lobby/proc/IsReady()
-	return (client || new_character) && istype(get_area(src), /area/shuttle/lobby/start_zone)
+	return (client || new_character) && (said_yes_to_the_dress || istype(get_area(src), /area/shuttle/lobby/start_zone))
 
 /mob/living/carbon/human/lobby/proc/OnInitializationsComplete(immediate = FALSE)
 	set waitfor = FALSE
 	if(!immediate)
-		var/obj/docking_port/mobile/crew/shuttle = SSshuttle.getShutte("crew_shuttle")
-		UNTIL(shuttle.mode != SHUTTLE_IDLE)	//let the shuttle roundstart dock
+		var/obj/docking_port/mobile/crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
+		UNTIL(shuttle.mode == SHUTTLE_CALL)	//let the shuttle roundstart dock
 	QDEL_NULL(setup_character)
 	QDEL_NULL(show_player_polls)
 	window_flash(client, ignorepref = TRUE) //let them know lobby has opened up.
