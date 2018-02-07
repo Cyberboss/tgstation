@@ -6,9 +6,6 @@
 		mind = new /datum/mind(key)
 		mind.active = TRUE
 		mind.current = src
-
-	var/round_started = SSticker.HasRoundStarted()
-	splash_screen = new(client, TRUE, round_started)
 	..()
 
 	var/motd = global.config.motd
@@ -33,10 +30,16 @@
 		to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
 		to_chat(src, "The game will start [postfix].")
 
+	var/round_started = SSticker.HasRoundStarted()
+	splash_screen = new(client, TRUE, round_started)
+
 	client.prefs.copy_to(src)
 	name = client.key
+
+	CheckPolls()
+
 	if(SSticker.IsPreGame() && !round_started) //post initializations
-		OnInitializationsComplete()
+		OnInitializationsComplete(TRUE)
 	SSticker.OnRoundstart(roundstart_callback)
 
 /mob/living/carbon/human/lobby/Logout()

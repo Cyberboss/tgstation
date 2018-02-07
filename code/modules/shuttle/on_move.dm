@@ -332,6 +332,9 @@ All ShuttleMove procs go here
 	if(. & MOVE_AREA)
 		. |= MOVE_CONTENTS
 
+/obj/machinery/computer/lobby/poll/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
+	new_notification.loc = loc
+
 
 /************************************Misc move procs************************************/
 

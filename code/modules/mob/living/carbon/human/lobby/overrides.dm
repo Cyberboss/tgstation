@@ -28,3 +28,7 @@
 //no griff
 /mob/living/carbon/human/lobby/can_be_pulled()
 	return FALSE
+
+//nahh, don't worry about us
+/mob/living/carbon/human/lobby/update_z()
+	return

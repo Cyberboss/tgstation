@@ -5,6 +5,7 @@
 	var/list/shutters = list()
 	var/list/announcers = list()
 	var/list/spawn_landmarks = list()
+	var/list/poll_computers = list()
 
 	var/process_started = FALSE
 	var/process_complete = FALSE

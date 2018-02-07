@@ -54,20 +54,34 @@
 
 /obj/machinery/computer/lobby/setup_character
 	name = "Setup Character"
+	icon_screen = "comm_monitor"
 
 /obj/machinery/computer/lobby/setup_character/attack_hand(mob/player)
 	player.client.prefs.ShowChoices(player)
 
 /obj/machinery/computer/lobby/observer
-	icon_screen = "comm_monitor"
 	name = "Become Observer"
+	icon_screen = "comm_monitor"
 
 /obj/machinery/computer/lobby/observer/attack_hand(mob/living/carbon/human/lobby/player)
 	player.make_me_an_observer()
 
 /obj/machinery/computer/lobby/poll
-	icon_screen = "syndishuttle"
 	name = "Show Player Polls"
+	icon_screen = "syndishuttle"
+	var/image/new_notification
+
+/obj/machinery/computer/lobby/poll/Initialize()
+	. = ..()
+	SSticker.lobby.poll_computers += src
+	new_notification = image('icons/mob/screen_gen.dmi', loc, "new_arrow")
+	var/matrix/shift_up = matrix(new_notification.transform)
+	shift_up.Translate(0, 20)
+	new_notification.transform = shift_up
+
+/obj/machinery/computer/lobby/poll/Destroy()
+	SSticker.lobby.poll_computers -= src
+	return ..()
 
 /obj/machinery/computer/lobby/poll/attack_hand(mob/living/carbon/human/lobby/player)
 	player.handle_player_polling()
