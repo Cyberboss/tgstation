@@ -51,4 +51,3 @@ SUBSYSTEM_DEF(title)
 	icon = SStitle.icon
 	splash_turf = SStitle.splash_turf
 	file_path = SStitle.file_path
-	previous_icon = SStitle.previous_icon
