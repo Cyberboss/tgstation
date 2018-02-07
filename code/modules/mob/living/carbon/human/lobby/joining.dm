@@ -41,14 +41,7 @@
 		to_chat(src, "<span class='danger'>The round has already finished!</span>")
 		return
 
-	//Determines Relevent Population Cap
-	var/relevant_cap
-	var/hpc = CONFIG_GET(number/hard_popcap)
-	var/epc = CONFIG_GET(number/extreme_popcap)
-	if(hpc && epc)
-		relevant_cap = min(hpc, epc)
-	else
-		relevant_cap = max(hpc, epc)
+	var/relevent_cap = GetReleventCap()
 
 	if(SSticker.queued_players.len || (relevant_cap && living_player_count() >= relevant_cap && !(ckey(key) in GLOB.admin_datums)))
 		to_chat(usr, "<span class='danger'>[CONFIG_GET(string/hard_popcap_message)]</span>")
@@ -63,6 +56,16 @@
 			to_chat(usr, "<span class='notice'>You have been added to the queue to join the game. Your position in queue is [SSticker.queued_players.len].</span>")
 		return
 	LateChoices()
+
+/mob/living/carbon/human/lobby/proc/GetReleventCap()
+	//Determines Relevent Population Cap
+	var/relevant_cap
+	var/hpc = CONFIG_GET(number/hard_popcap)
+	var/epc = CONFIG_GET(number/extreme_popcap)
+	if(hpc && epc)
+		relevant_cap = min(hpc, epc)
+	else
+		relevant_cap = max(hpc, epc)
 
 /mob/living/carbon/human/lobby/proc/AttemptLateSpawn(rank)
 	if(!IsJobAvailable(rank))
