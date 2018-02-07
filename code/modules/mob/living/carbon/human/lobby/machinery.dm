@@ -57,8 +57,7 @@
 	name = "Setup Character"
 
 /obj/machinery/computer/lobby/setup_character/attack_hand(mob/player)
-	player.client.prefs.current_tab = 1
-	player.client.prefs.ShowChoices()
+	player.client.prefs.ShowChoices(player)
 
 /obj/machinery/computer/lobby/observer
 	icon_screen = "comm_monitor"

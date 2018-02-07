@@ -16,8 +16,7 @@
 /datum/action/lobby/setup_character/Trigger()
 	. = ..()
 	if(.)
-		owner.client.prefs.current_tab = 1
-		owner.client.prefs.ShowChoices()
+		owner.client.prefs.ShowChoices(owner)
 
 /datum/action/lobby/show_player_polls
 	name = "Show Player Polls"
