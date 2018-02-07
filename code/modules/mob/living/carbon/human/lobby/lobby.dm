@@ -54,6 +54,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/proc/PromptStartNow()
 	set waitfor = FALSE
+	window_flash(client, ignorepref = TRUE) //important shit
 	said_yes_to_the_dress = alert(src, "An admin is starting the game. Do you want to join?", "Quick Start", "Yes", "No") == "Yes"
 
 /mob/living/carbon/human/lobby/proc/CheckPolls()

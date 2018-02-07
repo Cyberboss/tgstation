@@ -137,7 +137,7 @@ SUBSYSTEM_DEF(ticker)
 		if(GAME_STATE_STARTUP)
 			if(Master.initializations_finished_with_no_players_logged_in)
 				var/lc = CONFIG_GET(number/lobby_countdown)
-				start_at = lc == -1 ? lc : world.time + (lcSECONDS)
+				start_at = lc == -1 ? lc : world.time + (lc SECONDS)
 			for(var/client/C in GLOB.clients)
 			to_chat(world, "<span class='boldnotice'>Welcome to [station_name()]!</span>")
 			if(CONFIG_GET(flag/irc_announce_new_game))
@@ -183,7 +183,7 @@ SUBSYSTEM_DEF(ticker)
 				//setup failed
 				current_state = GAME_STATE_STARTUP
 				var/lc = CONFIG_GET(number/lobby_countdown)
-				start_at = lc == -1 ? lc : world.time + (lcSECONDS)
+				start_at = lc == -1 ? lc : world.time + (lc SECONDS)
 				timeLeft = null
 				Master.SetRunLevel(RUNLEVEL_LOBBY)
 
