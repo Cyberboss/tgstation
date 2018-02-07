@@ -546,7 +546,7 @@
 	plane = SPLASHSCREEN_PLANE
 	var/client/holder
 
-/obj/screen/splash/New(client/C, visible, use_previous_title) //TODO: Make this use INITIALIZE_IMMEDIATE, except its not easy
+/obj/screen/splash/New(client/C, visible) //TODO: Make this use INITIALIZE_IMMEDIATE, except its not easy
 	. = ..()
 
 	holder = C
@@ -556,14 +556,8 @@
 	else
 		holder.screen += src
 
-	if(!use_previous_title)
-		if(SStitle.icon)
-			icon = SStitle.icon
-	else
-		if(!SStitle.previous_icon)
-			qdel(src)
-			return
-		icon = SStitle.previous_icon
+	if(SStitle.icon)
+		icon = SStitle.icon
 
 /obj/screen/splash/proc/AdjustScreen(off = FALSE)
 	if(!holder)

@@ -4,18 +4,11 @@ SUBSYSTEM_DEF(title)
 
 	var/file_path
 	var/icon/icon
-	var/icon/previous_icon
 	var/turf/closed/indestructible/splashscreen/splash_turf
 
 /datum/controller/subsystem/title/PreInit()
 	if(file_path && icon)
 		return
-
-	if(fexists("data/previous_title.dat"))
-		var/previous_path = file2text("data/previous_title.dat")
-		if(istext(previous_path))
-			previous_icon = new(previous_icon)
-	fdel("data/previous_title.dat")
 
 	var/list/provisional_title_screens = flist("[global.config.directory]/title_screens/images/")
 	var/list/title_screens = list()
@@ -48,10 +41,6 @@ SUBSYSTEM_DEF(title)
 					splash_turf.icon = icon
 
 /datum/controller/subsystem/title/Shutdown()
-	if(file_path)
-		var/F = file("data/previous_title.dat")
-		WRITE_FILE(F, file_path)
-
 	for(var/thing in GLOB.clients)
 		if(!thing)
 			continue

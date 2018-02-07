@@ -87,8 +87,8 @@
 	for(var/I in wall_spawners)
 		var/turf/T = get_turf(I)
 		qdel(I)
-		//using ChangeTurf because otherwise it leaves weirdness at the corners
-		T.ChangeTurf(/turf/closed/wall/mineral/titanium)
+		//because otherwise it leaves weirdness at the corners
+		T.PlaceOnTop(/turf/closed/wall/mineral/titanium/nodiagonal)
 		if(you_had_your_chance)
 			CHECK_TICK
 	QDEL_LIST(wall_spawners)
@@ -101,3 +101,10 @@
 			else
 				INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/open)
 	shutters.Cut()
+
+/datum/lobby_manager/proc/AtRoundEnd()
+	for(var/I in hub_spawners)
+		var/obj/structure/lobby_teleporter/T = locate() in get_turf(I)
+		if(T)
+			//look off
+			T.icon_state = "tele1"

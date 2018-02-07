@@ -1,4 +1,7 @@
 /mob/living/carbon/human/lobby/proc/LateChoices()
+	//we are being allowed to join, time to disappear
+	PhaseInSplashScreen()
+
 	var/dat = "<div class='notice'>Round Duration: [DisplayTimeText(world.time - SSticker.round_start_time)]</div>"
 
 	if(SSshuttle.emergency)
@@ -53,10 +56,18 @@
 	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 440, 500)
 	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
 	popup.set_content(dat)
-	popup.open(FALSE)
+	popup.open(TRUE)
 
 /mob/living/carbon/human/lobby/Topic(href, list/href_list)
 	if(src != usr)
+		return
+
+	//only the latespawn window does this
+	if(href_list["close"])
+		if(!QDELETED(src))
+			//still around, they just closed the window
+			MoveToStartArea()
+			PhaseOutSplashScreen()
 		return
 
 	if(href_list["SelectedJob"])
