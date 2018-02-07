@@ -98,7 +98,7 @@
 	SSjob.SendToLateJoin(character)
 
 	if(!arrivals_docked)
-		PhaseOutSplashScreen(TRUE)
+		PhaseOutSplashScreen(character)
 		character.playsound_local(get_turf(character), 'sound/voice/ApproachingTG.ogg', 25)
 
 	character.update_parallax_teleport()
