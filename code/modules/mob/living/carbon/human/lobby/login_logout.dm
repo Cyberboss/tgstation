@@ -7,6 +7,7 @@
 		mind.active = TRUE
 		mind.current = src
 
+	splash_screen = new(client, TRUE, round_started)
 	..()
 	
 	var/motd = global.config.motd
@@ -31,11 +32,9 @@
 		to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
 		to_chat(src, "The game will start [postfix].")
 
-	show_player_polls.CheckDB()
 	client.prefs.copy_to(src)
 	name = client.key
 	var/round_started = SSticker.HasRoundStarted()
-	splash_screen = new(client, TRUE, round_started)
 	if(SSticker.IsPreGame() && !round_started) //post initializations
 		OnInitializationsComplete()
 	SSticker.OnRoundstart(roundstart_callback)

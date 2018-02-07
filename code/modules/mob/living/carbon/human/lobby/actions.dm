@@ -1,4 +1,6 @@
 /datum/action/lobby
+	layer = SPLASHSCREEN_LAYER
+	plane = SPLASHSCREEN_PLANE
 	icon_icon = 'icons/mob/actions/actions_lobby.dmi'
 
 /datum/action/lobby/ApplyIcon(obj/screen/movable/action_button/current_button, force = FALSE)
@@ -27,13 +29,6 @@
 	if(!owner || IsGuestKey(owner.key) || !SSdbcore.Connect())
 		return FALSE
 	return ..()
-
-/datum/action/lobby/show_player_polls/proc/CheckDB()
-	var/isadmin = owner.client && owner.client.holder
-	var/datum/DBQuery/query_get_new_polls = SSdbcore.NewQuery("SELECT id FROM [format_table_name("poll_question")] WHERE [(isadmin ? "" : "adminonly = false AND")] Now() BETWEEN starttime AND endtime AND id NOT IN (SELECT pollid FROM [format_table_name("poll_vote")] WHERE ckey = \"[owner.ckey]\") AND id NOT IN (SELECT pollid FROM [format_table_name("poll_textreply")] WHERE ckey = \"[owner.ckey]\")")
-	if(query_get_new_polls.Execute() && query_get_new_polls.NextRow())
-		button_icon_state = "show_polls_new"
-		UpdateButtonIcon()
 
 /datum/action/lobby/show_player_polls/Trigger()
 	. = ..()
