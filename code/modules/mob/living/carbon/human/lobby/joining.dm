@@ -19,14 +19,18 @@
 	new_character = H
 	if(transfer_after)
 		transfer_character()
+	else
+		new_character.notransform = TRUE
 
 /mob/living/carbon/human/lobby/proc/transfer_character()
 	. = new_character
 	if(.)
-		new_character.key = key		//Manually transfer the key to log them in
-		PhaseOut()  //logout won't do it
-		new_character.stop_sound_channel(CHANNEL_LOBBYMUSIC)
 		new_character = null
+		var/mob/nc = .
+		nc.key = key		//Manually transfer the key to log them in
+		PhaseOut()  //logout won't do it
+		nc.stop_sound_channel(CHANNEL_LOBBYMUSIC)
+		nc = null
 
 /mob/living/carbon/human/lobby/proc/AttemptJoin()
 	if(!SSticker.HasRoundStarted())
@@ -136,11 +140,7 @@
 /mob/living/carbon/human/lobby/proc/make_me_an_observer()
 	var/this_is_like_playing_right = alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No")
 
-	if(QDELETED(src) || !src.client)
-		return FALSE
-	if(this_is_like_playing_right != "Yes")
-		become_observer.on = FALSE
-		become_observer.UpdateButtonIcon()
+	if(QDELETED(src) || this_is_like_playing_right != "Yes")
 		return FALSE
 
 	var/mob/dead/observer/observer = new

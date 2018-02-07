@@ -35,6 +35,8 @@
 	
 	process_complete = TRUE
 	
+	sleep(30)
+
 	for(var/I in lights)
 		var/turf/open/floor/light/lobby/L = I
 		L.Normalize()
@@ -60,7 +62,7 @@
 
 	for(var/I in 1 to shutters.len)
 		if(I == shutters.len)
-			var/obj/machinery/door/door = I
+			var/obj/machinery/door/door = shutters[I]
 			door.open()    //wait on the last one
 		else
-			INVOKE_ASYNC(I, /obj/machinery/door/proc/open)
+			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/open)

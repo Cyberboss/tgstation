@@ -28,6 +28,7 @@
 	name = "Crew Boarding Room"
 	coloredlights = list("b")
 	can_modify_colour = FALSE
+	var/timer_id
 
 /turf/open/floor/light/lobby/Initialize()
 	. = ..()
@@ -39,14 +40,16 @@
 
 /turf/open/floor/light/lobby/proc/WarningSequence()
 	coloredlights = list("r", "g")
+	ToggleColour()
 
 /turf/open/floor/light/lobby/proc/ToggleColour()
 	currentcolor = currentcolor == 1 ? 2 : 1
 	update_icon()
-	addtimer(CALLBACK(src, .proc/ToggleColour), 20, TIMER_CLIENT_TIME)
+	timer_id = addtimer(CALLBACK(src, .proc/ToggleColour), 7, TIMER_CLIENT_TIME | TIMER_STOPPABLE)
 
 /turf/open/floor/light/lobby/proc/Normalize()
-	coloredlights = initial(coloredlights)
+	deltimer(timer_id)
+	coloredlights = list("b")
 	currentcolor = 1
 	update_icon()
 
@@ -54,6 +57,7 @@
 	name = "Setup Character"
 
 /obj/machinery/computer/lobby/setup_character/attack_hand(mob/player)
+	player.client.prefs.current_tab = 1
 	player.client.prefs.ShowChoices()
 
 /obj/machinery/computer/lobby/observer

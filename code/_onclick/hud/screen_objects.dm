@@ -553,6 +553,8 @@
 
 	if(!visible)
 		alpha = 0
+	else
+		holder.screen += src
 
 	if(!use_previous_title)
 		if(SStitle.icon)
@@ -563,18 +565,31 @@
 			return
 		icon = SStitle.previous_icon
 
-	holder.screen += src
+/obj/screen/splash/proc/AdjustScreen(off = FALSE)
+	if(!holder)
+		qdel(src)
+	else
+		holder.screen -= src
 
 /obj/screen/splash/proc/Fade(out, qdel_after = TRUE)
 	if(QDELETED(src))
 		return
+	if(!holder)
+		qdel(src)
+		return
 	if(out)
+		alpha = 255
+		holder.screen += src
+		animate(src, alpha = 255, time = 0, flags = ANIMATION_END_NOW)
 		animate(src, alpha = 0, time = 30)
+		addtimer(CALLBACK(src, .proc/AdjustScreen, TRUE), 30, TIMER_CLIENT_TIME)
 	else
 		alpha = 0
+		holder.screen += src
+		animate(src, alpha = 0, time = 0, flags = ANIMATION_END_NOW)
 		animate(src, alpha = 255, time = 30)
 	if(qdel_after)
-		QDEL_IN(src, 30)
+		QDEL_IN_CLIENT_TIME(src, 30)
 
 /obj/screen/splash/Destroy()
 	if(holder)

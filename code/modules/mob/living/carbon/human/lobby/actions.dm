@@ -14,27 +14,8 @@
 /datum/action/lobby/setup_character/Trigger()
 	. = ..()
 	if(.)
+		owner.client.prefs.current_tab = 1
 		owner.client.prefs.ShowChoices()
-
-/datum/action/lobby/become_observer
-	name = "Observe"
-	desc = "Become a ghost and watch the round"
-	button_icon_state = "observe"
-	var/on = FALSE
-
-/datum/action/lobby/become_observer/Trigger()
-	. = ..()
-	if(!.)
-		return
-	on = !on
-	UpdateButtonIcon()
-	if(on)
-		var/mob/living/carbon/human/lobby/player = owner
-		player.make_me_an_observer()
-
-/datum/action/lobby/become_observer/UpdateButtonIcon()
-	background_icon_state = on ? "template_active" : initial(background_icon_state)
-	return ..()
 
 /datum/action/lobby/show_player_polls
 	name = "Show Player Polls"

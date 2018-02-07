@@ -161,10 +161,6 @@ SUBSYSTEM_DEF(ticker)
 
 			if(start_immediately)
 				timeLeft = 0
-
-			if(timeLeft < 200 && !lobby.process_started)
-				lobby.BeginProcess()
-
 			//countdown
 			if(timeLeft < 0)
 				return
@@ -174,11 +170,13 @@ SUBSYSTEM_DEF(ticker)
 				send_tip_of_the_round()
 				tipped = TRUE
 
-			if(timeLeft <= 0)
+			if(timeLeft < 200 && !lobby.process_started)
+				lobby.BeginProcess()
+
+			if(timeLeft <= 0 && (lobby.process_complete || start_immediately))
 				current_state = GAME_STATE_SETTING_UP
 				Master.SetRunLevel(RUNLEVEL_SETUP)
-				if(start_immediately)
-					fire()
+				fire()
 
 		if(GAME_STATE_SETTING_UP)
 			if(!setup())
@@ -204,8 +202,6 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/setup()
 	to_chat(world, "<span class='boldannounce'>Starting game...</span>")
-
-	UNTIL(lobby.process_complete)
 
 	var/init_start = world.timeofday
 
@@ -244,12 +240,13 @@ SUBSYSTEM_DEF(ticker)
 	//Configure mode and assign player to special mode stuff
 	var/can_continue = 0
 	can_continue = src.mode.pre_setup()		//Choose antagonists
-
 	
 	for(var/I in GLOB.lobby_players)
 		var/mob/living/carbon/human/lobby/player = I
 		player.PhaseInSplashScreen()
 		CHECK_TICK
+
+	var/dont_finish_until = REALTIMEOFDAY + 30
 
 	SSjob.DivideOccupations() 				//Distribute jobs
 	CHECK_TICK
@@ -284,6 +281,8 @@ SUBSYSTEM_DEF(ticker)
 	equip_characters()
 
 	GLOB.data_core.manifest()
+
+	UNTIL(REALTIMEOFDAY >= dont_finish_until)
 
 	for(var/I in round_start_events)
 		var/datum/callback/cb = I

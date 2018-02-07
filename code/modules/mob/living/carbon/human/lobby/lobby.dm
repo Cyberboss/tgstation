@@ -14,10 +14,9 @@
 	var/mob/living/carbon/human/new_character
 	var/obj/screen/splash/splash_screen
 	var/datum/callback/roundstart_callback
+	
 	var/datum/action/lobby/setup_character/setup_character
-	var/datum/action/lobby/become_observer/become_observer
 	var/datum/action/lobby/show_player_polls/show_player_polls
-	var/datum/action/lobby/late_join/late_join_action
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
@@ -32,8 +31,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	setup_character = new
 	setup_character.Grant(src)
-	become_observer = new
-	become_observer.Grant(src)
 	show_player_polls = new
 	show_player_polls.Grant(src)
 
@@ -43,7 +40,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/Destroy()
 	QDEL_NULL(setup_character)
-	QDEL_NULL(become_observer)
 	QDEL_NULL(show_player_polls)
 	LAZYREMOVE(SSticker.round_start_events, roundstart_callback)
 	QDEL_NULL(roundstart_callback)
@@ -62,6 +58,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	return (client || new_character) && istype(get_area(src), /area/shuttle/lobby/start_zone)
 
 /mob/living/carbon/human/lobby/proc/OnInitializationsComplete()
+	QDEL_NULL(setup_character)
+	QDEL_NULL(show_player_polls)
 	window_flash(client, ignorepref = TRUE) //let them know lobby has opened up.
 	if(become_observer.on)
 		make_me_an_observer()
@@ -71,16 +69,19 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
 		return
-	PhaseOutSplashScreen(new_character)
+	
+	var/mob/nc = new_character
+	nc.notransform = TRUE
+	addtimer(VARSET_CALLBACK(new_character, notransform, FALSE), 30, TIMER_CLIENT_TIME)
 	transfer_character()
+	PhaseOutSplashScreen(nc)
 
 /mob/living/carbon/human/lobby/proc/PhaseOutSplashScreen(mob/character)
-	notransform = FALSE
 	splash_screen.Fade(TRUE, character != null)
 	if(character)
 		splash_screen = null
-		character.notransform = TRUE
-		addtimer(VARSET_CALLBACK(character, notransform, FALSE), 30, TIMER_CLIENT_TIME)
+	else
+		notransform = FALSE
 
 /mob/living/carbon/human/lobby/proc/PhaseInSplashScreen()
 	invisibility = INVISIBILITY_MAXIMUM
