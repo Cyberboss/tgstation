@@ -3,6 +3,7 @@
 	var/list/hub_spawners = list()
 	var/list/wall_spawners = list()
 	var/list/shutters = list()
+	var/list/announcers = list()
 
 	var/obj/docking_port/mobile/crew_shuttle
 
@@ -17,6 +18,11 @@
 	process_started = TRUE
 
 	//TODO dock crew shuttle
+
+	for(var/I in announcers)
+		var/obj/O = I
+		O.say("We have arrived at [station_name()]. Crew assigned to this outpost please report to the back area of the shuttle immediately.")
+	announcers.Cut()
 
 	UNTIL(SSticker.timeLeft < 150)
 
@@ -41,6 +47,7 @@
 		var/turf/open/floor/light/lobby/L = I
 		L.Normalize()
 		CHECK_TICK
+	lights.Cut()
 
 	sleep(30)
 
@@ -66,3 +73,4 @@
 			door.open()    //wait on the last one
 		else
 			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/open)
+	shutters.Cut()

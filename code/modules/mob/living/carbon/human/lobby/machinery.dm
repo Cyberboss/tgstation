@@ -72,3 +72,17 @@
 
 /obj/machinery/computer/lobby/poll/attack_hand(mob/living/carbon/human/lobby/player)
 	player.handle_player_polling()
+
+/obj/machinery/requests_console/lobby
+	name = "Announcement Console"
+
+/obj/machinery/requests_console/lobby/Initialize()
+	. = ..()
+	SSticker.lobby.announcers += src
+
+/obj/machinery/requests_console/lobby/Destroy()
+	SSticker.lobby.announcers -= src
+	return ..()
+
+/obj/machinery/requests_console/lobby/attack_hand()
+	return
