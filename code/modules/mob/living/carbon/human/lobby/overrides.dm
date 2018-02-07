@@ -10,3 +10,6 @@
 
 /mob/living/carbon/human/lobby/say(message)
 	client.ooc(message)
+
+/mob/living/carbon/human/lobby/suicide()
+	make_me_an_observer()

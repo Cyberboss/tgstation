@@ -482,17 +482,8 @@
 		log_game("[usr.key] AM failed due to disconnect.")
 		return
 
-	var/mob/dead/new_player/M = new /mob/dead/new_player()
-	if(!client)
-		log_game("[usr.key] AM failed due to disconnect.")
-		qdel(M)
-		return
-
+	var/mob/living/carbon/human/lobby/M = new
 	M.key = key
-//	M.Login()	//wat
-	return
-
-
 
 /mob/verb/cancel_camera()
 	set name = "Cancel Camera View"

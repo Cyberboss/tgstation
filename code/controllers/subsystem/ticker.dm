@@ -64,8 +64,12 @@ SUBSYSTEM_DEF(ticker)
 	var/mode_result = "undefined"
 	var/end_state = "undefined"
 
+	var/datum/lobby_manager/lobby
+
 /datum/controller/subsystem/ticker/Initialize(timeofday)
 	load_mode()
+
+	lobby = new
 
 	var/list/byond_sound_formats = list(
 		"mid"  = TRUE,
@@ -158,6 +162,9 @@ SUBSYSTEM_DEF(ticker)
 			if(start_immediately)
 				timeLeft = 0
 
+			if(timeLeft < 200 && !lobby.process_started)
+				lobby.BeginProcess()
+
 			//countdown
 			if(timeLeft < 0)
 				return
@@ -197,6 +204,9 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/setup()
 	to_chat(world, "<span class='boldannounce'>Starting game...</span>")
+
+	UNTIL(lobby.process_complete)
+
 	var/init_start = world.timeofday
 		//Create and announce mode
 	var/list/datum/game_mode/runnable_modes

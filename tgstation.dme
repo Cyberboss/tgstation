@@ -1796,6 +1796,8 @@
 #include "code\modules\mob\living\carbon\human\lobby\joining.dm"
 #include "code\modules\mob\living\carbon\human\lobby\lobby.dm"
 #include "code\modules\mob\living\carbon\human\lobby\login_logout.dm"
+#include "code\modules\mob\living\carbon\human\lobby\machinery.dm"
+#include "code\modules\mob\living\carbon\human\lobby\manager.dm"
 #include "code\modules\mob\living\carbon\human\lobby\menus.dm"
 #include "code\modules\mob\living\carbon\human\lobby\overrides.dm"
 #include "code\modules\mob\living\carbon\human\lobby\poll.dm"

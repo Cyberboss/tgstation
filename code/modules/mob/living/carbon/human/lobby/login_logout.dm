@@ -28,7 +28,8 @@
 			postfix = "in about [DisplayTimeText(tl)]"
 		else
 			postfix = "soon"
-		to_chat(src, "Please set up your character and select \"Ready\". The game will start [postfix].")
+		to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
+		to_chat(src, "The game will start [postfix].")
 
 	show_player_polls.CheckDB()
 	client.prefs.copy_to(src)

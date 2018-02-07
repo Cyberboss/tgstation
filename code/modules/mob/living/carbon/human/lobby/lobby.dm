@@ -23,7 +23,10 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/Initialize()
 	. = ..()
+
+	GLOB.alive_mob_list -= src
 	GLOB.lobby_players += src
+
 	MoveToStartArea()
 	equipOutfit(/datum/outfit/vr_basic, FALSE)
 

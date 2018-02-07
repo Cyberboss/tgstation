@@ -421,3 +421,19 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 	GLOB.ruin_landmarks -= src
 	ruin_template = null
 	. = ..()
+
+/obj/effect/landmark/lobby/hub_spawner/Initialize()
+	. = ..()
+	SSticker.lobby.hub_spawners += src
+
+/obj/effect/landmark/lobby/hub_spawner/Destroy()
+	SSticker.lobby.hub_spawners -= src
+	return ..()
+
+/obj/effect/landmark/lobby/wall_spawner/Initialize()
+	. = ..()
+	SSticker.lobby.wall_spawners += src
+
+/obj/effect/landmark/lobby/wall_spawner/Destroy()
+	SSticker.lobby.wall_spawners -= src
+	return ..()
