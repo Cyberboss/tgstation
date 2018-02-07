@@ -6,7 +6,7 @@
 	preferred_direction = WEST
 	port_direction = SOUTH
 
-	ignitionTime = 0    //first launch is instant
+	ignitionTime = 1    //first launch is instant, don't use 0 though or it could potentially just NOT launch because world.time + timer memes
 	callTime = INFINITY
 
 	ignore_already_docked = TRUE
