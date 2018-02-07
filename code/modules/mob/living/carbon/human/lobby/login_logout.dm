@@ -30,8 +30,7 @@
 		to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
 		to_chat(src, "The game will start [postfix].")
 
-	var/round_started = SSticker.HasRoundStarted()
-	splash_screen = new(client, TRUE, round_started)
+	splash_screen = new(client, TRUE)
 
 	client.prefs.copy_to(src)
 	name = client.key
