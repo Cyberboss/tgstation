@@ -1,12 +1,13 @@
 /datum/action/lobby
-	layer = SPLASHSCREEN_LAYER
-	plane = SPLASHSCREEN_PLANE
 	icon_icon = 'icons/mob/actions/actions_lobby.dmi'
 
 /datum/action/lobby/ApplyIcon(obj/screen/movable/action_button/current_button, force = FALSE)
 	. = ..()
 	//so the buttons are always up to date before initializations
 	COMPILE_OVERLAYS(current_button)
+
+	current_button.layer = SPLASHSCREEN_LAYER
+	current_button.plane = SPLASHSCREEN_PLANE
 
 /datum/action/lobby/setup_character
 	name = "Setup Character"

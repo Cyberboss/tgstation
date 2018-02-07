@@ -7,9 +7,10 @@
 		mind.active = TRUE
 		mind.current = src
 
+	var/round_started = SSticker.HasRoundStarted()
 	splash_screen = new(client, TRUE, round_started)
 	..()
-	
+
 	var/motd = global.config.motd
 	if(motd)
 		to_chat(src, "<div class=\"motd\">[motd]</div>")
@@ -34,7 +35,6 @@
 
 	client.prefs.copy_to(src)
 	name = client.key
-	var/round_started = SSticker.HasRoundStarted()
 	if(SSticker.IsPreGame() && !round_started) //post initializations
 		OnInitializationsComplete()
 	SSticker.OnRoundstart(roundstart_callback)
