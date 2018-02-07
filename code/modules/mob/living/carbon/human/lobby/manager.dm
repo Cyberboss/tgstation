@@ -15,13 +15,13 @@
 		return
 	process_started = TRUE
 
-	var/obj/docking_port/mobile//crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
-	if(!crew_shuttle)
+	var/obj/docking_port/mobile/crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
+	if(!shuttle)
 		process_complete = TRUE
 		CRASH("Unable to find crew shuttle!")
 
 	//dock crew shuttle
-	shuttle.setTimer(0)
+	shuttle.StopFlying()
 
 	for(var/I in announcers)
 		var/obj/O = I
