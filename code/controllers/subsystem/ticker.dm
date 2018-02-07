@@ -406,6 +406,7 @@ SUBSYSTEM_DEF(ticker)
 			queue_delay = 0 //No vacancy: restart timer
 		if(25 to INFINITY)  //No response from the next in line when a vacancy exists, remove he
 			to_chat(next_in_line, "<span class='danger'>No response recieved. You have been removed from the line.</span>")
+			QDEL_NULL(next_in_line.late_picker)
 			queued_players -= next_in_line
 			queue_delay = 0
 

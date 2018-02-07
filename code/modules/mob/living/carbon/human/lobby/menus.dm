@@ -53,10 +53,10 @@
 	dat += "</div></div>"
 
 	// Added the new browser window method
-	var/datum/browser/popup = new(src, "latechoices", "Choose Profession", 440, 500)
-	popup.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
-	popup.set_content(dat)
-	popup.open(TRUE)
+	late_picker = new(src, "latechoices", "Choose Profession", 440, 500)
+	late_picker.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
+	late_picker.set_content(dat)
+	late_picker.open(TRUE)
 
 /mob/living/carbon/human/lobby/Topic(href, list/href_list)
 	if(src != usr)

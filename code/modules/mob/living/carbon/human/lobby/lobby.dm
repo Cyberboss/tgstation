@@ -20,6 +20,8 @@
 	var/datum/action/lobby/setup_character/setup_character
 	var/datum/action/lobby/show_player_polls/show_player_polls
 
+	var/datum/browser/late_picker
+
 	//"Start Now" memes
 	var/said_yes_to_the_dress = FALSE
 
@@ -49,6 +51,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(roundstart_callback)
 	QDEL_NULL(new_character)
 	QDEL_NULL(splash_screen)
+	QDEL_NULL(late_picker)
 	GLOB.lobby_players -= src
 	return ..()
 
