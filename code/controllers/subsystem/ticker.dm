@@ -64,12 +64,10 @@ SUBSYSTEM_DEF(ticker)
 	var/mode_result = "undefined"
 	var/end_state = "undefined"
 
-	var/datum/lobby_manager/lobby
+	var/datum/lobby_manager/lobby = new
 
 /datum/controller/subsystem/ticker/Initialize(timeofday)
 	load_mode()
-
-	lobby = new
 
 	var/list/byond_sound_formats = list(
 		"mid"  = TRUE,
