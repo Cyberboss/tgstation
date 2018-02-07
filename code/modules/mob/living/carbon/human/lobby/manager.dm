@@ -28,10 +28,10 @@
 
 	for(var/I in 1 to shutters.len)
 		if(I == shutters.len)
-			var/obj/machinery/door/door = I
+			var/obj/machinery/door/door = shutters[I]
 			door.close()    //wait on the last one
 		else
-			INVOKE_ASYNC(I, /obj/machinery/door/proc/close)
+			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/close)
 	
 	process_complete = TRUE
 	

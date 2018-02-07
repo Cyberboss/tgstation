@@ -208,6 +208,7 @@ SUBSYSTEM_DEF(ticker)
 	UNTIL(lobby.process_complete)
 
 	var/init_start = world.timeofday
+
 		//Create and announce mode
 	var/list/datum/game_mode/runnable_modes
 	if(GLOB.master_mode == "random" || GLOB.master_mode == "secret")
@@ -243,7 +244,13 @@ SUBSYSTEM_DEF(ticker)
 	//Configure mode and assign player to special mode stuff
 	var/can_continue = 0
 	can_continue = src.mode.pre_setup()		//Choose antagonists
-	CHECK_TICK
+
+	
+	for(var/I in GLOB.lobby_players)
+		var/mob/living/carbon/human/lobby/player = I
+		player.PhaseInSplashScreen()
+		CHECK_TICK
+
 	SSjob.DivideOccupations() 				//Distribute jobs
 	CHECK_TICK
 

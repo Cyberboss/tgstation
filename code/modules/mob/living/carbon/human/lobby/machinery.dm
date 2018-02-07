@@ -27,6 +27,7 @@
 /turf/open/floor/light/lobby
 	name = "Crew Boarding Room"
 	coloredlights = list("b")
+	can_modify_colour = FALSE
 
 /turf/open/floor/light/lobby/Initialize()
 	. = ..()
@@ -39,8 +40,15 @@
 /turf/open/floor/light/lobby/proc/WarningSequence()
 	coloredlights = list("r", "g")
 
+/turf/open/floor/light/lobby/proc/ToggleColour()
+	currentcolor = currentcolor == 1 ? 2 : 1
+	update_icon()
+	addtimer(CALLBACK(src, .proc/ToggleColour), 20, TIMER_CLIENT_TIME)
+
 /turf/open/floor/light/lobby/proc/Normalize()
 	coloredlights = initial(coloredlights)
+	currentcolor = 1
+	update_icon()
 
 /obj/machinery/computer/lobby/setup_character
 	name = "Setup Character"

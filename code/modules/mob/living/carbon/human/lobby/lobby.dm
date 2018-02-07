@@ -84,6 +84,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/proc/PhaseInSplashScreen()
 	invisibility = INVISIBILITY_MAXIMUM
+	RunSparks()
 	notransform = TRUE
 	splash_screen.Fade(FALSE, FALSE)
 
