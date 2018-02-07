@@ -19,6 +19,8 @@
 	output += "</table>"
 	src << browse(output,"window=playerpolllist;size=500x300")
 
+	RemovePollNotifications()
+
 /mob/living/carbon/human/lobby/proc/poll_player(pollid)
 	if(!pollid)
 		return

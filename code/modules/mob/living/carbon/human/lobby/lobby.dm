@@ -67,6 +67,11 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	var/datum/DBQuery/query_get_new_polls = SSdbcore.NewQuery("SELECT id FROM [format_table_name("poll_question")] WHERE [(C.holder ? "" : "adminonly = false AND")] Now() BETWEEN starttime AND endtime AND id NOT IN (SELECT pollid FROM [format_table_name("poll_vote")] WHERE ckey = \"[C.ckey]\") AND id NOT IN (SELECT pollid FROM [format_table_name("poll_textreply")] WHERE ckey = \"[C.ckey]\")")
 	new_poll = query_get_new_polls.Execute() && query_get_new_polls.NextRow()
 
+/mob/living/carbon/human/lobby/proc/RemovePollNotifications()
+	for(var/I in SSticker.lobby.poll_computers)
+		var/obj/machinery/computer/lobby/poll/comp = I
+		client.images -= comp.new_notification
+
 /mob/living/carbon/human/lobby/proc/MoveToStartArea()
 	if(loc)
 		RunSparks()
