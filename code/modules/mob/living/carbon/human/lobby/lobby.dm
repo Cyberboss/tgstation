@@ -61,9 +61,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(setup_character)
 	QDEL_NULL(show_player_polls)
 	window_flash(client, ignorepref = TRUE) //let them know lobby has opened up.
-	if(become_observer.on)
-		make_me_an_observer()
-		return
 	PhaseOutSplashScreen()
 
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
