@@ -13,6 +13,7 @@
 	name = "To Arrivals Shuttle"
 	icon = 'icons/obj/machines/teleporter.dmi'
 	icon_state = "tele1"
+	density = TRUE
 
 /obj/structure/lobby_teleporter/CollidedWith(mob/living/carbon/human/lobby/player)
 	if(istype(player))

@@ -77,7 +77,9 @@
 		sleep(10)
 
 	for(var/I in hub_spawners)
-		new /obj/structure/lobby_teleporter(get_turf(I))
+		var/turf/T = get_turf(I)
+		T.ChangeTurf(/turf/open/floor/light/lobby)
+		new /obj/structure/lobby_teleporter(T)
 		if(you_had_your_chance)
 			CHECK_TICK
 	QDEL_LIST(hub_spawners)
@@ -85,7 +87,8 @@
 	for(var/I in wall_spawners)
 		var/turf/T = get_turf(I)
 		qdel(I)
-		T.PlaceOnTop(/turf/closed/wall/mineral/titanium)
+		//using ChangeTurf because otherwise it leaves weirdness at the corners
+		T.ChangeTurf(/turf/closed/wall/mineral/titanium)
 		if(you_had_your_chance)
 			CHECK_TICK
 	QDEL_LIST(wall_spawners)
