@@ -258,9 +258,12 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 	name = "New Player"
 
 /obj/effect/landmark/start/new_player/Initialize()
-	..()
-	GLOB.newplayer_start += loc
-	return INITIALIZE_HINT_QDEL
+	. = ..()
+	SSticker.lobby.spawn_landmarks += src
+
+/obj/effect/landmark/start/new_player/Destroy()
+	SSticker.lobby.spawn_landmarks -= src
+	return ..()
 
 /obj/effect/landmark/latejoin
 	name = "JoinLate"

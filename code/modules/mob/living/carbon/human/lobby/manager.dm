@@ -4,6 +4,7 @@
 	var/list/wall_spawners = list()
 	var/list/shutters = list()
 	var/list/announcers = list()
+	var/list/spawn_landmarks = list()
 
 	var/process_started = FALSE
 	var/process_complete = FALSE
@@ -59,7 +60,7 @@
 	sleep(60)
 
 	for(var/I in hub_spawners)
-		new /obj/machinery/teleport/hub/lobby(get_turf(I))
+		new /obj/structure/lobby_teleporter(get_turf(I))
 		CHECK_TICK
 	QDEL_LIST(hub_spawners)
 

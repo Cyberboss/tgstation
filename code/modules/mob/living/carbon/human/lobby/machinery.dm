@@ -9,13 +9,12 @@
 	SSticker.lobby.shutters -= src
 	return ..()
 
-/obj/machinery/teleport/hub/lobby
+/obj/structure/lobby_teleporter
+	name = "To Arrivals Shuttle"
+	icon = 'icons/obj/machines/teleporter.dmi'
 	icon_state = "tele1"
 
-/obj/machinery/teleport/hub/lobby/link_power_station()
-	return
-
-/obj/machinery/teleport/hub/lobby/CollidedWith(mob/living/carbon/human/lobby/player)
+/obj/structure/lobby_teleporter/CollidedWith(mob/living/carbon/human/lobby/player)
 	if(istype(player))
 		player.AttemptJoin()
 		return
@@ -45,7 +44,7 @@
 /turf/open/floor/light/lobby/proc/ToggleColour()
 	currentcolor = currentcolor == 1 ? 2 : 1
 	update_icon()
-	timer_id = addtimer(CALLBACK(src, .proc/ToggleColour), 7, TIMER_CLIENT_TIME | TIMER_STOPPABLE)
+	timer_id = addtimer(CALLBACK(src, .proc/ToggleColour), 5, TIMER_CLIENT_TIME | TIMER_STOPPABLE)
 
 /turf/open/floor/light/lobby/proc/Normalize()
 	deltimer(timer_id)

@@ -51,7 +51,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 /mob/living/carbon/human/lobby/proc/MoveToStartArea()
 	if(loc)
 		RunSparks()
-	forceMove(pick(GLOB.newplayer_start))
+	forceMove(get_turf(pick(SSticker.lobby.spawn_landmarks)))
 	RunSparks()
 
 /mob/living/carbon/human/lobby/proc/IsReady()
