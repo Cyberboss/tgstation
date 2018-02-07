@@ -32,12 +32,16 @@
 
 	splash_screen = new(client, TRUE)
 
-	client.prefs.copy_to(src)
-	name = client.key
+	if(!client.holder || !client.holder.fakekey)
+		client.prefs.copy_to(src)
+		name = client.key
 
 	CheckPolls()
 
 	if(SSticker.current_state > GAME_STATE_STARTUP) //post initializations
+		if(!SSticker.lobby.process_started)
+			//we got time to ensure smooth transitions
+			sleep(30)
 		OnInitializationsComplete(TRUE)
 	else if(!IsGuestKey(key) && SSdbcore.Connect())	//no poll button if can't use it
 		show_player_polls = new
