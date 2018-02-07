@@ -5,8 +5,6 @@
 	var/list/shutters = list()
 	var/list/announcers = list()
 
-	var/obj/docking_port/mobile/crew_shuttle
-
 	var/process_started = FALSE
 	var/process_complete = FALSE
 
@@ -17,7 +15,13 @@
 		return
 	process_started = TRUE
 
-	//TODO dock crew shuttle
+	var/obj/docking_port/mobile//crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
+	if(!crew_shuttle)
+		process_complete = TRUE
+		CRASH("Unable to find crew shuttle!")
+
+	//dock crew shuttle
+	shuttle.setTimer(0)
 
 	for(var/I in announcers)
 		var/obj/O = I
@@ -40,20 +44,19 @@
 			INVOKE_ASYNC(shutters[I], /obj/machinery/door/proc/close)
 	
 	process_complete = TRUE
-	
-	sleep(30)
 
 	for(var/I in lights)
 		var/turf/open/floor/light/lobby/L = I
 		L.Normalize()
 		CHECK_TICK
+	
+	sleep(30)
+
 	lights.Cut()
 
-	sleep(30)
+	shuttle.Launch()
 
-	//TODO undock crew shuttle
-
-	sleep(30)
+	sleep(60)
 
 	for(var/I in hub_spawners)
 		new /obj/machinery/teleport/hub/lobby(get_turf(I))
