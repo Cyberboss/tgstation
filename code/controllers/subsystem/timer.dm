@@ -10,8 +10,6 @@ SUBSYSTEM_DEF(timer)
 
 	flags = SS_TICKER|SS_NO_INIT
 
-	runlevels = RUNLEVELS_DEFAULT | RUNLEVEL_LOBBY
-
 	var/list/datum/timedevent/second_queue = list() //awe, yes, you've had first queue, but what about second queue?
 	var/list/hashes = list()
 

@@ -225,7 +225,7 @@ SUBSYSTEM_DEF(job)
 
 	//Get the players who are ready
 	for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
-		if(player.IsReady())
+		if(player.IsReady() && !player.mind.assigned_role)
 			unassigned += player
 
 	initial_players_to_assign = unassigned.len
@@ -459,7 +459,7 @@ SUBSYSTEM_DEF(job)
 		var/banned = 0 //banned
 		var/young = 0 //account too young
 		for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
-			if(!player.IsReady())
+			if(!player.IsReady() || player.mind.assigned_role)
 				continue //This player is not ready
 			if(jobban_isbanned(player, job.title))
 				banned++

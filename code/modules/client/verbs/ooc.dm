@@ -50,7 +50,7 @@
 
 	if(isnewplayer(mob))
 		var/mob/living/carbon/human/lobby/player = mob
-		player.SendSpeechBubble(raw_msg)
+		player.ShowSpeechBubble(raw_msg)
 
 	log_talk(mob,"[key_name(src)] : [raw_msg]",LOGOOC)
 	mob.log_message("[key]: [raw_msg]", INDIVIDUAL_OOC_LOG)
