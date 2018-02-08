@@ -64,7 +64,7 @@
 
 	//only the latespawn window does this
 	if(href_list["close"])
-		if(!QDELETED(src))
+		if(!QDELETED(src) && !new_character)
 			//still around, they just closed the window
 			MoveToStartArea()
 			PhaseOutSplashScreen()

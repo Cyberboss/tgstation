@@ -1,4 +1,4 @@
-/mob/living/carbon/human/lobby/proc/create_character(transfer_after)
+/mob/living/carbon/human/lobby/proc/create_character(late_joiner = FALSE)
 	var/mob/living/carbon/human/H = new(locate(1, 1, 1))    //TODO: Make some designated area for this
 
 	if(CONFIG_GET(flag/force_random_names) || jobban_isbanned(src, "appearance"))
@@ -7,7 +7,7 @@
 	client.prefs.copy_to(H)
 	H.dna.update_dna_identity()
 	if(mind)
-		if(transfer_after)
+		if(late_joiner)
 			mind.late_joiner = TRUE
 		mind.active = FALSE					//we wish to transfer the key manually
 		mind.transfer_to(H)					//won't transfer key since the mind is not active
@@ -17,10 +17,7 @@
 
 	. = H
 	new_character = H
-	if(transfer_after)
-		transfer_character()
-	else
-		new_character.notransform = TRUE
+	new_character.notransform = !late_joiner
 
 /mob/living/carbon/human/lobby/proc/transfer_character()
 	. = new_character
@@ -87,6 +84,8 @@
 	SSjob.AssignRole(src, rank, 1)
 
 	var/mob/living/character = create_character(TRUE)	//creates the human and transfers vars and mind
+	late_picker.close()
+	transfer_character()
 	var/equip = SSjob.EquipRank(character, rank, 1)
 	if(isliving(equip))	//Borgs get borged in the equip, so we need to make sure we handle the new mob.
 		character = equip
