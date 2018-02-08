@@ -13837,7 +13837,7 @@
 	dir = 8
 	},
 /turf/open/floor/plasteel/darkred/side{
-	dir = 4
+	dir = 6
 	},
 /area/shuttle/lobby)
 "Oa" = (
@@ -14112,7 +14112,9 @@
 	dir = 1
 	},
 /obj/machinery/computer/lobby/setup_character,
-/turf/open/floor/plasteel/darkred/side,
+/turf/open/floor/plasteel/darkred/side{
+	dir = 6
+	},
 /area/shuttle/lobby)
 "Pe" = (
 /obj/effect/landmark/start/new_player,
@@ -15106,7 +15108,7 @@
 	dir = 1
 	},
 /turf/open/floor/plasteel/darkred/side{
-	dir = 1
+	dir = 5
 	},
 /area/shuttle/lobby)
 "SZ" = (
@@ -16036,6 +16038,53 @@
 	dir = 8
 	},
 /area/shuttle/lobby/start_zone)
+"Wq" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred/side{
+	dir = 4
+	},
+/area/shuttle/lobby)
+"Wr" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred/side{
+	dir = 8
+	},
+/area/shuttle/lobby)
+"Ws" = (
+/obj/effect/landmark/start/new_player,
+/obj/machinery/light{
+	dir = 8
+	},
+/turf/open/floor/plasteel/darkred/side{
+	dir = 5
+	},
+/area/shuttle/lobby)
+"Wt" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred/side{
+	dir = 4
+	},
+/area/shuttle/lobby)
+"Wu" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred/side{
+	dir = 8
+	},
+/area/shuttle/lobby)
 
 (1,1,1) = {"
 aa
@@ -73839,14 +73888,14 @@ MF
 MI
 MF
 MF
-Nf
 OE
 OE
 OE
 OE
 OE
 OE
-SZ
+OE
+OE
 MF
 MF
 MI
@@ -74093,20 +74142,20 @@ aa
 aa
 MF
 Nd
-NB
+Wq
 NZ
-OC
-Pf
+NE
 OE
 OE
 OE
 OE
 OE
 OE
-Ta
-TD
-NZ
-St
+OE
+OE
+Ue
+Ws
+Wt
 UX
 MF
 aa
@@ -75378,7 +75427,7 @@ aa
 aa
 MF
 Ni
-NB
+Wr
 Oe
 OH
 OE
@@ -75391,7 +75440,7 @@ OE
 OE
 TI
 Oe
-St
+Wu
 Vc
 MF
 aa
