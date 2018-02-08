@@ -101,11 +101,12 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	if(!new_character)
 		return
 	
-	var/mob/nc = new_character
-	nc.notransform = TRUE
+	new_character.notransform = TRUE
 	addtimer(VARSET_CALLBACK(new_character, notransform, FALSE), 30, TIMER_CLIENT_TIME)
 	transfer_character()
-	PhaseOutSplashScreen(nc)
+	PhaseOutSplashScreen(new_character)
+	new_character = null
+	PhaseOut()
 
 /mob/living/carbon/human/lobby/proc/PhaseOutSplashScreen(mob/character)
 	splash_screen.Fade(TRUE, character != null)

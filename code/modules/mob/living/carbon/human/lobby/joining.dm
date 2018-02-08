@@ -25,12 +25,8 @@
 /mob/living/carbon/human/lobby/proc/transfer_character()
 	. = new_character
 	if(.)
-		new_character = null
-		var/mob/nc = .
-		nc.key = key		//Manually transfer the key to log them in
-		PhaseOut()  //logout won't do it
-		nc.stop_sound_channel(CHANNEL_LOBBYMUSIC)
-		nc = null
+		new_character.key = key		//Manually transfer the key to log them in
+		new_character.stop_sound_channel(CHANNEL_LOBBYMUSIC)
 
 /mob/living/carbon/human/lobby/proc/AttemptJoin()
 	if(!SSticker.HasRoundStarted())
@@ -74,6 +70,10 @@
 		alert(src, "An administrator has disabled late join spawning.")
 		return FALSE
 
+	//Remove the player from the join queue if he was in one and reset the timer
+	SSticker.queued_players -= src
+	SSticker.queue_delay = 4
+
 	var/arrivals_docked = TRUE
 	if(SSshuttle.arrivals)
 		if(SSshuttle.arrivals.damaged && CONFIG_GET(flag/arrivals_shuttle_require_safe_latejoin))
@@ -83,10 +83,6 @@
 		if(CONFIG_GET(flag/arrivals_shuttle_require_undocked))
 			SSshuttle.arrivals.RequireUndocked(src)
 		arrivals_docked = SSshuttle.arrivals.mode != SHUTTLE_CALL
-
-	//Remove the player from the join queue if he was in one and reset the timer
-	SSticker.queued_players -= src
-	SSticker.queue_delay = 4
 
 	SSjob.AssignRole(src, rank, 1)
 
@@ -98,8 +94,12 @@
 	SSjob.SendToLateJoin(character)
 
 	if(!arrivals_docked)
+		//use a new splash scren here, the other is already dead
 		PhaseOutSplashScreen(character)
 		character.playsound_local(get_turf(character), 'sound/voice/ApproachingTG.ogg', 25)
+
+	new_character = null
+	qdel(src)
 
 	character.update_parallax_teleport()
 
