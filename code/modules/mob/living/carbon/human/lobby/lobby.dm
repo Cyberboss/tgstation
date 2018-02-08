@@ -108,7 +108,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	if(QDELETED(src))	//instant_observer
 		return
 
-	if(no_initial_fade_in)
+	if(!no_initial_fade_in)
 		PhaseOutSplashScreen()
 	else
 		notransform = FALSE
