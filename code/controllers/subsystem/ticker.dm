@@ -147,6 +147,7 @@ SUBSYSTEM_DEF(ticker)
 			for(var/I in GLOB.lobby_players)
 				var/mob/living/carbon/human/lobby/player = I
 				player.OnInitializationsComplete()
+				CHECK_TICK
 			fire()
 		if(GAME_STATE_PREGAME)
 				//lobby stats for statpanels
