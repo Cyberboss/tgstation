@@ -13867,10 +13867,6 @@
 	dir = 8
 	},
 /area/shuttle/lobby)
-"Of" = (
-/obj/machinery/status_display/lobby,
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/lobby)
 "Og" = (
 /obj/machinery/light{
 	dir = 8
@@ -13944,10 +13940,6 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/lobby)
 "Ow" = (
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/lobby)
-"Ox" = (
-/obj/machinery/status_display/lobby,
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby)
 "Oy" = (
@@ -14169,10 +14161,6 @@
 /obj/structure/grille,
 /turf/open/floor/plating,
 /area/shuttle/lobby)
-"Pt" = (
-/obj/machinery/status_display/lobby,
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/lobby/start_zone)
 "Pu" = (
 /obj/structure/window/shuttle,
 /obj/structure/grille,
@@ -15160,10 +15148,6 @@
 /obj/structure/grille,
 /turf/open/floor/plating,
 /area/shuttle/lobby)
-"To" = (
-/obj/machinery/status_display/lobby,
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/lobby/start_zone)
 "Tp" = (
 /obj/structure/window/shuttle,
 /obj/structure/grille,
@@ -15210,10 +15194,6 @@
 /turf/open/floor/plating/airless,
 /area/shuttle/lobby)
 "Tx" = (
-/turf/closed/wall/mineral/titanium,
-/area/shuttle/lobby)
-"Ty" = (
-/obj/machinery/status_display/lobby,
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby)
 "Tz" = (
@@ -15386,10 +15366,6 @@
 /turf/open/floor/plasteel/darkred/side{
 	dir = 8
 	},
-/area/shuttle/lobby)
-"Uh" = (
-/obj/machinery/status_display/lobby,
-/turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby)
 "Ui" = (
 /obj/machinery/light{
@@ -75464,7 +75440,7 @@ aa
 MF
 MF
 MF
-Of
+MF
 OB
 Pl
 Pl
@@ -75475,7 +75451,7 @@ Pl
 Pl
 Pl
 OB
-Of
+MF
 MF
 MF
 MF
