@@ -250,10 +250,6 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 	GLOB.nukeop_leader_start += loc
 	return INITIALIZE_HINT_QDEL
 
-// Must be immediate because players will
-// join before SSatom initializes everything.
-INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
-
 /obj/effect/landmark/start/new_player
 	name = "New Player"
 	delete_after_roundstart = FALSE
