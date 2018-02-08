@@ -46,9 +46,7 @@
 			//we got time to ensure smooth transitions
 			sleep(30)
 		OnInitializationsComplete(TRUE)
-	if(!IsGuestKey(key) && SSdbcore.Connect())	//no poll button if can't use it
-		show_player_polls = new
-		show_player_polls.Grant(src)
+	CheckGrantPollAction()
 	SSticker.OnRoundstart(roundstart_callback)
 
 /mob/living/carbon/human/lobby/Logout()

@@ -500,7 +500,7 @@ SUBSYSTEM_DEF(job)
 		Debug("Popcap overflow Check observer located, Player: [player]")
 	to_chat(player, "<b>You have failed to qualify for any job you desired.</b>")
 	unassigned -= player
-	player.MoveToStartArea()
+	player.HandleJobRejection()
 
 /datum/controller/subsystem/job/Recover()
 	set waitfor = FALSE

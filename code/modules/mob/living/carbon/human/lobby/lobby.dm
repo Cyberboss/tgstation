@@ -45,12 +45,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	equipOutfit(/datum/outfit/vr_basic, FALSE)
 
-	setup_character = new
-	setup_character.Grant(src)
-	ready_up = new
-	ready_up.Grant(src)
-	become_observer = new
-	become_observer.Grant(src)
+	GrantStandardActions(TRUE)
 
 	verbs += /mob/dead/proc/server_hop
 
@@ -65,6 +60,21 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(late_picker)
 	GLOB.lobby_players -= src
 	return ..()
+
+/mob/living/carbon/human/lobby/proc/GrantStandardActions(include_ready_up = FALSE)
+	setup_character = new
+	setup_character.Grant(src)
+	if(include_ready_up)
+		ready_up = new
+		ready_up.Grant(src)
+	become_observer = new
+	become_observer.Grant(src)
+
+/mob/living/carbon/human/lobby/proc/CheckGrantPollAction()
+	if(IsGuestKey(key) || !SSdbcore.Connect())	//no poll button if can't use it
+		return
+	show_player_polls = new
+	show_player_polls.Grant(src)
 
 /mob/living/carbon/human/lobby/proc/DeleteActions()
 	QDEL_NULL(setup_character)
@@ -134,6 +144,15 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	PhaseOutSplashScreen(new_character)
 	new_character = null
 	PhaseOut()
+
+/mob/living/carbon/human/lobby/proc/HandleJobRejection()
+	instant_ready = FALSE
+	//new_character is null here so don't worry about that
+	//rebuild our actions
+	GrantStandardActions(FALSE)
+	CheckGrantPollAction()
+	//Send us back
+	MoveToStartArea()
 
 /mob/living/carbon/human/lobby/proc/PhaseOutSplashScreen(mob/character)
 	splash_screen.Fade(TRUE, character != null)
