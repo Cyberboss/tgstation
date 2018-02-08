@@ -256,6 +256,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark/start/new_player)
 
 /obj/effect/landmark/start/new_player
 	name = "New Player"
+	delete_after_roundstart = FALSE
 
 /obj/effect/landmark/start/new_player/Initialize()
 	. = ..()
