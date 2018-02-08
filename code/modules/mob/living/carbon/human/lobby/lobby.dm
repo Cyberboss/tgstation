@@ -109,9 +109,9 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
+		late_join = new
+		late_join.Grant(src)
 		return
-	late_join = new
-	late_join.Grant(src)
 	new_character.notransform = TRUE
 	addtimer(VARSET_CALLBACK(new_character, notransform, FALSE), 30, TIMER_CLIENT_TIME)
 	transfer_character()
