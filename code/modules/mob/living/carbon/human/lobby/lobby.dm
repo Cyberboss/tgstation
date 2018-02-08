@@ -82,11 +82,12 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 		var/obj/machinery/computer/lobby/poll/comp = I
 		client.images -= comp.new_notification
 
-/mob/living/carbon/human/lobby/proc/MoveToStartArea()
+/mob/living/carbon/human/lobby/proc/MoveToStartArea(no_pre_spark = FALSE)
 	if(instant_observer && make_me_an_observer())
 		return
 	become_observer.UpdateButtonIcon()
-	RunSparks()
+	if(!no_pre_spark)
+		RunSparks()
 	forceMove(get_turf(pick(instant_ready ? SSticker.lobby.ready_landmarks : SSticker.lobby.spawn_landmarks)))
 	RunSparks()
 

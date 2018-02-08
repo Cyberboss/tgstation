@@ -66,9 +66,10 @@
 	if(href_list["close"])
 		if(!QDELETED(src) && !new_character)
 			//still around, they just closed the window
-			MoveToStartArea()
+			MoveToStartArea(TRUE)
 			PhaseOutSplashScreen()
 			late_join.Grant(src)
+			invisibility = 0
 		return
 
 	if(href_list["SelectedJob"])

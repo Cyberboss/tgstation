@@ -46,7 +46,7 @@
 			//we got time to ensure smooth transitions
 			sleep(30)
 		OnInitializationsComplete(TRUE)
-	else if(!IsGuestKey(key) && SSdbcore.Connect())	//no poll button if can't use it
+	if(!IsGuestKey(key) && SSdbcore.Connect())	//no poll button if can't use it
 		show_player_polls = new
 		show_player_polls.Grant(src)
 	SSticker.OnRoundstart(roundstart_callback)
