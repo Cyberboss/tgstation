@@ -47,7 +47,6 @@
 			sleep(30)
 		OnInitializationsComplete(TRUE)
 	CheckGrantPollAction()
-	SSticker.OnRoundstart(roundstart_callback)
 
 /mob/living/carbon/human/lobby/Logout()
 	..()

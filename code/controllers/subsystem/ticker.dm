@@ -288,12 +288,18 @@ SUBSYSTEM_DEF(ticker)
 
 	UNTIL(REALTIMEOFDAY >= dont_finish_until)
 
+	for(var/I in GLOB.lobby_players)
+		var/mob/living/carbon/human/lobby/player = I
+		player.OnRoundstart()
+
+	CHECK_TICK
+
 	for(var/I in round_start_events)
 		var/datum/callback/cb = I
 		cb.InvokeAsync()
 	LAZYCLEARLIST(round_start_events)
 
-	stoplag()	//because cpu is hot rn
+	CHECK_TICK
 
 	log_world("Game start took [(world.timeofday - init_start)/10]s")
 	round_start_time = world.time

@@ -12,10 +12,16 @@
 
 	var/prefers_observer = FALSE
 	var/spawning = FALSE
+
+	var/instant_ready = FALSE
+	var/instant_observer = FALSE
+
+	var/phase_in_complete = TRUE
+	var/no_initial_fade_in
 	
 	var/mob/living/carbon/human/new_character
+
 	var/obj/screen/splash/splash_screen
-	var/datum/callback/roundstart_callback
 	
 	var/datum/action/lobby/setup_character/setup_character
 	var/datum/action/lobby/ready_up/ready_up
@@ -24,12 +30,6 @@
 	var/datum/action/lobby/show_player_polls/show_player_polls
 
 	var/datum/browser/late_picker
-
-	var/instant_ready = FALSE
-	var/instant_observer = FALSE
-
-	var/phase_in_complete = TRUE
-	var/no_initial_fade_in
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
@@ -49,12 +49,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	verbs += /mob/dead/proc/server_hop
 
-	roundstart_callback = CALLBACK(src, .proc/OnRoundstart)
-
 /mob/living/carbon/human/lobby/Destroy()
 	DeleteActions()
-	LAZYREMOVE(SSticker.round_start_events, roundstart_callback)
-	QDEL_NULL(roundstart_callback)
 	QDEL_NULL(new_character)
 	QDEL_NULL(splash_screen)
 	QDEL_NULL(late_picker)
