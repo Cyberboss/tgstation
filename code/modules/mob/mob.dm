@@ -482,7 +482,7 @@
 		log_game("[usr.key] AM failed due to disconnect.")
 		return
 
-	var/mob/living/carbon/human/lobby/M = new
+	var/mob/living/carbon/human/lobby/M = new(null, TRUE)
 	M.key = key
 
 /mob/verb/cancel_camera()

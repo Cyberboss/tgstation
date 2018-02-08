@@ -29,14 +29,17 @@
 	var/instant_observer = FALSE
 
 	var/phase_in_complete = TRUE
+	var/no_initial_fade_in
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
-/mob/living/carbon/human/lobby/Initialize()
+/mob/living/carbon/human/lobby/Initialize(mapload, _no_initial_fade_in = FALSE)
 	. = ..()
 
 	GLOB.alive_mob_list -= src
 	GLOB.lobby_players += src
+
+	no_initial_fade_in = _no_initial_fade_in
 
 	loc = locate(1, 1, 1)	//temporary, don't use forceMove or ambience will play
 
@@ -105,7 +108,10 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	if(QDELETED(src))	//instant_observer
 		return
 
-	PhaseOutSplashScreen()
+	if(no_initial_fade_in)
+		PhaseOutSplashScreen()
+	else
+		notransform = FALSE
 	if(!new_poll)
 		return
 	for(var/I in SSticker.lobby.poll_computers)

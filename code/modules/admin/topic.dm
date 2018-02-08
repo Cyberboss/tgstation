@@ -1384,7 +1384,7 @@
 		log_admin("[key_name(usr)] has sent [key_name(M)] back to the Lobby.")
 		message_admins("[key_name(usr)] has sent [key_name(M)] back to the Lobby.")
 
-		var/mob/living/carbon/human/lobby/NP = new
+		var/mob/living/carbon/human/lobby/NP = new(null, TRUE)
 		NP.ckey = M.ckey
 		qdel(M)
 

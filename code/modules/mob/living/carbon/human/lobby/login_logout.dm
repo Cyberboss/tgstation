@@ -33,7 +33,7 @@
 			to_chat(src, "Please set up your character. The lobby will load shortly.")
 		to_chat(src, "The game will start [postfix].")
 
-	splash_screen = new(client, TRUE)
+	splash_screen = new(client, !no_initial_fade_in)
 
 	if(!client.holder || !client.holder.fakekey)
 		client.prefs.copy_to(src)
