@@ -73,9 +73,7 @@
 	if(href_list["SelectedJob"])
 		if(!GLOB.enter_allowed)
 			to_chat(src, "<span class='notice'>There is an administrative lock on entering the game!</span>")
-			return
-	
-		if(SSticker.queued_players.len && !(ckey in GLOB.admin_datums) && ((living_player_count() >= GetRelevantCap()) || (src != SSticker.queued_players[1])))
+		else if(SSticker.queued_players.len && !(ckey in GLOB.admin_datums) && ((living_player_count() >= GetRelevantCap()) || (src != SSticker.queued_players[1])))
 			to_chat(src, "<span class='warning'>Server is full.</span>")
 		else
 			AttemptLateSpawn(href_list["SelectedJob"])
