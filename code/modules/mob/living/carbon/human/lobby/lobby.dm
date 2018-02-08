@@ -33,7 +33,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	GLOB.alive_mob_list -= src
 	GLOB.lobby_players += src
 
-	forceMove(locate(1, 1, 1))	//temporary
+	loc = locate(1, 1, 1)	//temporary, don't use forceMove or ambience will play
 
 	equipOutfit(/datum/outfit/vr_basic, FALSE)
 
