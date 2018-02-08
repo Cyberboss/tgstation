@@ -36,9 +36,12 @@ SUBSYSTEM_DEF(title)
 	. = ..()
 	if(.)
 		switch(var_name)
-			if("icon")
+			if(NAMEOF(src, icon))
 				if(splash_turf)
 					splash_turf.icon = icon
+				for(var/I in GLOB.lobby_players)
+					var/mob/living/carbon/human/lobby/player = I
+					player.splash_screen.icon = icon
 
 /datum/controller/subsystem/title/Shutdown()
 	for(var/thing in GLOB.clients)
