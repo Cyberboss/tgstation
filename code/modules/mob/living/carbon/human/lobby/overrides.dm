@@ -9,7 +9,8 @@
 
 //OOC only
 /mob/living/carbon/human/lobby/say(message)
-	client.ooc(message)
+	if(client.ooc(message))
+		ShowSpeechBubble(message)
 
 //do it right
 /mob/living/carbon/human/lobby/suicide()
