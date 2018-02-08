@@ -43,7 +43,7 @@
 		next_cd += 10
 		if(next_click == 5 SECONDS)
 			to_chat(player, "<span class='boldwarning'>The more you click the \"Ready\" button the less responsive it'll become!</span>")
-	player.update_action_buttons()
+	player.update_action_buttons_icon()
 
 /datum/action/lobby/ready_up/UpdateButtonIcon()
 	if(!..())
@@ -78,7 +78,7 @@
 	player.instant_observer = !player.instant_observer
 	if(!player.make_me_an_observer() && !SSticker.IsPreGame())
 		player.instant_ready = FALSE
-	player.update_action_buttons()
+	player.update_action_buttons_icon()
 
 /datum/action/lobby/become_observer/UpdateButtonIcon()
 	if(!..())
