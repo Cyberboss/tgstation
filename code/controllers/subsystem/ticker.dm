@@ -345,7 +345,7 @@ SUBSYSTEM_DEF(ticker)
 	for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
 		if(player.IsReady())
 			GLOB.joined_player_list += player.ckey
-			player.create_character(FALSE)
+			player.create_character()
 		CHECK_TICK
 
 /datum/controller/subsystem/ticker/proc/collect_minds()
@@ -534,7 +534,7 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/SetTimeLeft(newtime)
 	if(newtime >= 0 && isnull(timeLeft))	//remember, negative means delayed
-		newtime = min(MINIMUM_LOBBY_TIME, newtime)
+		newtime = max(MINIMUM_LOBBY_TIME, newtime)
 		start_at = world.time + newtime
 	else
 		timeLeft = newtime
