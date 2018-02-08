@@ -142,11 +142,12 @@
 
 /mob/living/carbon/human/lobby/proc/make_me_an_observer()
 	if(SSticker.current_state < GAME_STATE_PREGAME)
-		return
+		return FALSE
 
 	var/this_is_like_playing_right = alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No")
 
 	if(QDELETED(src) || this_is_like_playing_right != "Yes")
+		instant_observer = FALSE
 		return FALSE
 
 	var/mob/dead/observer/observer = new
@@ -160,7 +161,7 @@
 		to_chat(src, "<span class='notice'>Teleporting failed. Ahelp an admin please</span>")
 		stack_trace("There's no freaking observer landmark available on this map!")
 		qdel(observer)
-		return
+		return FALSE
 
 	QDEL_NULL(mind)
 	observer.key = key  //Logout handles phaseout

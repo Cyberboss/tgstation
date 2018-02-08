@@ -534,9 +534,6 @@
 		if(SSticker.current_state == GAME_STATE_STARTUP)
 			msg = " (The server is still setting up, but the round will be \
 				started as soon as possible.)"
-			for(var/I in GLOB.lobby_players)
-				var/mob/living/carbon/human/lobby/player = I
-				player.PromptStartNow()
 		message_admins("<font color='blue'>\
 			[usr.key] has started the game.[msg]</font>")
 		SSblackbox.record_feedback("tally", "admin_verb", 1, "Start Now") //If you are copy-pasting this, ensure the 2nd parameter is unique to the new proc!

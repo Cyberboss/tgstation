@@ -437,3 +437,15 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 /obj/effect/landmark/lobby/wall_spawner/Destroy()
 	SSticker.lobby.wall_spawners -= src
 	return ..()
+
+/obj/effect/landmark/start/ready_player
+	name = "Ready Player"
+	delete_after_roundstart = FALSE
+
+/obj/effect/landmark/start/ready_player/Initialize()
+	. = ..()
+	SSticker.lobby.ready_landmarks += src
+
+/obj/effect/landmark/start/ready_player/Destroy()
+	SSticker.lobby.ready_landmarks -= src
+	return ..()

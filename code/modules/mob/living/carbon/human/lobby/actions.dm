@@ -19,6 +19,27 @@
 	if(.)
 		owner.client.prefs.ShowChoices(owner)
 
+/datum/action/lobby/become_observer
+	name = "Observe"
+	desc = "Join the game as a ghost to spectate"
+	button_icon_state = "observe"
+
+/datum/action/lobby/become_observer/Trigger()
+	. = ..()
+	if(!.)
+		return
+	var/mob/living/carbon/human/lobby/player = owner
+	player.instant_observer = !player.instant_observer
+	player.make_me_an_observer()
+	UpdateButtonIcon()
+
+/datum/action/lobby/become_observer/UpdateButtonIcon()
+	if(!..())
+		return
+	var/mob/living/carbon/human/lobby/player = owner
+	if(player.instant_observer)
+		button.icon_state = "template_active"
+
 /datum/action/lobby/show_player_polls
 	name = "Show Player Polls"
 	desc = "Show active playerbase polls. Not available to guests"

@@ -19,11 +19,13 @@
 	
 	var/datum/action/lobby/setup_character/setup_character
 	var/datum/action/lobby/show_player_polls/show_player_polls
+	var/datum/action/lobby/become_observer/become_observer
 
 	var/datum/browser/late_picker
 
 	//"Start Now" memes
-	var/said_yes_to_the_dress = FALSE
+	var/instant_ready = FALSE
+	var/instant_observer = FALSE
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
@@ -39,6 +41,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	setup_character = new
 	setup_character.Grant(src)
+	become_observer = new
+	become_observer.Grant(src)
 
 	verbs += /mob/dead/proc/server_hop
 
@@ -47,6 +51,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 /mob/living/carbon/human/lobby/Destroy()
 	QDEL_NULL(setup_character)
 	QDEL_NULL(show_player_polls)
+	QDEL_NULL(become_observer)
 	LAZYREMOVE(SSticker.round_start_events, roundstart_callback)
 	QDEL_NULL(roundstart_callback)
 	QDEL_NULL(new_character)
@@ -54,11 +59,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(late_picker)
 	GLOB.lobby_players -= src
 	return ..()
-
-/mob/living/carbon/human/lobby/proc/PromptStartNow()
-	set waitfor = FALSE
-	window_flash(client, ignorepref = TRUE) //important shit
-	said_yes_to_the_dress = alert(src, "An admin is starting the game. Do you want to join?", "Quick Start", "Yes", "No") == "Yes"
 
 /mob/living/carbon/human/lobby/proc/CheckPolls()
 	if(IsGuestKey(src.key) || !SSdbcore.Connect())
@@ -73,24 +73,28 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 		client.images -= comp.new_notification
 
 /mob/living/carbon/human/lobby/proc/MoveToStartArea()
-	if(loc)
-		RunSparks()
-	forceMove(get_turf(pick(SSticker.lobby.spawn_landmarks)))
+	if(instant_observer && make_me_an_observer())
+		return
+	become_observer.UpdateButtonIcon()
+	RunSparks()
+	forceMove(get_turf(pick(instant_ready ? SSticker.lobby.ready_landmarks : SSticker.lobby.spawn_landmarks)))
 	RunSparks()
 
 /mob/living/carbon/human/lobby/proc/IsReady()
-	return (client || new_character) && (said_yes_to_the_dress || istype(get_area(src), /area/shuttle/lobby/start_zone))
+	return (client || new_character) && istype(get_area(src), /area/shuttle/lobby/start_zone)
 
 /mob/living/carbon/human/lobby/proc/OnInitializationsComplete(immediate = FALSE)
 	set waitfor = FALSE
 	if(!immediate)
 		var/obj/docking_port/mobile/crew/shuttle = SSshuttle.getShuttle("crew_shuttle")
 		UNTIL(shuttle.mode == SHUTTLE_CALL)	//let the shuttle roundstart dock
-	QDEL_NULL(setup_character)
-	QDEL_NULL(show_player_polls)
 	window_flash(client, ignorepref = TRUE) //let them know lobby has opened up.
-	PhaseOutSplashScreen()
 	MoveToStartArea()
+
+	if(QDELETED(src))	//instant_observer
+		return
+
+	PhaseOutSplashScreen()
 	if(!new_poll)
 		return
 	for(var/I in SSticker.lobby.poll_computers)

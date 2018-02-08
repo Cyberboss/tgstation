@@ -1,11 +1,15 @@
 /datum/lobby_manager
 	var/list/lights = list()
-	var/list/hub_spawners = list()
-	var/list/wall_spawners = list()
 	var/list/shutters = list()
 	var/list/announcers = list()
-	var/list/spawn_landmarks = list()
+
+	var/list/hub_spawners = list()
+	var/list/wall_spawners = list()
+
 	var/list/poll_computers = list()
+	
+	var/list/spawn_landmarks = list()
+	var/list/ready_landmarks = list()
 
 	var/process_started = FALSE
 	var/process_complete = FALSE
