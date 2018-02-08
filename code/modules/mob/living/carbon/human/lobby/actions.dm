@@ -25,7 +25,7 @@
 	button_icon_state = "ready"
 	//spam protection
 	var/next_click = 0
-	var/next_cd = 2
+	var/next_cd = 2 SECONDS
 
 /datum/action/lobby/ready_up/IsAvailable()
 	return world.time > next_click && ..()
@@ -39,7 +39,10 @@
 	player.instant_observer = FALSE
 	if(SSticker.IsPreGame())
 		player.MoveToStartArea()
-		next_click = world.time + (++next_cd)
+		next_click = world.time + next_cd
+		next_cd += 10
+		if(next_click == 5 SECONDS)
+			to_chat(player, "<span class='boldwarning'>The more you click the \"Ready\" button the less responsive it'll become!</span>")
 	player.update_action_buttons()
 
 /datum/action/lobby/ready_up/UpdateButtonIcon()
