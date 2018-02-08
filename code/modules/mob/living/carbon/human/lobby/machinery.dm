@@ -98,6 +98,9 @@
 	SSticker.lobby.announcers -= src
 	return ..()
 
+/obj/machinery/requests_console/lobby/SetName()
+	return
+
 /obj/machinery/requests_console/lobby/attack_hand()
 	return
 
