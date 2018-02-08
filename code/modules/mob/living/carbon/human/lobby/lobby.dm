@@ -107,12 +107,6 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 		var/obj/machinery/computer/lobby/poll/comp = I
 		client.images += comp.new_notification
 
-/mob/living/carbon/human/lobby/proc/LastCallForReadiedPlayers()
-	QDEL_NULL(ready_up)
-	if(!IsReady())
-		return
-	PhaseInSplashScreen()
-
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
 		late_join = new

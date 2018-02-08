@@ -243,8 +243,11 @@ SUBSYSTEM_DEF(ticker)
 	can_continue = src.mode.pre_setup()		//Choose antagonists
 	
 	for(var/I in GLOB.lobby_players)
-		//stagger for meta prevention
-		addtimer(CALLBACK(I, /mob/living/carbon/human/lobby/proc/LastCallForReadiedPlayers), rand(0, 5 SECONDS))
+		var/mob/living/carbon/human/lobby/player = I
+		QDEL_NULL(player.ready_up)	//no more switcheroo
+		if(player.IsReady())
+			//stagger for meta prevention
+			addtimer(CALLBACK(player, /mob/living/carbon/human/lobby/proc/PhaseInSplashScreen), rand(0, 5 SECONDS))
 
 	var/dont_finish_until = REALTIMEOFDAY + 10 SECONDS
 
