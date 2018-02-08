@@ -44,7 +44,7 @@
     }\
 }
 
-//minimum ticker lobby time
+//minimum ticker lobby time in seconds
 #define MINIMUM_LOBBY_TIME 30
 
 // Subsystem init_order, from highest priority to lowest priority

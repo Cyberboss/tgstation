@@ -151,7 +151,7 @@ SUBSYSTEM_DEF(ticker)
 		if(GAME_STATE_PREGAME)
 				//lobby stats for statpanels
 			if(isnull(timeLeft))
-				timeLeft = start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME, start_at - world.time)
+				timeLeft = start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME SECONDS, start_at - world.time)
 			totalPlayers = 0
 			totalPlayersReady = 0
 			for(var/mob/living/carbon/human/lobby/player in GLOB.player_list)
@@ -529,12 +529,12 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/GetTimeLeft()
 	if(isnull(SSticker.timeLeft))
-		return start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME, start_at - world.time)
+		return start_at == -1 ? start_at : max(MINIMUM_LOBBY_TIME SECONDS, start_at - world.time)
 	return timeLeft
 
 /datum/controller/subsystem/ticker/proc/SetTimeLeft(newtime)
 	if(newtime >= 0 && isnull(timeLeft))	//remember, negative means delayed
-		newtime = max(MINIMUM_LOBBY_TIME, newtime)
+		newtime = max(MINIMUM_LOBBY_TIME SECONDS, newtime)
 		start_at = world.time + newtime
 	else
 		timeLeft = newtime
