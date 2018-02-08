@@ -248,7 +248,7 @@ SUBSYSTEM_DEF(ticker)
 			player.PhaseInSplashScreen()
 		CHECK_TICK
 
-	var/dont_finish_until = REALTIMEOFDAY + 30
+	var/dont_finish_until = REALTIMEOFDAY + 5 SECONDS
 
 	SSjob.DivideOccupations() 				//Distribute jobs
 	CHECK_TICK

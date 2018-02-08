@@ -57,13 +57,15 @@
 		
 		sleep(30)
 
-		for(var/I in announcers)
-			var/obj/O = I
-			O.say("Returning to CentCom.")
-	announcers.Cut()
 	lights.Cut()
 
 	if(you_had_your_chance)
+		UNTIL(SSticker.setup_done)
+
+		for(var/I in announcers)
+			var/obj/O = I
+			O.say("Returning to CentCom.")
+
 		shuttle.Launch()
 
 		sleep(50)
