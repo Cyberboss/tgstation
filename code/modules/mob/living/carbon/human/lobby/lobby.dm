@@ -25,9 +25,10 @@
 
 	var/datum/browser/late_picker
 
-	//"Start Now" memes
 	var/instant_ready = FALSE
 	var/instant_observer = FALSE
+
+	var/phase_in_complete = TRUE
 
 INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
@@ -116,6 +117,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
+		QDEL_NULL(ready_up)	//late joiners need this
 		late_join = new
 		late_join.Grant(src)
 		return
@@ -134,10 +136,12 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 		notransform = FALSE
 
 /mob/living/carbon/human/lobby/proc/PhaseInSplashScreen()
+	phase_in_complete = FALSE
 	invisibility = INVISIBILITY_MAXIMUM
 	RunSparks()
 	notransform = TRUE
 	splash_screen.Fade(FALSE, FALSE)
+	addtimer(VARSET_CALLBACK(src, phase_in_complete, TRUE), 3 SECONDS, TIMER_CLIENT_TIME)
 
 /mob/living/carbon/human/lobby/proc/RunSparks()
 	do_sparks(5, FALSE, src)

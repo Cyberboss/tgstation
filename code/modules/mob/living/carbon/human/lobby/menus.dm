@@ -53,7 +53,7 @@
 	dat += "</div></div>"
 
 	// Added the new browser window method
-	late_picker = new(src, "latechoices", "Choose Profession", 440, 500)
+	late_picker = new(src, "latechoices", "Choose Profession", 440, 500, src)
 	late_picker.add_stylesheet("playeroptions", 'html/browser/playeroptions.css')
 	late_picker.set_content(dat)
 	late_picker.open(TRUE)

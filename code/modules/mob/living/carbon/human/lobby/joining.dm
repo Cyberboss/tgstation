@@ -74,6 +74,8 @@
 	SSticker.queued_players -= src
 	SSticker.queue_delay = 4
 
+	UNTIL(phase_in_complete)
+
 	var/arrivals_docked = TRUE
 	if(SSshuttle.arrivals)
 		if(SSshuttle.arrivals.damaged && CONFIG_GET(flag/arrivals_shuttle_require_safe_latejoin))
