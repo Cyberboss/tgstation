@@ -243,13 +243,10 @@ SUBSYSTEM_DEF(ticker)
 	can_continue = src.mode.pre_setup()		//Choose antagonists
 	
 	for(var/I in GLOB.lobby_players)
-		var/mob/living/carbon/human/lobby/player = I
-		QDEL_NULL(player.ready_up)
-		if(player.IsReady())
-			player.PhaseInSplashScreen()
-		CHECK_TICK
+		//stagger for meta prevention
+		addtimer(CALLBACK(I, /mob/living/carbon/human/lobby/proc/LastCallForReadiedPlayers), rand(0, 5 SECONDS))
 
-	var/dont_finish_until = REALTIMEOFDAY + 5 SECONDS
+	var/dont_finish_until = REALTIMEOFDAY + 10 SECONDS
 
 	SSjob.DivideOccupations() 				//Distribute jobs
 	CHECK_TICK
