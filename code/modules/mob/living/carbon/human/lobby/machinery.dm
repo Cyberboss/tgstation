@@ -103,31 +103,3 @@
 
 /obj/machinery/requests_console/lobby/attack_hand()
 	return
-
-/obj/machinery/status_display/lobby
-	speed_process = TRUE	//responsive UI
-	mode = 5	//generic shuttle, but it isn't
-
-/obj/machinery/status_display/lobby/display_shuttle_status()
-	if(SSticker.lobby.process_complete || (SSticker.start_immediately && ! SSticker.lobby.process_started))
-		update_display("-LEAV-", "")
-		speed_process = FALSE
-		return
-	
-	var/tl = SSticker.GetTimeLeft()
-
-	switch(tl)
-		if(15 to INFINITY)
-			tl -= 15
-			update_display("-ARIV-", "[add_zero(num2text((tl / 60) % 60),2)]:[add_zero(num2text(tl % 60), 2)]")
-		if(5 to 15)
-			tl -= 5
-			update_display("-LOCK-", "00:[add_zero(num2text(tl), 2)]")
-		if(0 to 5)
-			update_display("-TLPT-", "00:[add_zero(num2text(tl), 2)]")
-
-/obj/machinery/status_display/lobby/process()
-	. = ..()
-	//we're done
-	if(!speed_process)
-		return PROCESS_KILL

@@ -15852,6 +15852,18 @@
 "VQ" = (
 /turf/closed/wall/mineral/plastitanium,
 /area/shuttle/lobby)
+"VR" = (
+/turf/closed/wall/mineral/titanium,
+/area/shuttle/lobby/start_zone)
+"VS" = (
+/turf/closed/wall/mineral/titanium,
+/area/shuttle/lobby/start_zone)
+"VT" = (
+/turf/closed/wall/mineral/titanium,
+/area/shuttle/lobby/start_zone)
+"VU" = (
+/turf/closed/wall/mineral/titanium,
+/area/shuttle/lobby/start_zone)
 
 (1,1,1) = {"
 aa
@@ -73397,7 +73409,7 @@ aa
 aa
 aa
 aa
-Of
+OB
 Pd
 PE
 OE
@@ -73406,7 +73418,7 @@ OE
 OE
 St
 SY
-Of
+OB
 aa
 aa
 aa
@@ -73653,7 +73665,7 @@ aa
 MF
 MF
 MI
-OB
+MF
 MF
 Nf
 OE
@@ -73664,7 +73676,7 @@ OE
 OE
 SZ
 MF
-OB
+MF
 MI
 MF
 MF
@@ -76739,14 +76751,14 @@ Nl
 NK
 NK
 ON
-MI
+VR
 PT
 NK
 NK
 NK
 NK
 ON
-MI
+VT
 PT
 NK
 NK
@@ -76996,14 +77008,14 @@ Nl
 NK
 NK
 NL
-Pr
+MI
 PU
 NK
 NK
 NK
 NK
 NL
-Pr
+MI
 PU
 NK
 NK
@@ -77253,14 +77265,14 @@ Nl
 NK
 NK
 NL
-MI
+Pr
 PU
 NK
 NK
 NK
 NK
 NL
-MI
+Pr
 TQ
 NK
 NK
@@ -77510,14 +77522,14 @@ Nn
 NL
 NK
 NL
-Pt
+MI
 PU
 NK
 NK
 NK
 NK
 NL
-Pt
+MI
 PU
 NK
 PU
@@ -77767,14 +77779,14 @@ Nl
 NK
 NK
 ON
-MI
+VS
 PT
 NK
 NK
 NK
 NK
 ON
-MI
+VU
 PT
 NK
 NK
