@@ -18,10 +18,6 @@
 		return
 	make_me_an_observer()
 
-//prevent hearing ambience and stuff during transitions
-/mob/living/carbon/human/lobby/can_hear()
-	return !notransform
-
 //no griff
 /mob/living/carbon/human/lobby/can_be_pulled()
 	return FALSE
