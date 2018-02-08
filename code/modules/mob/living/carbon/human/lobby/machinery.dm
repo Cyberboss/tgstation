@@ -60,7 +60,7 @@
 /obj/machinery/computer/lobby/observer
 	name = "Become Observer"
 	desc = "Use this to become a ghost and spectate the game"
-	icon_screen = "comm_monitor"
+	icon_screen = "cameras"
 
 /obj/machinery/computer/lobby/observer/attack_hand(mob/living/carbon/human/lobby/player)
 	player.make_me_an_observer()
