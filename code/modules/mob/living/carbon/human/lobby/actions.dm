@@ -41,17 +41,16 @@
 	var/mob/living/carbon/human/lobby/player = owner
 	player.instant_ready = !player.instant_ready
 	player.instant_observer = FALSE
-	player.update_action_buttons_icon()
 
-	if(!SSticker.IsPreGame())
-		return
-		
-	player.MoveToStartArea()
-	available = FALSE
-	addtimer(CALLBACK(src, .proc/MakeAvailable), next_cd)
-	next_cd += 10
-	if(next_cd == 5 SECONDS)	//3 clicks in lobby
-		to_chat(player, "<span class='boldwarning'>The more you click the \"Ready\" button the less responsive it'll become!</span>")
+	if(SSticker.IsPreGame())
+		player.MoveToStartArea()
+		available = FALSE
+		addtimer(CALLBACK(src, .proc/MakeAvailable), next_cd)
+		next_cd += 10
+		if(next_cd == 5 SECONDS)	//3 clicks in lobby
+			to_chat(player, "<span class='boldwarning'>The more you click the \"Ready\" button the less responsive it'll become!</span>")
+			
+	player.update_action_buttons_icon()
 
 /datum/action/lobby/ready_up/UpdateButtonIcon()
 	if(!..())
