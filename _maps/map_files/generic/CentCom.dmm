@@ -13692,16 +13692,16 @@
 "NB" = (
 /obj/effect/landmark/start/new_player,
 /obj/structure/chair{
-	dir = 1
+	dir = 1;
+	item_chair = null
 	},
-/turf/open/floor/plasteel/darkred/side{
-	dir = 4
-	},
+/turf/open/floor/plasteel/darkred,
 /area/shuttle/lobby)
 "NC" = (
 /obj/effect/landmark/start/new_player,
 /obj/structure/chair{
-	dir = 4
+	dir = 4;
+	item_chair = null
 	},
 /turf/open/floor/plasteel/darkred,
 /area/shuttle/lobby)
@@ -13746,7 +13746,8 @@
 /area/shuttle/lobby/start_zone)
 "NJ" = (
 /obj/structure/chair{
-	dir = 8
+	dir = 8;
+	item_chair = null
 	},
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
@@ -13788,7 +13789,8 @@
 /area/shuttle/lobby/start_zone)
 "NU" = (
 /obj/structure/chair{
-	dir = 1
+	dir = 1;
+	item_chair = null
 	},
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
@@ -14019,7 +14021,8 @@
 "ON" = (
 /obj/machinery/light,
 /obj/structure/chair{
-	dir = 1
+	dir = 1;
+	item_chair = null
 	},
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
@@ -14283,14 +14286,18 @@
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "PT" = (
+/obj/structure/chair{
+	item_chair = null
+	},
 /obj/machinery/light{
 	dir = 1
 	},
-/obj/structure/chair,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "PU" = (
-/obj/structure/chair,
+/obj/structure/chair{
+	item_chair = null
+	},
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "PV" = (
@@ -14916,7 +14923,9 @@
 /area/shuttle/lobby)
 "St" = (
 /obj/effect/landmark/start/new_player,
-/obj/structure/chair,
+/obj/structure/chair{
+	item_chair = null
+	},
 /turf/open/floor/plasteel/darkred,
 /area/shuttle/lobby)
 "Su" = (
@@ -15535,7 +15544,9 @@
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "US" = (
-/obj/structure/chair,
+/obj/structure/chair{
+	item_chair = null
+	},
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
 	},
@@ -15840,6 +15851,159 @@
 "VU" = (
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby/start_zone)
+"VV" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"VW" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"VX" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"VY" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"VZ" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"Wa" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"Wb" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wc" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wd" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"We" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wf" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wg" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wh" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wi" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wj" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"Wk" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"Wl" = (
+/obj/structure/chair{
+	dir = 1;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkgreen,
+/area/shuttle/lobby/start_zone)
+"Wm" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wn" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
+"Wo" = (
+/obj/effect/landmark/start/new_player,
+/obj/structure/chair{
+	dir = 8;
+	item_chair = null
+	},
+/turf/open/floor/plasteel/darkred,
+/area/shuttle/lobby)
 
 (1,1,1) = {"
 aa
@@ -72873,11 +73037,11 @@ aa
 aa
 MI
 Pb
-PE
-NF
-NF
-NF
-NF
+NB
+Wb
+Wd
+Wf
+Wh
 St
 SW
 MI
@@ -73130,7 +73294,7 @@ aa
 aa
 MS
 Pb
-PE
+NB
 OE
 OE
 OE
@@ -73387,7 +73551,7 @@ aa
 aa
 OB
 Pd
-PE
+NB
 OE
 OE
 OE
@@ -73910,7 +74074,7 @@ OE
 Ta
 TD
 NZ
-Uz
+St
 UX
 MF
 aa
@@ -74159,13 +74323,13 @@ NC
 NF
 OE
 OE
-NF
-NF
-NF
-NF
+Wc
+We
+Wg
+Wi
 OE
 OE
-NF
+Wm
 NC
 NC
 UY
@@ -74925,8 +75089,8 @@ aa
 aa
 MI
 Nf
-NF
-NF
+VV
+VX
 NC
 OE
 OE
@@ -74937,8 +75101,8 @@ OE
 OE
 OE
 NC
-NF
-NF
+Wn
+Wo
 SZ
 MI
 aa
@@ -75182,7 +75346,7 @@ aa
 aa
 MF
 Ni
-NG
+NB
 Oe
 OH
 OE
@@ -75195,7 +75359,7 @@ OE
 OE
 TI
 Oe
-UE
+St
 Vc
 MF
 aa
@@ -76467,7 +76631,7 @@ aa
 aa
 MF
 Nn
-NL
+VW
 NK
 NK
 NK
@@ -76734,7 +76898,7 @@ NK
 NK
 NK
 ON
-VT
+VR
 PT
 NK
 NK
@@ -76983,14 +77147,14 @@ MS
 Nl
 NK
 NK
-NL
+VY
 MI
 PU
 NK
 NK
 NK
 NK
-NL
+Wj
 MI
 PU
 NK
@@ -77240,16 +77404,16 @@ MJ
 Nl
 NK
 NK
-NL
+VZ
 Pr
 PU
 NK
 NK
 NK
 NK
-NL
+Wk
 Pr
-TQ
+PU
 NK
 NK
 Vf
@@ -77497,14 +77661,14 @@ MF
 Nn
 NL
 NK
-NL
+Wa
 MI
 PU
 NK
 NK
 NK
 NK
-NL
+Wl
 MI
 PU
 NK
@@ -77755,14 +77919,14 @@ Nl
 NK
 NK
 ON
-VS
+VR
 PT
 NK
 NK
 NK
 NK
 ON
-VU
+VR
 PT
 NK
 NK
