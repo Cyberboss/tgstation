@@ -13608,9 +13608,11 @@
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby)
 "Nk" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/corner,
 /area/shuttle/lobby/start_zone)
 "Nl" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side,
 /area/shuttle/lobby/start_zone)
 "Nm" = (
@@ -13749,15 +13751,18 @@
 	dir = 8;
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "NK" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "NL" = (
 /obj/structure/chair{
 	dir = 1
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "NM" = (
@@ -13792,6 +13797,7 @@
 	dir = 1;
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
 	},
@@ -13873,6 +13879,7 @@
 /obj/machinery/light{
 	dir = 8
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 4
 	},
@@ -13911,6 +13918,7 @@
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "Os" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
 	},
@@ -14004,12 +14012,14 @@
 /area/shuttle/lobby)
 "OJ" = (
 /obj/effect/landmark/lobby/wall_spawner,
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 4
 	},
 /area/shuttle/lobby/start_zone)
 "OK" = (
 /obj/effect/landmark/lobby/wall_spawner,
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "OL" = (
@@ -14024,6 +14034,7 @@
 	dir = 1;
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "OO" = (
@@ -14064,6 +14075,7 @@
 /obj/machinery/light{
 	dir = 4
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
 	},
@@ -14138,6 +14150,7 @@
 /area/shuttle/lobby/start_zone)
 "Pm" = (
 /obj/effect/landmark/lobby/hub_spawner,
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "Pn" = (
@@ -14292,12 +14305,14 @@
 /obj/machinery/light{
 	dir = 1
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "PU" = (
 /obj/structure/chair{
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "PV" = (
@@ -14460,6 +14475,7 @@
 /obj/structure/chair{
 	dir = 4
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "QE" = (
@@ -15547,6 +15563,7 @@
 /obj/structure/chair{
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 8
 	},
@@ -15625,11 +15642,13 @@
 /turf/closed/wall/mineral/titanium,
 /area/shuttle/lobby)
 "Ve" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/corner{
 	dir = 4
 	},
 /area/shuttle/lobby/start_zone)
 "Vf" = (
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen/side{
 	dir = 1
 	},
@@ -15864,6 +15883,7 @@
 	dir = 1;
 	item_chair = null
 	},
+/obj/effect/landmark/start/ready_player,
 /turf/open/floor/plasteel/darkgreen,
 /area/shuttle/lobby/start_zone)
 "VX" = (
@@ -16004,6 +16024,18 @@
 	},
 /turf/open/floor/plasteel/darkred,
 /area/shuttle/lobby)
+"Wp" = (
+/obj/machinery/light{
+	dir = 4
+	},
+/obj/machinery/computer/lobby/setup_character{
+	dir = 8
+	},
+/obj/effect/landmark/start/ready_player,
+/turf/open/floor/plasteel/darkgreen/side{
+	dir = 8
+	},
+/area/shuttle/lobby/start_zone)
 
 (1,1,1) = {"
 aa
@@ -73038,10 +73070,10 @@ aa
 MI
 Pb
 NB
-Wb
-Wd
-Wf
-Wh
+VV
+VV
+VV
+VV
 St
 SW
 MI
@@ -74323,13 +74355,13 @@ NC
 NF
 OE
 OE
-Wc
-We
-Wg
-Wi
+VV
+VV
+VV
+VV
 OE
 OE
-Wm
+VV
 NC
 NC
 UY
@@ -75090,7 +75122,7 @@ aa
 MI
 Nf
 VV
-VX
+VV
 NC
 OE
 OE
@@ -75101,8 +75133,8 @@ OE
 OE
 OE
 NC
-Wn
-Wo
+VV
+VV
 SZ
 MI
 aa
@@ -77147,14 +77179,14 @@ MS
 Nl
 NK
 NK
-VY
+VW
 MI
 PU
 NK
 NK
 NK
 NK
-Wj
+VW
 MI
 PU
 NK
@@ -77404,14 +77436,14 @@ MJ
 Nl
 NK
 NK
-VZ
+VW
 Pr
 PU
 NK
 NK
 NK
 NK
-Wk
+VW
 Pr
 PU
 NK
@@ -77661,14 +77693,14 @@ MF
 Nn
 NL
 NK
-Wa
+VW
 MI
 PU
 NK
 NK
 NK
 NK
-Wl
+VW
 MI
 PU
 NK
@@ -78949,7 +78981,7 @@ Os
 OV
 Os
 Os
-QE
+Wp
 Rh
 Rh
 QE

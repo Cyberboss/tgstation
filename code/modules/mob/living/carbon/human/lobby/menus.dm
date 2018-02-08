@@ -68,6 +68,7 @@
 			//still around, they just closed the window
 			MoveToStartArea()
 			PhaseOutSplashScreen()
+			late_join.Grant(src)
 		return
 
 	if(href_list["SelectedJob"])

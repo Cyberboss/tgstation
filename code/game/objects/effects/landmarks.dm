@@ -440,6 +440,7 @@ INITIALIZE_IMMEDIATE(/obj/effect/landmark)
 
 /obj/effect/landmark/start/ready_player
 	name = "Ready Player"
+	icon_state = "x3"
 	delete_after_roundstart = FALSE
 
 /obj/effect/landmark/start/ready_player/Initialize()

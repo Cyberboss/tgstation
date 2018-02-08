@@ -19,6 +19,49 @@
 	if(.)
 		owner.client.prefs.ShowChoices(owner)
 
+/datum/action/lobby/ready_up
+	name = "Ready"
+	desc = "Spawn yourself in a position to join the game immediately when it starts"
+	button_icon_state = "ready"
+	//spam protection
+	var/next_click = 0
+	var/next_cd = 2
+
+/datum/action/lobby/ready_up/IsAvailable()
+	return world.time > next_click && ..()
+
+/datum/action/lobby/ready_up/Trigger()
+	. = ..()
+	if(!.)
+		return
+	var/mob/living/carbon/human/lobby/player = owner
+	player.instant_ready = !player.instant_ready
+	player.instant_observer = FALSE
+	if(SSticker.IsPreGame())
+		player.MoveToStartArea()
+		next_click = world.time + (++next_cd)
+	player.update_action_buttons()
+
+/datum/action/lobby/ready_up/UpdateButtonIcon()
+	if(!..())
+		return
+	var/mob/living/carbon/human/lobby/player = owner
+	if(player.instant_ready)
+		button.icon_state = "template_active"
+
+/datum/action/lobby/late_join
+	name = "Join Game"
+	desc = "Pick a job and enter the game"
+	button_icon_state = "late_join"
+
+/datum/action/lobby/late_join/Trigger()
+	. = ..()
+	if(!.)
+		return
+	var/mob/living/carbon/human/lobby/player = owner
+	player.AttemptJoin()
+	Remove(player)
+
 /datum/action/lobby/become_observer
 	name = "Observe"
 	desc = "Join the game as a ghost to spectate"
@@ -30,8 +73,9 @@
 		return
 	var/mob/living/carbon/human/lobby/player = owner
 	player.instant_observer = !player.instant_observer
-	player.make_me_an_observer()
-	UpdateButtonIcon()
+	if(!player.make_me_an_observer() && !SSticker.IsPreGame())
+		player.instant_ready = FALSE
+	player.update_action_buttons()
 
 /datum/action/lobby/become_observer/UpdateButtonIcon()
 	if(!..())

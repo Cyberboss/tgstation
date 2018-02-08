@@ -244,6 +244,7 @@ SUBSYSTEM_DEF(ticker)
 	
 	for(var/I in GLOB.lobby_players)
 		var/mob/living/carbon/human/lobby/player = I
+		QDEL_NULL(player.ready_up)
 		if(player.IsReady())
 			player.PhaseInSplashScreen()
 		CHECK_TICK

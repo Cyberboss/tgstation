@@ -28,3 +28,9 @@
 //no moverino
 /mob/living/carbon/human/lobby/ShuttleThrow(list/movement_force, move_dir)
 	return
+
+//checking stuff
+/mob/living/carbon/human/lobby/Moved()
+	. = ..()
+	instant_ready = istype(get_area(src), /area/shuttle/lobby/start_zone)
+	ready_up.UpdateButtonIcon()

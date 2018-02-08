@@ -18,8 +18,10 @@
 	var/datum/callback/roundstart_callback
 	
 	var/datum/action/lobby/setup_character/setup_character
-	var/datum/action/lobby/show_player_polls/show_player_polls
+	var/datum/action/lobby/ready_up/ready_up
+	var/datum/action/lobby/late_join/late_join
 	var/datum/action/lobby/become_observer/become_observer
+	var/datum/action/lobby/show_player_polls/show_player_polls
 
 	var/datum/browser/late_picker
 
@@ -41,6 +43,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 	setup_character = new
 	setup_character.Grant(src)
+	ready_up = new
+	ready_up.Grant(src)
 	become_observer = new
 	become_observer.Grant(src)
 
@@ -50,6 +54,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 
 /mob/living/carbon/human/lobby/Destroy()
 	QDEL_NULL(setup_character)
+	QDEL_NULL(ready_up)
+	QDEL_NULL(late_join)
 	QDEL_NULL(show_player_polls)
 	QDEL_NULL(become_observer)
 	LAZYREMOVE(SSticker.round_start_events, roundstart_callback)
@@ -81,7 +87,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	RunSparks()
 
 /mob/living/carbon/human/lobby/proc/IsReady()
-	return (client || new_character) && istype(get_area(src), /area/shuttle/lobby/start_zone)
+	return (client || new_character) && instant_ready
 
 /mob/living/carbon/human/lobby/proc/OnInitializationsComplete(immediate = FALSE)
 	set waitfor = FALSE
@@ -104,7 +110,8 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
 		return
-	
+	late_join = new
+	late_join.Grant(src)
 	new_character.notransform = TRUE
 	addtimer(VARSET_CALLBACK(new_character, notransform, FALSE), 30, TIMER_CLIENT_TIME)
 	transfer_character()
