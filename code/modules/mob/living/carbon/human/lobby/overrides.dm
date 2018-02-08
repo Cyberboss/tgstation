@@ -24,3 +24,7 @@
 //nahh, don't worry about us
 /mob/living/carbon/human/lobby/update_z()
 	return
+
+//no moverino
+/mob/living/carbon/human/lobby/ShuttleThrow(list/movement_force, move_dir)
+	return
