@@ -18,11 +18,6 @@
 /obj/structure/lobby_teleporter/CollidedWith(mob/living/carbon/human/lobby/player)
 	if(istype(player))
 		player.AttemptJoin()
-		return
-
-	//garbage
-	do_sparks(5, FALSE, src)
-	qdel(player)
 
 /turf/open/floor/light/lobby
 	name = "Crew Boarding Room"
