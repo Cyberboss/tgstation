@@ -27,7 +27,10 @@
 			postfix = "in about [DisplayTimeText(tl)]"
 		else
 			postfix = "soon"
-		to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
+		if(SSticker.current_state > GAME_STATE_STARTUP) //post initializations
+			to_chat(src, "Please set up your character using a console on the left and enter the green area to indicate your readiness.")
+		else
+			to_chat(src, "Please set up your character. The lobby will load shortly.")
 		to_chat(src, "The game will start [postfix].")
 
 	splash_screen = new(client, TRUE)
