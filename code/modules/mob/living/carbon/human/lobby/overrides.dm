@@ -7,8 +7,10 @@
 	..()
 	LobbyStat()
 
-//OOC only
+//OOC and memes only
 /mob/living/carbon/human/lobby/say(message)
+	if(check_emote(message))
+		return
 	client.ooc(message)
 
 //do it right
