@@ -15,6 +15,9 @@
 	//maybe unneccesary?
 	H.name = H.real_name
 
+	//Ughhhh
+	H.should_abandon_siliconization_due_to_no_transform = FALSE
+
 	. = H
 	new_character = H
 	new_character.notransform = !late_joiner

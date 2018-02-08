@@ -316,9 +316,6 @@
 
 	return ..()
 
-/mob/living/carbon/proc/should_abandon_siliconization_due_to_no_transform
-	return TRUE
-
 /mob/living/carbon/AIize()
 	if (should_abandon_siliconization_due_to_no_transform && notransform)
 		return
