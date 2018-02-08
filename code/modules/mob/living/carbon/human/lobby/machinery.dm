@@ -1,5 +1,5 @@
 /obj/machinery/door/poddoor/preopen/lobby
-	name = "Crew Boarding Room"
+	name = "\proper Crew Boarding Room"
 
 /obj/machinery/door/poddoor/preopen/lobby/Initialize()
 	. = ..()
@@ -10,7 +10,8 @@
 	return ..()
 
 /obj/structure/lobby_teleporter
-	name = "To Arrivals Shuttle"
+	name = "\proper To Arrivals Shuttle"
+	desc = "Use this teleporter to join the game in progress"
 	icon = 'icons/obj/machines/teleporter.dmi'
 	icon_state = "tele1"
 	density = TRUE
@@ -20,7 +21,7 @@
 		player.AttemptJoin()
 
 /turf/open/floor/light/lobby
-	name = "Crew Boarding Room"
+	name = "\proper Crew Boarding Room"
 	coloredlights = list("b")
 	can_modify_colour = FALSE
 	var/timer_id
@@ -49,7 +50,8 @@
 	update_icon()
 
 /obj/machinery/computer/lobby/setup_character
-	name = "Setup Character"
+	name = "\proper Setup Character"
+	desc = "Use this to change character and game preferences"
 	icon_screen = "comm_monitor"
 
 /obj/machinery/computer/lobby/setup_character/attack_hand(mob/player)
@@ -57,13 +59,15 @@
 
 /obj/machinery/computer/lobby/observer
 	name = "Become Observer"
+	desc = "Use this to become a ghost and spectate the game"
 	icon_screen = "comm_monitor"
 
 /obj/machinery/computer/lobby/observer/attack_hand(mob/living/carbon/human/lobby/player)
 	player.make_me_an_observer()
 
 /obj/machinery/computer/lobby/poll
-	name = "Show Player Polls"
+	name = "\proper Show Player Polls"
+	desc = "Use this to vote on playerbase polls"
 	icon_screen = "syndishuttle"
 	var/image/new_notification
 
@@ -83,7 +87,8 @@
 	player.handle_player_polling()
 
 /obj/machinery/requests_console/lobby
-	name = "Announcement Console"
+	name = "announcement console"
+	desc = "Used to broadcast the shuttle's automated announcements"
 
 /obj/machinery/requests_console/lobby/Initialize()
 	. = ..()

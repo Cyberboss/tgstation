@@ -4,7 +4,10 @@
 
 /mob/living/carbon/human/lobby/proc/handle_player_polling()
 	if(!SSdbcore.IsConnected())
-		to_chat(usr, "<span class='danger'>Failed to establish database connection.</span>")
+		to_chat(src, "<span class='danger'>Failed to establish database connection.</span>")
+		return
+	if(IsGuestKey(key))
+		to_chat(src, "<span class='danger'>Guest users may not vote in polls.</span>")
 		return
 	var/datum/DBQuery/query_poll_get = SSdbcore.NewQuery("SELECT id, question FROM [format_table_name("poll_question")] WHERE Now() BETWEEN starttime AND endtime [(client.holder ? "" : "AND adminonly = false")]")
 	if(!query_poll_get.warn_execute())
