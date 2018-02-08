@@ -138,6 +138,9 @@
 	log_manifest(character.mind.key,character.mind,character,latejoin = TRUE)
 
 /mob/living/carbon/human/lobby/proc/make_me_an_observer()
+	if(SSticker.current_state < GAME_STATE_PREGAME)
+		return
+
 	var/this_is_like_playing_right = alert(src,"Are you sure you wish to observe? You will not be able to play this round!","Player Setup","Yes","No")
 
 	if(QDELETED(src) || this_is_like_playing_right != "Yes")
