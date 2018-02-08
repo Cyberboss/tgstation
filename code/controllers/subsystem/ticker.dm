@@ -534,7 +534,8 @@ SUBSYSTEM_DEF(ticker)
 
 /datum/controller/subsystem/ticker/proc/SetTimeLeft(newtime)
 	if(newtime >= 0 && isnull(timeLeft))	//remember, negative means delayed
-		start_at = max(MINIMUM_LOBBY_TIME, world.time + newtime)
+		newtime = min(MINIMUM_LOBBY_TIME, newtime)
+		start_at = world.time + newtime
 	else
 		timeLeft = newtime
 
