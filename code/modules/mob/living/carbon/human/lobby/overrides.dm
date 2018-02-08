@@ -32,5 +32,7 @@
 //checking stuff
 /mob/living/carbon/human/lobby/Moved()
 	. = ..()
+	if(!ready_up)
+		return
 	instant_ready = istype(get_area(src), /area/shuttle/lobby/start_zone)
 	ready_up.UpdateButtonIcon()
