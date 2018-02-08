@@ -247,7 +247,7 @@ SUBSYSTEM_DEF(ticker)
 		QDEL_NULL(player.ready_up)	//no more switcheroo
 		if(player.IsReady())
 			//stagger for meta prevention
-			addtimer(CALLBACK(player, /mob/living/carbon/human/lobby/proc/PhaseInSplashScreen), rand(0, 5 SECONDS))
+			addtimer(CALLBACK(player, /mob/living/carbon/human/lobby/proc/OnReadiedUpAndStarting), rand(0, 5 SECONDS))
 
 	var/dont_finish_until = REALTIMEOFDAY + 10 SECONDS
 

@@ -53,11 +53,7 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	roundstart_callback = CALLBACK(src, .proc/OnRoundstart)
 
 /mob/living/carbon/human/lobby/Destroy()
-	QDEL_NULL(setup_character)
-	QDEL_NULL(ready_up)
-	QDEL_NULL(late_join)
-	QDEL_NULL(show_player_polls)
-	QDEL_NULL(become_observer)
+	DeleteActions()
 	LAZYREMOVE(SSticker.round_start_events, roundstart_callback)
 	QDEL_NULL(roundstart_callback)
 	QDEL_NULL(new_character)
@@ -65,6 +61,13 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	QDEL_NULL(late_picker)
 	GLOB.lobby_players -= src
 	return ..()
+
+/mob/living/carbon/human/lobby/proc/DeleteActions()
+	QDEL_NULL(setup_character)
+	QDEL_NULL(ready_up)
+	QDEL_NULL(late_join)
+	QDEL_NULL(show_player_polls)
+	QDEL_NULL(become_observer)
 
 /mob/living/carbon/human/lobby/proc/CheckPolls()
 	if(IsGuestKey(src.key) || !SSdbcore.Connect())
@@ -106,6 +109,10 @@ INITIALIZE_IMMEDIATE(/mob/living/carbon/human/lobby)
 	for(var/I in SSticker.lobby.poll_computers)
 		var/obj/machinery/computer/lobby/poll/comp = I
 		client.images += comp.new_notification
+
+/mob/living/carbon/human/lobby/proc/OnReadiedUpAndStarting()
+	DeleteActions()
+	PhaseInSplashScreen()
 
 /mob/living/carbon/human/lobby/proc/OnRoundstart()
 	if(!new_character)
