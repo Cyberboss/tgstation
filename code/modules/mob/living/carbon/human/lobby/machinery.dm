@@ -52,7 +52,7 @@
 /obj/machinery/computer/lobby/setup_character
 	name = "\proper Setup Character"
 	desc = "Use this to change character and game preferences"
-	icon_screen = "comm_monitor"
+	icon_screen = "teleport"
 
 /obj/machinery/computer/lobby/setup_character/attack_hand(mob/player)
 	player.client.prefs.ShowChoices(player)
