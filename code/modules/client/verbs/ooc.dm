@@ -2,8 +2,6 @@
 	set name = "OOC" //Gave this shit a shorter name so you only have to time out "ooc" rather than "ooc message" to use it --NeoFite
 	set category = "OOC"
 
-	. = FALSE
-
 	if(GLOB.say_disabled)	//This is here to try to identify lag problems
 		to_chat(usr, "<span class='danger'>Speech is currently admin-disabled.</span>")
 		return
@@ -50,7 +48,9 @@
 		to_chat(src, "<span class='danger'>You have OOC muted.</span>")
 		return
 
-	. = TRUE
+	if(isnewplayer(mob))
+		var/mob/living/carbon/human/lobby/player = mob
+		player.SendSpeechBubble(raw_msg)
 
 	log_talk(mob,"[key_name(src)] : [raw_msg]",LOGOOC)
 	mob.log_message("[key]: [raw_msg]", INDIVIDUAL_OOC_LOG)
