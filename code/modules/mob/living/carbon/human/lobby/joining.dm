@@ -74,8 +74,6 @@
 	SSticker.queued_players -= src
 	SSticker.queue_delay = 4
 
-	UNTIL(phase_in_complete)
-
 	var/arrivals_docked = TRUE
 	if(SSshuttle.arrivals)
 		if(SSshuttle.arrivals.damaged && CONFIG_GET(flag/arrivals_shuttle_require_safe_latejoin))
@@ -90,6 +88,7 @@
 
 	var/mob/living/character = create_character(TRUE)	//creates the human and transfers vars and mind
 	late_picker.close()
+	UNTIL(phase_in_complete)
 	transfer_character()
 	var/equip = SSjob.EquipRank(character, rank, 1)
 	if(isliving(equip))	//Borgs get borged in the equip, so we need to make sure we handle the new mob.
