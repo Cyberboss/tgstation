@@ -48,6 +48,7 @@
 // Subsystems shutdown in the reverse of the order they initialize in
 // The numbers just define the ordering, they are meaningless otherwise.
 
+#define INIT_ORDER_LOCALIZATION 20
 #define INIT_ORDER_GARBAGE 19
 #define INIT_ORDER_DBCORE 18
 #define INIT_ORDER_BLACKBOX 17
@@ -116,8 +117,10 @@
 
 #define RUNLEVELS_DEFAULT (RUNLEVEL_SETUP | RUNLEVEL_GAME | RUNLEVEL_POSTGAME)
 
+#define LOCALE_DEFAULT "default"
 
-
+#define STRING(Key, Value) /datum/controller/subsystem/localization/var/##Key = Value
+#define _(key, ...) new /datum/text_instance(SSlocalization.##key, __VA_ARGS__)
 
 #define COMPILE_OVERLAYS(A)\
 	if (TRUE) {\

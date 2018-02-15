@@ -189,8 +189,11 @@ GLOBAL_DATUM_INIT(iconCache, /savefile, new("data/iconCache.sav")) //Cache of ic
 	if (istype(message, /image) || istype(message, /sound) || istype(target, /savefile))
 		CRASH("Invalid message! [message]")
 
+	var/datum/text_instance/text_instance
 	if(!istext(message))
-		return
+		text_instance = message
+		if(!istype(text_instance))
+			return
 
 	if(target == world)
 		target = GLOB.clients
@@ -204,10 +207,14 @@ GLOBAL_DATUM_INIT(iconCache, /savefile, new("data/iconCache.sav")) //Cache of ic
 			return
 	var/original_message = message
 	//Some macros remain in the string even after parsing and fuck up the eventual output
+	//TODO: remove this eventually??
 	message = replacetext(message, "\improper", "")
 	message = replacetext(message, "\proper", "")
 	message = replacetext(message, "\n", "<br>")
 	message = replacetext(message, "\t", "[GLOB.TAB][GLOB.TAB]")
+
+	if(message != original_message)
+		stack_trace("Text macros reached to_chat: [original_message]")
 
 	for(var/I in targets)
 		//Grab us a client if possible
@@ -215,20 +222,22 @@ GLOBAL_DATUM_INIT(iconCache, /savefile, new("data/iconCache.sav")) //Cache of ic
 
 		if (!C)
 			continue
+		
+		var/formatted_message = text_instance ? text_instance.Format(C.prefs.language) : original_message
 
 		//Send it to the old style output window.
-		SEND_TEXT(C, original_message)
+		SEND_TEXT(C, formatted_message)
 
 		if(!C.chatOutput || C.chatOutput.broken) // A player who hasn't updated his skin file.
 			continue
 
 		if(!C.chatOutput.loaded)
 			//Client still loading, put their messages in a queue
-			C.chatOutput.messageQueue += message
+			C.chatOutput.messageQueue += formatted_message
 			continue
 
 		// url_encode it TWICE, this way any UTF-8 characters are able to be decoded by the Javascript.
-		C << output(url_encode(url_encode(message)), "browseroutput:output")
+		C << output(url_encode(url_encode(formatted_message)), "browseroutput:output")
 
 /proc/grab_client(target)
 	if(istype(target, /client))
