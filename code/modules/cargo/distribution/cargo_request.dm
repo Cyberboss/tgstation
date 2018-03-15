@@ -34,7 +34,9 @@ GLOBAL_LIST_EMPTY(cargo_requests)
 	src.from_cargo = from_cargo
 
 	LAZYADD(GLOB.cargo_requests[department], src)
-	for(var/I in )
+	for(var/I in GLOB.consoles_by_department[department])
+		var/obj/machinery/requests_console/R = I
+		R.update_icon()
 
 /datum/cargo_request/Destroy()
 	LAZYREMOVE(GLOB.cargo_requests[department], src)

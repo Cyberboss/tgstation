@@ -103,10 +103,11 @@ GLOBAL_LIST_EMPTY(consoles_by_department)
 	else
 		to_chat(user, "<span class='warning'>You must open the maintenance panel first!</span>")
 
-/obj/machinery/requests_console/attackby(obj/item/O, mob/user, params)
+/obj/machinery/requests_console/attackby(obj/item/O, mob/living/user, params)
 	if (istype(O, /obj/item/stamp))
 		stamper = O
-		ui_interact()
+		ui_interact(user)
+		return
 	return ..()
 
 /*
