@@ -1,0 +1,7 @@
+<link rel='ractive' href='./requests_console/local_requests.ract'>
+<link rel='ractive' href='./requests_console/cargo_requests.ract'>
+
+<ui-display title='Requistions'>
+    <ui-button action='from_cargo'>Cargo Requests</ui-button>
+    <ui-button action='to_cargo'>Supply Requests</ui-button>
+</ui-display>
