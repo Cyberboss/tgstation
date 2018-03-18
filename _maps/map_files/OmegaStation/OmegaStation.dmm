@@ -325,7 +325,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Bridge";
-	departmentType = 5;
 	name = "Bridge RC";
 	pixel_y = 32
 	},
@@ -2740,7 +2739,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Head of Personnel's Desk";
-	departmentType = 5;
 	name = "Head of Personnel RC";
 	pixel_x = 64;
 	pixel_y = 32
@@ -2882,7 +2880,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Detective's Office";
-	departmentType = 0;
 	name = "Detective RC";
 	pixel_x = 30
 	},
@@ -2937,7 +2934,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Captain's Desk";
-	departmentType = 5;
 	name = "Captain RC";
 	pixel_y = 32
 	},
@@ -4943,7 +4939,6 @@
 /obj/structure/table/reinforced,
 /obj/machinery/requests_console{
 	department = "Cargo Office";
-	departmentType = 0;
 	name = "Cargo Office RC";
 	pixel_x = 32
 	},
@@ -6909,7 +6904,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Security";
-	departmentType = 0;
 	name = "Security RC";
 	pixel_x = -32
 	},
@@ -7199,7 +7193,6 @@
 "anX" = (
 /obj/machinery/requests_console{
 	department = "E.V.A. Storage";
-	departmentType = 0;
 	name = "E.V.A. RC";
 	pixel_x = 32
 	},
@@ -8785,7 +8778,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Primary Tool Storage";
-	departmentType = 0;
 	name = "Primary Tool Storage RC";
 	pixel_y = 32
 	},
@@ -8940,7 +8932,6 @@
 /obj/machinery/light,
 /obj/machinery/requests_console{
 	department = "Mining";
-	departmentType = 0;
 	name = "Mining Dock RC";
 	pixel_y = -32
 	},
@@ -12299,7 +12290,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Bar Counter";
-	departmentType = 0;
 	name = "Bar RC";
 	pixel_x = 32;
 	receive_ore_updates = 1
@@ -13884,7 +13874,6 @@
 /obj/item/device/flashlight/lamp,
 /obj/machinery/requests_console{
 	department = "Atmospherics Office";
-	departmentType = 0;
 	name = "Atmospherics RC";
 	pixel_x = 30
 	},
@@ -14015,7 +14004,6 @@
 /obj/item/toy/figure/mime,
 /obj/machinery/requests_console{
 	department = "Theatre Backstage";
-	departmentType = 0;
 	name = "Theatre RC";
 	pixel_x = -32
 	},
@@ -14580,7 +14568,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Kitchen";
-	departmentType = 0;
 	name = "Kitchen RC";
 	pixel_y = 32
 	},
@@ -17220,7 +17207,6 @@
 /obj/item/device/flashlight/lamp,
 /obj/machinery/requests_console{
 	department = "Engineering";
-	departmentType = 0;
 	name = "Engineering RC";
 	pixel_x = 32
 	},
@@ -17359,7 +17345,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Hydroponics";
-	departmentType = 0;
 	name = "Hydroponics RC";
 	pixel_y = 32
 	},
@@ -17818,7 +17803,6 @@
 /obj/effect/decal/cleanable/cobweb,
 /obj/machinery/requests_console{
 	department = "Custodial Closet";
-	departmentType = 0;
 	name = "Custodial RC";
 	pixel_y = 32
 	},
@@ -21741,7 +21725,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Research Lab";
-	departmentType = 0;
 	name = "Research RC";
 	pixel_y = 32;
 	receive_ore_updates = 1
@@ -22955,7 +22938,6 @@
 /obj/machinery/atmospherics/pipe/simple/scrubbers/hidden,
 /obj/machinery/requests_console{
 	department = "Chemistry Lab";
-	departmentType = 0;
 	name = "Chemistry RC";
 	pixel_x = 32;
 	receive_ore_updates = 1
@@ -24176,7 +24158,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 0;
 	department = "Medbay";
-	departmentType = 1;
 	name = "Medbay RC";
 	pixel_x = -30
 	},
@@ -25340,7 +25321,6 @@
 /obj/structure/table/reinforced,
 /obj/machinery/requests_console{
 	department = "Robotics Lab";
-	departmentType = 0;
 	name = "Robotics RC";
 	pixel_y = 32;
 	receive_ore_updates = 1
@@ -30037,7 +30017,6 @@
 /obj/item/storage/crayons,
 /obj/machinery/requests_console{
 	department = "Chapel Office";
-	departmentType = 0;
 	name = "Chapel RC";
 	pixel_y = -32
 	},
@@ -30100,7 +30079,6 @@
 /obj/machinery/light,
 /obj/machinery/requests_console{
 	department = "Xenobiology Lab";
-	departmentType = 0;
 	name = "Xenobiology RC";
 	pixel_y = -32;
 	receive_ore_updates = 1
@@ -33108,7 +33086,6 @@
 "sLQ" = (
 /obj/machinery/requests_console{
 	department = "AI";
-	departmentType = 5;
 	pixel_x = 30;
 	pixel_y = 30
 	},

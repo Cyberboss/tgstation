@@ -27205,7 +27205,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Head of Security's Desk";
-	departmentType = 5;
 	name = "Head of Security RC";
 	pixel_y = 32
 	},
@@ -32656,7 +32655,6 @@
 	},
 /obj/machinery/requests_console{
 	department = "Hydroponics";
-	departmentType = 2;
 	name = "Hydroponics RC";
 	pixel_x = 32;
 	pixel_y = -32
@@ -37183,7 +37181,6 @@
 "bEj" = (
 /obj/machinery/requests_console{
 	department = "AI";
-	departmentType = 5;
 	name = "AI RC";
 	pixel_x = 30;
 	pixel_y = 30
@@ -39624,7 +39621,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Bridge";
-	departmentType = 5;
 	name = "Bridge RC";
 	pixel_x = -32;
 	pixel_y = -32
@@ -43058,7 +43054,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Chief Engineer's Desk";
-	departmentType = 5;
 	name = "Chief Engineer's RC";
 	pixel_x = -32
 	},
@@ -45611,7 +45606,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Captain's Desk";
-	departmentType = 5;
 	name = "Captain RC";
 	pixel_x = -32
 	},
@@ -46727,7 +46721,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Head of Personnel's Desk";
-	departmentType = 5;
 	name = "Head of Personnel RC";
 	pixel_x = 32;
 	pixel_y = 32
@@ -83145,7 +83138,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Research Director's Desk";
-	departmentType = 5;
 	name = "Research Director's RC";
 	pixel_x = -32;
 	receive_ore_updates = 1
@@ -87860,7 +87852,6 @@
 /obj/machinery/requests_console{
 	announcementConsole = 1;
 	department = "Chief Medical Officer's Desk";
-	departmentType = 5;
 	name = "Chief Medical Officer's RC";
 	pixel_x = 32
 	},
