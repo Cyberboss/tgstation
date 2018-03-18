@@ -122,8 +122,8 @@
 		return
 
 	for(var/obj/machinery/requests_console/D in GLOB.allConsoles)
-		if(D.receive_ore_updates)
-			D.createmessage("Ore Redemption Machine", "New minerals available!", msg, 1, 0)
+		if(D.receive_ore_updates && D.is_operational())
+			D.say("New minerals available!")
 
 /obj/machinery/mineral/ore_redemption/process()
 	if(panel_open || !powered())

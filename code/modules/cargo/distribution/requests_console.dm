@@ -18,7 +18,7 @@ GLOBAL_LIST_EMPTY(consoles_by_department)
 	var/open = FALSE
 	var/receive_ore_updates = FALSE
 
-	var/is_head_console
+	var/announcementConsole
 	var/department
 
 	var/msgStamped
@@ -140,7 +140,7 @@ Emergency buttons:
 
 */
 
-/obj/machinery/requests_console/ui_interact(mob/user, ui_key = "main", datum/tgui/ui, force_open = FALSE, datum/tgui/master_ui, datum/ui_state/state = default_state) // Remember to use the appropriate state.
+/obj/machinery/requests_console/ui_interact(mob/user, ui_key = "main", datum/tgui/ui, force_open = FALSE, datum/tgui/master_ui, datum/ui_state/state = GLOB.default_state) // Remember to use the appropriate state.
 	ui = SStgui.try_update_ui(user, src, ui_key, ui, force_open)
 	if(!ui)
 		ui = new(user, src, ui_key, "requests_console", name, 300, 300, master_ui, state)
