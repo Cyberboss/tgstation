@@ -26,7 +26,6 @@ GLOBAL_LIST_EMPTY(consoles_by_department)
 
 	var/list/cargo_requests
 
-	var/obj/item/stamp/stamper
 	var/obj/item/device/radio/radio
 
 /obj/machinery/requests_console/Initialize()
@@ -104,9 +103,8 @@ GLOBAL_LIST_EMPTY(consoles_by_department)
 		to_chat(user, "<span class='warning'>You must open the maintenance panel first!</span>")
 
 /obj/machinery/requests_console/attackby(obj/item/O, mob/living/user, params)
-	if (istype(O, /obj/item/stamp))
-		stamper = O
-		ui_interact(user)
+	if (announcementConsole && istype(O, /obj/item/stamp))
+		msgStamped = "<span class='boldnotice'>Stamped with the [O.name]</span>"
 		return
 	return ..()
 
@@ -150,10 +148,14 @@ Emergency buttons:
 /obj/machinery/requests_console/ui_data(mob/user)
 	. = list()
 	.["canAnnounce"] = announcementConsole
+	.["msgStamped"] = msgStamped
 	stamper = null
   
-/obj/machinery/requests_console/ui_act(action, params)
+/obj/machinery/requests_console/ui_act(action, list/params)
 	if(..())
 		return
 
-	to_chat(world, "ui_act: [action] ([params])")
+	to_chat(world, "ui_act: [action]")
+	for(var/I in params)
+		to_chat(world, I)
+		to_chat(world, params[I])

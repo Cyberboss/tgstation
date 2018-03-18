@@ -1,9 +1,8 @@
-<link rel='ractive' href='./requests_console/local_requests.ract'>
-<link rel='ractive' href='./requests_console/cargo_requests.ract'>
 
+{{#if config.screen == "home"}}
 <ui-display title='Requistions'>
-    <ui-button icon='forward' action='from_cargo'>Cargo Requests</ui-button>
-    <ui-button icon='backward' action='to_cargo'>Local Orders</ui-button>
+    <ui-button icon='forward' action='tgui:view' params='{ "screen" : "Cargo Requests" }'>Cargo Requests</ui-button>
+    <ui-button icon='backward' action='tgui:view' params='{ "screen" : "Local Orders" }'>Local Orders</ui-button>
 </ui-display>
 
 <ui-display title='Emergency'>
@@ -14,7 +13,21 @@
 
 {{#if data.canAnnounce}}
 <ui-display title='Station Announcement'>
-    <ui-input placeholder='Enter announcement' value='{{announceText}}' />
-    <ui-button action='announce' params='{{announceText}}'>Send</ui-button>
+    <ui-input placeholder='Enter announcement' value='{{announceText}}' /><br>
+    <b>Stamped by:</b> {{ data.msgStamped ? data.msgStamped : "<i>Not Stamped</i>" }}<br><br>
+    <ui-button action='announce' params='{{announceText}}' on-press='clear'>Send</ui-button>
+</ui-display>
+{{/if}}
+{{else}}
+<ui-display title='{{config.screen}}'>
+<ui-section>
+<ui-button icon='sign-out' action='tgui:view' params='{ "screen" : "home" }'>Back</ui-button>
+</ui-section>
+
+{{#if config.screen == "Local Orders"}}
+
+{{elseif config.screen == "Cargo Requests" }}
+
+{{/if}}
 </ui-display>
 {{/if}}
