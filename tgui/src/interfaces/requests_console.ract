@@ -2,6 +2,19 @@
 <link rel='ractive' href='./requests_console/cargo_requests.ract'>
 
 <ui-display title='Requistions'>
-    <ui-button action='from_cargo'>Cargo Requests</ui-button>
-    <ui-button action='to_cargo'>Supply Requests</ui-button>
+    <ui-button icon='forward' action='from_cargo'>Cargo Requests</ui-button>
+    <ui-button icon='backward' action='to_cargo'>Local Orders</ui-button>
 </ui-display>
+
+<ui-display title='Emergency'>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='security'>Security</ui-button>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='medical'>Medical</ui-button>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='engineering'>Engineering</ui-button>
+</ui-display>
+
+{{#if data.canAnnounce}}
+<ui-display title='Station Announcement'>
+    <ui-input placeholder='Enter announcement' value='{{announceText}}' />
+    <ui-button action='announce' params='{{announceText}}'>Send</ui-button>
+</ui-display>
+{{/if}}

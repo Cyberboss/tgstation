@@ -149,9 +149,11 @@ Emergency buttons:
 
 /obj/machinery/requests_console/ui_data(mob/user)
 	. = list()
-
+	.["canAnnounce"] = announcementConsole
 	stamper = null
   
 /obj/machinery/requests_console/ui_act(action, params)
 	if(..())
 		return
+
+	to_chat(world, "ui_act: [action] ([params])")
