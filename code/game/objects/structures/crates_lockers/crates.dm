@@ -21,6 +21,12 @@
 		opened = TRUE
 	update_icon()
 
+/obj/structure/closet/crate/Destroy()
+	if(manifest)
+		manifest.crate = null
+		manifest = null
+	return ..()
+
 /obj/structure/closet/crate/CanPass(atom/movable/mover, turf/target)
 	if(!istype(mover, /obj/structure/closet))
 		var/obj/structure/closet/crate/locatedcrate = locate(/obj/structure/closet/crate) in get_turf(mover)
@@ -49,7 +55,7 @@
 	if(. && manifest)
 		to_chat(user, "<span class='notice'>The manifest is torn off [src].</span>")
 		playsound(src, 'sound/items/poster_ripped.ogg', 75, 1)
-		manifest.forceMove(get_turf(src))
+		manifest.forceMove(drop_location())
 		manifest = null
 		update_icon()
 
@@ -57,9 +63,10 @@
 	to_chat(user, "<span class='notice'>You tear the manifest off of [src].</span>")
 	playsound(src, 'sound/items/poster_ripped.ogg', 75, 1)
 
-	manifest.forceMove(loc)
 	if(ishuman(user))
 		user.put_in_hands(manifest)
+	else
+		manifest.forceMove(drop_location())
 	manifest = null
 	update_icon()
 

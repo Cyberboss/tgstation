@@ -149,7 +149,33 @@ Emergency buttons:
 	. = list()
 	.["canAnnounce"] = announcementConsole
 	.["msgStamped"] = msgStamped
-	stamper = null
+	.["supplies"] = list()
+
+	for(var/pack in SSshuttle.supply_packs)
+		var/datum/supply_pack/P = SSshuttle.supply_packs[pack]
+		if(!.["supplies"][P.group])
+			.["supplies"][P.group] = list(
+				"name" = P.group,
+				"packs" = list()
+			)
+		if(P.hidden || P.contraband || (P.special && !P.special_enabled) || P.DropPodOnly)
+			continue
+		.["supplies"][P.group]["packs"] += list(list(
+			"name" = P.name,
+			"cost" = P.cost,
+			"id" = pack,
+			"desc" = P.desc || P.name // If there is a description, use it. Otherwise use the pack's name.
+		))
+
+	.["requests"] = list()
+	for(var/datum/supply_order/SO in SSshuttle.requestlist)
+		.["requests"] += list(list(
+			"object" = SO.pack.name,
+			"cost" = SO.pack.cost,
+			"orderer" = SO.orderer,
+			"reason" = SO.reason,
+			"id" = SO.id
+		))
   
 /obj/machinery/requests_console/ui_act(action, list/params)
 	if(..())

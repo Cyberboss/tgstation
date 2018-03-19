@@ -66,6 +66,7 @@
       <div class='content'>{{cost}} Credits</div>
       <div class='content'>By {{orderer}}</div>
       <div class='content'>Comment: {{reason}}</div>
+      <div class='content'>From: {{location}}</div>
       {{#if !data.requestonly}}
         <div class='content'>
           <ui-button icon='check' action='approve' params='{"id": "{{id}}"}'/>

@@ -6,9 +6,9 @@
 </ui-display>
 
 <ui-display title='Emergency'>
-    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='security'>Security</ui-button>
-    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='medical'>Medical</ui-button>
-    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='engineering'>Engineering</ui-button>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='{ "type" : "security" }'>Security</ui-button>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='{ "type" : "medical" }'>Medical</ui-button>
+    <ui-button icon='exclamation-triangle' style='caution' action='emergency' params='{ "type" : "engineering" }'>Engineering</ui-button>
 </ui-display>
 
 {{#if data.canAnnounce}}
@@ -25,7 +25,30 @@
 </ui-section>
 
 {{#if config.screen == "Local Orders"}}
+  {{#each data.requests}}
+    <ui-section candystripe nowrap>
+      <div class='content'>#{{id}}</div>
+      <div class='content'>{{object}}</div>
+      <div class='content'>{{cost}} Credits</div>
+      <div class='content'>By {{orderer}}</div>
+      <div class='content'>Comment: {{reason}}</div>
+      <div class='content'>State: {{state}}</div>
+    </ui-section>
+    {{else}}
+      <span>No Requests</span>
+    {{/each}}
 
+    <ui-tabs tabs='{{tabs}}'>
+    {{#each data.supplies}}
+        <tab name='{{name}}'>
+        {{#each packs}}
+            <ui-section label='{{name}}' candystripe right>
+            <ui-button tooltip='{{desc}}' tooltip-side='left' action='add' params='{"id": "{{id}}"}'>{{cost}} Credits</ui-button>
+            </ui-section>
+        {{/each}}
+        </tab>
+    {{/each}}
+    </ui-tabs>
 {{elseif config.screen == "Cargo Requests" }}
 
 {{/if}}

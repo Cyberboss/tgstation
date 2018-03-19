@@ -82,7 +82,7 @@
 		))
 
 	data["cart"] = list()
-	for(var/datum/supply_order/SO in SSshuttle.shoppinglist)
+	for(var/datum/cargo_request/SO in SSshuttle.shoppinglist)
 		data["cart"] += list(list(
 			"object" = SO.pack.name,
 			"cost" = SO.pack.cost,
@@ -90,12 +90,12 @@
 		))
 
 	data["requests"] = list()
-	for(var/datum/supply_order/SO in SSshuttle.requestlist)
+	for(var/datum/cargo_request/SO in SSshuttle.requestlist)
 		data["requests"] += list(list(
 			"object" = SO.pack.name,
 			"cost" = SO.pack.cost,
-			"orderer" = SO.orderer,
-			"reason" = SO.reason,
+			"orderer" = SO.requester_name,
+			"logs" = SO.log_messages,
 			"id" = SO.id
 		))
 
