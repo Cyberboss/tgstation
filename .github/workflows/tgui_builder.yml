@@ -2,9 +2,9 @@ name: TGUI Builder
 
 on:
   pull_request:
-    types:  [opened, synchronize, labeled, edited]
+    types: [opened, synchronize, labeled, edited]
     branches:
-      - master
+      - TiredOfTheEndlessTguiDebate
     paths:
       - 'tgui/**'
 
