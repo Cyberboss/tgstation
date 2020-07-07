@@ -19,7 +19,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const pr = github.pulls.get({
+            const pr = await github.pulls.get({
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
@@ -29,7 +29,7 @@ jobs:
               return false;
 
             // Check if we've built it already
-            const commitDetails = github.git.getCommit({
+            const commitDetails = await github.git.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: pr.head.sha,
@@ -41,7 +41,7 @@ jobs:
 
             // Needed, bail if not
             if(!pr.maintainer_can_modify) {
-              github.issues.createComment({
+              await github.issues.createComment({
                 issue_number: context.issue.number,
                 owner: context.repo.owner,
                 repo: context.repo.repo,
@@ -50,7 +50,7 @@ jobs:
               return 'exit';
             }
 
-            github.issues.createComment({
+            await github.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
