@@ -16,7 +16,7 @@ export const AtmosMixer = (props, context) => {
                 selected={data.on}
                 onClick={() => act('power')} />
             </LabeledList.Item>
-            <LabeledList.Item label="Output Pressure">
+            <LabeledList.Item label="Output Pressure2">
               <NumberInput
                 animated
                 value={parseFloat(data.set_pressure)}
