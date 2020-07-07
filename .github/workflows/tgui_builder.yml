@@ -23,7 +23,7 @@ jobs:
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-            });
+            }).data;
 
             if(pr.state === "closed")
               return false;
@@ -33,7 +33,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: pr.head.sha,
-            });
+            }).data;
 
             if(commitDetails.committer.login === 'Cyberboss' && commitDetails.commit.message === 'TGUI Rebuild'){
               return 'exit';
