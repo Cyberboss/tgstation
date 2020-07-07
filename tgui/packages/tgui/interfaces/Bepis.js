@@ -10,7 +10,7 @@ export const Bepis = (props, context) => {
   return (
     <Window>
       <Window.Content>
-        <Section title="Business Exploration Protocol Incubation Sink">
+        <Section title="Busines sExploration Protocol Incubation Sink">
           <Section
             title="Information"
             backgroundColor="#450F44"
