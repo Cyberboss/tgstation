@@ -19,21 +19,21 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           result-encoding: string
           script: |
-            const pr = await github.pulls.get({
+            const pr = (await github.pulls.get({
               pull_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-            }).data;
+            })).data;
 
             if(pr.state === "closed")
               return false;
 
             // Check if we've built it already
-            const commitDetails = await github.git.getCommit({
+            const commitDetails = (await github.git.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               commit_sha: pr.head.sha,
-            }).data;
+            })).data;
 
             if(commitDetails.committer.login === 'Cyberboss' && commitDetails.commit.message === 'TGUI Rebuild'){
               return 'exit';
