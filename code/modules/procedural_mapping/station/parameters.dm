@@ -1,5 +1,6 @@
 /datum/procedural_parameters
 	var/station_size = PROCEDURAL_STATION_SIZE_MED
+	var/list/seed_list
 
 /datum/procedural_parameters/working
 	/// Master prototype reference list, structure with strigified coords "[z]" -> "[y]" -> "[x]"

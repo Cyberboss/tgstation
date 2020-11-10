@@ -17,18 +17,17 @@
 	var/sleep_iterations = 0
 	var/total_iterations = 0
 
+	var/target_seed_iterations
 	if(!from_scratch)
-		var/seed_struct = seed_list["[sleep_iterations]"]
+		var/seed_struct = parameters.seed_list["[sleep_iterations]"]
 		current_seed = seed_struct["seed"]
 		target_seed_iterations = seed_struct["iter"]
 
 	rand_seed(current_seed)
 
-	var/target_seed_iterations
-
 	while (generator_queue.len)
 		var/datum/procedural_station/generator/G = generator_queue[1]
-		queue.Cut(1, 2)
+		generator_queue.Cut(1, 2)
 
 		testing("Running generator #[++total_iterations]: [G.type]...")
 		G.generate()
@@ -46,11 +45,11 @@
 		var/break_time = from_scratch ? TICK_CHECK : seed_iterations == target_seed_iterations
 		if(break_time)
 			if(!from_scratch)
-				seed_list["[sleep_iterations]"] = list("seed" = current_seed, "iter" = seed_iterations)
+				parameters.seed_list["[sleep_iterations]"] = list("seed" = current_seed, "iter" = seed_iterations)
 			stoplag()
 			++sleep_iterations
 			if(from_scratch)
-				var/seed_struct = seed_list["[sleep_iterations]"]
+				var/seed_struct = parameters.seed_list["[sleep_iterations]"]
 				current_seed = seed_struct["seed"]
 				target_seed_iterations = seed_struct["iter"]
 			else

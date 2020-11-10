@@ -2704,7 +2704,7 @@
 #include "code\modules\procedural_mapping\station\base.dm"
 #include "code\modules\procedural_mapping\station\controller.dm"
 #include "code\modules\procedural_mapping\station\core.dm"
-#include "code\modules\procedural_mapping\station\master.dm"
+#include "code\modules\procedural_mapping\station\generator.dm"
 #include "code\modules\procedural_mapping\station\multi_z.dm"
 #include "code\modules\procedural_mapping\station\parameters.dm"
 #include "code\modules\procedural_mapping\station\section.dm"

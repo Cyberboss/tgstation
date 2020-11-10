@@ -1,8 +1,8 @@
 /// Base /datum for all procedural_station generation
 /datum/procedural_station
-	var/datum/procedural_station/working/parameters
+	var/datum/procedural_parameters/working/parameters
 
-/datum/procedural_station/New(datum/procedural_station/working/parameters)
+/datum/procedural_station/New(datum/procedural_parameters/working/parameters)
 	if(!parameters)
 		CRASH("[type] missing parameters reference!")
 
