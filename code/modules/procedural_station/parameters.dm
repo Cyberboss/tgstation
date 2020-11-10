@@ -1,5 +1,5 @@
 /datum/procedural_parameters
-	var/station_size = PROCEDURAL_STATION_SIZE_MED
+	var/station_size = PS_SIZE_MED
 	var/list/seed_list
 
 /datum/procedural_parameters/working

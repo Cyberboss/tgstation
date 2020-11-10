@@ -146,3 +146,22 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 	rhs = ispath(B, /datum/reagent) ? 0 : 1
 
 	return lhs - rhs
+
+/// Sorts turfs by z -> y -> x
+/proc/cmp_turf_coord(turf/A, turf/B)
+	if(A.z < B.z)
+		return -1
+	if(A.z > B.z)
+		return 1
+
+	if(A.y < B.y)
+		return -1
+	if(B.y > A.y)
+		return 1
+
+	if(A.x < B.x)
+		return -1
+	if(B.x > A.x)
+		return 1
+
+	return 0
