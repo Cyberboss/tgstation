@@ -148,7 +148,7 @@ GLOBAL_VAR_INIT(cmp_field, "name")
 	return lhs - rhs
 
 /// Sorts turfs by z -> y -> x
-/proc/cmp_turf_coord(turf/A, turf/B)
+/proc/cmp_turf_coords(turf/A, turf/B)
 	if(A.z < B.z)
 		return -1
 	if(A.z > B.z)

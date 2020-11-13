@@ -10,9 +10,9 @@
 		if(PS_SIZE_LARGE)
 			map_size_factor = 0.9
 
-	var/minx = FLOOR((1 - map_size_factor) * world.maxx / 2)
+	var/minx = FLOOR((1 - map_size_factor) * world.maxx / 2, 1)
 	var/maxx = world.maxx - minx
-	var/miny = FLOOR((1 - map_size_factor) * world.maxy / 2)
+	var/miny = FLOOR((1 - map_size_factor) * world.maxy / 2, 1)
 	var/maxy = world.maxy - miny
 
 	return list(minx, miny, maxx, maxy)
