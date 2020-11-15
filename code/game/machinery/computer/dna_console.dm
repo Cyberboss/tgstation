@@ -42,9 +42,6 @@
 	density = TRUE
 	circuit = /obj/item/circuitboard/computer/scan_consolenew
 
-	use_power = IDLE_POWER_USE
-	idle_power_usage = 10
-	active_power_usage = 400
 	light_color = LIGHT_COLOR_BLUE
 
 	/// Link to the techweb's stored research. Used to retrieve stored mutations

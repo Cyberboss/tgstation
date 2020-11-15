@@ -5,8 +5,7 @@
 	name = "bluespace gigabeacon"
 	desc = "A device that draws power from bluespace and creates a permanent tracking beacon."
 	layer = LOW_OBJ_LAYER
-	use_power = IDLE_POWER_USE
-	idle_power_usage = 0
+	power_usage = FALSE
 	var/obj/item/beacon/Beacon
 
 /obj/machinery/bluespace_beacon/Initialize()

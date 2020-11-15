@@ -7,7 +7,6 @@
 	icon = 'icons/obj/power.dmi'
 	icon_state = "rtg"
 	density = TRUE
-	use_power = NO_POWER_USE
 	circuit = /obj/item/circuitboard/machine/rtg
 
 	// You can buckle someone to RTG, then open its panel. Fun stuff.
@@ -15,7 +14,7 @@
 	buckle_lying = 0
 	buckle_requires_restraints = TRUE
 
-	var/power_gen = 1000 // Enough to power a single APC. 4000 output with T4 capacitor.
+	use_active_power = TRUE
 
 	var/irradiate = TRUE // RTGs irradiate surroundings, but only when panel is open.
 
@@ -25,16 +24,8 @@
 
 /obj/machinery/power/rtg/process()
 	..()
-	add_avail(power_gen)
 	if(panel_open && irradiate)
 		radiation_pulse(src, 60)
-
-/obj/machinery/power/rtg/RefreshParts()
-	var/part_level = 0
-	for(var/obj/item/stock_parts/SP in component_parts)
-		part_level += SP.rating
-
-	power_gen = initial(power_gen) * part_level
 
 /obj/machinery/power/rtg/examine(mob/user)
 	. = ..()
@@ -50,7 +41,6 @@
 
 /obj/machinery/power/rtg/advanced
 	desc = "An advanced RTG capable of moderating isotope decay, increasing power output but reducing lifetime. It uses plasma-fueled radiation collectors to increase output even further."
-	power_gen = 1250 // 2500 on T1, 10000 on T4.
 	circuit = /obj/item/circuitboard/machine/rtg/advanced
 
 // Void Core, power source for Abductor ships and bases.
@@ -62,7 +52,6 @@
 	icon_state = "core"
 	desc = "An alien power source that produces energy seemingly out of nowhere."
 	circuit = /obj/item/circuitboard/machine/abductor/core
-	power_gen = 20000 // 280 000 at T1, 400 000 at T4. Starts at T4.
 	irradiate = FALSE // Green energy!
 	can_buckle = FALSE
 	pixel_y = 7

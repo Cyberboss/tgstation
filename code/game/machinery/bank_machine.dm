@@ -2,7 +2,6 @@
 	name = "bank machine"
 	desc = "A machine used to deposit and withdraw station funds."
 	icon = 'goon/icons/obj/goon_terminals.dmi'
-	idle_power_usage = 100
 
 	var/siphoning = FALSE
 	var/next_warning = 0

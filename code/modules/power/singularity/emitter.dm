@@ -9,10 +9,6 @@
 	req_access = list(ACCESS_ENGINE_EQUIP)
 	circuit = /obj/item/circuitboard/machine/emitter
 
-	use_power = NO_POWER_USE
-	idle_power_usage = 10
-	active_power_usage = 300
-
 	var/icon_state_on = "emitter_+a"
 	var/icon_state_underpowered = "emitter_+u"
 	var/active = FALSE
@@ -47,12 +43,10 @@
 /obj/machinery/power/emitter/ctf
 	name = "Energy Cannon"
 	active = TRUE
-	active_power_usage = FALSE
-	idle_power_usage = FALSE
+	power_usage = FALSE
 	locked = TRUE
 	req_access_txt = "100"
 	welded = TRUE
-	use_power = FALSE
 
 /obj/machinery/power/emitter/Initialize()
 	. = ..()
@@ -77,10 +71,10 @@
 		welded = FALSE
 
 /obj/machinery/power/emitter/RefreshParts()
+	..()
 	var/max_firedelay = 120
 	var/firedelay = 120
 	var/min_firedelay = 24
-	var/power_usage = 350
 	for(var/obj/item/stock_parts/micro_laser/L in component_parts)
 		max_firedelay -= 20 * L.rating
 		min_firedelay -= 4 * L.rating
@@ -88,9 +82,6 @@
 	maximum_fire_delay = max_firedelay
 	minimum_fire_delay = min_firedelay
 	fire_delay = firedelay
-	for(var/obj/item/stock_parts/manipulator/M in component_parts)
-		power_usage -= 50 * M.rating
-	active_power_usage = power_usage
 
 /obj/machinery/power/emitter/examine(mob/user)
 	. = ..()
@@ -108,7 +99,7 @@
 			. += "<span class='notice'>Its status display is glowing faintly.</span>"
 		else
 			. += "<span class='notice'>Its status display reads: Emitting one beam every <b>[DisplayTimeText(fire_delay)]</b>.</span>"
-			. += "<span class='notice'>Power consumption at <b>[DisplayPower(active_power_usage)]</b>.</span>"
+			. += "<span class='notice'>Power consumption at <b>[DisplayPower(power_usage.GetActive())]</b>.</span>"
 
 /obj/machinery/power/emitter/ComponentInitialize()
 	. = ..()

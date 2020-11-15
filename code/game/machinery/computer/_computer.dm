@@ -3,9 +3,6 @@
 	icon = 'icons/obj/computer.dmi'
 	icon_state = "computer"
 	density = TRUE
-	use_power = IDLE_POWER_USE
-	idle_power_usage = 300
-	active_power_usage = 300
 	max_integrity = 200
 	integrity_failure = 0.5
 	armor = list(MELEE = 0, BULLET = 0, LASER = 0, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 40, ACID = 20)
@@ -19,14 +16,6 @@
 	. = ..()
 
 	power_change()
-
-/obj/machinery/computer/Destroy()
-	. = ..()
-
-/obj/machinery/computer/process()
-	if(machine_stat & (NOPOWER|BROKEN))
-		return FALSE
-	return TRUE
 
 /obj/machinery/computer/update_overlays()
 	. = ..()

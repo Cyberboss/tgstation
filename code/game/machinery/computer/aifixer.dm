@@ -52,7 +52,6 @@
 
 	if(!occupier)
 		restoring = FALSE
-
 	switch(action)
 		if("PRG_beginReconstruction")
 			if(occupier?.health < 100)
@@ -62,11 +61,12 @@
 				occupier.notify_ghost_cloning("Your core files are being restored!", source = src)
 				. = TRUE
 
-/obj/machinery/computer/aifixer/proc/Fix()
-	use_power(1000)
-	occupier.adjustOxyLoss(-5, FALSE)
-	occupier.adjustFireLoss(-5, FALSE)
-	occupier.adjustBruteLoss(-5, FALSE)
+	use_active_power = restoring
+
+/obj/machinery/computer/aifixer/proc/Fix(delta_time)
+	occupier.adjustOxyLoss(-5 * delta_time, FALSE)
+	occupier.adjustFireLoss(-5 * delta_time, FALSE)
+	occupier.adjustBruteLoss(-5 * delta_time, FALSE)
 	occupier.updatehealth()
 	if(occupier.health >= 0 && occupier.stat == DEAD)
 		occupier.revive(full_heal = FALSE, admin_revive = FALSE)
@@ -75,13 +75,15 @@
 			to_chat(occupier, "<span class='warning'>Your Subspace Transceiver has been enabled!</span>")
 	return occupier.health < 100
 
-/obj/machinery/computer/aifixer/process()
-	if(..())
-		if(restoring)
-			var/oldstat = occupier.stat
-			restoring = Fix()
-			if(oldstat != occupier.stat)
-				update_icon()
+/obj/machinery/computer/aifixer/process(delta_time)
+	if(!restoring)
+		return
+
+	var/oldstat = occupier.stat
+	restoring = Fix(delta_time)
+	use_active_power = restoring
+	if(oldstat != occupier.stat)
+		update_icon()
 
 /obj/machinery/computer/aifixer/update_overlays()
 	. = ..()

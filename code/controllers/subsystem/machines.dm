@@ -7,6 +7,8 @@ SUBSYSTEM_DEF(machines)
 	var/list/currentrun = list()
 	var/list/powernets = list()
 
+	var/datum/power_table/power_table = new
+
 /datum/controller/subsystem/machines/Initialize()
 	makepowernets()
 	fire()
@@ -37,13 +39,11 @@ SUBSYSTEM_DEF(machines)
 	//cache for sanic speed (lists are references anyways)
 	var/list/currentrun = src.currentrun
 
+	var/delta_time = wait * 0.1
 	while(currentrun.len)
 		var/obj/machinery/thing = currentrun[currentrun.len]
 		currentrun.len--
-		if(!QDELETED(thing) && thing.process(wait * 0.1) != PROCESS_KILL)
-			if(thing.use_power)
-				thing.auto_use_power() //add back the power state
-		else
+		if(QDELETED(thing) || thing.machine_process(delta_time) == PROCESS_KILL)
 			processing -= thing
 			if (!QDELETED(thing))
 				thing.datum_flags &= ~DF_ISPROCESSING

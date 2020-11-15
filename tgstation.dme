@@ -2669,6 +2669,8 @@
 #include "code\modules\power\pipecleaners.dm"
 #include "code\modules\power\port_gen.dm"
 #include "code\modules\power\power.dm"
+#include "code\modules\power\power_table.dm"
+#include "code\modules\power\power_usage.dm"
 #include "code\modules\power\powernet.dm"
 #include "code\modules\power\rtg.dm"
 #include "code\modules\power\smes.dm"

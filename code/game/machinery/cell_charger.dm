@@ -3,14 +3,9 @@
 	desc = "It charges power cells."
 	icon = 'icons/obj/power.dmi'
 	icon_state = "ccharger"
-	use_power = IDLE_POWER_USE
-	idle_power_usage = 5
-	active_power_usage = 60
-	power_channel = AREA_USAGE_EQUIP
 	circuit = /obj/item/circuitboard/machine/cell_charger
 	pass_flags = PASSTABLE
 	var/obj/item/stock_parts/cell/charging = null
-	var/charge_rate = 250
 
 /obj/machinery/cell_charger/update_overlays()
 	. = ..()
@@ -30,7 +25,7 @@
 	if(charging)
 		. += "Current charge: [round(charging.percent(), 1)]%."
 	if(in_range(user, src) || isobserver(user))
-		. += "<span class='notice'>The status display reads: Charging power: <b>[charge_rate]W</b>.</span>"
+		. += "<span class='notice'>The status display reads: Charging power: <b>[_cached_active_usage]W</b>.</span>"
 
 /obj/machinery/cell_charger/attackby(obj/item/W, mob/user, params)
 	if(istype(W, /obj/item/stock_parts/cell) && !panel_open)
@@ -54,6 +49,7 @@
 				return
 
 			charging = W
+			use_active_power = charging.percent() < 100
 			user.visible_message("<span class='notice'>[user] inserts a cell into [src].</span>", "<span class='notice'>You insert a cell into [src].</span>")
 			update_icon()
 	else
@@ -67,7 +63,7 @@
 
 /obj/machinery/cell_charger/deconstruct()
 	if(charging)
-		charging.forceMove(drop_location())
+		removecell()
 	return ..()
 
 /obj/machinery/cell_charger/Destroy()
@@ -77,6 +73,7 @@
 /obj/machinery/cell_charger/proc/removecell()
 	charging.update_icon()
 	charging = null
+	use_active_power = FALSE
 	update_icon()
 
 /obj/machinery/cell_charger/attack_hand(mob/user)
@@ -114,20 +111,15 @@
 	if(machine_stat & (BROKEN|NOPOWER) || . & EMP_PROTECT_CONTENTS)
 		return
 
-	if(charging)
-		charging.emp_act(severity)
-
-/obj/machinery/cell_charger/RefreshParts()
-	charge_rate = 250
-	for(var/obj/item/stock_parts/capacitor/C in component_parts)
-		charge_rate *= C.rating
+	charging?.emp_act(severity)
 
 /obj/machinery/cell_charger/process(delta_time)
-	if(!charging || !anchored || (machine_stat & (BROKEN|NOPOWER)))
+	if(!charging || !anchored)
 		return
 
 	if(charging.percent() >= 100)
+		use_active_power = FALSE
 		return
-	if(directly_use_power(charge_rate * delta_time))
-		charging.give(charge_rate * delta_time)
-		update_icon()
+
+	charging.give(_cached_active_usage * delta_time)
+	update_icon()

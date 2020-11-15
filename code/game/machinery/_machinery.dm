@@ -96,14 +96,13 @@ Class Procs:
 	interaction_flags_atom = INTERACT_ATOM_ATTACK_HAND | INTERACT_ATOM_UI_INTERACT
 
 	var/machine_stat = NONE
-	var/use_power = IDLE_POWER_USE
-		//0 = dont run the auto
-		//1 = run auto, use idle
-		//2 = run auto, use active
-	var/idle_power_usage = 0
-	var/active_power_usage = 0
-	var/power_channel = AREA_USAGE_EQUIP
-		//AREA_USAGE_EQUIP,AREA_USAGE_ENVIRON or AREA_USAGE_LIGHT
+
+	var/use_active_power = FALSE
+	var/datum/power_usage/power_usage = TRUE
+
+	var/_cached_idle_usage
+	var/_cached_active_usage
+
 	///A combination of factors such as having power, not being broken and so on. Boolean.
 	var/is_operational = TRUE
 	var/wire_compatible = FALSE
@@ -131,8 +130,13 @@ Class Procs:
 /obj/machinery/Initialize()
 	if(!armor)
 		armor = list(MELEE = 25, BULLET = 10, LASER = 10, ENERGY = 0, BOMB = 0, BIO = 0, RAD = 0, FIRE = 50, ACID = 70)
-	. = ..()
+	..()
 	GLOB.machines += src
+
+	if (power_usage)
+		power_usage = SSmachines.power_table[type]
+		if (!power_usage)
+			log_world("Error: [type] has power_usage set but has no power_table entry.")
 
 	if(ispath(circuit, /obj/item/circuitboard))
 		circuit = new circuit(src)
@@ -179,6 +183,7 @@ Class Procs:
 	return
 
 /obj/machinery/process()//If you dont use process or power why are you here
+	SHOULD_CALL_PARENT(FALSE)
 	return PROCESS_KILL
 
 /obj/machinery/proc/process_atmos()//If you dont use process why are you here
@@ -205,8 +210,8 @@ Class Procs:
 
 /obj/machinery/emp_act(severity)
 	. = ..()
-	if(use_power && !machine_stat && !(. & EMP_PROTECT_SELF))
-		use_power(7500/severity)
+	if(power_usage && !machine_stat && !(. & EMP_PROTECT_SELF))
+		use_power_once(7500/severity)
 		new /obj/effect/temp_visual/emp(loc)
 
 /**
@@ -306,15 +311,27 @@ Class Procs:
 	updateUsrDialog()
 	update_icon()
 
-/obj/machinery/proc/auto_use_power()
-	if(!powered(power_channel))
-		return FALSE
-	if(use_power == 1)
-		use_power(idle_power_usage,power_channel)
-	else if(use_power >= 2)
-		use_power(active_power_usage,power_channel)
-	return TRUE
 
+/obj/machinery/proc/machine_process(delta_time)
+	SHOULD_NOT_OVERRIDE(TRUE)
+
+	// specific kind of inoperational
+	if (machine_stat & (BROKEN|MAINT))
+		return
+
+	var/datum/power_usage/power_usage = src.power_usage
+	if (power_usage)
+		var/amount = use_active_power ? _cached_active_usage : _cached_idle_usage
+		amount *= delta_time
+
+		use_power_once(amount)
+
+		if (powered())
+			return
+
+	var/process_result = process(delta_time)
+	if (process_result == PROCESS_KILL && !power_usage)
+		return PROCESS_KILL
 
 ///Called when we want to change the value of the `is_operational` variable. Boolean.
 /obj/machinery/proc/set_is_operational(new_value)
@@ -324,6 +341,15 @@ Class Procs:
 	is_operational = new_value
 	on_set_is_operational(.)
 
+/obj/machinery/proc/active_power_pulse()
+	if(!is_operational)
+		return FALSE
+
+	if(!powered())
+		return FALSE
+
+	use_power_once(_cached_active_usage)
+	return TRUE
 
 ///Called when the value of `is_operational` changes, so we can react to it.
 /obj/machinery/proc/on_set_is_operational(old_value)
@@ -469,7 +495,12 @@ Class Procs:
 	RefreshParts()
 
 /obj/machinery/proc/RefreshParts() //Placeholder proc for machines that are built using frames.
-	return
+	SHOULD_CALL_PARENT(TRUE)
+	if (!power_usage)
+		return
+
+	_cached_idle_usage = power_usage.GetIdle(src)
+	_cached_active_usage = power_usage.GetActive(src)
 
 /obj/machinery/proc/default_pry_open(obj/item/I)
 	. = !(state_open || panel_open || is_operational || (flags_1 & NODECONSTRUCT_1)) && I.tool_behaviour == TOOL_CROWBAR
@@ -735,7 +766,7 @@ Class Procs:
  *
  * Sends all AIs a message that a hack is occurring.  Specifically used for space ninja tampering as this proc was originally in the ninja files.
  * However, the proc may also be used elsewhere.
- */	
+ */
 /obj/machinery/proc/AI_notify_hack()
 	var/alertstr = "<span class='userdanger'>Network Alert: Hacking attempt detected[get_area(src)?" in [get_area_name(src, TRUE)]":". Unable to pinpoint location"].</span>"
 	for(var/mob/living/silicon/ai/AI in GLOB.player_list)

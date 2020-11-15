@@ -11,10 +11,8 @@
 	icon = 'icons/obj/power.dmi'
 	anchored = TRUE
 	obj_flags = CAN_BE_HIT | ON_BLUEPRINTS
+	power_usage = FALSE
 	var/datum/powernet/powernet = null
-	use_power = NO_POWER_USE
-	idle_power_usage = 0
-	active_power_usage = 0
 	var/machinery_layer = MACHINERY_LAYER_1 //cable layer to which the machine is connected
 
 /obj/machinery/power/Destroy()
@@ -77,55 +75,37 @@
 /obj/machinery/power/proc/disconnect_terminal() // machines without a terminal will just return, no harm no fowl.
 	return
 
-// returns true if the area has power on given channel (or doesn't require power).
-// defaults to power_channel
-/obj/machinery/proc/powered(chan = -1) // defaults to power_channel
+// returns true if the area has power on designated channel (or doesn't require power).
+/obj/machinery/proc/powered() // defaults to power_channel
 	if(!loc)
 		return FALSE
-	if(!use_power)
+
+	var/datum/power_usage/power_usage = src.power_usage
+	if (!power_usage)
 		return TRUE
 
 	var/area/A = get_area(src)		// make sure it's in an area
 	if(!A)
-		return FALSE					// if not, then not powered
-	if(chan == -1)
-		chan = power_channel
-	return A.powered(chan)	// return power status of the area
+		return FALSE
+	return A.powered(power_usage.channel)	// return power status of the area
 
 // increment the power usage stats for an area
-/obj/machinery/proc/use_power(amount, chan = -1) // defaults to power_channel
+/obj/machinery/proc/use_power_once(amount) // defaults to power_channel
+	var/datum/power_usage/power_usage = src.power_usage
+	if (!power_usage)
+		return
+
 	var/area/A = get_area(src)		// make sure it's in an area
 	if(!A)
 		return
-	if(chan == -1)
-		chan = power_channel
-	A.use_power(amount, chan)
+	A.use_power(amount, power_usage.channel)
 
-/**
-  * An alternative to 'use_power', this proc directly costs the APC in direct charge, as opposed to being calculated periodically.
-  * - Amount: How much power the APC's cell is to be costed.
-  */
-/obj/machinery/proc/directly_use_power(amount)
-	var/area/A = get_area(src)
-	var/obj/machinery/power/apc/local_apc
-	if(!A)
-		return FALSE
-	local_apc = A.get_apc()
-	if(!local_apc)
-		return FALSE
-	if(!local_apc.cell)
-		return FALSE
-	local_apc.cell.use(amount)
-	return TRUE
+/obj/machinery/power/proc/use_power_once(amount)
+	if(amount >= 0)
+		return ..()
 
-/obj/machinery/proc/addStaticPower(value, powerchannel)
-	var/area/A = get_area(src)
-	if(!A)
-		return
-	A.addStaticPower(value, powerchannel)
-
-/obj/machinery/proc/removeStaticPower(value, powerchannel)
-	addStaticPower(-value, powerchannel)
+	// negative value indicates production
+	add_avail(-amount)
 
 /**
   * Called whenever the power settings of the containing area change
@@ -140,7 +120,7 @@
 
 	if(machine_stat & BROKEN)
 		return
-	if(powered(power_channel))
+	if(powered())
 		if(machine_stat & NOPOWER)
 			SEND_SIGNAL(src, COMSIG_MACHINERY_POWER_RESTORED)
 			. = TRUE

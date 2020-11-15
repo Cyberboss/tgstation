@@ -7,9 +7,6 @@
 	icon = 'icons/obj/machines/defib_mount.dmi'
 	icon_state = "defibrillator_mount"
 	density = FALSE
-	use_power = IDLE_POWER_USE
-	idle_power_usage = 0
-	power_channel = AREA_USAGE_EQUIP
 	req_one_access = list(ACCESS_MEDICAL, ACCESS_HEADS, ACCESS_SECURITY) //used to control clamps
 	processing_flags = NONE
 /// The mount's defib
