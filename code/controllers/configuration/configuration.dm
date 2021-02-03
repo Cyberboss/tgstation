@@ -174,11 +174,12 @@
 	for(var/entry in parsed_entries)
 		var/value = parsed_entries[entry]
 		if(entry == CONFIGURATION_INCLUDE_TOKEN)
-			if(!value)
+			if(!islist(value))
 				log_config("Warning: Invalid $include directive: [value]")
 			else
-				LoadEntries(value, stack)
-				++.
+				for(var/included_file in value)
+					LoadEntries(included_file, stack)
+					++.
 			continue
 
 		var/firstchar = entry[1]
