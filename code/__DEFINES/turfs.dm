@@ -7,6 +7,9 @@
 
 #define IS_OPAQUE_TURF(turf) (turf.directional_opacity == ALL_CARDINALS)
 
+/// Number of pixels in the width/height of a turf
+#define TURF_PIXEL_DIAMETER 32
+
 //supposedly the fastest way to do this according to https://gist.github.com/Giacom/be635398926bb463b42a
 ///Returns a list of turf in a square
 #define RANGE_TURFS(RADIUS, CENTER) \

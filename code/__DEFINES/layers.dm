@@ -16,8 +16,11 @@
 #define OPENSPACE_PLANE -9 //Openspace plane below all turfs
 #define OPENSPACE_BACKDROP_PLANE -8 //Black square just over openspace plane to guaranteed cover all in openspace turf
 
-
 #define FLOOR_PLANE -7
+
+#define LOWER_SHUTTLE_MOVEMENT_PLANE -5
+#define LOWER_SHUTTLE_MOVEMENT_RENDER_TARGET "LOWER_SHUTTLE_MOVEMENT_PLANE"
+
 #define GAME_PLANE -4
 
 #define SPACE_LAYER 1.8
