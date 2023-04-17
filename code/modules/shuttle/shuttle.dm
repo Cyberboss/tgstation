@@ -473,6 +473,9 @@
 		"THROW" = 0,
 	)
 
+	/// The shuttle projector we create with ripples and should be deleted with ripples
+	var/obj/effect/abstract/shuttle_projector/inbound_shuttle_projector
+
 	///if this shuttle can move docking ports other than the one it is docked at
 	var/can_move_docking_ports = FALSE
 	var/list/hidden_turfs = list()
@@ -793,12 +796,22 @@
 	jumpToNullSpace()
 
 /obj/docking_port/mobile/proc/create_ripples(obj/docking_port/stationary/S1, animate_time)
+	// Don't create ripples for transit docks
+	if(istype(S1, /obj/docking_port/stationary/transit))
+		return
+
+	if(inbound_shuttle_projector)
+		CRASH("create_ripples() called multiple times!")
+
 	var/list/turfs = ripple_area(S1)
 	for(var/t in turfs)
-		ripples += new /obj/effect/abstract/ripple(t, animate_time)
+		ripples += new /obj/effect/abstract/ripple(t, src, animate_time)
+
+	inbound_shuttle_projector = new /obj/effect/abstract/shuttle_projector(null, src, S1, TRUE, animate_time)
 
 /obj/docking_port/mobile/proc/remove_ripples()
 	QDEL_LIST(ripples)
+	QDEL_NULL(inbound_shuttle_projector)
 
 /obj/docking_port/mobile/proc/ripple_area(obj/docking_port/stationary/S1)
 	var/list/L0 = return_ordered_turfs(x, y, z, dir)

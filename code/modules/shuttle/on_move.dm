@@ -20,6 +20,14 @@ All ShuttleMove procs go here
 	if(!(. & MOVE_TURF))
 		return
 
+	shuttle_gib(shuttle)
+
+/**
+ * Attempt to crush movables in a shuttle landing zone.
+ *
+ * * shuttle - The smashing shuttle
+ */
+/turf/proc/shuttle_gib(obj/docking_port/mobile/shuttle)
 	var/shuttle_dir = shuttle.dir
 	for(var/i in contents)
 		var/atom/movable/thing = i
@@ -247,11 +255,11 @@ All ShuttleMove procs go here
 /obj/machinery/navbeacon/afterShuttleMove(turf/oldT, list/movement_force, shuttle_dir, shuttle_preferred_direction, move_dir, rotation)
 	. = ..()
 
-	if(codes["patrol"])
+	if(codes[NAVBEACON_PATROL_MODE])
 		if(!GLOB.navbeacons["[z]"])
 			GLOB.navbeacons["[z]"] = list()
 		GLOB.navbeacons["[z]"] += src //Register with the patrol list!
-	if(codes["delivery"])
+	if(codes[NAVBEACON_DELIVERY_MODE])
 		GLOB.deliverybeacons += src
 		GLOB.deliverybeacontags += location
 

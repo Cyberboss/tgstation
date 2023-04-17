@@ -406,6 +406,24 @@ INITIALIZE_IMMEDIATE(/atom/movable/screen/plane_master)
 	// This is safe because we will ALWAYS be on the top z layer, so it DON'T MATTER
 	multiz_scaled = FALSE
 
+/atom/movable/screen/plane_master/lower_shuttle_animation
+	name = "Lower Shuttle Animation Plane"
+	documentation = "Contains vis_contents shuttles created by /obj/effect/abstract/shuttle_projector that fly below the station"
+	plane = LOWER_SHUTTLE_ANIMATION_PLANE
+	appearance_flags = PLANE_MASTER | KEEP_TOGETHER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	multiz_scaled = FALSE
+	render_relay_planes = list(RENDER_PLANE_GAME_WORLD)
+
+/atom/movable/screen/plane_master/higher_shuttle_animation
+	name = "Higher Shuttle Animation Plane"
+	documentation = "Contains vis_contents shuttles created by /obj/effect/abstract/shuttle_projector that fly above the station"
+	plane = HIGHER_SHUTTLE_ANIMATION_PLANE
+	appearance_flags = PLANE_MASTER | KEEP_TOGETHER
+	mouse_opacity = MOUSE_OPACITY_TRANSPARENT
+	multiz_scaled = FALSE
+	render_relay_planes = list(RENDER_PLANE_GAME_WORLD)
+
 /atom/movable/screen/plane_master/field_of_vision_blocker/Initialize(mapload, datum/plane_master_group/home, offset)
 	. = ..()
 	mirror_parent_hidden()

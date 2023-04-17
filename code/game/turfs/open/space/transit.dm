@@ -6,6 +6,7 @@
 	baseturfs = /turf/open/space/transit
 	flags_1 = NOJAUNT //This line goes out to every wizard that ever managed to escape the den. I'm sorry.
 	explosive_resistance = INFINITY
+	vis_flags = VIS_HIDE
 
 /turf/open/space/transit/Initialize(mapload)
 	. = ..()
@@ -21,6 +22,8 @@
 	. = ..()
 	underlay_appearance.icon_state = "speedspace_ns_[get_transit_state(asking_turf)]"
 	underlay_appearance.transform = turn(matrix(), get_transit_angle(asking_turf))
+	// For shuttle projection
+	underlay_appearance.appearance_flags = KEEP_APART
 
 /turf/open/space/transit/update_icon()
 	. = ..()

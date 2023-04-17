@@ -4,6 +4,7 @@
 
 	dir = WEST
 	port_direction = SOUTH
+	preferred_direction = WEST
 
 	callTime = INFINITY
 	ignitionTime = 50
