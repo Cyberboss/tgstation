@@ -187,11 +187,9 @@ namespace Tgstation.DiscordDiscussions
 
 				async ValueTask<ulong?> FindThreadID()
 				{
-					var currentUserTask = gitHubClient.User.Current();
 					var comments = await gitHubClient.Issue.Comment.GetAllForIssue(repoOwner, repoName, prNumber);
-					var currentUser = await currentUserTask;
 
-					var commentInQuestion = comments.FirstOrDefault(comment => comment.User.Id == currentUser.Id && comment.Body.StartsWith(GitHubCommentPrefix));
+					var commentInQuestion = comments.FirstOrDefault(comment => comment.Body.StartsWith(GitHubCommentPrefix));
 					if (commentInQuestion == null)
 						return null;
 
