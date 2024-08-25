@@ -15,10 +15,6 @@ concurrency:
   group: "discord-discussions-${{ github.head_ref }}"
   cancel-in-progress: true
 
-#
-env:
-  DISCORD_DISCUSSIONS_CHANNEL_ID: ${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID }}
-
 jobs:
   manage-discord-discussion:
     name: Manage Discord Discussion
@@ -26,9 +22,9 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'Discord Discussion')
     steps:
       - name: Fail if vars.DISCORD_DISCUSSIONS_CHANNEL_ID is unset
-        if: ${{ env.DISCORD_DISCUSSIONS_CHANNEL_ID == '' }}
+        if: ${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID == '' }}
         run: |
-          echo "vars.DISCORD_DISCUSSIONS_CHANNEL_ID must be set to use this label!"
+          echo "vars.DISCORD_DISCUSSIONS_CHANNEL_ID (${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID }}) must be set to use this label!"
           exit 1
 
       - name: Setup dotnet
