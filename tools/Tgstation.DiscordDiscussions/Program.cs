@@ -232,7 +232,7 @@ namespace Tgstation.DiscordDiscussions
 						if (!channel.IsSuccess)
 							throw new Exception(LogFormat(channel));
 
-						var threadMessage = await channelsClient.CreateMessageAsync(channelId, messageContent);
+						var threadMessage = await channelsClient.CreateMessageAsync(channelId, messageContent, flags: MessageFlags.HasThread);
 						if (!threadMessage.IsSuccess)
 							throw new Exception(LogFormat(threadMessage));
 
