@@ -213,12 +213,12 @@ namespace Tgstation.DiscordDiscussions
 				{
 					await gatewayReadyTcs.Task.WaitAsync(TimeSpan.FromMinutes(5));
 
-					var prLink = "https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
+					var prLink = $"https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
 
 					var stateEmoji = state == PRState.open
 						? "pr_opened"
-						: "pr_{ state.ToString().ToLowerInvariant()}";
-					var messageContent = $":{stateEmoji}: #{prNumber} {prTitle}";
+						: $"pr_{state.ToString().ToLowerInvariant()}";
+					var messageContent = $"#{prNumber} - {prTitle}";
 
 					var channelsClient = serviceProvider.GetRequiredService<IDiscordRestChannelAPI>();
 
@@ -232,9 +232,9 @@ namespace Tgstation.DiscordDiscussions
 						if (!channel.IsSuccess)
 							throw new Exception(LogFormat(channel));
 
-						const int SlowModeSeconds = 5;
+						int? slowModeSeconds = null; // TODO: Set this to 5
 
-						var threadMessage = await channelsClient.StartThreadInForumChannelAsync(channelId, messageContent, AutoArchiveDuration.Week, SlowModeSeconds, $"Maintainers have requested that discussion for [this pull request]({prLink}) be moved here.");
+						var threadMessage = await channelsClient.StartThreadInForumChannelAsync(channelId, messageContent, AutoArchiveDuration.Week, slowModeSeconds, $"Maintainers have requested that discussion for [this pull request]({prLink}) be moved here.");
 						if (!threadMessage.IsSuccess)
 							throw new Exception(LogFormat(threadMessage));
 
