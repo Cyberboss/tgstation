@@ -240,9 +240,6 @@ namespace Tgstation.DiscordDiscussions
 					else
 					{
 						messageId = new Snowflake(threadId.Value);
-						var response = await channelsClient.EditMessageAsync(channelId, messageId, messageContent);
-						if (!response.IsSuccess)
-							throw new Exception(LogFormat(response));
 
 						// open/close thread
 						if (state != PullRequestState.open)
@@ -251,7 +248,7 @@ namespace Tgstation.DiscordDiscussions
 							if (!archiveMessage.IsSuccess)
 								throw new Exception(LogFormat(archiveMessage));
 
-							var archiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Hour, isArchived: true);
+							var archiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, messageContent, autoArchiveDuration: AutoArchiveDuration.Hour, isArchived: true);
 							if (!archiveAction.IsSuccess)
 								throw new Exception(LogFormat(archiveAction));
 						}
@@ -261,9 +258,15 @@ namespace Tgstation.DiscordDiscussions
 							if (!unarchiveMessage.IsSuccess)
 								throw new Exception(LogFormat(unarchiveMessage));
 
-							var unarchiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Week, isArchived: false);
+							var unarchiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, messageContent, autoArchiveDuration: AutoArchiveDuration.Week, isArchived: false);
 							if (!unarchiveMessage.IsSuccess)
 								throw new Exception(LogFormat(unarchiveMessage));
+						}
+						else
+						{
+							var response = await channelsClient.ModifyThreadChannelAsync(messageId, messageContent);
+							if (!response.IsSuccess)
+								throw new Exception(LogFormat(response));
 						}
 					}
 
