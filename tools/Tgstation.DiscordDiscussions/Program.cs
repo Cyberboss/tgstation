@@ -16,21 +16,18 @@ using Remora.Discord.API.Abstractions.Rest;
 using Remora.Discord.API.Objects;
 using Remora.Discord.Gateway;
 using Remora.Discord.Gateway.Extensions;
-using Remora.Discord.Gateway.Responders;
 using Remora.Rest.Core;
 using Remora.Rest.Results;
 using Remora.Results;
 
 namespace Tgstation.DiscordDiscussions
 {
-	public sealed class Program : IDiscordResponders
+	public sealed partial class Program : IDiscordResponders
 	{
-		private enum PRState
-		{
-			closed,
-			open,
-			merged
-		}
+		const int InitSlowModeSeconds = 5;
+
+		[GeneratedRegex(@"https://discord.com/channels/[0-9]+/([0-9]+)")]
+		private static partial Regex ChannelLinkRegex();
 
 		readonly TaskCompletionSource gatewayReadyTcs;
 
@@ -170,7 +167,7 @@ namespace Tgstation.DiscordDiscussions
 				var repoOwner = args[1];
 				var repoName = args[2];
 				var prNumber = Int32.Parse(args[3]);
-				var state = Enum.Parse<PRState>(args[4]);
+				var state = Enum.Parse<PullRequestState>(args[4]);
 				var discordToken = args[5];
 				var discussionsChannelId = UInt64.Parse(args[6]);
 				var isReopen = Boolean.Parse(args[7]);
@@ -194,7 +191,7 @@ namespace Tgstation.DiscordDiscussions
 						return null;
 
 					// https://discord.com/channels/<guild ID>/<thread ID>
-					var threadId = UInt64.Parse(Regex.Match(commentInQuestion.Body, @"https://discord.com/channels/[0-9]+/([0-9]+)").Groups[1].Value);
+					var threadId = UInt64.Parse(ChannelLinkRegex().Match(commentInQuestion.Body).Groups[1].Value);
 					return threadId;
 				}
 
@@ -215,7 +212,7 @@ namespace Tgstation.DiscordDiscussions
 
 					var prLink = $"https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
 
-					var stateEmoji = state == PRState.open
+					var stateEmoji = state == PullRequestState.open
 						? "pr_opened"
 						: $"pr_{state.ToString().ToLowerInvariant()}";
 					var messageContent = $"#{prNumber} - {prTitle}";
@@ -232,9 +229,7 @@ namespace Tgstation.DiscordDiscussions
 						if (!channel.IsSuccess)
 							throw new Exception(LogFormat(channel));
 
-						int? slowModeSeconds = null; // TODO: Set this to 5
-
-						var threadMessage = await channelsClient.StartThreadInForumChannelAsync(channelId, messageContent, AutoArchiveDuration.Week, slowModeSeconds, $"Maintainers have requested that discussion for [this pull request]({prLink}) be moved here.");
+						var threadMessage = await channelsClient.StartThreadInForumChannelAsync(channelId, messageContent, AutoArchiveDuration.Week, InitSlowModeSeconds, $"Maintainers have requested that discussion for [this pull request]({prLink}) be moved here.");
 						if (!threadMessage.IsSuccess)
 							throw new Exception(LogFormat(threadMessage));
 
@@ -254,7 +249,7 @@ namespace Tgstation.DiscordDiscussions
 							throw new Exception(LogFormat(response));
 
 						// open/close thread
-						if (state != PRState.open)
+						if (state != PullRequestState.open)
 						{
 							var archiveMessage = await channelsClient.CreateMessageAsync(messageId, $"The associated pull request for this thread has been {state.ToString().ToLowerInvariant()}. This thread will now be archived.");
 							if (!archiveMessage.IsSuccess)
