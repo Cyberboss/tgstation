@@ -27,9 +27,9 @@ namespace Tgstation.DiscordDiscussions
 	{
 		private enum PRState
 		{
-			Closed,
-			Open,
-			Merged
+			closed,
+			open,
+			merged
 		}
 
 		readonly TaskCompletionSource gatewayReadyTcs;
@@ -215,7 +215,7 @@ namespace Tgstation.DiscordDiscussions
 
 					var prLink = "https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
 
-					var stateEmoji = state == PRState.Open
+					var stateEmoji = state == PRState.open
 						? "pr_opened"
 						: "pr_{ state.ToString().ToLowerInvariant()}";
 					var messageContent = $":{stateEmoji}: #{prNumber} {prTitle}\n{prLink}";
@@ -253,7 +253,7 @@ namespace Tgstation.DiscordDiscussions
 					}
 
 					// open/close thread
-					if (state != PRState.Open)
+					if (state != PRState.open)
 					{
 						var archiveMessage = await channelsClient.CreateMessageAsync(messageId, $"The associated pull request for this thread has been {state.ToString().ToLowerInvariant()}. This thread will now be archived.");
 						if (!archiveMessage.IsSuccess)
