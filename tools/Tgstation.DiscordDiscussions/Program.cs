@@ -204,6 +204,8 @@ namespace Tgstation.DiscordDiscussions
 
 				await using var serviceProvider = new ServiceCollection()
 					.AddDiscordGateway(serviceProvider => discordToken)
+					.AddSingleton(serviceProvider => (IResponder<IReady>)this)
+					.AddResponder<DiscordForwardingResponder>()
 					.BuildServiceProvider();
 
 				var gatewayClient = serviceProvider.GetRequiredService<DiscordGatewayClient>();
