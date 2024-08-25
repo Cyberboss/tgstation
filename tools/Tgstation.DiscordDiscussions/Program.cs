@@ -218,7 +218,7 @@ namespace Tgstation.DiscordDiscussions
 					var stateEmoji = state == PRState.open
 						? "pr_opened"
 						: "pr_{ state.ToString().ToLowerInvariant()}";
-					var messageContent = $":{stateEmoji}: #{prNumber} {prTitle}\n{prLink}";
+					var messageContent = $":{stateEmoji}: #{prNumber} {prTitle}";
 
 					var channelsClient = serviceProvider.GetRequiredService<IDiscordRestChannelAPI>();
 
@@ -232,7 +232,9 @@ namespace Tgstation.DiscordDiscussions
 						if (!channel.IsSuccess)
 							throw new Exception(LogFormat(channel));
 
-						var threadMessage = await channelsClient.CreateMessageAsync(channelId, messageContent, flags: MessageFlags.HasThread);
+						const int SlowModeSeconds = 5;
+
+						var threadMessage = await channelsClient.StartThreadInForumChannelAsync(channelId, messageContent, AutoArchiveDuration.Week, SlowModeSeconds, $"Maintainers have requested that discussion for [this pull request]({prLink}) be moved here.");
 						if (!threadMessage.IsSuccess)
 							throw new Exception(LogFormat(threadMessage));
 
