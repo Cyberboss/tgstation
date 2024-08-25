@@ -195,6 +195,7 @@ Temporary Items
 /tools/Tgstation.DiscordDiscussions/.vs/*
 /tools/Tgstation.DiscordDiscussions/bin/*
 /tools/Tgstation.DiscordDiscussions/obj/*
+/tools/Tgstation.DiscordDiscussions/Properties/launchSettings.json
 
 #GitHub Atom
 .atom-build.json
