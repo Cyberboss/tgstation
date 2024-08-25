@@ -211,7 +211,7 @@ namespace Tgstation.DiscordDiscussions
 				var localGatewayTask = gatewayClient.RunAsync(gatewayCts.Token);
 				try
 				{
-					await gatewayReadyTcs.Task.WaitAsync(TimeSpan.FromSeconds(30));
+					await gatewayReadyTcs.Task.WaitAsync(TimeSpan.FromMinutes(5));
 
 					var prLink = "https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
 
@@ -226,14 +226,7 @@ namespace Tgstation.DiscordDiscussions
 
 					var threadId = await threadIdTask;
 					Snowflake messageId;
-					if (threadId.HasValue)
-					{
-						messageId = new Snowflake(threadId.Value);
-						var response = await channelsClient.EditMessageAsync(channelId, messageId, messageContent);
-						if (!response.IsSuccess)
-							throw new Exception(LogFormat(response));
-					}
-					else
+					if (!threadId.HasValue)
 					{
 						var channel = await channelsClient.GetChannelAsync(channelId);
 						if (!channel.IsSuccess)
@@ -251,27 +244,34 @@ namespace Tgstation.DiscordDiscussions
 
 						await gitHubClient.Issue.Comment.Create(repoOwner, repoName, prNumber, gitHubComment);
 					}
-
-					// open/close thread
-					if (state != PRState.open)
+					else
 					{
-						var archiveMessage = await channelsClient.CreateMessageAsync(messageId, $"The associated pull request for this thread has been {state.ToString().ToLowerInvariant()}. This thread will now be archived.");
-						if (!archiveMessage.IsSuccess)
-							throw new Exception(LogFormat(archiveMessage));
+						messageId = new Snowflake(threadId.Value);
+						var response = await channelsClient.EditMessageAsync(channelId, messageId, messageContent);
+						if (!response.IsSuccess)
+							throw new Exception(LogFormat(response));
 
-						var archiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Hour, isArchived: true);
-						if (!archiveAction.IsSuccess)
-							throw new Exception(LogFormat(archiveAction));
-					}
-					else if (isReopen)
-					{
-						var unarchiveMessage = await channelsClient.CreateMessageAsync(messageId, "The associated pull request for this thread has been reopened. This thread will now be un archived.");
-						if (!unarchiveMessage.IsSuccess)
-							throw new Exception(LogFormat(unarchiveMessage));
+						// open/close thread
+						if (state != PRState.open)
+						{
+							var archiveMessage = await channelsClient.CreateMessageAsync(messageId, $"The associated pull request for this thread has been {state.ToString().ToLowerInvariant()}. This thread will now be archived.");
+							if (!archiveMessage.IsSuccess)
+								throw new Exception(LogFormat(archiveMessage));
 
-						var unarchiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Week, isArchived: false);
-						if (!unarchiveMessage.IsSuccess)
-							throw new Exception(LogFormat(unarchiveMessage));
+							var archiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Hour, isArchived: true);
+							if (!archiveAction.IsSuccess)
+								throw new Exception(LogFormat(archiveAction));
+						}
+						else if (isReopen)
+						{
+							var unarchiveMessage = await channelsClient.CreateMessageAsync(messageId, "The associated pull request for this thread has been reopened. This thread will now be un archived.");
+							if (!unarchiveMessage.IsSuccess)
+								throw new Exception(LogFormat(unarchiveMessage));
+
+							var unarchiveAction = await channelsClient.ModifyThreadChannelAsync(messageId, autoArchiveDuration: AutoArchiveDuration.Week, isArchived: false);
+							if (!unarchiveMessage.IsSuccess)
+								throw new Exception(LogFormat(unarchiveMessage));
+						}
 					}
 
 					// ensure the PR is locked
