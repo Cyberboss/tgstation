@@ -23,7 +23,7 @@ using Remora.Results;
 
 namespace Tgstation.DiscordDiscussions
 {
-	public sealed class Program : IResponder<IReady>
+	public sealed class Program : IDiscordResponders
 	{
 		private enum PRState
 		{
@@ -204,7 +204,7 @@ namespace Tgstation.DiscordDiscussions
 
 				await using var serviceProvider = new ServiceCollection()
 					.AddDiscordGateway(serviceProvider => discordToken)
-					.AddSingleton(serviceProvider => (IResponder<IReady>)this)
+					.AddSingleton(serviceProvider => (IDiscordResponders)this)
 					.AddResponder<DiscordForwardingResponder>()
 					.BuildServiceProvider();
 
