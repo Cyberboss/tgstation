@@ -1,4 +1,5 @@
 # This file is used by TGS (https://github.com/tgstation/tgstation-server) clients to quickly initialize a server instance for the codebase
+
 # The format isn't documented anywhere but hopefully we never have to change it. If there are questions, contact the TGS maintainer Cyberboss/@Dominion#0444
 version: 1
 # The BYOND version to use (kept in sync with dependencies.sh by the "TGS Test Suite" CI job)
