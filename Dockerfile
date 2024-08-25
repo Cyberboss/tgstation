@@ -17,6 +17,7 @@ RUN apt-get install -y --no-install-recommends \
         make \
         libstdc++6:i386
 
+
 COPY dependencies.sh .
 
 RUN . ./dependencies.sh \
