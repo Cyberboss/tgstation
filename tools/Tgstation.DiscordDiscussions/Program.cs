@@ -211,10 +211,6 @@ namespace Tgstation.DiscordDiscussions
 					await gatewayReadyTcs.Task.WaitAsync(TimeSpan.FromMinutes(5));
 
 					var prLink = $"https://github.com/{repoOwner}/{repoName}/pull/{prNumber}";
-
-					var stateEmoji = state == PullRequestState.open
-						? "pr_opened"
-						: $"pr_{state.ToString().ToLowerInvariant()}";
 					var messageContent = $"#{prNumber} - {prTitle}";
 
 					var channelsClient = serviceProvider.GetRequiredService<IDiscordRestChannelAPI>();
