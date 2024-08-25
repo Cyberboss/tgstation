@@ -6,6 +6,7 @@ RUN dpkg --add-architecture i386 \
     && apt-get dist-upgrade -y \
     && apt-get install -y --no-install-recommends \
         ca-certificates
+        
 
 # byond = base + byond installed globally
 FROM base AS byond
