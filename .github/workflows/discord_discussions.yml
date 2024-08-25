@@ -22,7 +22,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'Discord Discussion')
     steps:
       - name: Fail if vars.DISCORD_DISCUSSIONS_CHANNEL_ID is unset
-        if: ${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID }} == ''
+        if: ${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID == '' }}
         run: |
           echo "vars.DISCORD_DISCUSSIONS_CHANNEL_ID (${{ vars.DISCORD_DISCUSSIONS_CHANNEL_ID }}) must be set to use this label!"
           exit 1
