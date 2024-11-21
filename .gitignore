@@ -9,6 +9,7 @@
 /cache/**/*
 
 #Ignore byond config folder.
+
 /cfg/**/*
 
 #Ignore IDE files we don't need in the repo.
@@ -180,6 +181,9 @@ Temporary Items
 /tools/MapAtmosFixer/MapAtmosFixer/bin/*
 /tools/CreditsTool/bin/*
 /tools/CreditsTool/obj/*
+/tools/Tgstation.DiscordDiscussions/.vs/*
+/tools/Tgstation.DiscordDiscussions/bin/*
+/tools/Tgstation.DiscordDiscussions/obj/*
 
 #GitHub Atom
 .atom-build.json
