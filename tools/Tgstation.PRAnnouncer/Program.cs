@@ -69,6 +69,12 @@ namespace Tgstation.PRAnnouncer
 				var settings = services.GetRequiredService<IOptions<Settings>>();
 				var secret = settings.Value.GitHubSecret;
 
+				app.Use((context, next) =>
+				{
+					logger.LogInformation("Request headers: {headers}", String.Join(", ", context.Request.Headers.Keys));
+					return next();
+				});
+
 				app.MapGitHubWebhooks(secret: secret);
 				app.MapMetrics();
 				app.MapHealthChecks("/health");
