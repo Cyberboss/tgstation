@@ -13,6 +13,7 @@ import Juke from './juke/index.js';
 import { bun, bunRoot } from './lib/bun';
 import { DreamDaemon, DreamMaker, NamedVersionFile } from './lib/byond';
 import { downloadFile } from './lib/download';
+import dmApiExtract from './lib/dmApiExtract.js';
 import { formatDeps } from './lib/helpers';
 import { prependDefines } from './lib/tgs';
 
@@ -156,6 +157,31 @@ export const DmMapsIncludeTarget = new Juke.Target({
   },
 });
 
+export const TgsDmApiTarget = new Juke.Target({
+  inputs: ["dependencies.sh"],
+  outputs: ["code/modules/tgs/downloaded/**/*"],
+  executes: async () => {
+    const dependenciesShContent = fs.readFileSync("dependencies.sh", "utf8");
+    //const versionRegex = prependDefines("TGS"); //
+
+    const dmApiTag = "dmapi-v7.3.3";
+    const tempZipPath = "code/modules/tgs/temp.zip";
+    const outputPath = "code/modules/tgs/downloaded";
+
+    Juke.rm(tempZipPath);
+    Juke.rm(outputPath, { recursive: true });
+
+    await downloadFile(
+      `https://github.com/tgstation/tgstation-server/releases/download/${dmApiTag}/DMAPI.zip`,
+      tempZipPath,
+    );
+
+    await dmApiExtract(tempZipPath, "code/modules/tgs/downloaded");
+
+    Juke.rm(tempZipPath);
+  },
+});
+
 export const DmTarget = new Juke.Target({
   parameters: [
     DefineParameter,
@@ -165,6 +191,7 @@ export const DmTarget = new Juke.Target({
     SkipIconCutter,
   ],
   dependsOn: ({ get }) => [
+    TgsDmApiTarget,
     get(DefineParameter).includes('ALL_TEMPLATES') && DmMapsIncludeTarget,
     !get(SkipIconCutter) && IconCutterTarget,
   ],

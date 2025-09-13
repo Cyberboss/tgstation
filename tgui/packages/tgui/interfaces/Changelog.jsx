@@ -269,20 +269,18 @@ export class Changelog extends Component {
           {' See the footer of '}
           <a
             href={
-              'https://github.com/tgstation/tgstation/blob/master' +
-              '/code/__DEFINES/tgs.dm'
+              'https://github.com/tgstation/tgstation-server/blob/dev/src/DMAPI/tgs.dm'
             }
           >
-            code/__DEFINES/tgs.dm
+            tgs.dm
           </a>
           {' and '}
           <a
             href={
-              'https://github.com/tgstation/tgstation/blob/master' +
-              '/code/modules/tgs/LICENSE'
+              'https://github.com/tgstation/tgstation-server/blob/dev/src/DMAPI/tgs/LICENSE'
             }
           >
-            code/modules/tgs/LICENSE
+            tgs/LICENSE
           </a>
           {' for the MIT license.'}
         </p>

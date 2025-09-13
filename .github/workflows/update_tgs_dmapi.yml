@@ -28,6 +28,7 @@ jobs:
         with:
           header-path: "code/__DEFINES/tgs.dm"
           library-path: "code/modules/tgs"
+          dependencies-sh-mode: true
 
       - name: Commit and Push
         continue-on-error: true

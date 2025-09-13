@@ -34,3 +34,5 @@ export CUTTER_REPO=spacestation13/hypnagogic
 #hypnagogic git tag
 export CUTTER_VERSION=v5.0.0
 
+#tgstation-server DreamMaker API git tag
+export TGS_DMAPI_VERSION=dmapi-v7.3.3
